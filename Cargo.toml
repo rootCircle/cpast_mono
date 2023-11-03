@@ -1,16 +1,10 @@
 [package]
-name = "cpast_mono"
+name = "code_companion"
 version = "0.1.0"
 edition = "2021"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
 [dependencies]
-
-[workspace]
-
-members = [
-    "cpast",
-    "clex",
-    "clex_llm",
-    "cquestion_scrapper"
-]
-
+clap = { version = "4.4.7", features = ["derive"] }
+which = "5.0.0"
