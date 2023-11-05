@@ -33,7 +33,7 @@ struct Token {
     lexeme: String,
 }
 
-struct Tokens {
+pub(crate) struct Tokens {
     tokens: Vec<Token>,
     start: usize,
     current: usize,

@@ -1,27 +1,64 @@
-
+use super::lexer::Tokens;
 
 struct Language {
-    tokens: Vec<LangTypes>
+    tokens: Vec<Expression>
 }
 
-enum LangType {
-    CapturingGroup {
-        group_number: u32,
-        value: CharacterSet
+struct Expression {
+    unit: Vec<UnitExpression>
+}
+
+enum UnitExpression {
+    RangeBoundPrimitives {
+        data_type: NumeralDataType,
+        lower_bound: i64,
+        upper_bound: i64
+    },
+    Primitives {
+        data_type: DataType
     },
     NonCapturingGroup {
-        value: CharacterSet
+        nest_exp: Expression
     },
-
+    CapturingGroup {
+        // Type is fixed to be non-negative Number
+        group_number: u64
+    },
+    RepeatingExpressions {
+        unit_type: UnitExpression,
+        frequency_value_type: BackReferenceType
+    }
 }
 
-struct CharacterSets {
-    charset: Vec<CharacterSet>
-}
-
-enum CharacterSet {
+enum DataType {
+    Integer,
     Float,
-    Integer(i64, i64), // Max and Min values
     String,
     Char
+}
+
+enum NumeralDataType {
+    Integer,
+    Float
+}
+
+enum BackReferenceType {
+    Group {
+        group_number: u64
+    },
+    Literal(u64)
+}
+
+impl Language {
+    fn new() -> Self {
+        Language {
+            tokens: vec![]
+        }
+    }
+
+    pub fn parser(&self, tokens: Tokens) -> Language{
+
+        Language { tokens: vec![] }
+    }
+
 }
