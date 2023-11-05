@@ -1,13 +1,9 @@
-use crate::language::Language;
-use crate::utils::program_utils;
 use std::path::Path;
 
 #[derive(Debug)]
 pub(crate) struct ProgramStore<'a> {
     source_file: &'a Path,
     comparing_file: &'a Path,
-    source_lang: Option<Language>,
-    comparing_lang: Option<Language>,
 }
 
 impl<'a> ProgramStore<'a> {
@@ -15,8 +11,6 @@ impl<'a> ProgramStore<'a> {
         Self {
             source_file,
             comparing_file,
-            source_lang: Language::get_programming_language(source_file),
-            comparing_lang: Language::get_programming_language(comparing_file),
         }
     }
 
