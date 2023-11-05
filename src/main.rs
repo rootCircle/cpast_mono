@@ -29,6 +29,6 @@ fn main() {
 
     // println!("{:#?}", Language::run_program_code(Path::new("./1.c"), "Helloajkhdkjs"));
 
-    // println!("{:#?}", store.run_code("Hello"));
+    println!("{:#?}", store.run_code("Hello"));
 
 }
