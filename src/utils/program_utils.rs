@@ -1,4 +1,4 @@
-use std::process::{Command, exit, ExitStatus, Stdio};
+use std::process::{Command, Stdio};
 use std::{io, io::Write};
 use which::which;
 
@@ -38,7 +38,7 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
         return Err(io::Error::new(io::ErrorKind::Other, err));
     }
 
-    let mut child = Command::new(program)
+    let child = Command::new(program)
         .args(args)
         .stdout(Stdio::piped())
         .output();

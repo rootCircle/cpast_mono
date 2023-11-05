@@ -1,0 +1,13 @@
+*
+# Workaround to gitignore binary files
+# Unignore all files with extensions recursively
+!**/*.*
+
+/target
+
+# Local Testing Files
+*.py
+*.c
+*.java
+*.class
+*.rb
