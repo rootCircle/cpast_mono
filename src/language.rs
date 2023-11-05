@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::exit;
 use std::io;
 use crate::utils::program_utils;
@@ -23,7 +23,7 @@ enum CompilationType {
 }
 
 impl Language {
-    pub fn get_programming_language(file_path: &Path) -> Option<Language> {
+    pub fn get_programming_language_name(file_path: &Path) -> Option<Language> {
         match file_path.extension() {
             Some(src_str) => match src_str.to_str() {
                 Some("rs") => Some(Language::Rust),
@@ -44,30 +44,29 @@ impl Language {
     }
 
     /// Running single filed self executable program
-    pub fn run_program_code(file_path: &Path, stdin_content: &str) -> io::Result<String> {
-        let lang_name = Self::get_programming_language(file_path);
+    pub fn run_program_code(file_path: &Path, lang_name: &Option<Language>, stdin_content: &str) -> io::Result<String> {
         match lang_name {
             Some(lang) => {
-                let lang_type = Self::get_language_type(&lang);
+                let lang_type = Self::get_language_type(lang);
                 match lang_type {
                     CompilationType::AheadOfTime => {
                         // Need to Compile and then run
-                        match  Self::compile_language(file_path, &lang) {
+                        match  Self::compile_language(file_path, lang) {
                             Ok(bin_path) => {
                                 program_utils::run_program_with_input(&format!("./{}", bin_path), &vec![], stdin_content)
                             },
-                            Err(e) => {
+                            Err(_e) => {
                                 exit(COMPILATION_FAILED_EXIT_CODE)
                             }
                         }
                     }
                     CompilationType::InTime => {
                         // Need to Just Run
-                        match  Self::run_intrepreted_language(file_path, &lang, stdin_content) {
-                            Ok(bin_path) => {
-                                program_utils::run_program_with_input(&format!("./{}", bin_path), &vec![], stdin_content)
+                        match  Self::run_intrepreted_language(file_path, lang, stdin_content) {
+                            Ok(output) => {
+                                Ok(output)
                             },
-                            Err(err) => {
+                            Err(_err) => {
                                 exit(COMPILATION_FAILED_EXIT_CODE);
                             }
                         }
@@ -125,13 +124,13 @@ impl Language {
                     return Ok(prog_name_stem.to_string());
                 }
                 Err(err) => {
-                    eprintln!("WARNING: Failed to compile code with {prog}");
+                    eprintln!("WARNING: Failed to compile code with {prog} with reason {err}");
                 }
             };
         }
 
-        eprintln!("Failed to compile code\n");
-        Err("Failed to compile code!")
+        eprintln!("Couldn't Compile the code\n");
+        Err("Couldn't Compile the code")
     }
 
     fn run_intrepreted_language(file_path: &Path, lang_name: &Language, stdin_content: &str) -> Result<String, &'static str> {
@@ -151,11 +150,11 @@ impl Language {
             let std_out = program_utils::run_program_with_input(prog, args, stdin_content);
             match std_out {
                 Ok(output) => {
-                    println!("Run Successfully with {prog}! \n {}", output);
+                    println!("Run Successfully with {prog}!");
                     return Ok(output);
                 }
                 Err(err) => {
-                    eprintln!("WARNING: Failed to run code with {prog}");
+                    eprintln!("WARNING: Failed to run code with {prog} with reason {err}");
                 }
             };
         }
