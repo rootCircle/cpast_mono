@@ -7,3 +7,7 @@ pub fn read_file(file_path: &Path) -> io::Result<String> {
         .parse::<String>()
         .expect("Error reading the file!"))
 }
+
+pub fn string_diff(source: &str, dest: &str) -> bool {
+    source == dest
+}
