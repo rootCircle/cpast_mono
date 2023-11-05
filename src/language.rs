@@ -14,12 +14,15 @@ pub(crate) enum Language {
     Cpp,
     C,
     Rust,
+    Ruby,
+    Javascript,
+    Java
 }
 
 enum CompilationType {
-    AheadOfTime, // Compiled language like C, C++, Rust etc
-    Jit,         // Java, Go etc
-    InTime,      // Python etc
+    AheadOfTime, // Compiled language like C, C++, Rust, Java, Go etc
+    JustInTime,  // Python etc
+    AheadOfTimeIntrepreted, // Java
 }
 
 impl Language {
@@ -30,6 +33,9 @@ impl Language {
                 Some("py") => Some(Language::Python),
                 Some("c") => Some(Language::C),
                 Some("cpp") => Some(Language::Cpp),
+                Some("java") => Some(Language::Java),
+                Some("js") => Some(Language::Javascript),
+                Some("rb") => Some(Language::Ruby),
                 _ => None,
             },
             None => None,
@@ -39,7 +45,8 @@ impl Language {
     fn get_language_type(lang_type: &Language) -> CompilationType {
         match lang_type {
             Language::Rust | Language::Cpp | Language::C => CompilationType::AheadOfTime,
-            Language::Python => CompilationType::InTime,
+            Language::Python | Language::Ruby | Language::Javascript => CompilationType::JustInTime,
+            Language::Java => CompilationType::AheadOfTimeIntrepreted
         }
     }
 
@@ -60,7 +67,7 @@ impl Language {
                             }
                         }
                     }
-                    CompilationType::InTime => {
+                    CompilationType::JustInTime => {
                         // Need to Just Run
                         match  Self::run_intrepreted_language(file_path, lang, stdin_content) {
                             Ok(output) => {
@@ -71,10 +78,25 @@ impl Language {
                             }
                         }
                     }
-                    CompilationType::Jit => {
+                    CompilationType::AheadOfTimeIntrepreted => {
                         // Might require converting to intermediate before running (eg java)
-                        eprintln!("JIT is still not supported yet!");
-                        Err(io::Error::new(io::ErrorKind::Other, "JIT Runner Not Implemented yet!"))
+                        // Need to Compile and then run
+                        match  Self::compile_language(file_path, lang) {
+                            Ok(bin_path) => {
+                                match file_path.parent() {
+                                    Some(file_parent) => {
+                                        program_utils::run_program_with_input("java", &vec!["-cp", file_parent.to_str().unwrap_or(""), &bin_path], stdin_content)
+                                    },
+                                    None => {
+                                        program_utils::run_program_with_input("java", &vec![&bin_path], stdin_content)
+                                    }
+                                }
+
+                            },
+                            Err(_e) => {
+                                exit(COMPILATION_FAILED_EXIT_CODE)
+                            }
+                        }
                     }
                 }
             }
@@ -111,6 +133,9 @@ impl Language {
             Language::Rust => {
                 program.insert("rustc", vec!["-o", prog_name_stem, file_path.to_str().unwrap_or("")]);
             },
+            Language::Java => {
+                program.insert("javac", vec![file_path.to_str().unwrap_or("")]);
+            }
             _ => {
                 return Err("Unsupported/Not a Compiled Language");
             }
@@ -140,6 +165,14 @@ impl Language {
             Language::Python => {
                 program.insert("python3", vec![file_path.to_str().unwrap_or("")]);
                 program.insert("python", vec![file_path.to_str().unwrap_or("")]);
+            },
+            Language::Ruby => {
+                program.insert("ruby", vec![file_path.to_str().unwrap_or("")]);
+            },
+            Language::Javascript => {
+                program.insert("node", vec![file_path.to_str().unwrap_or("")]);
+                program.insert("deno", vec!["run", file_path.to_str().unwrap_or("")]);
+                program.insert("bun", vec![file_path.to_str().unwrap_or("")]);
             },
             _ => {
                 return Err("Unsupported/Not a Compiled Language");
