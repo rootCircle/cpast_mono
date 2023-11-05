@@ -1,9 +1,10 @@
-// #![allow(unused)]
+#![allow(unused)]
 
 mod cli;
 mod language;
 mod program_store;
 mod utils;
+mod test_language;
 
 use std::path::Path;
 
