@@ -1,6 +1,9 @@
 use std::path::Path;
+use std::process::exit;
 use crate::language::Language;
 use crate::utils::file_utils;
+
+const FILE_NOT_FOUND_EXIT_CODE: i32 = 6;
 
 #[derive(Debug)]
 pub(crate) struct ProgramStore<'a> {
@@ -20,8 +23,15 @@ impl<'a> ProgramStore<'a> {
         }
     }
 
+    fn exists(&self) -> bool {
+        self.source_file.exists() && self.test_file.exists()
+    }
 
     pub fn run_code(&self, stdin_content: &str) -> Result<bool, &str> {
+        if !self.exists() {
+            eprintln!("[ERROR] File(s) doesn't exists\nQuitting.....");
+            exit(FILE_NOT_FOUND_EXIT_CODE);
+        }
         let src_file = Language::run_program_code(self.source_file, &self.source_lang, stdin_content);
         let test_file = Language::run_program_code(self.test_file, &self.test_lang, stdin_content);
 

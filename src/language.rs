@@ -5,7 +5,6 @@ use std::io;
 use crate::utils::program_utils;
 
 const DEFAULT_PROGRAM_NAME: &str = "program";
-const UNSUPPORTED_LANGUAGE_EXIT_CODE: i32 = 2;
 const COMPILATION_FAILED_EXIT_CODE: i32 = 2;
 
 #[derive(Debug)]
@@ -69,7 +68,7 @@ impl Language {
                     }
                     CompilationType::JustInTime => {
                         // Need to Just Run
-                        match  Self::run_intrepreted_language(file_path, lang, stdin_content) {
+                        match  Self::run_interpreted_language(file_path, lang, stdin_content) {
                             Ok(output) => {
                                 Ok(output)
                             },
@@ -120,21 +119,21 @@ impl Language {
         };
 
         let mut program: HashMap<&str, Vec<&str>> = HashMap::new();
-
+        let file_path_str = file_path.to_str().unwrap_or("");
         match lang_name {
             Language::C => {
-                program.insert("gcc", vec!["-o", prog_name_stem, file_path.to_str().unwrap_or("")]);
-                program.insert("clang", vec!["-o", prog_name_stem, file_path.to_str().unwrap_or("")]);
+                program.insert("gcc", vec!["-o", prog_name_stem, file_path_str]);
+                program.insert("clang", vec!["-o", prog_name_stem, file_path_str]);
             },
             Language::Cpp => {
-                program.insert("g++", vec!["-o", prog_name_stem, file_path.to_str().unwrap_or("")]);
-                program.insert("clang++", vec!["-o", prog_name_stem, file_path.to_str().unwrap_or("")]);
+                program.insert("g++", vec!["-o", prog_name_stem, file_path_str]);
+                program.insert("clang++", vec!["-o", prog_name_stem, file_path_str]);
             },
             Language::Rust => {
-                program.insert("rustc", vec!["-o", prog_name_stem, file_path.to_str().unwrap_or("")]);
+                program.insert("rustc", vec!["-o", prog_name_stem, file_path_str]);
             },
             Language::Java => {
-                program.insert("javac", vec![file_path.to_str().unwrap_or("")]);
+                program.insert("javac", vec![file_path_str]);
             }
             _ => {
                 return Err("Unsupported/Not a Compiled Language");
@@ -145,34 +144,34 @@ impl Language {
             let std_out = program_utils::run_program(prog, args);
             match std_out {
                 Ok(output) => {
-                    println!("Compiled Successfully with {prog}! \n {}", output);
+                    println!("{prog_name_stem} compiled Successfully with {prog}! \n {}", output);
                     return Ok(prog_name_stem.to_string());
                 }
                 Err(err) => {
-                    eprintln!("WARNING: Failed to compile code with {prog} with reason {err}");
+                    eprintln!("WARNING: Failed to compile {prog_name_stem} code with {prog} with reason {err}");
                 }
             };
         }
 
-        eprintln!("Couldn't Compile the code\n");
+        eprintln!("Couldn't Compile the code {prog_name_stem}\n");
         Err("Couldn't Compile the code")
     }
 
-    fn run_intrepreted_language(file_path: &Path, lang_name: &Language, stdin_content: &str) -> Result<String, &'static str> {
+    fn  run_interpreted_language(file_path: &Path, lang_name: &Language, stdin_content: &str) -> Result<String, &'static str> {
         let mut program: HashMap<&str, Vec<&str>> = HashMap::new();
-
+        let file_path_str = file_path.to_str().unwrap_or("");
         match lang_name {
             Language::Python => {
-                program.insert("python3", vec![file_path.to_str().unwrap_or("")]);
-                program.insert("python", vec![file_path.to_str().unwrap_or("")]);
+                program.insert("python3", vec![file_path_str]);
+                program.insert("python", vec![file_path_str]);
             },
             Language::Ruby => {
-                program.insert("ruby", vec![file_path.to_str().unwrap_or("")]);
+                program.insert("ruby", vec![file_path_str]);
             },
             Language::Javascript => {
-                program.insert("node", vec![file_path.to_str().unwrap_or("")]);
-                program.insert("deno", vec!["run", file_path.to_str().unwrap_or("")]);
-                program.insert("bun", vec![file_path.to_str().unwrap_or("")]);
+                program.insert("node", vec![file_path_str]);
+                program.insert("deno", vec!["run", file_path_str]);
+                program.insert("bun", vec![file_path_str]);
             },
             _ => {
                 return Err("Unsupported/Not a Compiled Language");
@@ -183,11 +182,11 @@ impl Language {
             let std_out = program_utils::run_program_with_input(prog, args, stdin_content);
             match std_out {
                 Ok(output) => {
-                    println!("Run Successfully with {prog}!");
+                    println!("{file_path_str} Run Successfully with {prog}!");
                     return Ok(output);
                 }
                 Err(err) => {
-                    eprintln!("WARNING: Failed to run code with {prog} with reason {err}");
+                    eprintln!("[Interpreter] WARNING: Failed to run {file_path_str} code with {prog} with reason {err}");
                 }
             };
         }

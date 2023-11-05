@@ -1,4 +1,4 @@
-#![allow(unused)]
+// #![allow(unused)]
 
 mod cli;
 mod language;
@@ -10,7 +10,7 @@ use std::path::Path;
 use crate::cli::cli_parser::CliArgs;
 use crate::program_store::ProgramStore;
 // use crate::utils::file_utils::read_file;
-use crate::language::Language;
+// use crate::language::Language;
 
 fn main() {
     let args = CliArgs::new();
@@ -30,5 +30,4 @@ fn main() {
     // println!("{:#?}", Language::run_program_code(Path::new("./1.c"), "Helloajkhdkjs"));
 
     println!("{:#?}", store.run_code("Hello"));
-
 }

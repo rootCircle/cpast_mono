@@ -16,6 +16,7 @@ pub fn run_program_with_input(program: &str, args: &Vec<&str>, stdin_content: &s
         .args(args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .spawn()?;
 
     if let Some(mut stdin) = child.stdin.take() {
@@ -24,6 +25,20 @@ pub fn run_program_with_input(program: &str, args: &Vec<&str>, stdin_content: &s
     }
 
     let output = child.wait_with_output()?;
+
+    if output.status.code() != Some(0) {
+        return Err(io::Error::new(
+            io::ErrorKind::Other,
+            format!(
+                "Process `{} {}` failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
+                program,
+                args.join(" "),
+                output.status,
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            )
+        ));
+    }
 
     let stdout_content = String::from_utf8(output.stdout)
         .map_err(|non_utf8| String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
@@ -40,13 +55,15 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
 
     let child = Command::new(program)
         .args(args)
+        .stdin(Stdio::piped())
         .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .output();
 
     let child = match child {
         Ok(t) => t,
         Err(err) => {
-            eprintln!("Failed to run the command {} {:?}", program, args);
+            eprintln!("Failed to run the command {} {}", program, args.join(" "));
             return Err(io::Error::new(io::ErrorKind::Other, err))
         }
     };
@@ -55,7 +72,9 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
         return Err(io::Error::new(
             io::ErrorKind::Other,
             format!(
-                "Process failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
+                "Process `{} {}` failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
+                program,
+                args.join(" "),
                 child.status,
                 String::from_utf8_lossy(&child.stdout),
                 String::from_utf8_lossy(&child.stderr)
