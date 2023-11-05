@@ -26,6 +26,28 @@ Written similar to regex, just so that regex doesn't support Repeating Things th
 - (?:.....){} => Specify number of occurrence of group
 - N|F[m, n] => Specifying min and max values of N or F (Skip one of the values means MIN and MAX respectively), check for the string if it is within the range or not
 
+## Rule
+- Capturing group can only have **single** **non-negative** **INTEGER** element. If not specified its min value is set to 0.
+
+## Language
+
+- NCG = (:?EXPRESSION)
+- CG = (N[0,])
+- RE = EXPRESSION{\NATURAL_LITERAL_NUMBER}|{NATURAL_LITERAL_NUMBER}
+- RBP = N|F[LITERAL_NUMBER|e,LITERAL_NUMBER|e]
+- EXPRESSION = CG|NCG|PRIMITIVE_TYPES|RBP|RE
+- PRIMITIVE_TYPES = N|F|S|C
+
+- LITERAL_NUMBER = Any Integral numbers like -2, 0, 5 etc
+- NATURAL_LITERAL_NUMBER = Only Positive Integers like 1, 5 etc
+- e stands for epsilon or null
+
+Acronyms
+- NCG = Non Capturing Group
+- CG = Capturing Group
+- RBP = Range Bound Primitive
+- RE = Repeating Expressions
+
 ## Example Usage
 
 - `(N) N[,1000] (?:N F S){\1}` : Accepts: "2 2 2 2.2 ABC2 3 4.5 ASD"
