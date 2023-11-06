@@ -1,4 +1,4 @@
 mod language;
-mod lexer;
-mod parser;
+pub(crate) mod lexer;
+pub(crate) mod parser;
 mod ast;
