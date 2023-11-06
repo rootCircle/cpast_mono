@@ -16,7 +16,7 @@ Written similar to regex, just so that regex doesn't support Repeating Things th
 - C = Non-whitespace Character
 
 ### Misc character
-- Literal non-negative numbers (to denote ranges/no. of occurrences/back-referencing etc)
+- Literal non-negative numbers (to denote ranges/no. of occurrences/back-referencing etc.)
 
 ### Special Functions
 
@@ -60,4 +60,4 @@ Acronyms
 ## References
 - [Back-references in repetition construct regex](https://stackoverflow.com/questions/3407696/using-a-regex-back-reference-in-a-repetition-construct-n)
 - [Back-references S.O.](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count)
-- [Possible solution using Code Callout](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count/61898415#61898415)
+- [Possible solution using Code Call-out](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count/61898415#61898415)

@@ -12,6 +12,7 @@ use crate::cli::cli_parser::CliArgs;
 use crate::program_store::ProgramStore;
 // use crate::utils::file_utils::read_file;
 // use crate::language::Language;
+use crate::test_language::lexer;
 
 fn main() {
     let args = CliArgs::new();
@@ -30,5 +31,10 @@ fn main() {
 
     // println!("{:#?}", Language::run_program_code(Path::new("./1.c"), "Helloajkhdkjs"));
 
-    println!("{:#?}", store.run_code("Hello"));
+    // println!("{:#?}", store.run_code("Hello"));
+
+    let mut token = lexer::Tokens::new(String::from("N(?:\\\t\nF){[]} SC,"));
+    token.scan_tokens();
+
+    println!("{:#?}", token.tokens);
 }

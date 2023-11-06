@@ -21,7 +21,7 @@ pub(crate) enum Language {
 enum CompilationType {
     AheadOfTime, // Compiled language like C, C++, Rust, Java, Go etc
     JustInTime,  // Python etc
-    AheadOfTimeIntrepreted, // Java
+    AheadOfTimeInterpreted, // Java
 }
 
 impl Language {
@@ -45,7 +45,7 @@ impl Language {
         match lang_type {
             Language::Rust | Language::Cpp | Language::C => CompilationType::AheadOfTime,
             Language::Python | Language::Ruby | Language::Javascript => CompilationType::JustInTime,
-            Language::Java => CompilationType::AheadOfTimeIntrepreted
+            Language::Java => CompilationType::AheadOfTimeInterpreted
         }
     }
 
@@ -77,7 +77,7 @@ impl Language {
                             }
                         }
                     }
-                    CompilationType::AheadOfTimeIntrepreted => {
+                    CompilationType::AheadOfTimeInterpreted => {
                         // Might require converting to intermediate before running (eg java)
                         // Need to Compile and then run
                         match  Self::compile_language(file_path, lang) {
@@ -102,7 +102,7 @@ impl Language {
             None => {
                 eprintln!("Unsupported Language {:?}", lang_name);
                 eprintln!("Component: language::Language::detect_program_language");
-                std::process::exit(1);
+                exit(1);
             }
         }
     }
