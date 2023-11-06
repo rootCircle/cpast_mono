@@ -1,7 +1,8 @@
+use std::process::exit;
 use unicode_segmentation::UnicodeSegmentation;
 
-#[derive(Debug, PartialEq)]
-enum TokenType {
+#[derive(Debug, PartialEq, Clone)]
+pub(crate) enum TokenType {
     // Metacharacters
     LeftParens,
     RightParens,
@@ -27,21 +28,21 @@ enum TokenType {
     Eof
 }
 
-#[derive(Debug, PartialEq)]
-struct Token {
-    token_type: TokenType,
+#[derive(Debug, PartialEq, Clone)]
+pub(crate) struct Token {
+    pub(crate) token_type: TokenType,
     lexeme: String,
 }
 
 pub(crate) struct Tokens {
-    tokens: Vec<Token>,
+    pub(crate) tokens: Vec<Token>,
     start: usize,
     current: usize,
     source_language: String,
 }
 
 impl Tokens {
-    fn new(source_language: String) -> Self {
+    pub fn new(source_language: String) -> Self {
         Self {
             tokens: Vec::new(),
             start: 0,
@@ -51,9 +52,13 @@ impl Tokens {
     }
 
     pub fn scan_tokens(&mut self) {
-        while !self.is_at_end() {
+        while !self.at_end() {
             self.start = self.current;
-            self.scan_token();
+            let scan_token = self.scan_token();
+            if let Err(err) = scan_token {
+                eprintln!("[ERROR]: {}", err);
+                exit(1);
+            }
         }
         self.tokens.push(Token {
             token_type: TokenType::Eof,
@@ -61,11 +66,11 @@ impl Tokens {
         });
     }
 
-    fn is_at_end(&self) -> bool {
+    fn at_end(&self) -> bool {
         self.source_language.len() <= self.current
     }
 
-    fn scan_token(&mut self) -> Result<String, String>{
+    fn scan_token(&mut self) -> Result<(), String>{
         let c = self.advance();
         match c {
             "(" => self.add_token(TokenType::LeftParens),
@@ -111,7 +116,7 @@ impl Tokens {
                 }
             }
         }
-        Ok("".to_string())
+        Ok(())
     }
 
     fn add_token(&mut self, token_type: TokenType) {
@@ -131,7 +136,7 @@ impl Tokens {
     }
 
     fn match_str(&mut self, expected: &str) -> bool {
-        if self.is_at_end() {
+        if self.at_end() {
             return false;
         }
 
@@ -148,7 +153,7 @@ impl Tokens {
     }
 
     fn peek(&self) -> &str {
-        if self.is_at_end() {
+        if self.at_end() {
             return "\0";
         }
 
