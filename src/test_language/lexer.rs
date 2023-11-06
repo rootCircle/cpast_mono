@@ -6,7 +6,7 @@ pub(crate) enum TokenType {
     // Metacharacters
     LeftParens,
     RightParens,
-    ColonQuestion,
+    QuestionColon,
     Backslash,
     LeftSquareBracket,
     RightSquareBracket,
@@ -31,7 +31,7 @@ pub(crate) enum TokenType {
 #[derive(Debug, PartialEq, Clone)]
 pub(crate) struct Token {
     pub(crate) token_type: TokenType,
-    lexeme: String,
+    pub(crate) lexeme: String,
 }
 
 pub(crate) struct Tokens {
@@ -88,12 +88,12 @@ impl Tokens {
             " " | "\r" | "\t" | "\n" => {
                 // Do nothing, just those spaces out :evil:
             },
-            ":" => {
-                if self.match_str("?") {
-                    self.add_token(TokenType::ColonQuestion);
+            "?" => {
+                if self.match_str(":") {
+                    self.add_token(TokenType::QuestionColon);
                 }
                 else {
-                    return Err("Expected ? after :".to_string())
+                    return Err("Expected : after ?".to_string())
                 }
             },
             _ => {
