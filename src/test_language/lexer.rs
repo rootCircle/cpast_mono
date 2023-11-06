@@ -22,7 +22,7 @@ pub(crate) enum TokenType {
     // Space,
 
     // Literals
-    LiteralNumber(u64),
+    LiteralNumber(i64),
 
     // End of file
     Eof
@@ -97,12 +97,16 @@ impl Tokens {
                 }
             },
             _ => {
-                if Tokens::is_digit(c) {
+                if c == "-" || Tokens::is_digit(c) {
+                    if c == "-" && !Tokens::is_digit(self.peek()) {
+                        return  Err("Expected Number after -".to_string());
+                    }
+
                     while Tokens::is_digit(self.peek()) {
                         self.current += 1;
                     }
 
-                    let number = match self.source_language[self.start..self.current].parse::<u64>(){
+                    let number = match self.source_language[self.start..self.current].parse::<i64>(){
                         Ok(num) => num,
                         Err(err) => {
                             return  Err("Error parsing the number".to_string());
