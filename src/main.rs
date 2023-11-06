@@ -33,7 +33,7 @@ fn main() {
 
     // println!("{:#?}", store.run_code("Hello"));
 
-    let mut token = lexer::Tokens::new(String::from("N(?:\\\t\nF){[]} SC,"));
+    let mut token = lexer::Tokens::new(String::from("N(-121?:\\\t 321-63871 \nF){[]} SC,"));
     token.scan_tokens();
 
     println!("{:#?}", token.tokens);
