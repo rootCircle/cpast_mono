@@ -101,7 +101,7 @@ The `clex` language generator is based on a custom grammar specification. It all
 - `PRIMARY_DATA_TYPE(REPETITION_STORE) := NUMERAL_TYPE(MIN_VALUE, MAX_VALUE) | CHARACTER | STRING`
 - `NUMERAL_TYPE(MIN_VALUE, MAX_VALUE) := INTEGER | FLOAT`
 - `CAPTURING_GROUP := PRIMARY_DATA_TYPE(1)::NUMERAL_TYPE(0|POSITIVE_NUMBER, MAX_VALUE)::INTEGER`
-- `NON_CAPTURING_GROUP(REPETITION_STORE) := Vector<PRIMARY_DATA_TYPE | NON_CAPTURING_GROUP>`
+- `NON_CAPTURING_GROUP(REPETITION_STORE) := Vector<PRIMARY_DATA_TYPE | NON_CAPTURING_GROUP | CAPTURING_GROUP>`
 - `REPETITION_STORE := BY_GROUP(GROUP_NO) | BY_COUNT(POSITIVE_NUMBER) | NONE`
 
 For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](#references).
@@ -122,10 +122,11 @@ Here are some example usages of the `clex` language:
 
 ## TODO Later
 
-- [ ] Support for Capturing Group inside Non-capturing group
+- [x] Support for Capturing Group inside Non-capturing group
 - [ ] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
 - [ ] Allow only one time compilations in future
-- [ ] Add docs about `clex` usage. For now try infering from TEST_LANGUAGE.md file.
+- [ ] Add docs about `clex` usage. For now try inferring from TEST_LANGUAGE.md file.
+- [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
 
 ## References
 

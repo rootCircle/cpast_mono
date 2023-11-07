@@ -25,11 +25,11 @@ impl Generator {
         self.output_text = "".to_string();
     }
 
-    fn new_from_program(program: Program) -> Self {
+    fn new_from_program(program: Program, groups: &HashMap<u64, u64>) -> Self {
         Self {
             syntax_tree: program,
             output_text: "".to_string(),
-            groups: HashMap::new()
+            groups: groups.clone()
         }
     }
 
@@ -75,8 +75,9 @@ impl Generator {
                     };
 
                     for _ in 0..repetition_count {
-                        let mut nest_gen = Generator::new_from_program(Program { expression: nest_exp.clone() });
+                        let mut nest_gen = Generator::new_from_program(Program { expression: nest_exp.clone() }, &self.groups);
                         nest_gen.traverse_ast();
+                        self.groups = nest_gen.groups;
                         self.output_text.push_str(&nest_gen.output_text);
                         self.output_text.push(' ');
                     }
@@ -87,6 +88,14 @@ impl Generator {
                 _ => {}
             }
         }
+
+        self.post_generation_cleanup();
+    }
+
+    fn post_generation_cleanup(&mut self) {
+        // Trims out extra whitespaces
+        self.output_text = self.output_text.replace("  ", " ");
+        self.output_text = self.output_text.trim().to_string()
     }
 
     fn generate_random_number(min: i64, max: i64) -> i64 {

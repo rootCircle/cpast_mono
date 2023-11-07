@@ -179,6 +179,8 @@
       <workItem from="1699380391871" duration="96000" />
       <workItem from="1699380706747" duration="328000" />
       <workItem from="1699381102399" duration="656000" />
+      <workItem from="1699387301292" duration="606000" />
+      <workItem from="1699389190850" duration="1406000" />
     </task>
     <servers />
   </component>
@@ -189,17 +191,6 @@
     <option featureType="dependencySupport" implementationName="executable:podman" />
     <option featureType="dependencySupport" implementationName="executable:kubectl" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/main.rs</url>
-          <line>2</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
