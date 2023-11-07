@@ -3,13 +3,13 @@
 mod language;
 mod program_store;
 mod utils;
-mod test_language;
+mod clex_language;
 
 use std::path::Path;
 use std::process::exit;
 
 use crate::program_store::ProgramStore;
-use crate::test_language::{lexer, parser, generator};
+use crate::clex_language::{lexer, parser, generator};
 
 pub fn compile_and_test(src_binding:String, test_binding: String, language: String, iterations: usize) {
 
