@@ -124,14 +124,14 @@ impl Parser {
                     while self.current < last_index {
                         let expr = self.parse_expr();
                         match expr {
-                            UnitExpression::Primitives { .. } | UnitExpression::NonCapturingGroup { .. } => {
+                            UnitExpression::Primitives { .. } | UnitExpression::NonCapturingGroup { .. } | UnitExpression::CapturingGroup { .. } => {
                                 nest_exp.push(expr);
                             },
-                            UnitExpression::CapturingGroup { .. } => {
-                                eprintln!("[PARSER ERROR] Capturing Group isn't allowed inside Non-capturing Group");
-                                eprintln!("[PARSER ERROR] Prefer removing the non-capturing group if there is no quantifier");
-                                exit(1);
-                            },
+                            // UnitExpression::CapturingGroup { .. } => {
+                            //     eprintln!("[PARSER ERROR] Capturing Group isn't allowed inside Non-capturing Group");
+                            //     eprintln!("[PARSER ERROR] Prefer removing the non-capturing group if there is no quantifier");
+                            //     exit(1);
+                            // },
                             // Unreachable Code imo
                             UnitExpression::Eof => break
                         }
