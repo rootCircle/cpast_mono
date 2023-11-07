@@ -3,14 +3,8 @@ use crate::test_language::parser::Parser;
 use rand::{prelude::*, distributions::{Alphanumeric, DistString}};
 use crate::test_language::ast::{DataType, Program, RepetitionType, UnitExpression};
 use std::collections::HashMap;
-use crate::language::Language;
 
 const MAX_STRING_SIZE: usize = 12;
-
-struct Group {
-    group_no: u64,
-    repeat_count: u64
-}
 
 pub(crate) struct Generator {
     syntax_tree: Program,
@@ -25,6 +19,10 @@ impl Generator {
             output_text: "".to_string(),
             groups: HashMap::new()
         }
+    }
+
+    pub fn reset_output(&mut self) {
+        self.output_text = "".to_string();
     }
 
     fn new_from_program(program: Program) -> Self {
