@@ -16,7 +16,19 @@ impl Parser {
         let mut tokens = Tokens::new(source_language);
         tokens.scan_tokens();
 
-        Parser {
+        Self {
+            tokens,
+            start: 0,
+            current: 0,
+            language: Program {
+                expression: vec![]
+            },
+            current_group: 0,
+        }
+    }
+
+    pub fn new_from_tokens(tokens: Tokens) -> Self {
+        Self {
             tokens,
             start: 0,
             current: 0,

@@ -1,5 +1,6 @@
 use std::path::Path;
 use std::process::exit;
+use clap::builder::Str;
 use crate::language::Language;
 use crate::utils::file_utils;
 
@@ -27,7 +28,7 @@ impl<'a> ProgramStore<'a> {
         self.source_file.exists() && self.test_file.exists()
     }
 
-    pub fn run_code(&self, stdin_content: &str) -> Result<bool, &str> {
+    pub fn run_code(&self, stdin_content: &str) -> Result<(bool, String, String), &str> {
         if !self.exists() {
             eprintln!("[ERROR] File(s) doesn't exists\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);
@@ -39,7 +40,7 @@ impl<'a> ProgramStore<'a> {
             Ok(src_output) => {
                 match test_file  {
                     Ok(test_output) => {
-                        Ok(file_utils::string_diff(&src_output, &test_output))
+                        Ok((file_utils::string_diff(&src_output, &test_output), src_output, test_output))
                     }
                     Err(err) => {
                         eprintln!("Failed to run test file!\n{err}");

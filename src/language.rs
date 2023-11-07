@@ -144,7 +144,7 @@ impl Language {
             let std_out = program_utils::run_program(prog, args);
             match std_out {
                 Ok(output) => {
-                    println!("{prog_name_stem} compiled Successfully with {prog}! \n {}", output);
+                    // println!("{prog_name_stem} compiled Successfully with {prog}! \n {}", output);
                     return Ok(prog_name_stem.to_string());
                 }
                 Err(err) => {
@@ -182,7 +182,7 @@ impl Language {
             let std_out = program_utils::run_program_with_input(prog, args, stdin_content);
             match std_out {
                 Ok(output) => {
-                    println!("{file_path_str} Run Successfully with {prog}!");
+                    // println!("{file_path_str} Run Successfully with {prog}!");
                     return Ok(output);
                 }
                 Err(err) => {
