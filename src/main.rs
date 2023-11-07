@@ -33,13 +33,16 @@ fn main() {
 
     // println!("{:#?}", store.run_code("Hello"));
 
-    // let mut token = lexer::Tokens::new(String::from("N(-121?:\\\t 321-63871 \nF){[]} SC,"));
-    // token.scan_tokens();
+    let mut token = lexer::Tokens::new(String::from("N(-121?:\\\t 321-63871 \nF){[]} SC,"));
+    token.scan_tokens();
 
-    // println!("{:#?}", token.tokens);
+    println!("{:#?}", token.tokens);
 
 
-    let mut parser = parser::Parser::new("?:".to_string());
+    println!("\n\n\nSyntax Tree\n\n");
 
-    println!("{:#?}", parser.parse_expr());
+    let mut parser = parser::Parser::new("(?: N[1,100] S F C)".to_string());
+    parser.parser();
+
+    println!("{:#?}", parser.language);
 }

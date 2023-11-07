@@ -56,7 +56,7 @@ impl Tokens {
             self.start = self.current;
             let scan_token = self.scan_token();
             if let Err(err) = scan_token {
-                eprintln!("[ERROR]: {}", err);
+                eprintln!("[LEXER ERROR] {}", err);
                 exit(1);
             }
         }
@@ -108,7 +108,7 @@ impl Tokens {
 
                     let number = match self.source_language[self.start..self.current].parse::<i64>(){
                         Ok(num) => num,
-                        Err(err) => {
+                        Err(_err) => {
                             return  Err("Error parsing the number".to_string());
                         }
                     };
