@@ -1,6 +1,6 @@
 mod cli;
 
-use code_companion::compile_and_test;
+use cpast::compile_and_test;
 use crate::cli::cli_parser::CliArgs;
 
 
