@@ -3,7 +3,7 @@ pub(crate) struct Program {
     pub(crate) expression: Vec<UnitExpression>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) enum UnitExpression {
     Primitives {
         data_type: DataType,
@@ -22,7 +22,7 @@ pub(crate) enum UnitExpression {
     Eof
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub(crate) enum DataType {
     Integer(i64, i64), // Minimum value, Maximum Value (Inclusive)
     Float(f64, f64), // Minimum value, Maximum Value (Inclusive)
@@ -30,7 +30,7 @@ pub(crate) enum DataType {
     Character
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub(crate) enum RepetitionType {
     ByGroup {
         group_number: u64

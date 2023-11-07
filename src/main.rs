@@ -12,7 +12,7 @@ use crate::cli::cli_parser::CliArgs;
 use crate::program_store::ProgramStore;
 // use crate::utils::file_utils::read_file;
 // use crate::language::Language;
-use crate::test_language::{lexer, parser};
+use crate::test_language::{lexer, parser, generator};
 
 fn main() {
     let args = CliArgs::new();
@@ -41,8 +41,12 @@ fn main() {
 
     println!("\n\n\nSyntax Tree\n\n");
 
-    let mut parser = parser::Parser::new("(?: N[1,100] S F C)".to_string());
+    let mut parser = parser::Parser::new("(N[,5]) (?: N[1,100] S F[1,2] C){\\1}".to_string());
     parser.parser();
 
     println!("{:#?}", parser.language);
+
+    let mut gen = generator::Generator::new(parser);
+    gen.traverse_ast();
+    println!("{}", gen.output_text);
 }
