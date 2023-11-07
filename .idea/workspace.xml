@@ -9,13 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cli/cli_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/cli/cli_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/language.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/language.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/program_store.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/program_store.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_language/generator.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_language/generator.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_language/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_language/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,7 +178,9 @@
       <workItem from="1699256864480" duration="2495000" />
       <workItem from="1699267845154" duration="3033000" />
       <workItem from="1699352734331" duration="211000" />
-      <workItem from="1699352954328" duration="19919000" />
+      <workItem from="1699352954328" duration="20590000" />
+      <workItem from="1699380391871" duration="96000" />
+      <workItem from="1699380706747" duration="328000" />
     </task>
     <servers />
   </component>
@@ -194,6 +190,7 @@
   <component name="UnknownFeatures">
     <option featureType="dependencySupport" implementationName="executable:podman" />
     <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
