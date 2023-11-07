@@ -43,13 +43,12 @@ By addressing these crucial problems, `cpast` enhances your competitive programm
 ## Features
 
 - Test correct and incorrect code files.
-- Utilize the custom `clex` language generator to define input patterns.
 - Set the number of iterations to run your tests.
 - Support for multiple programming languages.
 
 ## Getting Started
 
-<video src="https://github.com/rootCircle/cpast/raw/main/assets/video.mp4" width=180/>
+https://github.com/rootCircle/cpast/assets/35325046/e8f28d06-eba4-4f00-8afc-240dcf7c56f3
 
 ### Installation
 
