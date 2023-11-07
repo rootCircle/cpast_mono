@@ -1,53 +1,50 @@
-pub(crate) struct AstLanguage {
-    pub(crate) tokens: Vec<Expression>
-}
-
-#[derive(Debug)]
-pub(crate) struct Expression {
-    pub(crate) unit: Vec<UnitExpression>
+pub(crate) struct Program {
+    pub(crate) tokens: Vec<UnitExpression>
 }
 
 #[derive(Debug)]
 pub(crate) enum UnitExpression {
-    RangeBoundPrimitives {
-        data_type: NumeralDataType,
-        lower_bound: i64,
-        upper_bound: i64
-    },
     Primitives {
-        data_type: DataType
-    },
-    NonCapturingGroup {
-        nest_exp: Expression
+        data_type: DataType,
+        repetition: RepetitionType
     },
     CapturingGroup {
         // Type is fixed to be non-negative Number
-        group_number: u64
+        group_number: u64,
+        data_type: DataType // Need to ensure DataType must be DataType::Integer(i64>0, i64>0)
     },
-    RepeatingExpressions {
-        unit_type: Box<UnitExpression>,
-        frequency_value_type: BackReferenceType
+    NonCapturingGroup {
+        nest_exp: Vec<ChildUnitExpression>,
+        repetition: RepetitionType
     }
 }
 
 #[derive(Debug)]
+pub(crate) enum ChildUnitExpression {
+    Primitives {
+        data_type: DataType,
+        repetition: RepetitionType
+    },
+    NonCapturingGroup {
+        nest_exp: Vec<ChildUnitExpression>,
+        repetition: RepetitionType
+    }
+}
+
+
+#[derive(Debug)]
 pub(crate) enum DataType {
-    Integer,
-    Float,
+    Integer(i64, i64), // Minimum value, Maximum Value (Inclusive)
+    Float(f64, f64), // Minimum value, Maximum Value (Inclusive)
     String,
     Character
 }
 
 #[derive(Debug)]
-pub(crate) enum NumeralDataType {
-    Integer,
-    Float
-}
-
-#[derive(Debug)]
-pub(crate) enum BackReferenceType {
-    Group {
+pub(crate) enum RepetitionType {
+    ByGroup {
         group_number: u64
     },
-    Literal(i64)
+    ByCount(u64), // The number of times it's going to be repeated
+    None // No Repetition, similar to Literal(1)
 }
