@@ -169,7 +169,7 @@ impl Tokens {
 
 #[cfg(test)]
 mod tests {
-    use crate::test_language::lexer::{Tokens, Token, TokenType};
+    use crate::clex_language::lexer::{Tokens, Token, TokenType};
 
     #[test]
     fn tokenization_works() {
