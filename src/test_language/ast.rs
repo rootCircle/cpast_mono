@@ -1,5 +1,6 @@
+#[derive(Debug)]
 pub(crate) struct Program {
-    pub(crate) tokens: Vec<UnitExpression>
+    pub(crate) expression: Vec<UnitExpression>
 }
 
 #[derive(Debug)]
@@ -9,28 +10,17 @@ pub(crate) enum UnitExpression {
         repetition: RepetitionType
     },
     CapturingGroup {
-        // Type is fixed to be non-negative Number
+        // Type is fixed to be non-negative Number, DataType is implied to be integer
+        // i.e. DataType::Integer(0, TOTAL_GROUP_COUNT)
         group_number: u64,
-        data_type: DataType // Need to ensure DataType must be DataType::Integer(i64>0, i64>0)
+        data_type: DataType
     },
     NonCapturingGroup {
-        nest_exp: Vec<ChildUnitExpression>,
-        repetition: RepetitionType
-    }
-}
-
-#[derive(Debug)]
-pub(crate) enum ChildUnitExpression {
-    Primitives {
-        data_type: DataType,
+        nest_exp: Vec<UnitExpression>,
         repetition: RepetitionType
     },
-    NonCapturingGroup {
-        nest_exp: Vec<ChildUnitExpression>,
-        repetition: RepetitionType
-    }
+    Eof
 }
-
 
 #[derive(Debug)]
 pub(crate) enum DataType {
