@@ -1,7 +1,7 @@
 use std::process::exit;
-use crate::test_language::parser::Parser;
+use crate::clex_language::parser::Parser;
 use rand::{prelude::*, distributions::{Alphanumeric, DistString}};
-use crate::test_language::ast::{DataType, Program, RepetitionType, UnitExpression};
+use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpression};
 use std::collections::HashMap;
 
 const MAX_STRING_SIZE: usize = 12;

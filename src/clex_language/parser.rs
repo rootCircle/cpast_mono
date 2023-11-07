@@ -1,6 +1,6 @@
 use std::process::exit;
-use crate::test_language::ast::{DataType, Program, RepetitionType, UnitExpression};
-use crate::test_language::lexer::Token;
+use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpression};
+use crate::clex_language::lexer::Token;
 use super::lexer::{Tokens, TokenType};
 
 pub(crate) struct Parser {
