@@ -12,7 +12,7 @@ use crate::cli::cli_parser::CliArgs;
 use crate::program_store::ProgramStore;
 // use crate::utils::file_utils::read_file;
 // use crate::language::Language;
-use crate::test_language::lexer;
+use crate::test_language::{lexer, parser};
 
 fn main() {
     let args = CliArgs::new();
@@ -33,8 +33,13 @@ fn main() {
 
     // println!("{:#?}", store.run_code("Hello"));
 
-    let mut token = lexer::Tokens::new(String::from("N(-121?:\\\t 321-63871 \nF){[]} SC,"));
-    token.scan_tokens();
+    // let mut token = lexer::Tokens::new(String::from("N(-121?:\\\t 321-63871 \nF){[]} SC,"));
+    // token.scan_tokens();
 
-    println!("{:#?}", token.tokens);
+    // println!("{:#?}", token.tokens);
+
+
+    let mut parser = parser::Parser::new("?:".to_string());
+
+    println!("{:#?}", parser.parse_expr());
 }

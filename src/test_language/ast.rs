@@ -2,10 +2,12 @@ pub(crate) struct AstLanguage {
     pub(crate) tokens: Vec<Expression>
 }
 
+#[derive(Debug)]
 pub(crate) struct Expression {
     pub(crate) unit: Vec<UnitExpression>
 }
 
+#[derive(Debug)]
 pub(crate) enum UnitExpression {
     RangeBoundPrimitives {
         data_type: NumeralDataType,
@@ -28,6 +30,7 @@ pub(crate) enum UnitExpression {
     }
 }
 
+#[derive(Debug)]
 pub(crate) enum DataType {
     Integer,
     Float,
@@ -35,14 +38,16 @@ pub(crate) enum DataType {
     Character
 }
 
+#[derive(Debug)]
 pub(crate) enum NumeralDataType {
     Integer,
     Float
 }
 
+#[derive(Debug)]
 pub(crate) enum BackReferenceType {
     Group {
         group_number: u64
     },
-    Literal(u64)
+    Literal(i64)
 }
