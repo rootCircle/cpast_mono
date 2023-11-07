@@ -1,13 +1,26 @@
 use clap::Parser;
 
+const DEFAULT_ITERATIONS_COUNT: usize = 5;
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
-pub(crate) struct CliArgs {
-    #[arg(short, long, required = true)]
-    pub(crate) source_file: Option<String>,
+pub struct CliArgs {
 
+    /// The file you have written
     #[arg(short, long, required = true)]
-    pub(crate) test_file: Option<String>,
+    pub source_file: Option<String>,
+
+    /// File against which you want to do test
+    #[arg(short, long, required = true)]
+    pub test_file: Option<String>,
+
+    /// Write Generator Language for generating Tests
+    #[arg(short, long, required = true)]
+    pub(crate) generator: Option<String>,
+
+    /// Number of times to iterate before finding a correct output
+    #[arg(short, long, default_value_t = DEFAULT_ITERATIONS_COUNT)]
+    pub(crate) iterations: usize
 }
 
 impl CliArgs {
