@@ -2,10 +2,9 @@
 name = "cpast"
 version = "0.2.0"
 edition = "2021"
-license = "GPL-3"
+license = " GPL-3.0-or-later"
 repository = "https://github.com/rootCircle/code_companion"
 description = "Run custom testcase with powerful clex lang powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
-license-file = "LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

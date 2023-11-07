@@ -1,4 +1,4 @@
-# Grammar Rules for TestCase Generator
+# Grammar Rules for Clex Generator
 
 Written similar to regex, just so that regex doesn't support Repeating Things through Back-references and Regex is unnecessary complex.
 
