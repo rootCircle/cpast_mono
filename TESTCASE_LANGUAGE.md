@@ -31,6 +31,7 @@ Written similar to regex, just so that regex doesn't support Repeating Things th
 
 ## Language
 
+### Old Designs
 - NCG = (:?EXPRESSION)
 - CG = (N[0,])
 - RE = EXPRESSION{\NATURAL_LITERAL_NUMBER}|{NATURAL_LITERAL_NUMBER}
@@ -48,6 +49,18 @@ Acronyms
 - RBP = Range Bound Primitive
 - RE = Repeating Expressions
 
+### Newer Designs
+- PROGRAM := Vector<PRIMARY_DATA_TYPE | CAPTURING_GROUP | NON_CAPTURING_GROUP>
+- PRIMARY_DATA_TYPE(REPETITION_STORE) := NUMERAL_TYPE(MIN_VALUE, MAX_VALUE) | CHARACTER | STRING
+- NUMERAL_TYPE(MIN_VALUE, MAX_VALUE) := INTEGER | FLOAT
+- CAPTURING_GROUP := PRIMARY_DATA_TYPE(1)::NUMERAL_TYPE(0|POSITIVE_NUMBER, MAX_VALUE)::INTEGER
+- NON_CAPTURING_GROUP(REPETITION_STORE) := Vector<PRIMARY_DATA_TYPE | NON_CAPTURING_GROUP>
+- REPETITION_STORE := BY_GROUP(GROUP_NO) | BY_COUNT(POSITIVE_NUMBER) | NONE
+
+- MIN_VALUE, MAX_VALUE is of type Integer 
+- POSITIVE_NUMBER is non-negative Integer
+- Vector -> Similar to Variable Sized Array
+
 ## Example Usage
 
 - `(N) N[,1000] (?:N F S){\1}` : Accepts: "2 2 2 2.2 ABC2 3 4.5 ASD"
@@ -56,6 +69,10 @@ Acronyms
 - `(?:N[,1000]{\2})` => Valid
 - `(?:N{\2}[,1000])` => Invalid
 - `(N F)` => Invalid, Capturing Group can only contain a single non-negative number only, else put it in non-capturing one
+
+## TODO Later
+
+- [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
 
 ## References
 - [Back-references in repetition construct regex](https://stackoverflow.com/questions/3407696/using-a-regex-back-reference-in-a-repetition-construct-n)
