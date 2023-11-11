@@ -9,6 +9,7 @@ use std::process::exit;
 
 const MAX_STRING_SIZE: usize = 12;
 
+#[derive(Debug)]
 pub(crate) struct Generator {
     syntax_tree: Program,
     pub output_text: String,
