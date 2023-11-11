@@ -63,7 +63,7 @@ cargo install cpast
 Here's a simple example of how to use `cpast`:
 
 ```bash
-cpast -s correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
+cpast -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
 ```
 
 - `correct.cpp` should contain the correct code.
