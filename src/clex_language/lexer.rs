@@ -2,7 +2,7 @@ use std::process::exit;
 use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Debug, PartialEq, Clone)]
-pub(crate) enum TokenType {
+pub enum TokenType {
     // Metacharacters
     LeftParens,
     RightParens,
@@ -30,8 +30,8 @@ pub(crate) enum TokenType {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Token {
-    pub(crate) token_type: TokenType,
-    pub(crate) lexeme: String,
+    pub token_type: TokenType,
+    pub lexeme: String,
 }
 #[derive(Debug)]
 pub(crate) struct Tokens {
