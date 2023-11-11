@@ -127,6 +127,7 @@ Here are some example usages of the `clex` language:
 - [x] Allow only one time compilations in future
 - [ ] Add docs about `clex` usage. For now try inferring from TEST_LANGUAGE.md file.
 - [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
+- [x] Support Back-references in Range Bounds as well. 
 
 ## References
 

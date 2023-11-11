@@ -1,5 +1,5 @@
 use super::lexer::{TokenType, Tokens};
-use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpression};
+use crate::clex_language::ast::{DataType, Program, ReferenceType, UnitExpression};
 use crate::clex_language::lexer::Token;
 use std::process::exit;
 
@@ -59,11 +59,11 @@ impl Parser {
                 }
             }
             TokenType::Float => {
-                let (lower_bound, upper_bound) = self.parse_range();
+                let (lower_reference, upper_reference) = self.parse_range();
                 let repetition_type = self.parse_quantifier();
 
                 UnitExpression::Primitives {
-                    data_type: DataType::Float(lower_bound as f64, upper_bound as f64),
+                    data_type: DataType::Float(lower_reference, upper_reference),
                     repetition: repetition_type,
                 }
             }
@@ -85,22 +85,17 @@ impl Parser {
             }
             TokenType::LeftParens => {
                 if self.match_token(TokenType::Integer) {
-                    let (mut lower_bound, upper_bound) = self.parse_range();
+                    let (mut lower_reference, upper_reference) = self.parse_range();
                     if !self.match_token(TokenType::RightParens) {
                         eprintln!("[PARSER ERROR] Expected ) after (N in Capturing Group");
                         exit(1);
                     }
 
-                    if lower_bound <= 0 {
-                        eprintln!("[PARSER WARNING] Lower bound for Integers in Capturing Group can't be negative or 0");
-                        eprintln!("[PARSER WARNING] Defaulting to 1");
-                        lower_bound = 1;
-                    }
                     self.current_group += 1;
 
                     UnitExpression::CapturingGroup {
                         group_number: self.current_group,
-                        data_type: DataType::Integer(lower_bound, upper_bound),
+                        data_type: DataType::Integer(lower_reference, upper_reference),
                     }
                 } else if self.match_token(TokenType::QuestionColon) {
                     let last_index =
@@ -159,62 +154,45 @@ impl Parser {
         }
     }
 
-    fn parse_quantifier(&mut self) -> RepetitionType {
+    fn parse_quantifier(&mut self) -> ReferenceType {
         if self.match_token(TokenType::LeftCurlyBrackets) {
-            if self.match_token(TokenType::Backslash) {
-                if let TokenType::LiteralNumber(group_no) = self.peek().token_type {
-                    self.current += 1;
 
-                    if group_no <= 0 {
-                        eprintln!(
-                            "[PARSER ERROR] Group Number in Back-reference can't be 0 or negative!"
-                        );
-                        exit(1);
-                    }
+            let reference = self.parse_reference();
 
-                    if !self.match_token(TokenType::RightCurlyBrackets) {
-                        eprintln!("[PARSER ERROR] Expected }} after {{\\N in Quantifiers");
-                        exit(1);
-                    }
-
-                    return RepetitionType::ByGroup {
-                        group_number: group_no as u64,
-                    };
-                } else {
-                    eprintln!("[PARSER ERROR] Expected <Group Number> after {{\\ in Quantifiers");
-                    exit(1);
-                }
-            } else if let TokenType::LiteralNumber(count) = self.peek().token_type {
-                self.current += 1;
-
+            if let ReferenceType::ByLiteral(count) = reference {
                 if count <= 0 {
                     eprintln!("[PARSER ERROR] Count in Quantifier can't be 0 or negative!");
                     exit(1);
                 }
+            }
 
-                if !self.match_token(TokenType::RightCurlyBrackets) {
-                    eprintln!("[PARSER ERROR] Expected }} after {{N in Quantifiers");
-                    exit(1);
-                }
-
-                return RepetitionType::ByCount(count as u64);
-            } else {
+            if reference == ReferenceType::None {
                 eprintln!("[PARSER ERROR] Expected \\N}} or N}} after {{");
                 exit(1);
             }
-        }
 
-        RepetitionType::None
+            if !self.match_token(TokenType::RightCurlyBrackets) {
+                eprintln!("[PARSER ERROR] Expected }} after {{\\N in Quantifiers");
+                exit(1);
+            }
+            return reference;
+        }
+        ReferenceType::None
     }
 
-    fn parse_range(&mut self) -> (i64, i64) {
-        let mut lower_bound = i64::MIN;
-        let mut upper_bound = i64::MAX;
+    fn parse_range(&mut self) -> (ReferenceType, ReferenceType) {
+        let lower_bound = i64::MIN;
+        let upper_bound = i64::MAX;
+        let mut lower_reference = ReferenceType::ByLiteral(lower_bound);
+        let mut upper_reference = ReferenceType::ByLiteral(upper_bound);
+
 
         if self.match_token(TokenType::LeftSquareBracket) {
-            if let TokenType::LiteralNumber(lower) = self.peek().token_type {
-                self.current += 1;
-                lower_bound = lower;
+
+            lower_reference = self.parse_reference();
+
+            if lower_reference == ReferenceType::None {
+                lower_reference = ReferenceType::ByLiteral(lower_bound);
             }
 
             if !self.match_token(TokenType::Comma) {
@@ -222,9 +200,10 @@ impl Parser {
                 exit(1);
             }
 
-            if let TokenType::LiteralNumber(upper) = self.peek().token_type {
-                self.current += 1;
-                upper_bound = upper;
+            upper_reference = self.parse_reference();
+
+            if upper_reference == ReferenceType::None {
+                upper_reference = ReferenceType::ByLiteral(upper_bound);
             }
 
             if !self.match_token(TokenType::RightSquareBracket) {
@@ -233,12 +212,37 @@ impl Parser {
             }
         }
 
-        if lower_bound > upper_bound {
-            eprintln!("[PARSER ERROR] Lower bound is greater than upper bound in [m,n]");
-            exit(1);
-        }
+        (lower_reference, upper_reference)
+    }
 
-        (lower_bound, upper_bound)
+    fn parse_reference(&mut self) -> ReferenceType {
+        if self.match_token(TokenType::Backslash) {
+            if let TokenType::LiteralNumber(value) = self.peek().token_type {
+                self.current += 1;
+
+                if value <= 0 {
+                    eprintln!(
+                        "[PARSER ERROR] Group Number in Back-reference can't be 0 or negative!"
+                    );
+                    exit(1);
+                }
+
+                ReferenceType::ByGroup {
+                    group_number: value as u64,
+                }
+
+            } else {
+                eprintln!("[PARSER ERROR] Expected <Group Number> after {{\\ in Quantifiers");
+                exit(1);
+            }
+        }
+        else if let TokenType::LiteralNumber(value) = self.peek().token_type {
+            self.current += 1;
+
+            return ReferenceType::ByLiteral(value);
+        } else {
+            return ReferenceType::None;
+        }
     }
 
     fn peek_from_current(&mut self, expected: TokenType, not_expected: TokenType) -> Option<usize> {

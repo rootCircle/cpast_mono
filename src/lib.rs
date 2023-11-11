@@ -88,7 +88,7 @@ pub fn compile_and_test(
 
         match store.run_code(&gen.output_text) {
             Ok((true, _, _)) => println!("Testcase {iter} ran successfully!"),
-            Ok((false, actual, expected)) => {
+            Ok((false, expected, actual)) => {
                 println!("Testcase {iter} failed!");
                 println!("INPUT\n{}", &gen.output_text);
                 println!("==============================");
