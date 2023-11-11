@@ -1,6 +1,48 @@
+//! The `lexer` module provides lexical analysis capabilities for tokenizing input patterns in the `clex` language.
+//! It defines the `Tokens` struct, which represents a collection of tokens produced by the lexer.
+//! The lexer scans the input pattern and identifies different types of tokens, categorizing them according to the `TokenType` enum.
+//!
+//! # Types
+//!
+//! - `Tokens`: Represents a collection of tokens produced by the lexer, containing information about each token's type and lexeme.
+//! - `Token`: Represents an individual token, consisting of a `TokenType` and the corresponding lexeme.
+//! - `TokenType`: Enumerates different types of tokens that the lexer can identify, including metacharacters, character sets, literals, and end-of-file markers.
+//!
+//! The lexer is a crucial component in the `clex_language` module, providing the initial step in processing the `clex` language input patterns.
+//! It tokenizes the input, making it easier for subsequent components, such as the parser, to understand and structure the code patterns.
+//!
+//! # Example
+//!
+//! ```rust
+//! use cpast::clex_language::lexer::{TokenType, Token};
+//! use cpast::get_tokens;
+//!
+//! // Example input pattern
+//! let src = "N";
+//!
+//! // Assert token types and lexemes in a test
+//! assert_eq!(
+//!     get_tokens(src.to_string()),
+//!     vec![
+//!         Token {
+//!             token_type: TokenType::Integer,
+//!             lexeme: "N".to_string(),
+//!         },
+//!         Token {
+//!             token_type: TokenType::Eof,
+//!             lexeme: "".to_string(),
+//!         },
+//!     ]
+//! );
+//! ```
+//!
+//! For more details on the types and methods provided by the lexer, refer to the documentation for each type.
+
+
 use std::process::exit;
 use unicode_segmentation::UnicodeSegmentation;
 
+/// Represents the different types of tokens in the lexer.
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
     // Metacharacters
@@ -15,24 +57,34 @@ pub enum TokenType {
     Comma,
 
     // Character sets
+    /// Integer token type with optional minimum and maximum values (inclusive).
     Integer, // (Value, Min, Max)
+    /// Float token type with optional minimum and maximum values (inclusive).
     Float,   // (Value, Min, Max)
+    /// String token type.
     String,
+    /// Character token type.
     Character,
     // Space,
 
     // Literals
+    /// Literal number token type with a specified value.
     LiteralNumber(i64),
 
     // End of file
+    /// Represents the end of the file in the token stream.
     Eof,
 }
 
+/// Represents a token in the lexer, consisting of a token type and the corresponding lexeme.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Token {
+    /// The type of the token, indicating its classification.
     pub token_type: TokenType,
+    /// The actual characters that form the token in the source code.
     pub lexeme: String,
 }
+
 #[derive(Debug)]
 pub(crate) struct Tokens {
     pub(crate) tokens: Vec<Token>,
