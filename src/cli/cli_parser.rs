@@ -5,9 +5,9 @@ const DEFAULT_ITERATIONS_COUNT: usize = 5;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct CliArgs {
-    /// The file you have written
+    /// The correct reference file
     #[arg(short, long, required = true)]
-    pub source_file: Option<String>,
+    pub correct_file: Option<String>,
 
     /// File against which you want to do test
     #[arg(short, long, required = true)]

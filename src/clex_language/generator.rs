@@ -1,4 +1,4 @@
-use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpression};
+use crate::clex_language::ast::{DataType, Program, ReferenceType, UnitExpression};
 use crate::clex_language::parser::Parser;
 use rand::{
     distributions::{Alphanumeric, DistString},
@@ -13,7 +13,7 @@ const MAX_STRING_SIZE: usize = 12;
 pub(crate) struct Generator {
     syntax_tree: Program,
     pub output_text: String,
-    groups: HashMap<u64, u64>, // group_no, repeat_count
+    groups: HashMap<u64, i64>, // group_no, repeat_count
 }
 
 impl Generator {
@@ -29,7 +29,7 @@ impl Generator {
         self.output_text = "".to_string();
     }
 
-    fn new_from_program(program: Program, groups: &HashMap<u64, u64>) -> Self {
+    fn new_from_program(program: Program, groups: &HashMap<u64, i64>) -> Self {
         Self {
             syntax_tree: program,
             output_text: "".to_string(),
@@ -44,13 +44,21 @@ impl Generator {
                     data_type,
                     repetition,
                 } => {
-                    let repetition_count = match repetition {
-                        RepetitionType::ByGroup { group_number } => {
-                            self.get_count_from_group(*group_number)
-                        }
-                        RepetitionType::ByCount(count) => *count,
-                        RepetitionType::None => 1,
-                    };
+                    let mut repetition_count;
+
+                    if repetition != &ReferenceType::None {
+                        repetition_count = self.get_value_from_reference(*repetition);
+                    }
+                    else {
+                        // Defaults repetition to 1
+                        repetition_count = 1;
+                    }
+
+                    if repetition_count <= 0 {
+                        eprintln!("[GENERATOR ERROR] Repetition Count({repetition_count}) can't be negative or zero");
+                        eprintln!("[GENERATOR ERROR] If referencing count by group, then prefer setting minimum value to at-least 1.");
+                        exit(1);
+                    }
 
                     for _ in 0..repetition_count {
                         match data_type {
@@ -60,11 +68,11 @@ impl Generator {
                             DataType::Character => self
                                 .output_text
                                 .push_str(&Generator::generate_random_character()),
-                            DataType::Float(min, max) => self.output_text.push_str(
-                                &Generator::generate_random_float(*min, *max).to_string(),
+                            DataType::Float(min_reference, max_reference) => self.output_text.push_str(
+                                &self.generate_random_float(*min_reference, *max_reference).to_string(),
                             ),
-                            DataType::Integer(min, max) => self.output_text.push_str(
-                                &Generator::generate_random_number(*min, *max).to_string(),
+                            DataType::Integer(min_reference, max_reference) => self.output_text.push_str(
+                                &self.generate_random_number(*min_reference, *max_reference).to_string(),
                             ),
                         }
                         self.output_text.push(' ');
@@ -72,15 +80,10 @@ impl Generator {
                 }
                 UnitExpression::CapturingGroup {
                     group_number,
-                    data_type: DataType::Integer(min, max),
+                    data_type: DataType::Integer(min_reference, max_reference),
                 } => {
-                    if *min <= 0 {
-                        eprintln!("[GENERATOR ERROR] Lower Bound can't be negative or zero in Capturing Group");
-                        exit(1);
-                    }
-
-                    let random_number = Generator::generate_random_number(*min, *max);
-                    self.groups.insert(*group_number, random_number as u64);
+                    let random_number = self.generate_random_number(*min_reference, *max_reference);
+                    self.groups.insert(*group_number, random_number);
 
                     let mut random_number = random_number.to_string();
                     random_number.push(' ');
@@ -91,13 +94,20 @@ impl Generator {
                     nest_exp,
                     repetition,
                 } => {
-                    let repetition_count = match repetition {
-                        RepetitionType::ByGroup { group_number } => {
-                            self.get_count_from_group(*group_number)
-                        }
-                        RepetitionType::ByCount(count) => *count,
-                        RepetitionType::None => 1,
-                    };
+                    let mut repetition_count;
+
+                    if repetition != &ReferenceType::None {
+                        repetition_count = self.get_value_from_reference(*repetition);
+                    }
+                    else {
+                        // Defaults repetition to 1
+                        repetition_count = 1;
+                    }
+
+                    if repetition_count <= 0 {
+                        eprintln!("[GENERATOR ERROR] Repetition Count({repetition_count}) can't be negative or zero");
+                        exit(1);
+                    }
 
                     for _ in 0..repetition_count {
                         let mut nest_gen = Generator::new_from_program(
@@ -128,12 +138,40 @@ impl Generator {
         self.output_text = self.output_text.trim().to_string()
     }
 
-    fn generate_random_number(min: i64, max: i64) -> i64 {
+    fn generate_random_number(&self, min_reference: ReferenceType, max_reference: ReferenceType) -> i64 {
+        let min = self.get_value_from_reference(min_reference);
+        let max = self.get_value_from_reference(max_reference);
+
+        if min > max {
+            eprintln!("[GENERATOR ERROR] Upper bound should be greater than lower bound in [m({min}),n({max})]");
+            exit(1);
+        }
+
         rand::thread_rng().gen_range(min..=max)
     }
 
-    fn generate_random_float(min: f64, max: f64) -> f64 {
+    fn generate_random_float(&self, min_reference: ReferenceType, max_reference: ReferenceType) -> f64 {
+        let min = self.get_value_from_reference(min_reference) as f64;
+        let max = self.get_value_from_reference(max_reference) as f64;
+
+        if min > max {
+            eprintln!("[GENERATOR ERROR] Upper bound should be greater than lower bound in [m({min}),n({max})]");
+            exit(1);
+        }
+
         rand::thread_rng().gen_range(min..=max)
+    }
+    fn get_value_from_reference(&self, reference_type: ReferenceType) -> i64 {
+        match reference_type {
+            ReferenceType::ByGroup { group_number: gn} => {
+                self.get_count_from_group( gn)
+            },
+            ReferenceType::ByLiteral(value) => value,
+            ReferenceType::None => {
+                eprintln!("[GENERATOR ERROR] Error detecting Reference Type");
+                exit(1);
+            }
+        }
     }
 
     fn generate_random_character() -> String {
@@ -144,7 +182,7 @@ impl Generator {
         Alphanumeric.sample_string(&mut rand::thread_rng(), MAX_STRING_SIZE)
     }
 
-    fn get_count_from_group(&self, group_number: u64) -> u64 {
+    fn get_count_from_group(&self, group_number: u64) -> i64 {
         match self.groups.get(&group_number) {
             Some(t) => *t,
             None => {
