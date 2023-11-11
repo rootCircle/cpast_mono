@@ -49,7 +49,7 @@ impl Language {
 
     pub fn get_programming_language_name(file_path: &Path) -> LanguageName {
         match file_path.extension() {
-            Some(src_str) => match src_str.to_str() {
+            Some(file_ext) => match file_ext.to_str() {
                 Some("rs") => LanguageName::Rust,
                 Some("py") => LanguageName::Python,
                 Some("c") => LanguageName::C,
@@ -58,7 +58,7 @@ impl Language {
                 Some("js") => LanguageName::Javascript,
                 Some("rb") => LanguageName::Ruby,
                 _ => {
-                    eprintln!("Unsupported LanguageName {:?}", src_str);
+                    eprintln!("Unsupported LanguageName {:?}", file_ext);
                     eprintln!("Component: language::LanguageName::detect_program_language");
                     exit(1);
                 }
