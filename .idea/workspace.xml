@@ -7,7 +7,9 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="" />
+    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,7 +200,7 @@
       <workItem from="1699387301292" duration="606000" />
       <workItem from="1699389190850" duration="1406000" />
       <workItem from="1699674124097" duration="12182000" />
-      <workItem from="1699703774506" duration="6745000" />
+      <workItem from="1699703774506" duration="7386000" />
     </task>
     <servers />
   </component>
