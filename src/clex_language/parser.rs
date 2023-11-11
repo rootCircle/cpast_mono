@@ -1,14 +1,14 @@
-use std::process::exit;
+use super::lexer::{TokenType, Tokens};
 use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpression};
 use crate::clex_language::lexer::Token;
-use super::lexer::{Tokens, TokenType};
+use std::process::exit;
 
 pub(crate) struct Parser {
     tokens: Tokens,
     start: usize,
     current: usize,
     pub(crate) language: Program,
-    current_group: u64 // for capturing groupCount, starts from 1.....
+    current_group: u64, // for capturing groupCount, starts from 1.....
 }
 
 impl Parser {
@@ -20,9 +20,7 @@ impl Parser {
             tokens,
             start: 0,
             current: 0,
-            language: Program {
-                expression: vec![]
-            },
+            language: Program { expression: vec![] },
             current_group: 0,
         }
     }
@@ -32,15 +30,12 @@ impl Parser {
             tokens,
             start: 0,
             current: 0,
-            language: Program {
-                expression: vec![]
-            },
+            language: Program { expression: vec![] },
             current_group: 0,
         }
     }
 
     pub fn parser(&mut self) {
-
         while !self.at_end() {
             self.start = self.current;
 
@@ -50,7 +45,6 @@ impl Parser {
     }
 
     pub fn parse_expr(&mut self) -> UnitExpression {
-
         let token = self.advance();
 
         match token.token_type {
@@ -62,7 +56,7 @@ impl Parser {
                     data_type: DataType::Integer(lower_bound, upper_bound),
                     repetition: repetition_type,
                 }
-            },
+            }
             TokenType::Float => {
                 let (lower_bound, upper_bound) = self.parse_range();
                 let repetition_type = self.parse_quantifier();
@@ -71,23 +65,23 @@ impl Parser {
                     data_type: DataType::Float(lower_bound as f64, upper_bound as f64),
                     repetition: repetition_type,
                 }
-            },
+            }
             TokenType::String => {
                 let repetition_type = self.parse_quantifier();
 
                 UnitExpression::Primitives {
                     data_type: DataType::String,
-                    repetition: repetition_type
+                    repetition: repetition_type,
                 }
-            },
+            }
             TokenType::Character => {
                 let repetition_type = self.parse_quantifier();
 
                 UnitExpression::Primitives {
                     data_type: DataType::Character,
-                    repetition: repetition_type
+                    repetition: repetition_type,
                 }
-            },
+            }
             TokenType::LeftParens => {
                 if self.match_token(TokenType::Integer) {
                     let (mut lower_bound, upper_bound) = self.parse_range();
@@ -105,11 +99,11 @@ impl Parser {
 
                     UnitExpression::CapturingGroup {
                         group_number: self.current_group,
-                        data_type: DataType::Integer(lower_bound, upper_bound)
+                        data_type: DataType::Integer(lower_bound, upper_bound),
                     }
-                }
-                else if self.match_token(TokenType::QuestionColon) {
-                    let last_index = self.peek_from_current(TokenType::RightParens, TokenType::LeftParens);
+                } else if self.match_token(TokenType::QuestionColon) {
+                    let last_index =
+                        self.peek_from_current(TokenType::RightParens, TokenType::LeftParens);
 
                     let last_index = match last_index {
                         Some(t) => t,
@@ -124,18 +118,19 @@ impl Parser {
                     while self.current < last_index {
                         let expr = self.parse_expr();
                         match expr {
-                            UnitExpression::Primitives { .. } | UnitExpression::NonCapturingGroup { .. } | UnitExpression::CapturingGroup { .. } => {
+                            UnitExpression::Primitives { .. }
+                            | UnitExpression::NonCapturingGroup { .. }
+                            | UnitExpression::CapturingGroup { .. } => {
                                 nest_exp.push(expr);
-                            },
+                            }
                             // UnitExpression::CapturingGroup { .. } => {
                             //     eprintln!("[PARSER ERROR] Capturing Group isn't allowed inside Non-capturing Group");
                             //     eprintln!("[PARSER ERROR] Prefer removing the non-capturing group if there is no quantifier");
                             //     exit(1);
                             // },
                             // Unreachable Code imo
-                            UnitExpression::Eof => break
+                            UnitExpression::Eof => break,
                         }
-
                     }
 
                     if !self.match_token(TokenType::RightParens) {
@@ -149,13 +144,11 @@ impl Parser {
                         nest_exp,
                         repetition: repetition_type,
                     }
-                }
-                else {
+                } else {
                     eprintln!("[PARSER ERROR] Expected N) or :?<ChildExpression> after opening (");
                     exit(1);
                 }
-
-            },
+            }
             TokenType::Eof => UnitExpression::Eof,
             _ => {
                 eprintln!("[PARSER ERROR] Invalid Token found!");
@@ -172,7 +165,9 @@ impl Parser {
                     self.current += 1;
 
                     if group_no <= 0 {
-                        eprintln!("[PARSER ERROR] Group Number in Back-reference can't be 0 or negative!");
+                        eprintln!(
+                            "[PARSER ERROR] Group Number in Back-reference can't be 0 or negative!"
+                        );
                         exit(1);
                     }
 
@@ -181,29 +176,28 @@ impl Parser {
                         exit(1);
                     }
 
-                    return RepetitionType::ByGroup { group_number: group_no as u64 };
-                }
-                else {
+                    return RepetitionType::ByGroup {
+                        group_number: group_no as u64,
+                    };
+                } else {
                     eprintln!("[PARSER ERROR] Expected <Group Number> after {{\\ in Quantifiers");
                     exit(1);
                 }
-            }
-            else if let TokenType::LiteralNumber(count) = self.peek().token_type {
+            } else if let TokenType::LiteralNumber(count) = self.peek().token_type {
                 self.current += 1;
 
-                    if count <= 0 {
-                        eprintln!("[PARSER ERROR] Count in Quantifier can't be 0 or negative!");
-                        exit(1);
-                    }
+                if count <= 0 {
+                    eprintln!("[PARSER ERROR] Count in Quantifier can't be 0 or negative!");
+                    exit(1);
+                }
 
-                    if !self.match_token(TokenType::RightCurlyBrackets) {
-                        eprintln!("[PARSER ERROR] Expected }} after {{N in Quantifiers");
-                        exit(1);
-                    }
+                if !self.match_token(TokenType::RightCurlyBrackets) {
+                    eprintln!("[PARSER ERROR] Expected }} after {{N in Quantifiers");
+                    exit(1);
+                }
 
-                    return RepetitionType::ByCount(count as u64);
-            }
-            else {
+                return RepetitionType::ByCount(count as u64);
+            } else {
                 eprintln!("[PARSER ERROR] Expected \\N}} or N}} after {{");
                 exit(1);
             }
@@ -213,8 +207,8 @@ impl Parser {
     }
 
     fn parse_range(&mut self) -> (i64, i64) {
-        let mut lower_bound = i64:: MIN;
-        let mut upper_bound = i64 ::MAX;
+        let mut lower_bound = i64::MIN;
+        let mut upper_bound = i64::MAX;
 
         if self.match_token(TokenType::LeftSquareBracket) {
             if let TokenType::LiteralNumber(lower) = self.peek().token_type {
@@ -257,18 +251,15 @@ impl Parser {
 
             if tk.token_type == not_expected {
                 stack.push(&not_expected)
-            }
-            else if tk.token_type == expected {
+            } else if tk.token_type == expected {
                 if let Some(not_expect) = stack.pop() {
                     if not_expect == &not_expected {
                         stack.pop();
-                    }
-                    else {
+                    } else {
                         // Unreachable Code imo XD
                         stack.push(&expected);
                     }
-                }
-                else {
+                } else {
                     let expected_index = self.current - 1;
                     self.current = current_reset_duplicate;
                     return Some(expected_index);
@@ -283,7 +274,13 @@ impl Parser {
 
     fn lookup(&mut self, expected: TokenType, current: usize) -> i64 {
         // Finds index of occurrence of expected Token from current position
-        if let Some(index) = self.tokens.tokens.iter().skip(current).position(|item| item.token_type == expected) {
+        if let Some(index) = self
+            .tokens
+            .tokens
+            .iter()
+            .skip(current)
+            .position(|item| item.token_type == expected)
+        {
             return (index + current) as i64;
         }
         -1
@@ -295,12 +292,11 @@ impl Parser {
     }
 
     fn peek(&mut self) -> Token {
-
         if self.at_end() {
             return Token {
                 token_type: TokenType::Eof,
                 lexeme: "".to_string(),
-            }
+            };
         }
 
         self.tokens.tokens[self.current].clone()

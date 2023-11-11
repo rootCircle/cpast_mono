@@ -124,7 +124,7 @@ Here are some example usages of the `clex` language:
 
 - [x] Support for Capturing Group inside Non-capturing group
 - [ ] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
-- [ ] Allow only one time compilations in future
+- [x] Allow only one time compilations in future
 - [ ] Add docs about `clex` usage. For now try inferring from TEST_LANGUAGE.md file.
 - [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
 

@@ -6,8 +6,11 @@ fn program_exists(program: &str) -> Result<std::path::PathBuf, which::Error> {
     which(program)
 }
 
-pub fn run_program_with_input(program: &str, args: &Vec<&str>, stdin_content: &str) -> io::Result<String> {
-
+pub fn run_program_with_input(
+    program: &str,
+    args: &Vec<&str>,
+    stdin_content: &str,
+) -> io::Result<String> {
     if let Err(err) = program_exists(program) {
         return Err(io::Error::new(io::ErrorKind::Other, err));
     }
@@ -48,7 +51,6 @@ pub fn run_program_with_input(program: &str, args: &Vec<&str>, stdin_content: &s
 }
 
 pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
-
     if let Err(err) = program_exists(program) {
         return Err(io::Error::new(io::ErrorKind::Other, err));
     }
@@ -64,7 +66,7 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
         Ok(t) => t,
         Err(err) => {
             eprintln!("Failed to run the command {} {}", program, args.join(" "));
-            return Err(io::Error::new(io::ErrorKind::Other, err))
+            return Err(io::Error::new(io::ErrorKind::Other, err));
         }
     };
 

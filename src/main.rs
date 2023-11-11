@@ -1,8 +1,7 @@
 mod cli;
 
-use cpast::compile_and_test;
 use crate::cli::cli_parser::CliArgs;
-
+use cpast::compile_and_test;
 
 fn main() {
     let args = CliArgs::new();

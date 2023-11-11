@@ -1,15 +1,18 @@
-use std::process::exit;
-use crate::clex_language::parser::Parser;
-use rand::{prelude::*, distributions::{Alphanumeric, DistString}};
 use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpression};
+use crate::clex_language::parser::Parser;
+use rand::{
+    distributions::{Alphanumeric, DistString},
+    prelude::*,
+};
 use std::collections::HashMap;
+use std::process::exit;
 
 const MAX_STRING_SIZE: usize = 12;
 
 pub(crate) struct Generator {
     syntax_tree: Program,
     pub output_text: String,
-    groups: HashMap<u64, u64> // group_no, repeat_count
+    groups: HashMap<u64, u64>, // group_no, repeat_count
 }
 
 impl Generator {
@@ -17,7 +20,7 @@ impl Generator {
         Self {
             syntax_tree: syntax_tree.language,
             output_text: "".to_string(),
-            groups: HashMap::new()
+            groups: HashMap::new(),
         }
     }
 
@@ -29,31 +32,47 @@ impl Generator {
         Self {
             syntax_tree: program,
             output_text: "".to_string(),
-            groups: groups.clone()
+            groups: groups.clone(),
         }
     }
 
     pub fn traverse_ast(&mut self) {
         for unit_expression in self.syntax_tree.expression.iter() {
             match unit_expression {
-                UnitExpression::Primitives { data_type, repetition } => {
+                UnitExpression::Primitives {
+                    data_type,
+                    repetition,
+                } => {
                     let repetition_count = match repetition {
-                        RepetitionType::ByGroup { group_number} => self.get_count_from_group(*group_number),
+                        RepetitionType::ByGroup { group_number } => {
+                            self.get_count_from_group(*group_number)
+                        }
                         RepetitionType::ByCount(count) => *count,
-                        RepetitionType::None => 1
+                        RepetitionType::None => 1,
                     };
 
                     for _ in 0..repetition_count {
                         match data_type {
-                            DataType::String => self.output_text.push_str(&Generator::generate_random_string()),
-                            DataType::Character => self.output_text.push_str(&Generator::generate_random_character()),
-                            DataType::Float(min, max) => self.output_text.push_str(&Generator::generate_random_float(*min, *max).to_string()),
-                            DataType::Integer(min, max) => self.output_text.push_str(&Generator::generate_random_number(*min, *max).to_string())
+                            DataType::String => self
+                                .output_text
+                                .push_str(&Generator::generate_random_string()),
+                            DataType::Character => self
+                                .output_text
+                                .push_str(&Generator::generate_random_character()),
+                            DataType::Float(min, max) => self.output_text.push_str(
+                                &Generator::generate_random_float(*min, *max).to_string(),
+                            ),
+                            DataType::Integer(min, max) => self.output_text.push_str(
+                                &Generator::generate_random_number(*min, *max).to_string(),
+                            ),
                         }
                         self.output_text.push(' ');
                     }
-                },
-                UnitExpression::CapturingGroup { group_number, data_type: DataType::Integer(min, max) } => {
+                }
+                UnitExpression::CapturingGroup {
+                    group_number,
+                    data_type: DataType::Integer(min, max),
+                } => {
                     if *min <= 0 {
                         eprintln!("[GENERATOR ERROR] Lower Bound can't be negative or zero in Capturing Group");
                         exit(1);
@@ -66,22 +85,32 @@ impl Generator {
                     random_number.push(' ');
 
                     self.output_text.push_str(&random_number);
-                },
-                UnitExpression::NonCapturingGroup { nest_exp, repetition} => {
+                }
+                UnitExpression::NonCapturingGroup {
+                    nest_exp,
+                    repetition,
+                } => {
                     let repetition_count = match repetition {
-                        RepetitionType::ByGroup { group_number} => self.get_count_from_group(*group_number),
+                        RepetitionType::ByGroup { group_number } => {
+                            self.get_count_from_group(*group_number)
+                        }
                         RepetitionType::ByCount(count) => *count,
-                        RepetitionType::None => 1
+                        RepetitionType::None => 1,
                     };
 
                     for _ in 0..repetition_count {
-                        let mut nest_gen = Generator::new_from_program(Program { expression: nest_exp.clone() }, &self.groups);
+                        let mut nest_gen = Generator::new_from_program(
+                            Program {
+                                expression: nest_exp.clone(),
+                            },
+                            &self.groups,
+                        );
                         nest_gen.traverse_ast();
                         self.groups = nest_gen.groups;
                         self.output_text.push_str(&nest_gen.output_text);
                         self.output_text.push(' ');
                     }
-                },
+                }
                 UnitExpression::Eof => {
                     break;
                 }
@@ -118,7 +147,10 @@ impl Generator {
         match self.groups.get(&group_number) {
             Some(t) => *t,
             None => {
-                eprintln!("Can't find specified Group no. {} in the language", group_number);
+                eprintln!(
+                    "Can't find specified Group no. {} in the language",
+                    group_number
+                );
                 exit(1);
             }
         }

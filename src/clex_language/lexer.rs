@@ -16,7 +16,7 @@ pub(crate) enum TokenType {
 
     // Character sets
     Integer, // (Value, Min, Max)
-    Float, // (Value, Min, Max)
+    Float,   // (Value, Min, Max)
     String,
     Character,
     // Space,
@@ -25,11 +25,11 @@ pub(crate) enum TokenType {
     LiteralNumber(i64),
 
     // End of file
-    Eof
+    Eof,
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub(crate) struct Token {
+pub struct Token {
     pub(crate) token_type: TokenType,
     pub(crate) lexeme: String,
 }
@@ -47,7 +47,7 @@ impl Tokens {
             tokens: Vec::new(),
             start: 0,
             current: 0,
-            source_language
+            source_language,
         }
     }
 
@@ -62,7 +62,7 @@ impl Tokens {
         }
         self.tokens.push(Token {
             token_type: TokenType::Eof,
-            lexeme: "".to_string()
+            lexeme: "".to_string(),
         });
     }
 
@@ -70,7 +70,7 @@ impl Tokens {
         self.source_language.len() <= self.current
     }
 
-    fn scan_token(&mut self) -> Result<(), String>{
+    fn scan_token(&mut self) -> Result<(), String> {
         let c = self.advance();
         match c {
             "(" => self.add_token(TokenType::LeftParens),
@@ -87,36 +87,35 @@ impl Tokens {
             "C" => self.add_token(TokenType::Character),
             " " | "\r" | "\t" | "\n" => {
                 // Do nothing, just those spaces out :evil:
-            },
+            }
             "?" => {
                 if self.match_str(":") {
                     self.add_token(TokenType::QuestionColon);
+                } else {
+                    return Err("Expected : after ?".to_string());
                 }
-                else {
-                    return Err("Expected : after ?".to_string())
-                }
-            },
+            }
             _ => {
                 if c == "-" || Tokens::is_digit(c) {
                     if c == "-" && !Tokens::is_digit(self.peek()) {
-                        return  Err("Expected Number after -".to_string());
+                        return Err("Expected Number after -".to_string());
                     }
 
                     while Tokens::is_digit(self.peek()) {
                         self.current += 1;
                     }
 
-                    let number = match self.source_language[self.start..self.current].parse::<i64>(){
+                    let number = match self.source_language[self.start..self.current].parse::<i64>()
+                    {
                         Ok(num) => num,
                         Err(_err) => {
-                            return  Err("Error parsing the number".to_string());
+                            return Err("Error parsing the number".to_string());
                         }
                     };
 
                     self.add_token(TokenType::LiteralNumber(number));
-                }
-                else {
-                    return Err(format!("Unexpected character {c}"))
+                } else {
+                    return Err(format!("Unexpected character {c}"));
                 }
             }
         }
@@ -163,13 +162,11 @@ impl Tokens {
 
         self.char_at(self.current)
     }
-
 }
-
 
 #[cfg(test)]
 mod tests {
-    use crate::clex_language::lexer::{Tokens, Token, TokenType};
+    use crate::clex_language::lexer::{Token, TokenType, Tokens};
 
     #[test]
     fn tokenization_works() {
@@ -178,11 +175,26 @@ mod tests {
 
         tokens.scan_tokens();
 
-        assert_eq!(tokens.tokens, vec![
-            Token { token_type: TokenType::LiteralNumber(12), lexeme: "12".to_string() },
-            Token { token_type: TokenType::Integer, lexeme: "N".to_string() },
-            Token { token_type: TokenType::LiteralNumber(3), lexeme: "3".to_string() },
-            Token { token_type: TokenType::Eof, lexeme: "".to_string()}
-        ]);
+        assert_eq!(
+            tokens.tokens,
+            vec![
+                Token {
+                    token_type: TokenType::LiteralNumber(12),
+                    lexeme: "12".to_string()
+                },
+                Token {
+                    token_type: TokenType::Integer,
+                    lexeme: "N".to_string()
+                },
+                Token {
+                    token_type: TokenType::LiteralNumber(3),
+                    lexeme: "3".to_string()
+                },
+                Token {
+                    token_type: TokenType::Eof,
+                    lexeme: "".to_string()
+                }
+            ]
+        );
     }
 }
