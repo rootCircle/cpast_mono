@@ -7,7 +7,9 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="" />
+    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,7 +47,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Cargo.Build cpast.executor": "Run",
     "Cargo.Doctest of compile_and_test (line 67).executor": "Run",
+    "Cargo.Run cpast.executor": "Run",
+    "Cargo.Test generator_integration.executor": "Run",
+    "Cargo.Test lexer_integration.executor": "Run",
+    "Cargo.Test parser_integration.executor": "Run",
     "Cargo.Test test_empty_source.executor": "Run",
     "Cargo.Test test_invalid_number_format.executor": "Run",
     "Cargo.Test test_mixed_tokens.executor": "Run",
@@ -75,9 +82,9 @@
     <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager" selected="Cargo.Test test_invalid_number_format">
-    <configuration name="Test test_empty_source" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test lexer_integration test_empty_source -- --exact" />
+  <component name="RunManager" selected="Cargo.Build cpast">
+    <configuration name="Build cpast" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="build --package cpast --lib" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
@@ -93,8 +100,8 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test test_invalid_number_format" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test lexer_integration test_invalid_number_format -- --exact" />
+    <configuration name="Run cpast" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --package cpast --bin cpast" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
@@ -110,8 +117,8 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test test_mixed_tokens" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test lexer_integration test_mixed_tokens -- --exact" />
+    <configuration name="Test generator_integration" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test generator_integration" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
@@ -127,8 +134,8 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test test_single_token" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test lexer_integration test_single_token -- --exact" />
+    <configuration name="Test lexer_integration" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
@@ -144,8 +151,8 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test test_whitespace_source" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test lexer_integration test_whitespace_source -- --exact" />
+    <configuration name="Test parser_integration" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test parser_integration" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
@@ -163,11 +170,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Cargo.Test test_invalid_number_format" />
-        <item itemvalue="Cargo.Test test_mixed_tokens" />
-        <item itemvalue="Cargo.Test test_whitespace_source" />
-        <item itemvalue="Cargo.Test test_empty_source" />
-        <item itemvalue="Cargo.Test test_single_token" />
+        <item itemvalue="Cargo.Build cpast" />
+        <item itemvalue="Cargo.Test parser_integration" />
+        <item itemvalue="Cargo.Test lexer_integration" />
+        <item itemvalue="Cargo.Test generator_integration" />
+        <item itemvalue="Cargo.Run cpast" />
       </list>
     </recent_temporary>
   </component>
@@ -192,7 +199,7 @@
       <workItem from="1699381102399" duration="656000" />
       <workItem from="1699387301292" duration="606000" />
       <workItem from="1699389190850" duration="1406000" />
-      <workItem from="1699674124097" duration="10176000" />
+      <workItem from="1699674124097" duration="12182000" />
     </task>
     <servers />
   </component>
