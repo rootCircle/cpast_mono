@@ -6,7 +6,7 @@
 //! - `Program`: The top-level AST type representing a program, consisting of a vector of `UnitExpression`.
 //! - `UnitExpression`: Enumerates different types of expressions within a program, including primitives, capturing groups, non-capturing groups, and an end-of-file marker.
 //! - `DataType`: Enumerates different data types that can be associated with expressions, such as integer, float, string, and character.
-//! - `RepetitionType`: Enumerates different repetition types, including repetition by capturing group, repetition by count, and no repetition.
+//! - `ReferenceType`: Enumerates different repetition types, including repetition by capturing group, repetition by count, and no repetition.
 //!
 //! The `ast` module provides a structured representation of the code patterns specified in the `clex` language,
 //! making it easier for other components of the `clex_language` module, such as the parser and generator, to process and manipulate the input patterns.
@@ -14,18 +14,18 @@
 //! # Example
 //!
 //! ```rust
-//! use cpast::clex_language::ast::{Program, UnitExpression, DataType, RepetitionType};
+//! use cpast::clex_language::ast::{Program, UnitExpression, DataType, ReferenceType};
 //!
 //! // Define a simple program AST
 //! let program_ast = Program {
 //!     expression: vec![
 //!         UnitExpression::Primitives {
-//!             data_type: DataType::Integer(0, 100),
-//!             repetition: RepetitionType::None,
+//!             data_type: DataType::Integer(ReferenceType::ByLiteral(0), ReferenceType::ByLiteral(100)),
+//!             repetition: ReferenceType::ByLiteral(1),
 //!         },
 //!         UnitExpression::CapturingGroup {
 //!             group_number: 1,
-//!             data_type: DataType::Float(0.0, 1.0),
+//!             data_type: DataType::Float(ReferenceType::ByLiteral(0), ReferenceType::ByLiteral(1)),
 //!         },
 //!         UnitExpression::Eof,
 //!     ],
@@ -47,7 +47,7 @@ pub enum UnitExpression {
     /// Primitive unit expression with specified data type and repetition type.
     Primitives {
         data_type: DataType,
-        repetition: RepetitionType,
+        repetition: ReferenceType,
     },
     /// Capturing group unit expression with a group number and data type.
     CapturingGroup {
@@ -59,7 +59,7 @@ pub enum UnitExpression {
     /// Non-capturing group unit expression with nested expressions and repetition type.
     NonCapturingGroup {
         nest_exp: Vec<UnitExpression>,
-        repetition: RepetitionType,
+        repetition: ReferenceType,
     },
     /// Represents the end of the file in the program.
     Eof,
@@ -69,9 +69,9 @@ pub enum UnitExpression {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DataType {
     /// Integer data type with a specified minimum and maximum value (inclusive).
-    Integer(i64, i64),
+    Integer(ReferenceType, ReferenceType),
     /// Float data type with a specified minimum and maximum value (inclusive).
-    Float(f64, f64),
+    Float(ReferenceType, ReferenceType),
     /// String data type.
     String,
     /// Character data type.
@@ -80,11 +80,11 @@ pub enum DataType {
 
 /// Represents the repetition type of a unit expression.
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum RepetitionType {
-    /// Repetition based on a capturing group with a specified group number.
+pub enum ReferenceType {
+    /// Reference based on a capturing group with a specified group number.
     ByGroup { group_number: u64 },
-    /// Repetition based on a specified count.
-    ByCount(u64),
-    /// No repetition, similar to a literal count of 1.
+    /// Reference based on a specified literal.
+    ByLiteral(i64),
+    /// No repetition, defaults to 1 in case of Repetitions
     None,
 }
