@@ -162,7 +162,8 @@ pub fn get_ast(language: String) -> Program {
 /// let generated_code = cpast::generator("(N) (?:N){\\1}".to_string());
 /// ```
 pub fn generator(language: String) -> String {
-    let parser = parser::Parser::new(language);
+    let mut parser = parser::Parser::new(language);
+    parser.parser();
     let mut gen = generator::Generator::new(parser);
     gen.traverse_ast();
     gen.output_text

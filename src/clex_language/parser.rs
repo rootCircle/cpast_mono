@@ -3,6 +3,7 @@ use crate::clex_language::ast::{DataType, Program, RepetitionType, UnitExpressio
 use crate::clex_language::lexer::Token;
 use std::process::exit;
 
+#[derive(Debug)]
 pub(crate) struct Parser {
     tokens: Tokens,
     start: usize,

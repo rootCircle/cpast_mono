@@ -33,7 +33,7 @@ pub struct Token {
     pub(crate) token_type: TokenType,
     pub(crate) lexeme: String,
 }
-
+#[derive(Debug)]
 pub(crate) struct Tokens {
     pub(crate) tokens: Vec<Token>,
     start: usize,
