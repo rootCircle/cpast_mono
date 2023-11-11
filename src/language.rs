@@ -128,7 +128,7 @@ impl Language {
         }
     }
 
-    fn compile_language(&self) -> Result<String, &'static str> {
+    fn compile_language(&mut self) -> Result<String, &'static str> {
         // Converts "abc/def.rs" to "def"
         let program_name_stem = match self.file_path.file_stem() {
             Some(program_name) => match program_name.to_str() {
@@ -169,6 +169,7 @@ impl Language {
             match std_out {
                 Ok(_output) => {
                     // println!("{program_name_stem} compiled Successfully with {prog}! \n {}", output);
+                    self.is_compiled = true;
                     return Ok(program_name_stem.to_string());
                 }
                 Err(err) => {
