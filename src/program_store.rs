@@ -13,7 +13,6 @@ pub(crate) struct ProgramStore {
 
 impl ProgramStore {
     pub fn new(correct_file: &Path, test_file: &Path) -> ProgramStore {
-
         if !Self::exists(correct_file, test_file) {
             eprintln!("[ERROR] File(s) doesn't exists\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);
@@ -30,7 +29,6 @@ impl ProgramStore {
     }
 
     pub fn run_code(&mut self, stdin_content: &str) -> Result<(bool, String, String), &str> {
-
         let correct_file = self.correct_file.run_program_code(stdin_content);
         let test_file = self.test_file.run_program_code(stdin_content);
 

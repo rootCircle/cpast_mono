@@ -1,10 +1,10 @@
 #[derive(Debug)]
 pub struct Program {
-    pub(crate) expression: Vec<UnitExpression>,
+    pub expression: Vec<UnitExpression>,
 }
 
-#[derive(Debug, Clone)]
-pub(crate) enum UnitExpression {
+#[derive(Debug, Clone, PartialEq)]
+pub enum UnitExpression {
     Primitives {
         data_type: DataType,
         repetition: RepetitionType,
@@ -22,16 +22,16 @@ pub(crate) enum UnitExpression {
     Eof,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub(crate) enum DataType {
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum DataType {
     Integer(i64, i64), // Minimum value, Maximum Value (Inclusive)
     Float(f64, f64),   // Minimum value, Maximum Value (Inclusive)
     String,
     Character,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub(crate) enum RepetitionType {
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum RepetitionType {
     ByGroup { group_number: u64 },
     ByCount(u64), // The number of times it's going to be repeated
     None,         // No Repetition, similar to Literal(1)
