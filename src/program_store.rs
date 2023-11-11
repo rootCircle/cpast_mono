@@ -12,30 +12,33 @@ pub(crate) struct ProgramStore {
 }
 
 impl ProgramStore {
-    pub fn new(source_file: &Path, comparing_file: &Path) -> ProgramStore {
-        Self {
-            correct_file: Language::new(source_file),
-            test_file: Language::new(comparing_file),
-        }
-    }
+    pub fn new(correct_file: &Path, test_file: &Path) -> ProgramStore {
 
-    fn exists(&self) -> bool {
-        self.correct_file.file_path.exists() && self.test_file.file_path.exists()
-    }
-
-    pub fn run_code(&mut self, stdin_content: &str) -> Result<(bool, String, String), &str> {
-        if !self.exists() {
+        if !Self::exists(correct_file, test_file) {
             eprintln!("[ERROR] File(s) doesn't exists\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);
         }
-        let src_file = self.correct_file.run_program_code(stdin_content);
+
+        Self {
+            correct_file: Language::new(correct_file),
+            test_file: Language::new(test_file),
+        }
+    }
+
+    fn exists(correct_file: &Path, test_file: &Path) -> bool {
+        correct_file.exists() && test_file.exists()
+    }
+
+    pub fn run_code(&mut self, stdin_content: &str) -> Result<(bool, String, String), &str> {
+
+        let correct_file = self.correct_file.run_program_code(stdin_content);
         let test_file = self.test_file.run_program_code(stdin_content);
 
-        match src_file {
-            Ok(src_output) => match test_file {
+        match correct_file {
+            Ok(correct_output) => match test_file {
                 Ok(test_output) => Ok((
-                    file_utils::string_diff(&src_output, &test_output),
-                    src_output,
+                    file_utils::string_diff(&correct_output, &test_output),
+                    correct_output,
                     test_output,
                 )),
                 Err(err) => {

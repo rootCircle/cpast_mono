@@ -65,7 +65,7 @@ use crate::program_store::ProgramStore;
 /// # Example
 ///
 /// ```rust
-/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.cpp".to_string(), "(N) (?:N){\\1}".to_string(), 100);
+/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N) (?:N){\\1}".to_string(), 100);
 /// ```
 pub fn compile_and_test(
     correct_binding: String,
