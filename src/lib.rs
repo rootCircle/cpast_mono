@@ -26,7 +26,7 @@
 //!
 //! ## Example
 //!
-//! ```rust
+//! ```rust, no_run
 //! use cpast::{compile_and_test, get_tokens, get_ast, generator};
 //!
 //! compile_and_test("correct.cpp".to_string(), "incorrect.cpp".to_string(), "(N) (?:N){\\1}".to_string(), 100);
@@ -41,7 +41,7 @@
 //! For more details on usage and advanced features, refer to the README.
 //!
 
-mod clex_language;
+pub mod clex_language;
 mod language;
 mod program_store;
 mod utils;
@@ -64,8 +64,8 @@ use crate::program_store::ProgramStore;
 ///
 /// # Example
 ///
-/// ```rust
-/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N) (?:N){\\1}".to_string(), 100);
+/// ```rust,no_run
+/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100);
 /// ```
 pub fn compile_and_test(
     correct_binding: String,
@@ -159,7 +159,7 @@ pub fn get_ast(language: String) -> Program {
 /// # Example
 ///
 /// ```rust
-/// let generated_code = cpast::generator("(N) (?:N){\\1}".to_string());
+/// let generated_code = cpast::generator("(N[1,10]) (?:N){\\1}".to_string());
 /// ```
 pub fn generator(language: String) -> String {
     let mut parser = parser::Parser::new(language);

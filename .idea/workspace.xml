@@ -7,10 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-    </list>
+    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,6 +46,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Cargo.Doctest of compile_and_test (line 67).executor": "Run",
+    "Cargo.Test test_empty_source.executor": "Run",
+    "Cargo.Test test_invalid_number_format.executor": "Run",
+    "Cargo.Test test_mixed_tokens.executor": "Run",
+    "Cargo.Test test_single_token.executor": "Run",
+    "Cargo.Test test_whitespace_source.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -64,13 +66,18 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager" selected="Cargo.Doctest of compile_and_test (line 67)">
-    <configuration name="Doctest of compile_and_test (line 67)" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --doc &quot;compile_and_test\ (line\ 67)&quot;" />
+  <component name="RunManager" selected="Cargo.Test test_invalid_number_format">
+    <configuration name="Test test_empty_source" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration test_empty_source -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
@@ -86,10 +93,10 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test lexer" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package code_companion --bin code_companion test_language::lexer" />
+    <configuration name="Test test_invalid_number_format" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration test_invalid_number_format -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <option name="emulateTerminal" value="false" />
+      <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
       <option name="requiredFeatures" value="true" />
       <option name="allFeatures" value="false" />
@@ -103,10 +110,10 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test lexer::tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package code_companion --bin code_companion test_language::lexer::tests" />
+    <configuration name="Test test_mixed_tokens" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration test_mixed_tokens -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <option name="emulateTerminal" value="false" />
+      <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
       <option name="requiredFeatures" value="true" />
       <option name="allFeatures" value="false" />
@@ -120,10 +127,10 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test test_language::lexer::tests::shift_works" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package code_companion --bin code_companion test_language::lexer::tests::shift_works -- --exact" />
+    <configuration name="Test test_single_token" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration test_single_token -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <option name="emulateTerminal" value="false" />
+      <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
       <option name="requiredFeatures" value="true" />
       <option name="allFeatures" value="false" />
@@ -137,10 +144,10 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test test_language::lexer::tests::tokenization_works" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package code_companion --bin code_companion test_language::lexer::tests::tokenization_works -- --exact" />
+    <configuration name="Test test_whitespace_source" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration test_whitespace_source -- --exact" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <option name="emulateTerminal" value="false" />
+      <option name="emulateTerminal" value="true" />
       <option name="channel" value="DEFAULT" />
       <option name="requiredFeatures" value="true" />
       <option name="allFeatures" value="false" />
@@ -156,11 +163,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Cargo.Doctest of compile_and_test (line 67)" />
-        <item itemvalue="Cargo.Test test_language::lexer::tests::tokenization_works" />
-        <item itemvalue="Cargo.Test lexer::tests" />
-        <item itemvalue="Cargo.Test lexer" />
-        <item itemvalue="Cargo.Test test_language::lexer::tests::shift_works" />
+        <item itemvalue="Cargo.Test test_invalid_number_format" />
+        <item itemvalue="Cargo.Test test_mixed_tokens" />
+        <item itemvalue="Cargo.Test test_whitespace_source" />
+        <item itemvalue="Cargo.Test test_empty_source" />
+        <item itemvalue="Cargo.Test test_single_token" />
       </list>
     </recent_temporary>
   </component>
@@ -185,7 +192,7 @@
       <workItem from="1699381102399" duration="656000" />
       <workItem from="1699387301292" duration="606000" />
       <workItem from="1699389190850" duration="1406000" />
-      <workItem from="1699674124097" duration="6371000" />
+      <workItem from="1699674124097" duration="10176000" />
     </task>
     <servers />
   </component>
