@@ -222,7 +222,7 @@ mod tests {
 
     #[test]
     fn tokenization_works() {
-        let mut src = "12N3";
+        let src = "12N3";
         let mut tokens = Tokens::new(src.to_string());
 
         tokens.scan_tokens();

@@ -85,7 +85,7 @@ impl Parser {
             }
             TokenType::LeftParens => {
                 if self.match_token(TokenType::Integer) {
-                    let (mut lower_reference, upper_reference) = self.parse_range();
+                    let (lower_reference, upper_reference) = self.parse_range();
                     if !self.match_token(TokenType::RightParens) {
                         eprintln!("[PARSER ERROR] Expected ) after (N in Capturing Group");
                         exit(1);
