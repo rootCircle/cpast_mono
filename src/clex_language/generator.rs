@@ -44,15 +44,13 @@ impl Generator {
                     data_type,
                     repetition,
                 } => {
-                    let mut repetition_count;
-
-                    if repetition != &ReferenceType::None {
-                        repetition_count = self.get_value_from_reference(*repetition);
+                    let repetition_count = if repetition != &ReferenceType::None {
+                        self.get_value_from_reference(*repetition)
                     }
                     else {
                         // Defaults repetition to 1
-                        repetition_count = 1;
-                    }
+                        1
+                    };
 
                     if repetition_count <= 0 {
                         eprintln!("[GENERATOR ERROR] Repetition Count({repetition_count}) can't be negative or zero");
@@ -94,15 +92,13 @@ impl Generator {
                     nest_exp,
                     repetition,
                 } => {
-                    let mut repetition_count;
-
-                    if repetition != &ReferenceType::None {
-                        repetition_count = self.get_value_from_reference(*repetition);
+                    let repetition_count= if repetition != &ReferenceType::None {
+                        self.get_value_from_reference(*repetition)
                     }
                     else {
                         // Defaults repetition to 1
-                        repetition_count = 1;
-                    }
+                        1
+                    };
 
                     if repetition_count <= 0 {
                         eprintln!("[GENERATOR ERROR] Repetition Count({repetition_count}) can't be negative or zero");
