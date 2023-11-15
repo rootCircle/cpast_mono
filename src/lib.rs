@@ -1,4 +1,4 @@
-#![allow(unused)]
+#![allow(dead_code)]
 
 //! # cpast - Code Testing and Analysis Tool
 //!
