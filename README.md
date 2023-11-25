@@ -58,6 +58,14 @@ To get started with `cpast`, you need to install it. You can do this by running 
 cargo install cpast
 ```
 
+Sidenote: On windows, to install cargo, run these commands in terminal (for faster and lighter setup)
+
+```bash
+winget install rustup
+rustup toolchain install stable-x86_64-pc-windows-gnu
+rustup default stable-x86_64-pc-windows-gnu
+```
+
 ### Usage
 
 Here's a simple example of how to use `cpast`:
