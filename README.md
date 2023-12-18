@@ -1,5 +1,14 @@
 # cpast - Code Testing and Analysis Tool
 
+![Crates.io](https://img.shields.io/crates/d/cpast)
+![Crates.io](https://img.shields.io/crates/v/cpast)
+![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast)
+![Crates.io](https://img.shields.io/crates/l/cpast)
+![docs.rs](https://img.shields.io/docsrs/cpast)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/rust.yml)
+
+
+
 `cpast` is a versatile code testing and analysis tool that allows you to test correct and incorrect code files against a custom language generator called `clex`. It supports a variety of programming languages, including Python, C++, C, Rust, Ruby, JavaScript, and Java. You can specify the number of iterations and test your code against random input values, comparing the output against expected results.
 
 ## Introduction
