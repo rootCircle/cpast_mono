@@ -46,8 +46,7 @@ impl Generator {
                 } => {
                     let repetition_count = if repetition != &ReferenceType::None {
                         self.get_value_from_reference(*repetition)
-                    }
-                    else {
+                    } else {
                         // Defaults repetition to 1
                         1
                     };
@@ -66,12 +65,20 @@ impl Generator {
                             DataType::Character => self
                                 .output_text
                                 .push_str(&Generator::generate_random_character()),
-                            DataType::Float(min_reference, max_reference) => self.output_text.push_str(
-                                &self.generate_random_float(*min_reference, *max_reference).to_string(),
-                            ),
-                            DataType::Integer(min_reference, max_reference) => self.output_text.push_str(
-                                &self.generate_random_number(*min_reference, *max_reference).to_string(),
-                            ),
+                            DataType::Float(min_reference, max_reference) => {
+                                self.output_text.push_str(
+                                    &self
+                                        .generate_random_float(*min_reference, *max_reference)
+                                        .to_string(),
+                                )
+                            }
+                            DataType::Integer(min_reference, max_reference) => {
+                                self.output_text.push_str(
+                                    &self
+                                        .generate_random_number(*min_reference, *max_reference)
+                                        .to_string(),
+                                )
+                            }
                         }
                         self.output_text.push(' ');
                     }
@@ -92,10 +99,9 @@ impl Generator {
                     nest_exp,
                     repetition,
                 } => {
-                    let repetition_count= if repetition != &ReferenceType::None {
+                    let repetition_count = if repetition != &ReferenceType::None {
                         self.get_value_from_reference(*repetition)
-                    }
-                    else {
+                    } else {
                         // Defaults repetition to 1
                         1
                     };
@@ -134,7 +140,11 @@ impl Generator {
         self.output_text = self.output_text.trim().to_string()
     }
 
-    fn generate_random_number(&self, min_reference: ReferenceType, max_reference: ReferenceType) -> i64 {
+    fn generate_random_number(
+        &self,
+        min_reference: ReferenceType,
+        max_reference: ReferenceType,
+    ) -> i64 {
         let min = self.get_value_from_reference(min_reference);
         let max = self.get_value_from_reference(max_reference);
 
@@ -146,7 +156,11 @@ impl Generator {
         rand::thread_rng().gen_range(min..=max)
     }
 
-    fn generate_random_float(&self, min_reference: ReferenceType, max_reference: ReferenceType) -> f64 {
+    fn generate_random_float(
+        &self,
+        min_reference: ReferenceType,
+        max_reference: ReferenceType,
+    ) -> f64 {
         let min = self.get_value_from_reference(min_reference) as f64;
         let max = self.get_value_from_reference(max_reference) as f64;
 
@@ -159,9 +173,7 @@ impl Generator {
     }
     fn get_value_from_reference(&self, reference_type: ReferenceType) -> i64 {
         match reference_type {
-            ReferenceType::ByGroup { group_number: gn} => {
-                self.get_count_from_group( gn)
-            },
+            ReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(gn),
             ReferenceType::ByLiteral(value) => value,
             ReferenceType::None => {
                 eprintln!("[GENERATOR ERROR] Error detecting Reference Type");
