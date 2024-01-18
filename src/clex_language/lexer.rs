@@ -38,7 +38,6 @@
 //!
 //! For more details on the types and methods provided by the lexer, refer to the documentation for each type.
 
-
 use std::process::exit;
 use unicode_segmentation::UnicodeSegmentation;
 
@@ -60,7 +59,7 @@ pub enum TokenType {
     /// Integer token type with optional minimum and maximum values (inclusive).
     Integer, // (Value, Min, Max)
     /// Float token type with optional minimum and maximum values (inclusive).
-    Float,   // (Value, Min, Max)
+    Float, // (Value, Min, Max)
     /// String token type.
     String,
     /// Character token type.

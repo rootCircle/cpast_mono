@@ -156,7 +156,6 @@ impl Parser {
 
     fn parse_quantifier(&mut self) -> ReferenceType {
         if self.match_token(TokenType::LeftCurlyBrackets) {
-
             let reference = self.parse_reference();
 
             if let ReferenceType::ByLiteral(count) = reference {
@@ -186,9 +185,7 @@ impl Parser {
         let mut lower_reference = ReferenceType::ByLiteral(lower_bound);
         let mut upper_reference = ReferenceType::ByLiteral(upper_bound);
 
-
         if self.match_token(TokenType::LeftSquareBracket) {
-
             lower_reference = self.parse_reference();
 
             if lower_reference == ReferenceType::None {
@@ -230,13 +227,11 @@ impl Parser {
                 ReferenceType::ByGroup {
                     group_number: value as u64,
                 }
-
             } else {
                 eprintln!("[PARSER ERROR] Expected <Group Number> after {{\\ in Quantifiers");
                 exit(1);
             }
-        }
-        else if let TokenType::LiteralNumber(value) = self.peek().token_type {
+        } else if let TokenType::LiteralNumber(value) = self.peek().token_type {
             self.current += 1;
 
             return ReferenceType::ByLiteral(value);
