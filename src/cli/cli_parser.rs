@@ -5,7 +5,7 @@ const DEFAULT_ITERATIONS_COUNT: usize = 5;
 #[derive(Parser)] // requires `derive` feature
 #[command(name = "cpast", version, author, about, long_about = None)]
 #[command(bin_name = "cpast")]
-pub(crate) struct CpastCli {
+pub struct CpastCli {
     #[command(subcommand)]
     pub(crate) command: Option<Commands>,
 }
@@ -13,7 +13,7 @@ pub(crate) struct CpastCli {
 #[derive(Parser)] // requires `derive` feature
 #[command(name = "cpast", version, author, about, long_about = None)]
 #[command(bin_name = "cpast")]
-pub(crate) enum Commands {
+pub enum Commands {
     /// Compare two files to find the missing edge case
     Test(TestCliArgs),
 
@@ -23,7 +23,7 @@ pub(crate) enum Commands {
 
 #[derive(clap::Args)]
 #[command(author, about, long_about = None)]
-pub(crate) struct TestCliArgs {
+pub struct TestCliArgs {
     /// The correct reference file
     #[arg(short, long, required = true)]
     pub correct_file: Option<String>,
@@ -51,7 +51,7 @@ pub(crate) struct TestCliArgs {
 
 #[derive(clap::Args)]
 #[command(author, about, long_about = None)]
-pub(crate) struct GeneratorCliArgs {
+pub struct GeneratorCliArgs {
     /// Write Generator LanguageName for generating Tests
     pub(crate) generator: Option<String>,
 
@@ -62,6 +62,6 @@ pub(crate) struct GeneratorCliArgs {
 
 impl CpastCli {
     pub fn new() -> Self {
-        CpastCli::parse()
+        Self::parse()
     }
 }

@@ -9,7 +9,7 @@ const DEFAULT_PROGRAM_NAME: &str = "program";
 const COMPILATION_FAILED_EXIT_CODE: i32 = 2;
 
 #[derive(Debug)]
-pub(crate) enum LanguageName {
+pub enum LanguageName {
     Python,
     Cpp,
     C,
@@ -27,7 +27,7 @@ enum CompilationType {
 }
 
 #[derive(Debug)]
-pub(crate) struct Language {
+pub struct Language {
     pub file_path: PathBuf,
     lang_name: LanguageName,
     compilation_type: CompilationType,
@@ -61,7 +61,7 @@ impl Language {
                 Some("js") => LanguageName::Javascript,
                 Some("rb") => LanguageName::Ruby,
                 _ => {
-                    eprintln!("Unsupported LanguageName {:?}", file_ext);
+                    eprintln!("Unsupported LanguageName {file_ext:?}");
                     eprintln!("Component: language::LanguageName::detect_program_language");
                     exit(1);
                 }
@@ -93,7 +93,7 @@ impl Language {
                 // Need to Compile and then run
                 match self.compile_language() {
                     Ok(bin_path) => program_utils::run_program_with_input(
-                        &format!("./{}", bin_path),
+                        &format!("./{bin_path}"),
                         &vec![],
                         stdin_content,
                     ),

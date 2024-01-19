@@ -65,7 +65,7 @@ pub enum UnitExpression {
 }
 
 /// Represents the data type of a unit expression.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DataType {
     /// Integer data type with a specified minimum and maximum value (inclusive).
     Integer(ReferenceType, ReferenceType),
@@ -78,7 +78,7 @@ pub enum DataType {
 }
 
 /// Represents the repetition type of a unit expression.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ReferenceType {
     /// Reference based on a capturing group with a specified group number.
     ByGroup { group_number: u64 },
@@ -91,7 +91,7 @@ pub enum ReferenceType {
 pub const MAX_STRING_SIZE: usize = 12;
 
 /// Represent character set for string domain
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CharacterSet {
     Alpha,
     Numeric,
@@ -102,29 +102,30 @@ pub enum CharacterSet {
 }
 
 impl CharacterSet {
-    pub fn default_charset() -> CharacterSet {
-        CharacterSet::AlphaNumeric
+    #[must_use]
+    pub fn default_charset() -> Self {
+        Self::AlphaNumeric
     }
-    pub(crate) fn get_code(character_set: CharacterSet) -> char {
+    pub(crate) fn get_code(character_set: Self) -> char {
         match character_set {
-            CharacterSet::Alpha => 'A',
-            CharacterSet::Numeric => '0',
-            CharacterSet::AlphaNumeric => 'N',
-            CharacterSet::UppercaseOnly => 'U',
-            CharacterSet::LowerCaseOnly => 'L',
-            CharacterSet::All => 'D',
+            Self::Alpha => 'A',
+            Self::Numeric => '0',
+            Self::AlphaNumeric => 'N',
+            Self::UppercaseOnly => 'U',
+            Self::LowerCaseOnly => 'L',
+            Self::All => 'D',
         }
     }
 
-    pub(crate) fn get_charset_from_code(code: char) -> CharacterSet {
+    pub(crate) fn get_charset_from_code(code: char) -> Self {
         match code {
-            'A' => CharacterSet::Alpha,
-            '0'..='9' => CharacterSet::Numeric,
-            'N' => CharacterSet::AlphaNumeric,
-            'U' => CharacterSet::UppercaseOnly,
-            'a'..='z' | 'L' => CharacterSet::LowerCaseOnly,
-            'D' => CharacterSet::All,
-            _ => CharacterSet::All,
+            'A' => Self::Alpha,
+            '0'..='9' => Self::Numeric,
+            'N' => Self::AlphaNumeric,
+            'U' => Self::UppercaseOnly,
+            'a'..='z' | 'L' => Self::LowerCaseOnly,
+            'D' => Self::All,
+            _ => Self::All,
         }
     }
 }

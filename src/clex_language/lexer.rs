@@ -43,7 +43,7 @@ use std::process::exit;
 use unicode_segmentation::UnicodeSegmentation;
 
 /// Represents the different types of tokens in the lexer.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum TokenType {
     // Metacharacters
     LeftParens,
@@ -78,7 +78,7 @@ pub enum TokenType {
 }
 
 /// Represents a token in the lexer, consisting of a token type and the corresponding lexeme.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Token {
     /// The type of the token, indicating its classification.
     pub token_type: TokenType,
@@ -109,13 +109,13 @@ impl Tokens {
             self.start = self.current;
             let scan_token = self.scan_token();
             if let Err(err) = scan_token {
-                eprintln!("[LEXER ERROR] {}", err);
+                eprintln!("[LEXER ERROR] {err}");
                 exit(1);
             }
         }
         self.tokens.push(Token {
             token_type: TokenType::Eof,
-            lexeme: "".to_string(),
+            lexeme: String::new(),
         });
     }
 
@@ -159,12 +159,12 @@ impl Tokens {
                 }
             }
             _ => {
-                if c == "-" || Tokens::is_digit(c) {
-                    if c == "-" && !Tokens::is_digit(self.peek()) {
+                if c == "-" || Self::is_digit(c) {
+                    if c == "-" && !Self::is_digit(self.peek()) {
                         return Err("Expected Number after -".to_string());
                     }
 
-                    while Tokens::is_digit(self.peek()) {
+                    while Self::is_digit(self.peek()) {
                         self.current += 1;
                     }
 
@@ -189,16 +189,16 @@ impl Tokens {
         self.tokens.push(Token {
             token_type,
             lexeme: self.source_language[self.start..self.current].to_string(),
-        })
+        });
     }
 
     fn advance(&mut self) -> &str {
         self.current += 1;
-        self.char_at(self.current - 1)
+        return self.char_at(self.current - 1);
     }
 
     fn char_at(&self, index: usize) -> &str {
-        self.source_language.graphemes(true).collect::<Vec<&str>>()[index]
+        return self.source_language.graphemes(true).collect::<Vec<&str>>()[index];
     }
 
     fn match_str(&mut self, expected: &str) -> bool {
@@ -223,7 +223,7 @@ impl Tokens {
             return "\0";
         }
 
-        self.char_at(self.current)
+        return self.char_at(self.current);
     }
 }
 
@@ -255,7 +255,7 @@ mod tests {
                 },
                 Token {
                     token_type: TokenType::Eof,
-                    lexeme: "".to_string()
+                    lexeme: String::new()
                 }
             ]
         );
