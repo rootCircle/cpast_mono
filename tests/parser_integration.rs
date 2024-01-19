@@ -1,4 +1,6 @@
-use cpast::clex_language::ast::{DataType, ReferenceType, UnitExpression};
+use cpast::clex_language::ast::{
+    CharacterSet, DataType, ReferenceType, UnitExpression, MAX_STRING_SIZE,
+};
 use cpast::get_ast;
 
 #[test]
@@ -49,7 +51,10 @@ fn test_get_ast_with_backreference() {
         ast.expression,
         vec![
             UnitExpression::Primitives {
-                data_type: DataType::String,
+                data_type: DataType::String(
+                    ReferenceType::ByLiteral(MAX_STRING_SIZE as i64),
+                    CharacterSet::default_charset()
+                ),
                 repetition: ReferenceType::ByGroup { group_number: 1 },
             },
             UnitExpression::Eof

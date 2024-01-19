@@ -72,7 +72,7 @@ pub enum DataType {
     /// Float data type with a specified minimum and maximum value (inclusive).
     Float(ReferenceType, ReferenceType),
     /// String data type.
-    String,
+    String(ReferenceType, CharacterSet),
     /// Character data type.
     Character,
 }
@@ -86,4 +86,45 @@ pub enum ReferenceType {
     ByLiteral(i64),
     /// No repetition, defaults to 1 in case of Repetitions
     None,
+}
+
+pub const MAX_STRING_SIZE: usize = 12;
+
+/// Represent character set for string domain
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum CharacterSet {
+    Alpha,
+    Numeric,
+    AlphaNumeric,
+    UppercaseOnly,
+    LowerCaseOnly,
+    All,
+}
+
+impl CharacterSet {
+    pub fn default_charset() -> CharacterSet {
+        CharacterSet::AlphaNumeric
+    }
+    pub(crate) fn get_code(character_set: CharacterSet) -> char {
+        match character_set {
+            CharacterSet::Alpha => 'A',
+            CharacterSet::Numeric => '0',
+            CharacterSet::AlphaNumeric => 'N',
+            CharacterSet::UppercaseOnly => 'U',
+            CharacterSet::LowerCaseOnly => 'L',
+            CharacterSet::All => 'D',
+        }
+    }
+
+    pub(crate) fn get_charset_from_code(code: char) -> CharacterSet {
+        match code {
+            'A' => CharacterSet::Alpha,
+            '0'..='9' => CharacterSet::Numeric,
+            'N' => CharacterSet::AlphaNumeric,
+            'U' => CharacterSet::UppercaseOnly,
+            'a'..='z' | 'L' => CharacterSet::LowerCaseOnly,
+            'D' => CharacterSet::All,
+            _ => CharacterSet::All,
+        }
+    }
 }

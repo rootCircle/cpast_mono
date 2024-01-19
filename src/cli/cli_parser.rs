@@ -46,6 +46,10 @@ pub(crate) struct TestCliArgs {
 pub(crate) struct GeneratorCliArgs {
     /// Write Generator LanguageName for generating Tests
     pub(crate) generator: Option<String>,
+
+    /// Copy testcases to clipboard
+    #[arg(short, long)]
+    pub(crate) clipboard: bool,
 }
 
 impl CpastCli {
