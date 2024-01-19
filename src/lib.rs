@@ -29,7 +29,7 @@
 //! ```rust, no_run
 //! use cpast::{compile_and_test, get_tokens, get_ast, generator};
 //!
-//! compile_and_test("correct.cpp".to_string(), "incorrect.cpp".to_string(), "(N) (?:N){\\1}".to_string(), 100, false);
+//! compile_and_test("correct.cpp".to_string(), "incorrect.cpp".to_string(), "(N) (?:N){\\1}".to_string(), 100, false, false);
 //!
 //! let tokens = get_tokens("(N) (?:N){\\1}".to_string());
 //!
@@ -59,14 +59,15 @@ use crate::program_store::ProgramStore;
 ///
 /// * `correct_binding` - The source code file path containing correct code.
 /// * `test_binding` - The source code file path containing incorrect code for testing.
-/// * `language` - The cuThe number of test iterations to runstom language generator code for test generation.
+/// * `language` - The custom language generator code for test generation.
 /// * `iterations` - The number of test iterations to run.
 /// * `no_stop` - Whether to stop after a failing testcase is found or not.
+/// * `do_force_compile` - Whether or not to forcefully recompile files, even though it is updated
 ///
 /// # Example
 ///
 /// ```rust,no_run
-/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false);
+/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false);
 /// ```
 pub fn compile_and_test(
     correct_binding: String,
@@ -74,8 +75,13 @@ pub fn compile_and_test(
     language: String,
     iterations: usize,
     no_stop: bool,
+    do_force_compile: bool,
 ) {
-    let mut store = ProgramStore::new(Path::new(&correct_binding), Path::new(&test_binding));
+    let mut store = ProgramStore::new(
+        Path::new(&correct_binding),
+        Path::new(&test_binding),
+        do_force_compile,
+    );
 
     let mut token = lexer::Tokens::new(language);
     token.scan_tokens();

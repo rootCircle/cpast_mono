@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::{io, io::Write};
 use which::which;
@@ -48,6 +49,25 @@ pub fn run_program_with_input(
         .expect("Found invalid UTF-8");
 
     Ok(stdout_content)
+}
+
+/// Adapted with modifications from GNU Make Project
+/// * `source_code_path` : Path of source code
+/// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of source_code_path
+/// Returns true if file needs to be recompiled
+pub fn remake(source_code_path: PathBuf, compiled_artifact_path: PathBuf) -> bool {
+    if source_code_path.exists() && compiled_artifact_path.exists() {
+        let source_modified_time = source_code_path.metadata().unwrap().modified().unwrap();
+        let compiled_artifact_creation_time = compiled_artifact_path
+            .metadata()
+            .unwrap()
+            .created()
+            .unwrap();
+        if source_modified_time > compiled_artifact_creation_time {
+            return true;
+        }
+    }
+    false
 }
 
 pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {

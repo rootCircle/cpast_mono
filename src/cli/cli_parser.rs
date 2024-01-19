@@ -43,6 +43,10 @@ pub(crate) struct TestCliArgs {
     /// Whether to not stop after finding one edge case
     #[arg(short, long)]
     pub(crate) no_stop: bool,
+
+    /// Whether or not to force recompile code even if binaries is up to date
+    #[arg(short, long)]
+    pub(crate) force_recompile: bool,
 }
 
 #[derive(clap::Args)]

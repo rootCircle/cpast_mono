@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.2
+
+Pre-release
+
+- Performance Fixes
+  - remake implementation to reduce repeated compilation based on remake implementation in [GNU make](https://www.gnu.org/software/make/)
+  - Significant improvement in benchmark performance for `test` with files of compiled programming language. 
+
 ## 3.0.1
 
 Released on : Jan 19, 2024 (Hotfix to 3.0.0)
