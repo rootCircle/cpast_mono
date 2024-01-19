@@ -1,6 +1,7 @@
 mod cli;
 
 use crate::cli::cli_parser::{Commands, CpastCli};
+use cli_clipboard::{ClipboardContext, ClipboardProvider};
 use cpast::{compile_and_test, generator};
 
 fn main() {
@@ -20,15 +21,25 @@ fn main() {
                     println!("[GENERATOR] Generator language is required!");
                 } else {
                     let language = args.generator.unwrap_or(String::from(""));
+                    let generated_tescases = generator(language);
                     println!("Generated Testcase");
                     println!("=====================================");
-                    println!("{}", generator(language));
+                    println!("{}", &generated_tescases);
                     println!("=====================================");
+
+                    if args.clipboard {
+                        let mut ctx = ClipboardContext::new().unwrap();
+                        ctx.set_contents(generated_tescases.to_owned()).unwrap();
+
+                        // get_contents is required for set_contents to work
+                        // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
+                        let _ = ctx.get_contents();
+                        println!("Copied to clipboard successfully!");
+                    }
                 }
             }
         }
-    }
-    else {
+    } else {
         println!("Invalid Usage! Use cpast --help for more info");
     }
 }

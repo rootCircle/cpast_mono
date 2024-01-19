@@ -1,5 +1,7 @@
 use super::lexer::{TokenType, Tokens};
-use crate::clex_language::ast::{DataType, Program, ReferenceType, UnitExpression};
+use crate::clex_language::ast::{
+    CharacterSet, DataType, Program, ReferenceType, UnitExpression, MAX_STRING_SIZE,
+};
 use crate::clex_language::lexer::Token;
 use std::process::exit;
 
@@ -68,10 +70,11 @@ impl Parser {
                 }
             }
             TokenType::String => {
+                let (length, charset) = self.parse_string_modifiers();
                 let repetition_type = self.parse_quantifier();
 
                 UnitExpression::Primitives {
-                    data_type: DataType::String,
+                    data_type: DataType::String(length, charset),
                     repetition: repetition_type,
                 }
             }
@@ -85,10 +88,16 @@ impl Parser {
             }
             TokenType::LeftParens => {
                 if self.match_token(TokenType::Integer) {
-                    let (lower_reference, upper_reference) = self.parse_range();
+                    let (mut lower_reference, upper_reference) = self.parse_range();
                     if !self.match_token(TokenType::RightParens) {
                         eprintln!("[PARSER ERROR] Expected ) after (N in Capturing Group");
                         exit(1);
+                    }
+
+                    if let ReferenceType::ByLiteral(value) = lower_reference {
+                        if value < 0 {
+                            lower_reference = ReferenceType::ByLiteral(0);
+                        }
                     }
 
                     self.current_group += 1;
@@ -179,6 +188,38 @@ impl Parser {
         ReferenceType::None
     }
 
+    fn parse_string_modifiers(&mut self) -> (ReferenceType, CharacterSet) {
+        let length = MAX_STRING_SIZE;
+        let mut length_reference = ReferenceType::ByLiteral(length as i64);
+        let mut char_set = CharacterSet::default_charset();
+
+        if self.match_token(TokenType::LeftSquareBracket) {
+            length_reference = self.parse_reference();
+
+            if length_reference == ReferenceType::None {
+                length_reference = ReferenceType::ByLiteral(length as i64);
+            }
+
+            if !self.match_token(TokenType::Comma) {
+                eprintln!("[PARSER ERROR] Expected , after [ in String Modifier Expression");
+                exit(1);
+            }
+
+            if let TokenType::LiteralCharacter(char) = self.tokens.tokens[self.current].token_type {
+                char_set = CharacterSet::get_charset_from_code(char);
+                self.advance();
+            }
+
+            if !self.match_token(TokenType::RightSquareBracket) {
+                eprintln!(
+                    "[PARSER ERROR] Expected character or ] after [ in String Modifier Expression"
+                );
+                exit(1);
+            }
+        }
+
+        (length_reference, char_set)
+    }
     fn parse_range(&mut self) -> (ReferenceType, ReferenceType) {
         let lower_bound = i64::MIN;
         let upper_bound = i64::MAX;

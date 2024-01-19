@@ -38,6 +38,7 @@
 //!
 //! For more details on the types and methods provided by the lexer, refer to the documentation for each type.
 
+use crate::clex_language::ast::CharacterSet;
 use std::process::exit;
 use unicode_segmentation::UnicodeSegmentation;
 
@@ -69,6 +70,7 @@ pub enum TokenType {
     // Literals
     /// Literal number token type with a specified value.
     LiteralNumber(i64),
+    LiteralCharacter(char),
 
     // End of file
     /// Represents the end of the file in the token stream.
@@ -138,6 +140,16 @@ impl Tokens {
             "C" => self.add_token(TokenType::Character),
             " " | "\r" | "\t" | "\n" => {
                 // Do nothing, just those spaces out :evil:
+            }
+            "'" => {
+                let character = self
+                    .advance()
+                    .parse()
+                    .unwrap_or(CharacterSet::get_code(CharacterSet::default_charset()));
+                self.add_token(TokenType::LiteralCharacter(character));
+                if !self.match_str("'") {
+                    return Err("Expected closing ' after opening '".to_string());
+                }
             }
             "?" => {
                 if self.match_str(":") {

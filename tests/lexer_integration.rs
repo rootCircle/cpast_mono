@@ -83,3 +83,22 @@ fn test_mixed_tokens() {
         ]
     );
 }
+
+#[test]
+fn test_characters() {
+    let src = "'A'";
+
+    assert_eq!(
+        get_tokens(src.to_string()),
+        vec![
+            Token {
+                token_type: TokenType::LiteralCharacter('A'),
+                lexeme: "'A".to_string(),
+            },
+            Token {
+                token_type: TokenType::Eof,
+                lexeme: "".to_string()
+            }
+        ]
+    );
+}
