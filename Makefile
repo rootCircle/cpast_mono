@@ -48,7 +48,7 @@ doc :
 ifeq ($(clean),yes)
 	@rm -rf target/doc/
 endif
-	cargo doc --all-features --package router \
+	cargo doc --all-features --no-deps\
 		$(if $(call eq,$(private),no),,--document-private-items) \
 		$(if $(call eq,$(open),no),,--open)
 
