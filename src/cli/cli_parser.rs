@@ -39,6 +39,10 @@ pub(crate) struct TestCliArgs {
     /// Number of times to iterate before finding a correct output
     #[arg(short, long, default_value_t = DEFAULT_ITERATIONS_COUNT)]
     pub(crate) iterations: usize,
+
+    /// Whether to not stop after finding one edge case
+    #[arg(short, long)]
+    pub(crate) no_stop: bool,
 }
 
 #[derive(clap::Args)]
