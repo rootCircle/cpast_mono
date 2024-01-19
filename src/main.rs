@@ -15,8 +15,9 @@ fn main() {
                 let test_binding = args.test_file.unwrap_or(String::from(""));
                 let language = args.generator.unwrap_or(String::from(""));
                 let iterations = args.iterations;
+                let no_stop = args.no_stop;
 
-                compile_and_test(correct_binding, test_binding, language, iterations);
+                compile_and_test(correct_binding, test_binding, language, iterations, no_stop);
             }
             Commands::Generate(args) => {
                 if args.generator.is_none() {
