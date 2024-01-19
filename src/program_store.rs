@@ -12,15 +12,15 @@ pub(crate) struct ProgramStore {
 }
 
 impl ProgramStore {
-    pub fn new(correct_file: &Path, test_file: &Path) -> ProgramStore {
+    pub fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> ProgramStore {
         if !Self::exists(correct_file, test_file) {
             eprintln!("[ERROR] File(s) doesn't exists\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);
         }
 
         Self {
-            correct_file: Language::new(correct_file),
-            test_file: Language::new(test_file),
+            correct_file: Language::new(correct_file, do_force_compile),
+            test_file: Language::new(test_file, do_force_compile),
         }
     }
 
