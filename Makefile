@@ -55,10 +55,10 @@ endif
 # Format Rust sources with rustfmt.
 #
 # Usage :
-#	make fmt [writing=(no|yes)]
+#	make fmt [fix=(no|yes)]
 
 fmt :
-	cargo fmt --all $(if $(call eq,$(writing),yes),,-- --check)
+	cargo fmt --all $(if $(call eq,$(fix),yes),,-- --check)
 
 # Lint Rust sources with Clippy.
 #
