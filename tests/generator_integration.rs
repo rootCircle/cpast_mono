@@ -30,5 +30,5 @@ fn test_generator_with_upper_string_expression() {
 
     // Validate the output_text based on the generated AST
     let gen_language = generator(language.to_string());
-    assert!(!gen_language.is_empty() && gen_language.chars().all(|c| c.is_digit(10)));
+    assert!(!gen_language.is_empty() && gen_language.chars().all(|c| c.is_ascii_digit()));
 }
