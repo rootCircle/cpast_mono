@@ -138,7 +138,7 @@ For more information on the `clex` language and its usage, please refer to the [
 - [x] Support for Capturing Group inside Non-capturing group
 - [x] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
 - [x] Allow only one time compilations in future
-- [ ] Add docs about `clex` usage. For now try inferring from TEST_LANGUAGE.md file.
+- [ ] Add docs about `clex` usage. For now try inferring from CLEX_LANGUAGE.md file.
 - [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
 - [x] Support Back-references in Range Bounds as well.
 
