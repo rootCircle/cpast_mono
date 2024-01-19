@@ -1,4 +1,5 @@
 use crate::utils::program_utils;
+use crate::utils::program_utils::remake;
 use std::collections::HashMap;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -31,10 +32,11 @@ pub(crate) struct Language {
     lang_name: LanguageName,
     compilation_type: CompilationType,
     is_compiled: bool, // For program optimization
+    do_force_compile: bool,
 }
 
 impl Language {
-    pub(crate) fn new(file_path: &Path) -> Self {
+    pub(crate) fn new(file_path: &Path, do_force_compile: bool) -> Self {
         let lang_name = Self::get_programming_language_name(file_path);
 
         let compilation_type = Self::get_language_type(&lang_name);
@@ -44,6 +46,7 @@ impl Language {
             lang_name,
             compilation_type,
             is_compiled: false,
+            do_force_compile,
         }
     }
 
@@ -131,14 +134,17 @@ impl Language {
     fn compile_language(&mut self) -> Result<String, &'static str> {
         // Converts "abc/def.rs" to "def"
         let program_name_stem = match self.file_path.file_stem() {
-            Some(program_name) => match program_name.to_str() {
-                Some(t) => t,
-                None => DEFAULT_PROGRAM_NAME,
-            },
+            Some(program_name) => program_name.to_str().unwrap_or(DEFAULT_PROGRAM_NAME),
             None => DEFAULT_PROGRAM_NAME,
         };
 
         if self.is_compiled {
+            return Ok(program_name_stem.to_string());
+        }
+
+        if !self.do_force_compile
+            && !remake(self.file_path.clone(), PathBuf::from(program_name_stem))
+        {
             return Ok(program_name_stem.to_string());
         }
 
@@ -148,16 +154,20 @@ impl Language {
             LanguageName::C => {
                 program.insert("gcc", vec!["-o", program_name_stem, file_path_str]);
                 program.insert("clang", vec!["-o", program_name_stem, file_path_str]);
+                self.is_compiled = true;
             }
             LanguageName::Cpp => {
                 program.insert("g++", vec!["-o", program_name_stem, file_path_str]);
                 program.insert("clang++", vec!["-o", program_name_stem, file_path_str]);
+                self.is_compiled = true;
             }
             LanguageName::Rust => {
                 program.insert("rustc", vec!["-o", program_name_stem, file_path_str]);
+                self.is_compiled = true;
             }
             LanguageName::Java => {
                 program.insert("javac", vec![file_path_str]);
+                self.is_compiled = true;
             }
             _ => {
                 return Err("Unsupported/Not a Compiled LanguageName");
