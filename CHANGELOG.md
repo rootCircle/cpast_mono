@@ -1,12 +1,12 @@
 # Changelog
 
-## 3.0.3
+## 0.3.3
 
-Released on : Jan 19, 2024 (Hotfix to 3.0.2)
+Released on : Jan 19, 2024 (Hotfix to 0.3.2)
 
 - Fix error in case if compile binaries are not present by default due to buggy remake implementation.
 
-## 3.0.2
+## 0.3.2
 
 Released on : Jan 19, 2024
 
@@ -14,9 +14,9 @@ Released on : Jan 19, 2024
   - remake implementation to reduce repeated compilation based on remake implementation in [GNU make](https://www.gnu.org/software/make/)
   - Significant improvement in benchmark performance for `test` with files of compiled programming language. 
 
-## 3.0.1
+## 0.3.1
 
-Released on : Jan 19, 2024 (Hotfix to 3.0.0)
+Released on : Jan 19, 2024 (Hotfix to 0.3.0)
 
 - CLI
   - `test` subcommand now supports an optional `--no-stop` flag, that can be used to never stop after only one failing testcase is found
@@ -27,7 +27,7 @@ Released on : Jan 19, 2024 (Hotfix to 3.0.0)
   - compile_and_test method now requires an boolean argument at last to accord to changes in CLI. This argument as addressed earlier too is to whether or not to stop after one failing testcase is found. 
 
 
-## 3.0.0
+## 0.3.0
 
 Released on : Jan 19, 2024
 
