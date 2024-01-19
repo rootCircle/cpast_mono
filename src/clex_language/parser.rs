@@ -6,7 +6,7 @@ use crate::clex_language::lexer::Token;
 use std::process::exit;
 
 #[derive(Debug)]
-pub(crate) struct Parser {
+pub struct Parser {
     tokens: Tokens,
     start: usize,
     current: usize,
@@ -145,10 +145,10 @@ impl Parser {
 
                     // Move till N
                     let repetition_type = self.parse_quantifier();
-                    UnitExpression::NonCapturingGroup {
+                    return UnitExpression::NonCapturingGroup {
                         nest_exp,
                         repetition: repetition_type,
-                    }
+                    };
                 } else {
                     eprintln!("[PARSER ERROR] Expected N) or :?<ChildExpression> after opening (");
                     exit(1);
@@ -291,7 +291,7 @@ impl Parser {
             let tk = self.advance();
 
             if tk.token_type == not_expected {
-                stack.push(&not_expected)
+                stack.push(&not_expected);
             } else if tk.token_type == expected {
                 if let Some(not_expect) = stack.pop() {
                     if not_expect == &not_expected {
@@ -313,6 +313,7 @@ impl Parser {
         None
     }
 
+    #[allow(dead_code)]
     fn lookup(&mut self, expected: TokenType, current: usize) -> i64 {
         // Finds index of occurrence of expected Token from current position
         if let Some(index) = self
@@ -336,7 +337,7 @@ impl Parser {
         if self.at_end() {
             return Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string(),
+                lexeme: String::new(),
             };
         }
 
