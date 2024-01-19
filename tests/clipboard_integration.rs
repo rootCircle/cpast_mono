@@ -1,12 +1,13 @@
-use cli_clipboard::{ClipboardContext, ClipboardProvider};
 #[test]
+#[cfg(all(
+    any(target_os = "windows", target_os = "linux", target_os = "macos"),
+    feature = "clipboard"
+))]
 fn send_to_clipboard_works() {
+    use cli_clipboard::{ClipboardContext, ClipboardProvider};
     let ctx = ClipboardContext::new();
-    if ctx.is_ok() {
-        let mut ctx = ctx.unwrap();
-        let the_string = "Hello, world!";
-        ctx.set_contents(the_string.to_owned()).unwrap();
-        assert_eq!(ctx.get_contents().unwrap(), the_string);
-    }
-    // Ignoring if Clipboard can't be initialised cases for brevity! Useful for GitHub Actions Workflows
+    let mut ctx = ctx.unwrap();
+    let the_string = "Hello, world!";
+    ctx.set_contents(the_string.to_owned()).unwrap();
+    assert_eq!(ctx.get_contents().unwrap(), the_string);
 }

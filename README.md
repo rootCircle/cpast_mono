@@ -88,7 +88,21 @@ On Linux, you'll need to have xorg-dev and libxcb-composite0-dev to compile. On 
 sudo apt install xorg-dev libxcb-composite0-dev
 ```
 
-Required for clipboard support
+Required for clipboard support,
+
+Chances are that clipboard support might be broken for some WMs like bspwm, but other features will work just fine!
+</details>
+
+<details>
+<summary>Note for users not running windows, linux or macos; basically android users etc</summary>
+<br>
+
+Default compilations won't be supported due to lack of clipboard API support in those systems, and hence you need to compile it with `--no-default-features` feature
+
+```bash
+cargo install cpast --no-default-features
+```
+
 </details>
 
 ### Usage
