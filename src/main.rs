@@ -11,9 +11,9 @@ fn main() {
     if let Some(command) = cli_instance.command {
         match command {
             Commands::Test(args) => {
-                let correct_binding = args.correct_file.unwrap_or(String::from(""));
-                let test_binding = args.test_file.unwrap_or(String::from(""));
-                let language = args.generator.unwrap_or(String::from(""));
+                let correct_binding = args.correct_file.unwrap_or_else(String::new);
+                let test_binding = args.test_file.unwrap_or_else(String::new);
+                let language = args.generator.unwrap_or_else(String::new);
                 let iterations = args.iterations;
                 let no_stop = args.no_stop;
                 let do_force_compile = args.force_recompile;
@@ -31,11 +31,11 @@ fn main() {
                 if args.generator.is_none() {
                     println!("[GENERATOR] Generator language is required!");
                 } else {
-                    let language = args.generator.unwrap_or(String::from(""));
-                    let generated_tescases = generator(language);
+                    let language = args.generator.unwrap_or_else(String::new);
+                    let generated_testcases = generator(language);
                     println!("Generated Testcase");
                     println!("=====================================");
-                    println!("{}", &generated_tescases);
+                    println!("{}", &generated_testcases);
                     println!("=====================================");
                     if args.clipboard {
                         #[cfg(all(
@@ -44,7 +44,7 @@ fn main() {
                         ))]
                         {
                             let mut ctx = ClipboardContext::new().unwrap();
-                            ctx.set_contents(generated_tescases.to_owned()).unwrap();
+                            ctx.set_contents(generated_testcases).unwrap();
 
                             // get_contents is required for set_contents to work
                             // Refer https://github.com/aweinstock314/rust-clipboard/issues/86

@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 //! # cpast - Code Testing and Analysis Tool
 //!
 //! `cpast` is a versatile code testing and analysis tool that empowers users in competitive programming and coding practice. It allows testing correct and incorrect code files against a custom language generator called `clex`. This crate supports various programming languages, such as Python, C++, C, Rust, Ruby, JavaScript, and Java, and enables users to specify the number of iterations for testing code against random input values.
@@ -100,14 +98,14 @@ pub fn compile_and_test(
                 println!("Testcase {iter} failed!");
                 println!("INPUT\n{}", &gen.output_text);
                 println!("==============================");
-                println!("EXPECTED OUTPUT\n{}", expected);
+                println!("EXPECTED OUTPUT\n{expected}");
                 println!("==============================");
-                println!("ACTUAL OUTPUT\n{}", actual);
+                println!("ACTUAL OUTPUT\n{actual}");
                 if !no_stop {
                     exit(0);
                 }
             }
-            Err(err) => println!("Error matching the file! {}", err),
+            Err(err) => println!("Error matching the file! {err}"),
         }
 
         gen.reset_output();
@@ -129,6 +127,7 @@ pub fn compile_and_test(
 /// ```rust
 /// let tokens = cpast::get_tokens("(N) (?:N){\\1}".to_string());
 /// ```
+#[must_use]
 pub fn get_tokens(language: String) -> Vec<Token> {
     let mut token = lexer::Tokens::new(language);
     token.scan_tokens();
@@ -150,6 +149,7 @@ pub fn get_tokens(language: String) -> Vec<Token> {
 /// ```rust
 /// let ast = cpast::get_ast("(N) (?:N){\\1}".to_string());
 /// ```
+#[must_use]
 pub fn get_ast(language: String) -> Program {
     let mut parser = parser::Parser::new(language);
     parser.parser();
@@ -171,6 +171,7 @@ pub fn get_ast(language: String) -> Program {
 /// ```rust
 /// let generated_code = cpast::generator("(N[1,10]) (?:N){\\1}".to_string());
 /// ```
+#[must_use]
 pub fn generator(language: String) -> String {
     let mut parser = parser::Parser::new(language);
     parser.parser();

@@ -6,13 +6,13 @@ use std::process::exit;
 const FILE_NOT_FOUND_EXIT_CODE: i32 = 6;
 
 #[derive(Debug)]
-pub(crate) struct ProgramStore {
+pub struct ProgramStore {
     correct_file: Language,
     test_file: Language,
 }
 
 impl ProgramStore {
-    pub fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> ProgramStore {
+    pub fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> Self {
         if !Self::exists(correct_file, test_file) {
             eprintln!("[ERROR] File(s) doesn't exists\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);

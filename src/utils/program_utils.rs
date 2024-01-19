@@ -45,7 +45,7 @@ pub fn run_program_with_input(
     }
 
     let stdout_content = String::from_utf8(output.stdout)
-        .map_err(|non_utf8| String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
+        .map_err(|non_utf8| return String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
         .expect("Found invalid UTF-8");
 
     Ok(stdout_content)
@@ -53,7 +53,7 @@ pub fn run_program_with_input(
 
 /// Adapted with modifications from GNU Make Project
 /// * `source_code_path` : Path of source code
-/// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of source_code_path
+/// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of `source_code_path`
 /// Returns true if file needs to be recompiled
 pub fn remake(source_code_path: PathBuf, compiled_artifact_path: PathBuf) -> bool {
     if compiled_artifact_path.exists() {
@@ -108,7 +108,7 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
     }
 
     let stdout_content = String::from_utf8(child.stdout)
-        .map_err(|non_utf8| String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
+        .map_err(|non_utf8| return String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
         .expect("Found invalid UTF-8");
 
     Ok(stdout_content)

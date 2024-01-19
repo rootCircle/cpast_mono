@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use std::process::exit;
 
 #[derive(Debug)]
-pub(crate) struct Generator {
+pub struct Generator {
     syntax_tree: Program,
     pub output_text: String,
     groups: HashMap<u64, i64>, // group_no, repeat_count
@@ -19,25 +19,25 @@ impl Generator {
     pub fn new(syntax_tree: Parser) -> Self {
         Self {
             syntax_tree: syntax_tree.language,
-            output_text: "".to_string(),
+            output_text: String::new(),
             groups: HashMap::new(),
         }
     }
 
     pub fn reset_output(&mut self) {
-        self.output_text = "".to_string();
+        self.output_text = String::new();
     }
 
     fn new_from_program(program: Program, groups: &HashMap<u64, i64>) -> Self {
         Self {
             syntax_tree: program,
-            output_text: "".to_string(),
+            output_text: String::new(),
             groups: groups.clone(),
         }
     }
 
     pub fn traverse_ast(&mut self) {
-        for unit_expression in self.syntax_tree.expression.iter() {
+        for unit_expression in &self.syntax_tree.expression {
             match unit_expression {
                 UnitExpression::Primitives {
                     data_type,
@@ -63,20 +63,20 @@ impl Generator {
                                 .push_str(&self.generate_random_string(*length, *charset)),
                             DataType::Character => self
                                 .output_text
-                                .push_str(&Generator::generate_random_character()),
+                                .push_str(&Self::generate_random_character()),
                             DataType::Float(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
                                         .generate_random_float(*min_reference, *max_reference)
                                         .to_string(),
-                                )
+                                );
                             }
                             DataType::Integer(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
                                         .generate_random_number(*min_reference, *max_reference)
                                         .to_string(),
-                                )
+                                );
                             }
                         }
                         self.output_text.push(' ');
@@ -115,7 +115,7 @@ impl Generator {
                     }
 
                     for _ in 0..repetition_count {
-                        let mut nest_gen = Generator::new_from_program(
+                        let mut nest_gen = Self::new_from_program(
                             Program {
                                 expression: nest_exp.clone(),
                             },
@@ -140,7 +140,7 @@ impl Generator {
     fn post_generation_cleanup(&mut self) {
         // Trims out extra whitespaces
         self.output_text = self.output_text.replace("  ", " ");
-        self.output_text = self.output_text.trim().to_string()
+        self.output_text = self.output_text.trim().to_string();
     }
 
     fn generate_random_number(
@@ -194,7 +194,7 @@ impl Generator {
         //     &mut rand::thread_rng(),
         //     self.get_value_from_reference(length) as usize,
 
-        Generator::generate_random_string_from_charset(
+        Self::generate_random_string_from_charset(
             character_set,
             self.get_value_from_reference(length) as usize,
         )
@@ -239,10 +239,7 @@ impl Generator {
         match self.groups.get(&group_number) {
             Some(t) => *t,
             None => {
-                eprintln!(
-                    "Can't find specified Group no. {} in the language",
-                    group_number
-                );
+                eprintln!("Can't find specified Group no. {group_number} in the language");
                 exit(1);
             }
         }
