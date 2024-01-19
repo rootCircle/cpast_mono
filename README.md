@@ -46,14 +46,13 @@ By addressing these crucial problems, `cpast` enhances your competitive programm
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Language Specification](#language-specification)
-- [Example Usage](#example-usage)
-- [References](#references)
 
 ## Features
 
 - Test correct and incorrect code files.
 - Set the number of iterations to run your tests.
 - Support for multiple programming languages.
+- [What's new?](./CHANGELOG.md)
 
 ## Getting Started
 
@@ -67,7 +66,10 @@ To get started with `cpast`, you need to install it. You can do this by running 
 cargo install cpast
 ```
 
-Sidenote: On windows, to install cargo, run these commands in terminal (for faster and lighter setup)
+<details>
+<summary>Note for Windows users</summary>
+<br>
+On windows, to install cargo, run these commands in terminal (for faster and lighter setup)
 
 ```bash
 winget install rustup
@@ -75,12 +77,28 @@ rustup toolchain install stable-x86_64-pc-windows-gnu
 rustup default stable-x86_64-pc-windows-gnu
 ```
 
+</details>
+
+<details>
+<summary>Note for Linux users</summary>
+<br>
+On Linux, you'll need to have xorg-dev and libxcb-composite0-dev to compile. On Debian and Ubuntu you can install them with
+
+```bash
+sudo apt install xorg-dev libxcb-composite0-dev
+```
+
+Required for clipboard support
+</details>
+
 ### Usage
 
 Here's a simple example of how to use `cpast`:
 
+#### test
+
 ```bash
-cpast -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
+cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
 ```
 
 - `correct.cpp` should contain the correct code.
@@ -88,70 +106,26 @@ cpast -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
 - `(N) (?:N){\1}` is the language generator.
 - `100` is the number of test iterations.
 
+#### generate
+
+```bash
+cpast generate "S[10,'U']"
+```
+
+- Generates string of length 10, of uppercase characters only
+
 ## Language Specification
 
-The `clex` language generator is based on a custom grammar specification. It allows you to define input patterns for testing. Here are some of the key elements of the `clex` language:
+The `clex` language generator is based on a custom grammar specification. It allows you to define input patterns for testing.
+For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./CLEX_LANGUAGE.md).
 
-### Meta-characters
-
-- `()?:\{}[],`
-
-### Character Sets
-
-- `SPACE = WHITESPACE | e`
-- `N = Integer (-infinity to infinity)`
-- `F = Float (-infinity.sth to infinity.sth)`
-- `S = Non-whitespace String`
-- `C = Non-whitespace Character`
-
-### Special Functions
-
-- `() => Capturing Group Indexed by 1`
-- `(?:) => Non-capturing Group`
-- `\1 => Back-reference`
-- `(?:.....){} => Specify the number of occurrences of the group`
-- `N|F[m, n] => Specifying min and max values of N or F (Skip one of the values means MIN and MAX respectively), check for the string if it is within the range or not`
-
-### Language
-
-- `PROGRAM := Vector<PRIMARY_DATA_TYPE | CAPTURING_GROUP | NON_CAPTURING_GROUP>`
-- `PRIMARY_DATA_TYPE(REPETITION_STORE) := NUMERAL_TYPE(MIN_VALUE, MAX_VALUE) | CHARACTER | STRING`
-- `NUMERAL_TYPE(MIN_VALUE, MAX_VALUE) := INTEGER | FLOAT`
-- `CAPTURING_GROUP := PRIMARY_DATA_TYPE(1)::NUMERAL_TYPE(0|POSITIVE_NUMBER, MAX_VALUE)::INTEGER`
-- `NON_CAPTURING_GROUP(REPETITION_STORE) := Vector<PRIMARY_DATA_TYPE | NON_CAPTURING_GROUP | CAPTURING_GROUP>`
-- `REPETITION_STORE := BY_GROUP(GROUP_NO) | BY_COUNT(POSITIVE_NUMBER) | NONE`
-
-For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](#references).
-
-## Example Usage
-
-Here are some example usages of the `clex` language:
-
-- `(N) N[,1000] (?:N F S){\1}`: Accepts input like "2 2 2 2.2 ABC2 3 4.5 ASD". It expects two integers (with a range from 0 to 1000), followed by triplets of Integer, Float, and String, occurring as many times as specified by the first capturing group.
-
-- `(N[,1000]){\2}`: Valid usage.
-
-- `(?:N[,1000]{\2})`: Valid usage.
-
-- `(?:N{\2}[,1000])`: Invalid usage.
-
-- `(N F)`: Invalid usage. Capturing group can only contain a single non-negative number.
-
-## TODO Later
+## Roadmap
 
 - [x] Support for Capturing Group inside Non-capturing group
-- [ ] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
+- [x] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
 - [x] Allow only one time compilations in future
 - [ ] Add docs about `clex` usage. For now try inferring from TEST_LANGUAGE.md file.
 - [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
-- [x] Support Back-references in Range Bounds as well. 
-
-## References
-
-For more details on the `clex` language and advanced usage, you can refer to the following references:
-
-- [Back-references in repetition construct regex](https://stackoverflow.com/questions/3407696/using-a-regex-back-reference-in-a-repetition-construct-n)
-- [Back-references Stack Overflow](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count)
-- [Possible solution using Code Call-out](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count/61898415#61898415)
+- [x] Support Back-references in Range Bounds as well.
 
 Now you are ready to use `cpast` for testing your code against various programming languages and input patterns defined by the `clex` language. Happy testing!

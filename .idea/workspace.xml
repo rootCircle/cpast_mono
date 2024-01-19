@@ -8,15 +8,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CLEX_LANGUAGE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/clipboard_integration.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TESTCASE_LANGUAGE.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/clex_language/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/ast.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/clex_language/generator.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/generator.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/clex_language/lexer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/lexer.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/clex_language/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/parser.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/cli/cli_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/cli/cli_parser.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/generator_integration.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/generator_integration.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/lexer_integration.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lexer_integration.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/parser_integration.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/parser_integration.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +48,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -54,34 +61,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Cargo.Build cpast.executor": "Run",
-    "Cargo.Doctest of compile_and_test (line 67).executor": "Run",
-    "Cargo.Run cpast.executor": "Run",
-    "Cargo.Test generator_integration.executor": "Run",
-    "Cargo.Test lexer_integration.executor": "Run",
-    "Cargo.Test parser_integration.executor": "Run",
-    "Cargo.Test test_empty_source.executor": "Run",
-    "Cargo.Test test_invalid_number_format.executor": "Run",
-    "Cargo.Test test_mixed_tokens.executor": "Run",
-    "Cargo.Test test_single_token.executor": "Run",
-    "Cargo.Test test_whitespace_source.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/violow/Documents/Coding/Languages/lang/Rust/Projects/zen-project/zen-lang",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "language.rust.cargo.check",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Build cpast.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Doctest of compile_and_test (line 67).executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run cpast.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test generator_integration.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test lexer_integration.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test parser_integration.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_characters.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_empty_source.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_generator_with_upper_string_expression.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_get_ast_with_backreference.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_invalid_number_format.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_mixed_tokens.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_single_token.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test test_whitespace_source.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/violow/Documents/Coding/Languages/lang/Rust/Projects/zen-project/zen-lang&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -90,60 +100,9 @@
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
   </component>
-  <component name="RunManager" selected="Cargo.Build cpast">
+  <component name="RunManager" selected="Cargo.Test test_get_ast_with_backreference">
     <configuration name="Build cpast" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="build --package cpast --lib" />
-      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <envs />
-      <option name="emulateTerminal" value="true" />
-      <option name="channel" value="DEFAULT" />
-      <option name="requiredFeatures" value="true" />
-      <option name="allFeatures" value="false" />
-      <option name="withSudo" value="false" />
-      <option name="buildTarget" value="REMOTE" />
-      <option name="backtrace" value="SHORT" />
-      <option name="isRedirectInput" value="false" />
-      <option name="redirectInputPath" value="" />
-      <method v="2">
-        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Run cpast" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="run --package cpast --bin cpast" />
-      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <envs />
-      <option name="emulateTerminal" value="true" />
-      <option name="channel" value="DEFAULT" />
-      <option name="requiredFeatures" value="true" />
-      <option name="allFeatures" value="false" />
-      <option name="withSudo" value="false" />
-      <option name="buildTarget" value="REMOTE" />
-      <option name="backtrace" value="SHORT" />
-      <option name="isRedirectInput" value="false" />
-      <option name="redirectInputPath" value="" />
-      <method v="2">
-        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test generator_integration" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test generator_integration" />
-      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <envs />
-      <option name="emulateTerminal" value="true" />
-      <option name="channel" value="DEFAULT" />
-      <option name="requiredFeatures" value="true" />
-      <option name="allFeatures" value="false" />
-      <option name="withSudo" value="false" />
-      <option name="buildTarget" value="REMOTE" />
-      <option name="backtrace" value="SHORT" />
-      <option name="isRedirectInput" value="false" />
-      <option name="redirectInputPath" value="" />
-      <method v="2">
-        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test lexer_integration" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package cpast --test lexer_integration" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
       <option name="emulateTerminal" value="true" />
@@ -176,13 +135,64 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test test_characters" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test lexer_integration test_characters -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test test_generator_with_upper_string_expression" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test generator_integration test_generator_with_upper_string_expression -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test test_get_ast_with_backreference" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package cpast --test parser_integration test_get_ast_with_backreference -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.Test test_get_ast_with_backreference" />
+        <item itemvalue="Cargo.Test test_generator_with_upper_string_expression" />
+        <item itemvalue="Cargo.Test test_characters" />
         <item itemvalue="Cargo.Build cpast" />
         <item itemvalue="Cargo.Test parser_integration" />
-        <item itemvalue="Cargo.Test lexer_integration" />
-        <item itemvalue="Cargo.Test generator_integration" />
-        <item itemvalue="Cargo.Run cpast" />
       </list>
     </recent_temporary>
   </component>
@@ -213,7 +223,8 @@
       <workItem from="1705095234324" duration="1228000" />
       <workItem from="1705165299580" duration="21000" />
       <workItem from="1705165330393" duration="5000" />
-      <workItem from="1705596295254" duration="3317000" />
+      <workItem from="1705596295254" duration="4072000" />
+      <workItem from="1705603713590" duration="10693000" />
     </task>
     <servers />
   </component>

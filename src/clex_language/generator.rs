@@ -1,13 +1,12 @@
-use crate::clex_language::ast::{DataType, Program, ReferenceType, UnitExpression};
+use crate::clex_language::ast::{CharacterSet, DataType, Program, ReferenceType, UnitExpression};
 use crate::clex_language::parser::Parser;
 use rand::{
     distributions::{Alphanumeric, DistString},
-    prelude::*,
+    Rng,
 };
+
 use std::collections::HashMap;
 use std::process::exit;
-
-const MAX_STRING_SIZE: usize = 12;
 
 #[derive(Debug)]
 pub(crate) struct Generator {
@@ -59,9 +58,9 @@ impl Generator {
 
                     for _ in 0..repetition_count {
                         match data_type {
-                            DataType::String => self
+                            DataType::String(length, charset) => self
                                 .output_text
-                                .push_str(&Generator::generate_random_string()),
+                                .push_str(&self.generate_random_string(*length, *charset)),
                             DataType::Character => self
                                 .output_text
                                 .push_str(&Generator::generate_random_character()),
@@ -87,6 +86,10 @@ impl Generator {
                     group_number,
                     data_type: DataType::Integer(min_reference, max_reference),
                 } => {
+                    let mut min_reference = min_reference;
+                    if self.get_value_from_reference(*min_reference) < 0 {
+                        min_reference = &ReferenceType::ByLiteral(0);
+                    }
                     let random_number = self.generate_random_number(*min_reference, *max_reference);
                     self.groups.insert(*group_number, random_number);
 
@@ -186,8 +189,50 @@ impl Generator {
         Alphanumeric.sample_string(&mut rand::thread_rng(), 1)
     }
 
-    fn generate_random_string() -> String {
-        Alphanumeric.sample_string(&mut rand::thread_rng(), MAX_STRING_SIZE)
+    fn generate_random_string(&self, length: ReferenceType, character_set: CharacterSet) -> String {
+        // CharacterSet::All => Alphanumeric.sample_string(
+        //     &mut rand::thread_rng(),
+        //     self.get_value_from_reference(length) as usize,
+
+        Generator::generate_random_string_from_charset(
+            character_set,
+            self.get_value_from_reference(length) as usize,
+        )
+    }
+
+    fn generate_random_string_from_charset(character_set: CharacterSet, length: usize) -> String {
+        let charset = match character_set {
+            CharacterSet::Alpha => {
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+            abcdefghijklmnopqrstuvwxyz"
+            }
+            CharacterSet::Numeric => "0123456789",
+            CharacterSet::AlphaNumeric => {
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+            abcdefghijklmnopqrstuvwxyz\
+            0123456789"
+            }
+            CharacterSet::UppercaseOnly => "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            CharacterSet::LowerCaseOnly => "abcdefghijklmnopqrstuvwxyz",
+            CharacterSet::All => {
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+            abcdefghijklmnopqrstuvwxyz\
+            0123456789)(*&^%$#@!~"
+            }
+        };
+
+        let charset = charset.as_bytes();
+
+        let mut rng = rand::thread_rng();
+
+        let generated_string: String = (0..length)
+            .map(|_| {
+                let idx = rng.gen_range(0..charset.len());
+                charset[idx] as char
+            })
+            .collect();
+
+        generated_string
     }
 
     fn get_count_from_group(&self, group_number: u64) -> i64 {
