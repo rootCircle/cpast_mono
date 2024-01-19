@@ -145,6 +145,7 @@ impl Language {
         if !self.do_force_compile
             && !remake(self.file_path.clone(), PathBuf::from(program_name_stem))
         {
+            self.is_compiled = true;
             return Ok(program_name_stem.to_string());
         }
 
@@ -154,20 +155,16 @@ impl Language {
             LanguageName::C => {
                 program.insert("gcc", vec!["-o", program_name_stem, file_path_str]);
                 program.insert("clang", vec!["-o", program_name_stem, file_path_str]);
-                self.is_compiled = true;
             }
             LanguageName::Cpp => {
                 program.insert("g++", vec!["-o", program_name_stem, file_path_str]);
                 program.insert("clang++", vec!["-o", program_name_stem, file_path_str]);
-                self.is_compiled = true;
             }
             LanguageName::Rust => {
                 program.insert("rustc", vec!["-o", program_name_stem, file_path_str]);
-                self.is_compiled = true;
             }
             LanguageName::Java => {
                 program.insert("javac", vec![file_path_str]);
-                self.is_compiled = true;
             }
             _ => {
                 return Err("Unsupported/Not a Compiled LanguageName");

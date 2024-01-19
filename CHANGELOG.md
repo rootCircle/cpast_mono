@@ -1,8 +1,14 @@
 # Changelog
 
+## 3.0.3
+
+Released on : Jan 19, 2024 (Hotfix to 3.0.2)
+
+- Fix error in case if compile binaries are not present by default due to buggy remake implementation.
+
 ## 3.0.2
 
-Pre-release
+Released on : Jan 19, 2024
 
 - Performance Fixes
   - remake implementation to reduce repeated compilation based on remake implementation in [GNU make](https://www.gnu.org/software/make/)
