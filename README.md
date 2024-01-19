@@ -56,7 +56,7 @@ By addressing these crucial problems, `cpast` enhances your competitive programm
 
 ## Getting Started
 
-https://github.com/rootCircle/cpast/assets/35325046/e8f28d06-eba4-4f00-8afc-240dcf7c56f3
+https://github.com/rootCircle/cpast/assets/35325046/1229ce29-f142-4e7a-9008-10b280fb57b6
 
 ### Installation
 
