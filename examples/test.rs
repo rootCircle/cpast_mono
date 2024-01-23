@@ -2,7 +2,8 @@ use std::{path::PathBuf, env};
 
 use cpast::compile_and_test;
 
-fn main() {
+#[tokio::main(flavor = "multi_thread", worker_threads = 64)]
+async fn main() {
     let manifest_dir = env!("CARGO_MANIFEST_DIR");
 
     // Just to ensure that compiled binaries are in examples dir
@@ -15,5 +16,5 @@ fn main() {
         100,
         true,
         false,
-    );
+    ).await;
 }

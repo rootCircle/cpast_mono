@@ -5,7 +5,7 @@ use crate::clex_language::ast::{
 use crate::clex_language::lexer::Token;
 use std::process::exit;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Parser {
     tokens: Tokens,
     start: usize,
