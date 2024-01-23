@@ -35,7 +35,7 @@
 //! For more details on the AST types and their usage, refer to the documentation for each type.
 
 /// Represents a program consisting of a vector of `UnitExpression`.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Program {
     pub expression: Vec<UnitExpression>,
 }

@@ -6,7 +6,8 @@ use cpast::{compile_and_test, generator};
 #[cfg(feature = "clipboard")]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
-fn main() {
+#[tokio::main(flavor = "multi_thread", worker_threads = 64)]
+async fn main() {
     let cli_instance = CpastCli::new();
     if let Some(command) = cli_instance.command {
         match command {
@@ -25,7 +26,7 @@ fn main() {
                     iterations,
                     no_stop,
                     do_force_compile,
-                );
+                ).await;
             }
             Commands::Generate(args) => {
                 if args.generator.is_none() {
