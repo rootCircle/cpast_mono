@@ -86,7 +86,7 @@ pub struct Token {
     pub lexeme: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) struct Tokens {
     pub(crate) tokens: Vec<Token>,
     start: usize,
