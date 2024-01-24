@@ -40,18 +40,17 @@
 //!
 
 pub mod clex_language;
-mod language;
-mod program_store;
 mod utils;
+mod lang_runner;
 
+use futures::future::join_all;
 use std::path::Path;
 use std::process::exit;
-use futures::future::join_all;
 
 use crate::clex_language::lexer::Token;
-use crate::clex_language::{ast::Program, generator, lexer, parser};
 use crate::clex_language::parser::Parser;
-use crate::program_store::ProgramStore;
+use crate::clex_language::{ast::Program, generator, lexer, parser};
+use crate::lang_runner::program_store::ProgramStore;
 
 /// Compile and test code against custom language generator.
 ///
@@ -78,8 +77,13 @@ pub async fn compile_and_test(
     do_force_compile: bool,
 ) {
 
-    let correct_binding:&'static String = Box::leak(correct_binding.into());
-    let test_binding:&'static String = Box::leak(test_binding.into());
+    let store = ProgramStore::new(
+        Path::new(&correct_binding),
+        Path::new(&test_binding),
+        do_force_compile,
+    );
+
+    let store: &'static ProgramStore = Box::leak(store.into());
 
 
     let mut token = lexer::Tokens::new(language);
@@ -88,19 +92,13 @@ pub async fn compile_and_test(
     let mut parser = parser::Parser::new_from_tokens(token);
     parser.parser();
 
-    let parser:&'static Parser = Box::leak(parser.into());
+    let parser: &'static Parser = Box::leak(parser.into());
 
     let tasks = (1..=iterations)
         .map(|iter| {
             tokio::spawn(async move {
-                let mut store = ProgramStore::new(
-                    Path::new(&correct_binding),
-                    Path::new(&test_binding),
-                    do_force_compile,
-                );
-                
                 let mut gen = generator::Generator::new(parser.to_owned());
-                
+
                 gen.traverse_ast();
 
                 match store.run_code(&gen.output_text) {
@@ -125,7 +123,6 @@ pub async fn compile_and_test(
         .collect::<Vec<_>>();
 
     join_all(tasks).await;
-    
 }
 
 /// Get tokens from the custom language lexer.
