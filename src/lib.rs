@@ -43,9 +43,11 @@ pub mod clex_language;
 mod lang_runner;
 mod utils;
 
+use colored::Colorize;
 use futures::future::join_all;
 use std::path::Path;
 use std::process::exit;
+use std::sync::{Arc, Mutex};
 
 use crate::clex_language::lexer::Token;
 use crate::clex_language::parser::Parser;
@@ -92,9 +94,18 @@ pub async fn compile_and_test(
 
     let parser: &'static Parser = Box::leak(parser.into());
 
-    println!("[INFO] Using multi-threading to speed up the process, testcase order might vary!");
+    // Storing state if testcase matching has failed or not
+    let has_failed = Arc::new(Mutex::new(false));
+
+    println!(
+        "{}\n",
+        "[INFO] Using multi-threading to speed up the process, testcase order might vary!"
+            .bright_blue()
+    );
+
     let tasks = (1..=iterations)
         .map(|iter| {
+            let has_failed_clone = Arc::clone(&has_failed);
             tokio::spawn(async move {
                 let mut gen = generator::Generator::new(parser.to_owned());
 
@@ -103,21 +114,34 @@ pub async fn compile_and_test(
                 match store.run_code(&gen.output_text) {
                     Ok((true, _, _)) => {
                         if !no_stop {
-                            println!("Testcase {iter} ran successfully!");
+                            println!("{}", format!("Testcase {} ran successfully!", iter).green());
                         }
                     }
                     Ok((false, expected, actual)) => {
-                        println!("Testcase {iter} failed!");
-                        println!("INPUT\n{}", &gen.output_text);
-                        println!("==============================");
-                        println!("EXPECTED OUTPUT\n{expected}");
-                        println!("==============================");
-                        println!("ACTUAL OUTPUT\n{actual}");
+                        // Each usage of println!() puts a lock on stdout
+                        println!("{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
+                                 format!("Testcase {} failed!", iter).red(),
+                                 "INPUT".underline(),
+                                 &gen.output_text.cyan(),
+                                 "EXPECTED OUTPUT".underline(),
+                                 expected.green(),
+                                 "ACTUAL OUTPUT".underline(),
+                                 actual.red());
+
+
                         if !no_stop {
                             exit(0);
                         }
+                        else {
+                            let mut has_failed_guard = has_failed_clone.lock().unwrap();
+                            *has_failed_guard = true;
+                            drop(has_failed_guard);
+
+                        }
                     }
-                    Err(err) => println!("Error matching the file! {err}"),
+                    Err(err) => {
+                        println!("{}", format!("Error matching the file! {}", err).red())
+                    }
                 }
 
                 gen.reset_output();
@@ -127,7 +151,31 @@ pub async fn compile_and_test(
 
     join_all(tasks).await;
 
-    println!("Test case generation & matching done!");
+    if no_stop {
+        println!(
+            "\n{}",
+            "Test case generation & matching done!".bold().bright_blue()
+        );
+
+        let has_failed_clone = Arc::clone(&has_failed);
+        let has_failed_guard = has_failed_clone.lock().unwrap();
+
+        if !*has_failed_guard {
+            println!(
+                "{}",
+                "All testcases ran successfully! No failures detected."
+                    .bold()
+                    .green()
+            );
+        }
+    } else {
+        println!(
+            "\n{}",
+            "All testcases ran successfully! No failures detected."
+                .bold()
+                .green()
+        );
+    }
 }
 
 /// Get tokens from the custom language lexer.

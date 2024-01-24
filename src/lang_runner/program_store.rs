@@ -16,7 +16,7 @@ pub struct ProgramStore {
 impl ProgramStore {
     pub fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> Self {
         if !Self::exists(correct_file, test_file) {
-            eprintln!("[ERROR] File(s) don't exist\nQuitting.....");
+            eprintln!("[PROGRAM STORE ERROR] File(s) don't exist\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);
         }
 
@@ -27,7 +27,7 @@ impl ProgramStore {
             test_file_bin_path: String::new(),
         };
 
-        println!("[INFO] Compiling program/Generating Intermediates");
+        println!("[PROGRAM STORE INFO] Compiling program/Generating Intermediates");
         program_store.correct_file_bin_path =
             program_store.correct_file.warmup_precompile().unwrap();
         program_store.test_file_bin_path = program_store.test_file.warmup_precompile().unwrap();
@@ -70,7 +70,10 @@ impl ProgramStore {
         language
             .run_program_code(bin_path, stdin_content)
             .map_err(|err| {
-                eprintln!("Failed to run {}!\n{}", file_type, err);
+                eprintln!(
+                    "[PROGRAM STORE ERROR] Failed to run {}!\n{}",
+                    file_type, err
+                );
                 "Error running file"
             })
     }
