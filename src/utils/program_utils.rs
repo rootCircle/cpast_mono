@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 use std::process::{Command, Output, Stdio};
 use std::{io, io::Write};
 use which::which;
@@ -59,12 +59,10 @@ pub fn run_program_with_input(
 /// * `source_code_path` : Path of source code
 /// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of `source_code_path`
 /// Returns true if file needs to be recompiled
-pub fn remake(source_code_path: PathBuf, compiled_artifact_path: PathBuf) -> Result<bool, io::Error> {
+pub fn remake(source_code_path: &Path, compiled_artifact_path: &Path) -> Result<bool, io::Error> {
     if compiled_artifact_path.exists() {
         let source_modified_time = source_code_path.metadata()?.modified()?;
-        let compiled_artifact_creation_time = compiled_artifact_path
-            .metadata()?
-            .created()?;
+        let compiled_artifact_creation_time = compiled_artifact_path.metadata()?.created()?;
 
         return Ok(source_modified_time > compiled_artifact_creation_time);
     }

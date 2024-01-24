@@ -1,4 +1,4 @@
-use crate::lang_runner::language::Language;
+use crate::lang_runner::runner::Language;
 use crate::utils::file_utils;
 use std::path::Path;
 use std::process::exit;
@@ -27,7 +27,9 @@ impl ProgramStore {
             test_file_bin_path: String::new(),
         };
 
-        program_store.correct_file_bin_path = program_store.correct_file.warmup_precompile().unwrap();
+        println!("[INFO] Compiling program/Generating Intermediates");
+        program_store.correct_file_bin_path =
+            program_store.correct_file.warmup_precompile().unwrap();
         program_store.test_file_bin_path = program_store.test_file.warmup_precompile().unwrap();
 
         program_store
@@ -38,8 +40,18 @@ impl ProgramStore {
     }
 
     pub fn run_code(&self, stdin_content: &str) -> Result<(bool, String, String), &str> {
-        let correct_output = self.run_program_code_interface(&self.correct_file, &self.correct_file_bin_path, stdin_content, "source file")?;
-        let test_output = self.run_program_code_interface(&self.test_file, &self.test_file_bin_path, stdin_content, "test file")?;
+        let correct_output = self.run_program_code_interface(
+            &self.correct_file,
+            &self.correct_file_bin_path,
+            stdin_content,
+            "source file",
+        )?;
+        let test_output = self.run_program_code_interface(
+            &self.test_file,
+            &self.test_file_bin_path,
+            stdin_content,
+            "test file",
+        )?;
 
         Ok((
             file_utils::string_diff(&correct_output, &test_output),
@@ -48,10 +60,18 @@ impl ProgramStore {
         ))
     }
 
-    fn run_program_code_interface(&self, language: &Language, bin_path: &str, stdin_content: &str, file_type: &str) -> Result<String, &str> {
-        language.run_program_code(bin_path, stdin_content).map_err(|err| {
-            eprintln!("Failed to run {}!\n{}", file_type, err);
-            "Error running file"
-        })
+    fn run_program_code_interface(
+        &self,
+        language: &Language,
+        bin_path: &str,
+        stdin_content: &str,
+        file_type: &str,
+    ) -> Result<String, &str> {
+        language
+            .run_program_code(bin_path, stdin_content)
+            .map_err(|err| {
+                eprintln!("Failed to run {}!\n{}", file_type, err);
+                "Error running file"
+            })
     }
 }
