@@ -84,7 +84,11 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
     let output = match child {
         Ok(out) => out,
         Err(err) => {
-            eprintln!("[PROGRAM UTILS ERROR] Failed to run the command {} {}", program, args.join(" "));
+            eprintln!(
+                "[PROGRAM UTILS ERROR] Failed to run the command {} {}",
+                program,
+                args.join(" ")
+            );
             return Err(io::Error::new(io::ErrorKind::Other, err));
         }
     };

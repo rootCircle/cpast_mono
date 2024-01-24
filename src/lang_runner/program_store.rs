@@ -70,7 +70,10 @@ impl ProgramStore {
         language
             .run_program_code(bin_path, stdin_content)
             .map_err(|err| {
-                eprintln!("[PROGRAM STORE ERROR] Failed to run {}!\n{}", file_type, err);
+                eprintln!(
+                    "[PROGRAM STORE ERROR] Failed to run {}!\n{}",
+                    file_type, err
+                );
                 "Error running file"
             })
     }

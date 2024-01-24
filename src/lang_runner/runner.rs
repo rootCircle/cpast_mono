@@ -59,7 +59,9 @@ impl Language {
             Some("rb") => LanguageName::Ruby,
             file_extension => {
                 eprintln!("[RUNNER ERROR] Unsupported Language: {:?}", file_extension);
-                eprintln!("[RUNNER ERROR] Component: language::Language::get_programming_language_name");
+                eprintln!(
+                    "[RUNNER ERROR] Component: language::Language::get_programming_language_name"
+                );
                 exit(1);
             }
         }
@@ -201,7 +203,10 @@ impl Language {
             }
         }
 
-        eprintln!("[RUNNER ERROR] Couldn't compile the code {}.", program_name_stem);
+        eprintln!(
+            "[RUNNER ERROR] Couldn't compile the code {}.",
+            program_name_stem
+        );
         Err("Couldn't Compile the code")
     }
 

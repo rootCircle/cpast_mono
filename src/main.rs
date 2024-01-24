@@ -28,7 +28,7 @@ async fn main() {
                     no_stop,
                     do_force_compile,
                 )
-                    .await;
+                .await;
             }
             Commands::Generate(args) => {
                 if args.generator.is_none() {
@@ -42,8 +42,8 @@ async fn main() {
                     println!("=====================================");
                     if args.clipboard {
                         #[cfg(all(
-                        any(target_os = "windows", target_os = "linux", target_os = "macos"),
-                        feature = "clipboard"
+                            any(target_os = "windows", target_os = "linux", target_os = "macos"),
+                            feature = "clipboard"
                         ))]
                         {
                             let mut ctx = ClipboardContext::new().unwrap();
@@ -56,12 +56,12 @@ async fn main() {
                         }
 
                         #[cfg(any(
-                        not(any(
-                        target_os = "windows",
-                        target_os = "linux",
-                        target_os = "macos"
-                        )),
-                        not(feature = "clipboard")
+                            not(any(
+                                target_os = "windows",
+                                target_os = "linux",
+                                target_os = "macos"
+                            )),
+                            not(feature = "clipboard")
                         ))]
                         println!(
                             "{}",
