@@ -239,7 +239,7 @@ impl Generator {
         match self.groups.get(&group_number) {
             Some(t) => *t,
             None => {
-                eprintln!("Can't find specified Group no. {group_number} in the language");
+                eprintln!("[GENERATOR ERROR] Can't find specified Group no. {group_number} in the language");
                 exit(1);
             }
         }
