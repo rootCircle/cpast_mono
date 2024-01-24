@@ -58,8 +58,8 @@ impl Language {
             Some("js") => LanguageName::Javascript,
             Some("rb") => LanguageName::Ruby,
             file_extension => {
-                eprintln!("Unsupported Language: {:?}", file_extension);
-                eprintln!("Component: language::Language::get_programming_language_name");
+                eprintln!("[RUNNER ERROR] Unsupported Language: {:?}", file_extension);
+                eprintln!("[RUNNER ERROR] Component: language::Language::get_programming_language_name");
                 exit(1);
             }
         }
@@ -194,14 +194,14 @@ impl Language {
                 }
                 Err(err) => {
                     eprintln!(
-                        "WARNING: Failed to compile {} code with {} with reason {}",
+                        "[RUNNER WARNING] Failed to compile {} code with {} with reason {}",
                         program_name_stem, compiler, err
                     );
                 }
             }
         }
 
-        eprintln!("Couldn't compile the code {}.", program_name_stem);
+        eprintln!("[RUNNER ERROR] Couldn't compile the code {}.", program_name_stem);
         Err("Couldn't Compile the code")
     }
 
@@ -228,7 +228,7 @@ impl Language {
                 }
                 Err(err) => {
                     eprintln!(
-                        "[Interpreter] WARNING: Failed to run {} code with {} with reason {}",
+                        "[INTERPRETER WARNING] Failed to run {} code with {} with reason {}",
                         self.file_path.to_str().unwrap(),
                         interpreter,
                         err

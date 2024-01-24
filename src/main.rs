@@ -1,6 +1,7 @@
 mod cli;
 
 use crate::cli::cli_parser::{Commands, CpastCli};
+use colored::Colorize;
 use cpast::{compile_and_test, generator};
 
 #[cfg(feature = "clipboard")]
@@ -27,22 +28,22 @@ async fn main() {
                     no_stop,
                     do_force_compile,
                 )
-                .await;
+                    .await;
             }
             Commands::Generate(args) => {
                 if args.generator.is_none() {
-                    println!("[GENERATOR] Generator language is required!");
+                    println!("{}", "[GENERATOR] Generator language is required!".red());
                 } else {
                     let language = args.generator.unwrap_or_else(String::new);
                     let generated_testcases = generator(language);
-                    println!("Generated Testcase");
+                    println!("{}", "Generated Testcase".green());
                     println!("=====================================");
                     println!("{}", &generated_testcases);
                     println!("=====================================");
                     if args.clipboard {
                         #[cfg(all(
-                            any(target_os = "windows", target_os = "linux", target_os = "macos"),
-                            feature = "clipboard"
+                        any(target_os = "windows", target_os = "linux", target_os = "macos"),
+                        feature = "clipboard"
                         ))]
                         {
                             let mut ctx = ClipboardContext::new().unwrap();
@@ -51,23 +52,27 @@ async fn main() {
                             // get_contents is required for set_contents to work
                             // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
                             let _ = ctx.get_contents();
-                            println!("Copied to clipboard successfully!");
+                            println!("{}", "Copied to clipboard successfully!".green());
                         }
 
                         #[cfg(any(
-                            not(any(
-                                target_os = "windows",
-                                target_os = "linux",
-                                target_os = "macos"
-                            )),
-                            not(feature = "clipboard")
+                        not(any(
+                        target_os = "windows",
+                        target_os = "linux",
+                        target_os = "macos"
+                        )),
+                        not(feature = "clipboard")
                         ))]
-                        println!("Clipboard Features not enabled during compilation/device not supported!");
+                        println!(
+                            "{}",
+                            "Clipboard Features not enabled during compilation/device not supported!"
+                                .yellow()
+                        );
                     }
                 }
             }
         }
     } else {
-        println!("Invalid Usage! Use cpast --help for more info");
+        println!("{}", "Invalid Usage! Use cpast --help for more info".red());
     }
 }

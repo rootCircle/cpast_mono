@@ -17,6 +17,7 @@ unicode-segmentation = "1.10.1"
 which = "6.0.0"
 tokio = { version = "1.35.1", features = ["full"] }
 futures = "0.3.30"
+colored = "2.1.0"
 
 [features]
 default = ["clipboard"]
