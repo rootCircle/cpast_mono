@@ -1,10 +1,32 @@
 use std::path::PathBuf;
-use std::process::{Command, Stdio};
+use std::process::{Command, Output, Stdio};
 use std::{io, io::Write};
 use which::which;
 
 fn program_exists(program: &str) -> Result<std::path::PathBuf, which::Error> {
     which(program)
+}
+
+fn run_program_common(output: Output, program: &str, args: &[&str]) -> io::Result<String> {
+    if output.status.code() != Some(0) {
+        return Err(io::Error::new(
+            io::ErrorKind::Other,
+            format!(
+                "Process `{} {}` failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
+                program,
+                args.join(" "),
+                output.status,
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            )
+        ));
+    }
+
+    let stdout_content = String::from_utf8(output.stdout)
+        .map_err(|non_utf8| return String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
+        .expect("Found invalid UTF-8");
+
+    Ok(stdout_content)
 }
 
 pub fn run_program_with_input(
@@ -30,47 +52,23 @@ pub fn run_program_with_input(
 
     let output = child.wait_with_output()?;
 
-    if output.status.code() != Some(0) {
-        return Err(io::Error::new(
-            io::ErrorKind::Other,
-            format!(
-                "Process `{} {}` failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
-                program,
-                args.join(" "),
-                output.status,
-                String::from_utf8_lossy(&output.stdout),
-                String::from_utf8_lossy(&output.stderr)
-            )
-        ));
-    }
-
-    let stdout_content = String::from_utf8(output.stdout)
-        .map_err(|non_utf8| return String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
-        .expect("Found invalid UTF-8");
-
-    Ok(stdout_content)
+    run_program_common(output, program, args)
 }
 
 /// Adapted with modifications from GNU Make Project
 /// * `source_code_path` : Path of source code
 /// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of `source_code_path`
 /// Returns true if file needs to be recompiled
-pub fn remake(source_code_path: PathBuf, compiled_artifact_path: PathBuf) -> bool {
+pub fn remake(source_code_path: PathBuf, compiled_artifact_path: PathBuf) -> Result<bool, io::Error> {
     if compiled_artifact_path.exists() {
-        let source_modified_time = source_code_path.metadata().unwrap().modified().unwrap();
+        let source_modified_time = source_code_path.metadata()?.modified()?;
         let compiled_artifact_creation_time = compiled_artifact_path
-            .metadata()
-            .unwrap()
-            .created()
-            .unwrap();
+            .metadata()?
+            .created()?;
 
-        if source_modified_time > compiled_artifact_creation_time {
-            return true;
-        }
-        false
-    } else {
-        true
+        return Ok(source_modified_time > compiled_artifact_creation_time);
     }
+    Ok(true)
 }
 
 pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
@@ -85,31 +83,13 @@ pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
         .stderr(Stdio::piped())
         .output();
 
-    let child = match child {
-        Ok(t) => t,
+    let output = match child {
+        Ok(out) => out,
         Err(err) => {
             eprintln!("Failed to run the command {} {}", program, args.join(" "));
             return Err(io::Error::new(io::ErrorKind::Other, err));
         }
     };
 
-    if child.status.code() != Some(0) {
-        return Err(io::Error::new(
-            io::ErrorKind::Other,
-            format!(
-                "Process `{} {}` failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
-                program,
-                args.join(" "),
-                child.status,
-                String::from_utf8_lossy(&child.stdout),
-                String::from_utf8_lossy(&child.stderr)
-            )
-        ));
-    }
-
-    let stdout_content = String::from_utf8(child.stdout)
-        .map_err(|non_utf8| return String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
-        .expect("Found invalid UTF-8");
-
-    Ok(stdout_content)
+    run_program_common(output, program, args)
 }
