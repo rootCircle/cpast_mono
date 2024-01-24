@@ -40,8 +40,8 @@
 //!
 
 pub mod clex_language;
-mod utils;
 mod lang_runner;
+mod utils;
 
 use futures::future::join_all;
 use std::path::Path;
@@ -76,7 +76,6 @@ pub async fn compile_and_test(
     no_stop: bool,
     do_force_compile: bool,
 ) {
-
     let store = ProgramStore::new(
         Path::new(&correct_binding),
         Path::new(&test_binding),
@@ -84,7 +83,6 @@ pub async fn compile_and_test(
     );
 
     let store: &'static ProgramStore = Box::leak(store.into());
-
 
     let mut token = lexer::Tokens::new(language);
     token.scan_tokens();
@@ -94,6 +92,7 @@ pub async fn compile_and_test(
 
     let parser: &'static Parser = Box::leak(parser.into());
 
+    println!("[INFO] Using multi-threading to speed up the process, testcase order might vary!");
     let tasks = (1..=iterations)
         .map(|iter| {
             tokio::spawn(async move {
@@ -102,7 +101,11 @@ pub async fn compile_and_test(
                 gen.traverse_ast();
 
                 match store.run_code(&gen.output_text) {
-                    Ok((true, _, _)) => println!("Testcase {iter} ran successfully!"),
+                    Ok((true, _, _)) => {
+                        if !no_stop {
+                            println!("Testcase {iter} ran successfully!");
+                        }
+                    }
                     Ok((false, expected, actual)) => {
                         println!("Testcase {iter} failed!");
                         println!("INPUT\n{}", &gen.output_text);
@@ -123,6 +126,8 @@ pub async fn compile_and_test(
         .collect::<Vec<_>>();
 
     join_all(tasks).await;
+
+    println!("Test case generation & matching done!");
 }
 
 /// Get tokens from the custom language lexer.
