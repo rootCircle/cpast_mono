@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.4
+
+Released on : Jan 25, 2024
+
+- Multithreading support, improving run times for testcases by more than 45%.
+- Refactored the code for more readability and performance
+- CLI
+  - Colorized outputs
+
 ## 0.3.3
 
 Released on : Jan 19, 2024 (Hotfix to 0.3.2)
