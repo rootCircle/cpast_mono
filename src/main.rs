@@ -26,7 +26,8 @@ async fn main() {
                     iterations,
                     no_stop,
                     do_force_compile,
-                ).await;
+                )
+                .await;
             }
             Commands::Generate(args) => {
                 if args.generator.is_none() {

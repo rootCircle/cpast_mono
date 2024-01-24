@@ -1,4 +1,4 @@
-use std::{path::PathBuf, env};
+use std::{env, path::PathBuf};
 
 use cpast::compile_and_test;
 
@@ -16,5 +16,6 @@ async fn main() {
         100,
         true,
         false,
-    ).await;
+    )
+    .await;
 }

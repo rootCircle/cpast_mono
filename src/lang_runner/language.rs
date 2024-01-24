@@ -56,7 +56,7 @@ impl Language {
                 Some("rs") => LanguageName::Rust,
                 Some("py") => LanguageName::Python,
                 Some("c") => LanguageName::C,
-                Some("cpp") => LanguageName::Cpp,
+                Some("cpp") | Some("cxx") | Some("c++")=> LanguageName::Cpp,
                 Some("java") => LanguageName::Java,
                 Some("js") => LanguageName::Javascript,
                 Some("rb") => LanguageName::Ruby,
@@ -86,19 +86,49 @@ impl Language {
         }
     }
 
-    /// Running single filed self executable program
-    pub fn run_program_code(&mut self, stdin_content: &str) -> io::Result<String> {
+    /// One time compilation/intermediate generation before code is actually run for the first time
+    pub fn warmup_precompile(&mut self) -> io::Result<String> {
         match self.compilation_type {
             CompilationType::AheadOfTime => {
                 // Need to Compile and then run
                 match self.compile_language() {
-                    Ok(bin_path) => program_utils::run_program_with_input(
-                        &format!("./{bin_path}"),
-                        &vec![],
-                        stdin_content,
-                    ),
+                    Ok(bin_path) => Ok(bin_path),
                     Err(_e) => exit(COMPILATION_FAILED_EXIT_CODE),
                 }
+            }
+            CompilationType::JustInTime => {
+                // No pre-computations needed
+                Ok("".to_owned())
+            }
+            CompilationType::AheadOfTimeInterpreted => {
+                // Might require converting to intermediate before running (eg java)
+                // Need to Compile and then run
+                match self.compile_language() {
+                    Ok(bin_path) => Ok(bin_path),
+                    Err(_e) => exit(COMPILATION_FAILED_EXIT_CODE),
+                }
+            }
+        }
+    }
+
+    /// Running single filed self executable program
+    pub fn run_program_code(
+        &self,
+        bin_path: &str,
+        stdin_content: &str,
+    ) -> io::Result<String> {
+        match self.compilation_type {
+            CompilationType::AheadOfTime => {
+                // Need to Compile and then run
+                if !self.is_compiled {
+                    panic!("Need to call warmup_precompile() method before run_program_code() is run.");
+                }
+
+                program_utils::run_program_with_input(
+                    &format!("./{bin_path}"),
+                    &vec![],
+                    stdin_content,
+                )
             }
             CompilationType::JustInTime => {
                 // Need to Just Run
@@ -112,20 +142,21 @@ impl Language {
             CompilationType::AheadOfTimeInterpreted => {
                 // Might require converting to intermediate before running (eg java)
                 // Need to Compile and then run
-                match self.compile_language() {
-                    Ok(bin_path) => match self.file_path.parent() {
-                        Some(file_parent) => program_utils::run_program_with_input(
-                            "java",
-                            &vec!["-cp", file_parent.to_str().unwrap_or(""), &bin_path],
-                            stdin_content,
-                        ),
-                        None => program_utils::run_program_with_input(
-                            "java",
-                            &vec![&bin_path],
-                            stdin_content,
-                        ),
-                    },
-                    Err(_e) => exit(COMPILATION_FAILED_EXIT_CODE),
+                if !self.is_compiled {
+                    panic!("Need to call warmup_precompile() method before run_program_code() is run.");
+                }
+
+                match self.file_path.parent() {
+                    Some(file_parent) => program_utils::run_program_with_input(
+                        "java",
+                        &vec!["-cp", file_parent.to_str().unwrap_or(""), &bin_path],
+                        stdin_content,
+                    ),
+                    None => program_utils::run_program_with_input(
+                        "java",
+                        &vec![&bin_path],
+                        stdin_content,
+                    ),
                 }
             }
         }
