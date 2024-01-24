@@ -173,8 +173,10 @@ impl Language {
             return Ok(program_name_stem.to_string());
         }
 
+        let to_remake = remake(self.file_path.clone(), PathBuf::from(program_name_stem));
+
         if !self.do_force_compile
-            && !remake(self.file_path.clone(), PathBuf::from(program_name_stem))
+            && to_remake.is_ok() && !to_remake.unwrap()
         {
             self.is_compiled = true;
             return Ok(program_name_stem.to_string());
