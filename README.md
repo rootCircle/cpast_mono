@@ -47,6 +47,12 @@ By addressing these crucial problems, `cpast` enhances your competitive programm
 - [Getting Started](#getting-started)
 - [Language Specification](#language-specification)
 
+## Usecases
+
+0. Debugging your CP/DSA questions.
+1. Live hacking in during/post Codeforces contests.
+2. Generate testcases for your problem setters.
+
 ## Features
 
 - Test correct and incorrect code files.
@@ -143,3 +149,54 @@ For more information on the `clex` language and its usage, please refer to the [
 - [x] Support Back-references in Range Bounds as well.
 
 Now you are ready to use `cpast` for testing your code against various programming languages and input patterns defined by the `clex` language. Happy testing!
+
+## Alternatives
+
+- Warning: User discretion is required! I don't take any responsibility for any issues faced, while using these alternatives. They are just for informational purposes only. I have not tested either of these.
+
+- Dynamic Testcase Generators
+    - [CP-test](https://github.com/ccd97/CP-test)
+    - [contest-testcase-generator](https://github.com/tmt514/contest-testcase-generator)
+    - [metagen](https://github.com/mingaleg/metagen)
+    - [TestCaseGenerator](https://github.com/masterashu/TestCaseGenerator)
+    - [testcase-gen](https://github.com/JacobLinCool/testcase-gen)
+    - [pycontest](https://github.com/matinhimself/pycontest)
+    - [testcase-generator](https://github.com/naskya/testcase-generator)
+    - [testcase-generator](https://github.com/Ninjaclasher/testcase-generator)
+    - [python-testcase-generator](https://github.com/tjkendev/python-testcase-generator)
+    - [inzva-testcase-generator](https://github.com/brkdnmz/inzva-testcase-generator)
+    - [MochaGen](https://github.com/CKEFGISC/MochaGen/)
+    - [TestcaseGenerator](https://github.com/phirasit/TestcaseGenerator)
+    - [genlib](https://github.com/MasterIceZ/genlib)
+    - [tc-lexer](https://github.com/bluebottlewize/tc-lexer)
+    - [tc-generator](https://github.com/rdxxer/tc-generator)
+    - [testcase_generator](https://github.com/hyeonseok92/testcase_generator)
+    - [Random_Testcases_Generator](https://github.com/dasilvaca/Random_Testcases_Generator)
+    - [python-testcase-generator](https://github.com/tuanpauet/python-testcase-generator)
+    - [TestCasesGenerator](https://github.com/khaled-hamam/TestCasesGenerator)
+    - [GenerateTestCase](https://github.com/Gingmzmzx/GenerateTestCase)
+
+- Static Testcase Generator
+    - [ojtest](https://github.com/f-fanfan/ojtest)
+    - [CHD2-12-09-2019](https://github.com/fextivity/CHD2-12-09-2019)
+
+- GPT Based Generators
+    - [GPT-testCase-Generator](https://github.com/voho0000/GPT-testCase-Generator)
+    - [testcase-generator](https://github.com/DragonBuilder/testcase-generator)
+
+- Misc
+    - [tokilib](https://github.com/fushar/tokilib)
+    - [testlib](https://github.com/MikeMirzayanov/testlib)
+    - [tcframe](https://github.com/ia-toki/tcframe)
+    - [tcg](https://github.com/huntzhan/tcg)
+    - [TestCase-generator-vscode-extension](https://github.com/yongsk0066/TestCase-generator-vscode-extension)
+    - [pnoj-tg](https://github.com/pnoj/pnoj-tg)
+    - [TomChienXuTestcaseGenerator](https://github.com/TomChienXuOrganization/TomChienXuTestcaseGenerator)
+    - [leetgen](https://github.com/sebnyberg/leetgen)
+    - [codeforces-companion](https://github.com/PanagiotisPtr/codeforces-companion)
+    - [lc_tcg](https://github.com/deweshsoc/lc_tcg)
+    - [code-cross-check](https://github.com/JacobLinCool/code-cross-check)
+
+- Website
+    - [testcase-generator](https://github.com/xxxzc/testcase-generator)
+
