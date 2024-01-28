@@ -7,7 +7,7 @@ use cpast::{compile_and_test, generator};
 #[cfg(feature = "clipboard")]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 64)]
+#[tokio::main(flavor = "multi_thread", worker_threads = 16)]
 async fn main() {
     let cli_instance = CpastCli::new();
     if let Some(command) = cli_instance.command {
