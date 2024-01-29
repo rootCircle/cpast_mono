@@ -2,6 +2,8 @@
 
 Written similar to regex, just so that regex doesn't support Repeating Things through Back-references and Regex is unnecessary complex.
 
+Refer [clex specs](./clex.specs.md)for more detailed explanation.
+
 ## Rules
 
 ### Meta-characters
