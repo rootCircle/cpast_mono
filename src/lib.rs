@@ -4,8 +4,7 @@
 //!
 //! ## Main Modules
 //!
-//! - `language`: Module for language-runner-related functionalities.
-//! - `program_store`: Module handling the storage and management of code programs.
+//! - `lang_runner`: Module for language-runner-related functionalities and handling the storage and management of code programs.
 //! - `utils`: Utility module with miscellaneous functions.
 //! - `clex_language`: Module containing lexer, parser, generator, and abstract syntax tree (AST) for the custom language `clex`.
 //!
@@ -27,7 +26,9 @@
 //! ```rust, no_run
 //! use cpast::{compile_and_test, get_tokens, get_ast, generator};
 //!
-//! compile_and_test("correct.cpp".to_string(), "incorrect.cpp".to_string(), "(N) (?:N){\\1}".to_string(), 100, false, false);
+//! async fn compile() {
+//!     compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false).await.unwrap();
+//! }
 //!
 //! let tokens = get_tokens("(N) (?:N){\\1}".to_string());
 //!
@@ -49,9 +50,10 @@ use std::path::Path;
 use std::process::exit;
 use std::sync::{Arc, Mutex};
 
+use crate::clex_language::clex_error_type::ClexErrorType;
 use crate::clex_language::lexer::Token;
 use crate::clex_language::parser::Parser;
-use crate::clex_language::{ast::Program, generator, lexer, parser};
+use crate::clex_language::{ast::ClexLanguageAST, generator, lexer, parser};
 use crate::lang_runner::program_store::ProgramStore;
 
 /// Compile and test code against custom language generator.
@@ -63,12 +65,14 @@ use crate::lang_runner::program_store::ProgramStore;
 /// * `language` - The custom language generator code for test generation.
 /// * `iterations` - The number of test iterations to run.
 /// * `no_stop` - Whether to stop after a failing testcase is found or not.
-/// * `do_force_compile` - Whether or not to forcefully recompile files, even though it is updated
+/// * `do_force_compile` - Whether to forcefully recompile files, even though it is updated
 ///
 /// # Example
 ///
 /// ```rust,no_run
-/// cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false);
+/// async fn compile() {
+///     cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false).await.unwrap();
+/// }
 /// ```
 pub async fn compile_and_test(
     correct_binding: String,
@@ -77,7 +81,7 @@ pub async fn compile_and_test(
     iterations: usize,
     no_stop: bool,
     do_force_compile: bool,
-) {
+) -> Result<(), ClexErrorType> {
     let store = ProgramStore::new(
         Path::new(&correct_binding),
         Path::new(&test_binding),
@@ -87,10 +91,10 @@ pub async fn compile_and_test(
     let store: &'static ProgramStore = Box::leak(store.into());
 
     let mut token = lexer::Tokens::new(language);
-    token.scan_tokens();
+    token.scan_tokens()?;
 
     let mut parser = parser::Parser::new_from_tokens(token);
-    parser.parser();
+    parser.parser()?;
 
     let parser: &'static Parser = Box::leak(parser.into());
 
@@ -109,7 +113,9 @@ pub async fn compile_and_test(
             tokio::spawn(async move {
                 let mut gen = generator::Generator::new(parser.to_owned());
 
-                gen.traverse_ast();
+                gen.traverse_ast().unwrap_or_else(|err| {
+                    err.print_and_exit()
+                });
 
                 match store.run_code(&gen.output_text) {
                     Ok((true, _, _)) => {
@@ -176,6 +182,8 @@ pub async fn compile_and_test(
                 .green()
         );
     }
+
+    Ok(())
 }
 
 /// Get tokens from the custom language lexer.
@@ -186,18 +194,17 @@ pub async fn compile_and_test(
 ///
 /// # Returns
 ///
-/// A vector of `Token` representing the lexed tokens.
+/// Result enum, if Ok contains a vector of `Token` representing the lexed tokens.
 ///
 /// # Example
 ///
 /// ```rust
-/// let tokens = cpast::get_tokens("(N) (?:N){\\1}".to_string());
+/// let tokens = cpast::get_tokens("(N) (?:N){\\1}".to_string()).unwrap();
 /// ```
-#[must_use]
-pub fn get_tokens(language: String) -> Vec<Token> {
+pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexErrorType> {
     let mut token = lexer::Tokens::new(language);
-    token.scan_tokens();
-    token.tokens
+    token.scan_tokens()?;
+    Ok(token.tokens)
 }
 
 /// Get the Abstract Syntax Tree (AST) from the custom language parser.
@@ -208,18 +215,17 @@ pub fn get_tokens(language: String) -> Vec<Token> {
 ///
 /// # Returns
 ///
-/// The `Program` AST representing the parsed program.
+/// Result enum, if Ok contains the `ClexLanguageAST` AST representing the parsed program.
 ///
 /// # Example
 ///
 /// ```rust
-/// let ast = cpast::get_ast("(N) (?:N){\\1}".to_string());
+/// let ast = cpast::get_ast("(N) (?:N){\\1}".to_string()).unwrap();
 /// ```
-#[must_use]
-pub fn get_ast(language: String) -> Program {
-    let mut parser = parser::Parser::new(language);
-    parser.parser();
-    parser.language
+pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexErrorType> {
+    let mut parser = parser::Parser::new(language)?;
+    parser.parser()?;
+    Ok(parser.language)
 }
 
 /// Generate code based on the custom language specification.
@@ -230,18 +236,17 @@ pub fn get_ast(language: String) -> Program {
 ///
 /// # Returns
 ///
-/// A string representing the generated test pattern.
+/// Result enum, if Ok contains a string representing the generated test pattern.
 ///
 /// # Example
 ///
 /// ```rust
-/// let generated_code = cpast::generator("(N[1,10]) (?:N){\\1}".to_string());
+/// let generated_code = cpast::generator("(N[1,10]) (?:N){\\1}".to_string()).unwrap();
 /// ```
-#[must_use]
-pub fn generator(language: String) -> String {
-    let mut parser = parser::Parser::new(language);
-    parser.parser();
+pub fn generator(language: String) -> Result<String, ClexErrorType> {
+    let mut parser = parser::Parser::new(language)?;
+    parser.parser()?;
     let mut gen = generator::Generator::new(parser);
-    gen.traverse_ast();
-    gen.output_text
+    gen.traverse_ast()?;
+    Ok(gen.output_text)
 }
