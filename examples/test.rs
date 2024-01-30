@@ -17,5 +17,6 @@ async fn main() {
         true,
         false,
     )
-    .await;
+    .await
+    .unwrap_or_else(|err| err.print_and_exit());
 }

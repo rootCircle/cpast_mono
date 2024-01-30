@@ -1,30 +1,30 @@
 use cpast::clex_language::ast::{
-    CharacterSet, DataType, ReferenceType, UnitExpression, MAX_STRING_SIZE,
+    CharacterSet, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };
-use cpast::get_ast;
+use cpast::{clex_language, get_ast};
 
 #[test]
 fn test_get_ast_with_complex_pattern() {
     let language = "(N[5,7]) (?: (N[1,5]) N[-10000,10000]{\\2}){\\1}";
-    let ast = get_ast(language.to_string());
+    let ast = get_ast(language.to_string()).unwrap();
 
     assert_eq!(
         ast.expression,
         vec![
             UnitExpression::CapturingGroup {
                 group_number: 1,
-                data_type: DataType::Integer(
-                    ReferenceType::ByLiteral(5),
-                    ReferenceType::ByLiteral(7)
+                range: (
+                    PositiveReferenceType::ByLiteral(5),
+                    PositiveReferenceType::ByLiteral(7)
                 ),
             },
             UnitExpression::NonCapturingGroup {
                 nest_exp: vec![
                     UnitExpression::CapturingGroup {
                         group_number: 2,
-                        data_type: DataType::Integer(
-                            ReferenceType::ByLiteral(1),
-                            ReferenceType::ByLiteral(5)
+                        range: (
+                            PositiveReferenceType::ByLiteral(1),
+                            PositiveReferenceType::ByLiteral(5)
                         ),
                     },
                     UnitExpression::Primitives {
@@ -32,10 +32,10 @@ fn test_get_ast_with_complex_pattern() {
                             ReferenceType::ByLiteral(-10000),
                             ReferenceType::ByLiteral(10000)
                         ),
-                        repetition: ReferenceType::ByGroup { group_number: 2 },
+                        repetition: PositiveReferenceType::ByGroup { group_number: 2 },
                     },
                 ],
-                repetition: ReferenceType::ByGroup { group_number: 1 },
+                repetition: PositiveReferenceType::ByGroup { group_number: 1 },
             },
             UnitExpression::Eof,
         ]
@@ -45,17 +45,17 @@ fn test_get_ast_with_complex_pattern() {
 #[test]
 fn test_get_ast_with_backreference() {
     let language = "S {\\1}";
-    let ast = get_ast(language.to_string());
+    let ast = get_ast(language.to_string()).unwrap();
 
     assert_eq!(
         ast.expression,
         vec![
             UnitExpression::Primitives {
                 data_type: DataType::String(
-                    ReferenceType::ByLiteral(MAX_STRING_SIZE as i64),
+                    PositiveReferenceType::ByLiteral(clex_language::ast::MAX_STRING_SIZE as u64),
                     CharacterSet::default_charset()
                 ),
-                repetition: ReferenceType::ByGroup { group_number: 1 },
+                repetition: PositiveReferenceType::ByGroup { group_number: 1 },
             },
             UnitExpression::Eof
         ]

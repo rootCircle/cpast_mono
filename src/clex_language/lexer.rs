@@ -22,7 +22,7 @@
 //!
 //! // Assert token types and lexemes in a test
 //! assert_eq!(
-//!     get_tokens(src.to_string()),
+//!     get_tokens(src.to_string()).unwrap(),
 //!     vec![
 //!         Token {
 //!             token_type: TokenType::Integer,
@@ -39,11 +39,11 @@
 //! For more details on the types and methods provided by the lexer, refer to the documentation for each type.
 
 use crate::clex_language::ast::CharacterSet;
-use std::process::exit;
+use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use unicode_segmentation::UnicodeSegmentation;
 
 /// Represents the different types of tokens in the lexer.
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum TokenType {
     // Metacharacters
     LeftParens,
@@ -57,10 +57,10 @@ pub enum TokenType {
     Comma,
 
     // Character sets
-    /// Integer token type with optional minimum and maximum values (inclusive).
-    Integer, // (Value, Min, Max)
-    /// Float token type with optional minimum and maximum values (inclusive).
-    Float, // (Value, Min, Max)
+    /// Integer token type
+    Integer,
+    /// Float token type
+    Float,
     /// String token type.
     String,
     /// Character token type.
@@ -73,7 +73,6 @@ pub enum TokenType {
     LiteralCharacter(char),
 
     // End of file
-    /// Represents the end of the file in the token stream.
     Eof,
 }
 
@@ -86,6 +85,7 @@ pub struct Token {
     pub lexeme: String,
 }
 
+/// Represents a collection of tokens produced by the lexer.
 #[derive(Debug, Clone)]
 pub(crate) struct Tokens {
     pub(crate) tokens: Vec<Token>,
@@ -95,6 +95,7 @@ pub(crate) struct Tokens {
 }
 
 impl Tokens {
+    /// Creates a new Tokens instance for a given source language.
     pub fn new(source_language: String) -> Self {
         Self {
             tokens: Vec::new(),
@@ -104,26 +105,28 @@ impl Tokens {
         }
     }
 
-    pub fn scan_tokens(&mut self) {
+    /// Scans tokens from the source language and adds them to the tokens vector.
+    pub fn scan_tokens(&mut self) -> Result<(), ClexErrorType> {
         while !self.at_end() {
             self.start = self.current;
-            let scan_token = self.scan_token();
-            if let Err(err) = scan_token {
-                eprintln!("[LEXER ERROR] {err}");
-                exit(1);
-            }
+            self.scan_token()?;
         }
+
         self.tokens.push(Token {
             token_type: TokenType::Eof,
             lexeme: String::new(),
         });
+
+        Ok(())
     }
 
+    /// Checks if the lexer has reached the end of the source language.
     fn at_end(&self) -> bool {
         self.source_language.len() <= self.current
     }
 
-    fn scan_token(&mut self) -> Result<(), String> {
+    /// Scans a single token from the source language.
+    fn scan_token(&mut self) -> Result<(), ClexErrorType> {
         let c = self.advance();
         match c {
             "(" => self.add_token(TokenType::LeftParens),
@@ -139,7 +142,7 @@ impl Tokens {
             "S" => self.add_token(TokenType::String),
             "C" => self.add_token(TokenType::Character),
             " " | "\r" | "\t" | "\n" => {
-                // Do nothing, just those spaces out :evil:
+                // Do nothing, just ignore these spaces
             }
             "'" => {
                 let character = self
@@ -148,20 +151,26 @@ impl Tokens {
                     .unwrap_or(CharacterSet::get_code(CharacterSet::default_charset()));
                 self.add_token(TokenType::LiteralCharacter(character));
                 if !self.match_str("'") {
-                    return Err("Expected closing ' after opening '".to_string());
+                    return Err(ClexErrorType::UnclosedSingleQuotes(
+                        ParentErrorType::LexerError,
+                    ));
                 }
             }
             "?" => {
                 if self.match_str(":") {
                     self.add_token(TokenType::QuestionColon);
                 } else {
-                    return Err("Expected : after ?".to_string());
+                    return Err(ClexErrorType::MissingColonAfterQuestionMark(
+                        ParentErrorType::LexerError,
+                    ));
                 }
             }
             _ => {
                 if c == "-" || Self::is_digit(c) {
                     if c == "-" && !Self::is_digit(self.peek()) {
-                        return Err("Expected Number after -".to_string());
+                        return Err(ClexErrorType::MissingNumberAfterNegativeSign(
+                            ParentErrorType::LexerError,
+                        ));
                     }
 
                     while Self::is_digit(self.peek()) {
@@ -172,19 +181,26 @@ impl Tokens {
                     {
                         Ok(num) => num,
                         Err(_err) => {
-                            return Err("Error parsing the number".to_string());
+                            return Err(ClexErrorType::NumericParsingError(
+                                ParentErrorType::LexerError,
+                            ));
                         }
                     };
 
                     self.add_token(TokenType::LiteralNumber(number));
                 } else {
-                    return Err(format!("Unexpected character {c}"));
+                    let character: &'static str = Box::leak(c.into());
+                    return Err(ClexErrorType::UnknownCharacter(
+                        ParentErrorType::LexerError,
+                        character,
+                    ));
                 }
             }
         }
         Ok(())
     }
 
+    /// Adds a token to the tokens vector.
     fn add_token(&mut self, token_type: TokenType) {
         self.tokens.push(Token {
             token_type,
@@ -192,51 +208,52 @@ impl Tokens {
         });
     }
 
+    /// Advances the current index and returns the character at the new index.
     fn advance(&mut self) -> &str {
         self.current += 1;
-        return self.char_at(self.current - 1);
+        self.char_at(self.current - 1)
     }
 
+    /// Retrieves the character at the specified index.
     fn char_at(&self, index: usize) -> &str {
-        return self.source_language.graphemes(true).collect::<Vec<&str>>()[index];
+        self.source_language.graphemes(true).collect::<Vec<&str>>()[index]
     }
 
+    /// Checks if the current characters match the expected string.
     fn match_str(&mut self, expected: &str) -> bool {
-        if self.at_end() {
-            return false;
+        if self.at_end() || self.char_at(self.current) != expected {
+            false
+        } else {
+            self.current += 1;
+            true
         }
-
-        if self.char_at(self.current) != expected {
-            return false;
-        }
-
-        self.current += 1;
-        true
     }
 
+    /// Checks if the character is a digit.
     fn is_digit(ch: &str) -> bool {
         ("0"..="9").contains(&ch)
     }
 
+    /// Peeks at the character at the current index.
     fn peek(&self) -> &str {
         if self.at_end() {
-            return "\0";
+            "\0"
+        } else {
+            self.char_at(self.current)
         }
-
-        return self.char_at(self.current);
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::clex_language::lexer::{Token, TokenType, Tokens};
+    use super::*;
 
     #[test]
     fn tokenization_works() {
         let src = "12N3";
         let mut tokens = Tokens::new(src.to_string());
 
-        tokens.scan_tokens();
+        tokens.scan_tokens().unwrap();
 
         assert_eq!(
             tokens.tokens,
