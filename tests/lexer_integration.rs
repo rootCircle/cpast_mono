@@ -5,7 +5,7 @@ fn test_single_token() {
     let src = "N";
 
     assert_eq!(
-        get_tokens(src.to_string()),
+        get_tokens(src.to_string()).unwrap(),
         vec![
             Token {
                 token_type: TokenType::Integer,
@@ -24,7 +24,7 @@ fn test_empty_source() {
     let src = "";
 
     assert_eq!(
-        get_tokens(src.to_string()),
+        get_tokens(src.to_string()).unwrap(),
         vec![Token {
             token_type: TokenType::Eof,
             lexeme: "".to_string(),
@@ -37,7 +37,7 @@ fn test_whitespace_source() {
     let src = "  \t\n\r ";
 
     assert_eq!(
-        get_tokens(src.to_string()),
+        get_tokens(src.to_string()).unwrap(),
         vec![Token {
             token_type: TokenType::Eof,
             lexeme: "".to_string(),
@@ -50,7 +50,7 @@ fn test_mixed_tokens() {
     let src = "N [ C ?: 42 ]";
 
     assert_eq!(
-        get_tokens(src.to_string()),
+        get_tokens(src.to_string()).unwrap(),
         vec![
             Token {
                 token_type: TokenType::Integer,
@@ -89,7 +89,7 @@ fn test_characters() {
     let src = "'A'";
 
     assert_eq!(
-        get_tokens(src.to_string()),
+        get_tokens(src.to_string()).unwrap(),
         vec![
             Token {
                 token_type: TokenType::LiteralCharacter('A'),

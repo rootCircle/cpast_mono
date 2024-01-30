@@ -3,6 +3,7 @@ mod cli;
 use crate::cli::cli_parser::{Commands, CpastCli};
 use colored::Colorize;
 use cpast::{compile_and_test, generator};
+use std::process::exit;
 
 #[cfg(feature = "clipboard")]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
@@ -28,14 +29,18 @@ async fn main() {
                     no_stop,
                     do_force_compile,
                 )
-                .await;
+                .await
+                .unwrap_or_else(|err| err.print_and_exit());
             }
             Commands::Generate(args) => {
                 if args.generator.is_none() {
                     println!("{}", "[GENERATOR] Generator language is required!".red());
                 } else {
                     let language = args.generator.unwrap_or_else(String::new);
-                    let generated_testcases = generator(language);
+                    let generated_testcases = generator(language).unwrap_or_else(|err| {
+                        eprintln!("{:#?} {}", err, err.get_msg());
+                        exit(1);
+                    });
                     println!("{}", "Generated Testcase".green());
                     println!("=====================================");
                     println!("{}", &generated_testcases);

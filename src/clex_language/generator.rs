@@ -1,18 +1,20 @@
-use crate::clex_language::ast::{CharacterSet, DataType, Program, ReferenceType, UnitExpression};
+use crate::clex_language::ast::{
+    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
+};
 use crate::clex_language::parser::Parser;
 use rand::{
     distributions::{Alphanumeric, DistString},
     Rng,
 };
 
+use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use std::collections::HashMap;
-use std::process::exit;
 
 #[derive(Debug)]
 pub struct Generator {
-    syntax_tree: Program,
+    syntax_tree: ClexLanguageAST,
     pub output_text: String,
-    groups: HashMap<u64, i64>, // group_no, repeat_count
+    groups: HashMap<u64, u64>, // group_no, repeat_count
 }
 
 impl Generator {
@@ -28,7 +30,7 @@ impl Generator {
         self.output_text = String::new();
     }
 
-    fn new_from_program(program: Program, groups: &HashMap<u64, i64>) -> Self {
+    fn new_from_program(program: ClexLanguageAST, groups: &HashMap<u64, u64>) -> Self {
         Self {
             syntax_tree: program,
             output_text: String::new(),
@@ -36,45 +38,34 @@ impl Generator {
         }
     }
 
-    pub fn traverse_ast(&mut self) {
+    pub fn traverse_ast(&mut self) -> Result<(), ClexErrorType> {
         for unit_expression in &self.syntax_tree.expression {
             match unit_expression {
                 UnitExpression::Primitives {
                     data_type,
                     repetition,
                 } => {
-                    let repetition_count = if repetition != &ReferenceType::None {
-                        self.get_value_from_reference(*repetition)
-                    } else {
-                        // Defaults repetition to 1
-                        1
-                    };
+                    let repetition_count = self.get_positive_value_from_reference(*repetition)?;
 
-                    if repetition_count <= 0 {
-                        eprintln!("[GENERATOR ERROR] Repetition Count({repetition_count}) can't be negative or zero");
-                        eprintln!("[GENERATOR ERROR] If referencing count by group, then prefer setting minimum value to at-least 1.");
-                        exit(1);
-                    }
-
-                    for _ in 0..repetition_count {
+                    for _ in 1..=repetition_count {
                         match data_type {
                             DataType::String(length, charset) => self
                                 .output_text
-                                .push_str(&self.generate_random_string(*length, *charset)),
+                                .push_str(&self.generate_random_string(*length, *charset)?),
                             DataType::Character => self
                                 .output_text
                                 .push_str(&Self::generate_random_character()),
                             DataType::Float(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
-                                        .generate_random_float(*min_reference, *max_reference)
+                                        .generate_random_float(*min_reference, *max_reference)?
                                         .to_string(),
                                 );
                             }
                             DataType::Integer(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
-                                        .generate_random_number(*min_reference, *max_reference)
+                                        .generate_random_number(*min_reference, *max_reference)?
                                         .to_string(),
                                 );
                             }
@@ -84,13 +75,10 @@ impl Generator {
                 }
                 UnitExpression::CapturingGroup {
                     group_number,
-                    data_type: DataType::Integer(min_reference, max_reference),
+                    range: (min_reference, max_reference),
                 } => {
-                    let mut min_reference = min_reference;
-                    if self.get_value_from_reference(*min_reference) < 0 {
-                        min_reference = &ReferenceType::ByLiteral(0);
-                    }
-                    let random_number = self.generate_random_number(*min_reference, *max_reference);
+                    let random_number =
+                        self.generate_positive_random_number(*min_reference, *max_reference)?;
                     self.groups.insert(*group_number, random_number);
 
                     let mut random_number = random_number.to_string();
@@ -102,26 +90,16 @@ impl Generator {
                     nest_exp,
                     repetition,
                 } => {
-                    let repetition_count = if repetition != &ReferenceType::None {
-                        self.get_value_from_reference(*repetition)
-                    } else {
-                        // Defaults repetition to 1
-                        1
-                    };
+                    let repetition_count = self.get_positive_value_from_reference(*repetition)?;
 
-                    if repetition_count <= 0 {
-                        eprintln!("[GENERATOR ERROR] Repetition Count({repetition_count}) can't be negative or zero");
-                        exit(1);
-                    }
-
-                    for _ in 0..repetition_count {
+                    for _ in 1..=repetition_count {
                         let mut nest_gen = Self::new_from_program(
-                            Program {
+                            ClexLanguageAST {
                                 expression: nest_exp.clone(),
                             },
                             &self.groups,
                         );
-                        nest_gen.traverse_ast();
+                        nest_gen.traverse_ast()?;
                         self.groups = nest_gen.groups;
                         self.output_text.push_str(&nest_gen.output_text);
                         self.output_text.push(' ');
@@ -130,11 +108,12 @@ impl Generator {
                 UnitExpression::Eof => {
                     break;
                 }
-                _ => {}
             }
         }
 
         self.post_generation_cleanup();
+
+        Ok(())
     }
 
     fn post_generation_cleanup(&mut self) {
@@ -143,105 +122,134 @@ impl Generator {
         self.output_text = self.output_text.trim().to_string();
     }
 
-    fn generate_random_number(
-        &self,
-        min_reference: ReferenceType,
-        max_reference: ReferenceType,
-    ) -> i64 {
-        let min = self.get_value_from_reference(min_reference);
-        let max = self.get_value_from_reference(max_reference);
-
+    // Helper method for generating random integers
+    fn generate_random_integer(&self, min: i64, max: i64) -> Result<i64, ClexErrorType> {
         if min > max {
-            eprintln!("[GENERATOR ERROR] Upper bound should be greater than lower bound in [m({min}),n({max})]");
-            exit(1);
+            return Err(ClexErrorType::InvalidRangeValues(
+                ParentErrorType::GeneratorError,
+                min,
+                max,
+            ));
         }
-
-        rand::thread_rng().gen_range(min..=max)
+        Ok(rand::thread_rng().gen_range(min..=max))
     }
 
-    fn generate_random_float(
-        &self,
-        min_reference: ReferenceType,
-        max_reference: ReferenceType,
-    ) -> f64 {
-        let min = self.get_value_from_reference(min_reference) as f64;
-        let max = self.get_value_from_reference(max_reference) as f64;
-
+    // Helper method for generating random positive integers
+    fn generate_positive_random_integer(&self, min: u64, max: u64) -> Result<u64, ClexErrorType> {
         if min > max {
-            eprintln!("[GENERATOR ERROR] Upper bound should be greater than lower bound in [m({min}),n({max})]");
-            exit(1);
+            return Err(ClexErrorType::InvalidRangeValues(
+                ParentErrorType::GeneratorError,
+                min as i64,
+                max as i64,
+            ));
         }
-
-        rand::thread_rng().gen_range(min..=max)
-    }
-    fn get_value_from_reference(&self, reference_type: ReferenceType) -> i64 {
-        match reference_type {
-            ReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(gn),
-            ReferenceType::ByLiteral(value) => value,
-            ReferenceType::None => {
-                eprintln!("[GENERATOR ERROR] Error detecting Reference Type");
-                exit(1);
-            }
-        }
+        Ok(rand::thread_rng().gen_range(min..=max))
     }
 
     fn generate_random_character() -> String {
         Alphanumeric.sample_string(&mut rand::thread_rng(), 1)
     }
 
-    fn generate_random_string(&self, length: ReferenceType, character_set: CharacterSet) -> String {
-        // CharacterSet::All => Alphanumeric.sample_string(
-        //     &mut rand::thread_rng(),
-        //     self.get_value_from_reference(length) as usize,
-
-        Self::generate_random_string_from_charset(
-            character_set,
-            self.get_value_from_reference(length) as usize,
-        )
-    }
-
-    fn generate_random_string_from_charset(character_set: CharacterSet, length: usize) -> String {
+    fn generate_random_string(
+        &self,
+        length: PositiveReferenceType,
+        character_set: CharacterSet,
+    ) -> Result<String, ClexErrorType> {
+        let length = self.get_positive_value_from_reference(length)? as usize;
         let charset = match character_set {
-            CharacterSet::Alpha => {
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-            abcdefghijklmnopqrstuvwxyz"
-            }
+            CharacterSet::Alphabet => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
             CharacterSet::Numeric => "0123456789",
             CharacterSet::AlphaNumeric => {
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-            abcdefghijklmnopqrstuvwxyz\
-            0123456789"
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
             }
             CharacterSet::UppercaseOnly => "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             CharacterSet::LowerCaseOnly => "abcdefghijklmnopqrstuvwxyz",
             CharacterSet::All => {
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-            abcdefghijklmnopqrstuvwxyz\
-            0123456789)(*&^%$#@!~"
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789)(*&^%$#@!~"
             }
         };
+        Ok(Self::generate_random_string_from_charset(charset, length))
+    }
 
+    fn generate_random_string_from_charset(charset: &str, length: usize) -> String {
         let charset = charset.as_bytes();
-
         let mut rng = rand::thread_rng();
-
-        let generated_string: String = (0..length)
+        (0..length)
             .map(|_| {
                 let idx = rng.gen_range(0..charset.len());
                 charset[idx] as char
             })
-            .collect();
-
-        generated_string
+            .collect()
     }
 
-    fn get_count_from_group(&self, group_number: u64) -> i64 {
+    fn generate_random_number(
+        &self,
+        min_reference: ReferenceType,
+        max_reference: ReferenceType,
+    ) -> Result<i64, ClexErrorType> {
+        let min = self.get_value_from_reference(min_reference)?;
+        let max = self.get_value_from_reference(max_reference)?;
+
+        self.generate_random_integer(min, max)
+    }
+
+    fn generate_positive_random_number(
+        &self,
+        min_reference: PositiveReferenceType,
+        max_reference: PositiveReferenceType,
+    ) -> Result<u64, ClexErrorType> {
+        let min = self.get_positive_value_from_reference(min_reference)?;
+        let max = self.get_positive_value_from_reference(max_reference)?;
+
+        self.generate_positive_random_integer(min, max)
+    }
+
+    fn generate_random_float(
+        &self,
+        min_reference: ReferenceType,
+        max_reference: ReferenceType,
+    ) -> Result<f64, ClexErrorType> {
+        let min = self.get_value_from_reference(min_reference)? as f64;
+        let max = self.get_value_from_reference(max_reference)? as f64;
+
+        if min > max {
+            return Err(ClexErrorType::InvalidRangeValues(
+                ParentErrorType::GeneratorError,
+                min as i64,
+                max as i64,
+            ));
+        }
+
+        Ok(rand::thread_rng().gen_range(min..=max))
+    }
+
+    fn get_value_from_reference(
+        &self,
+        reference_type: ReferenceType,
+    ) -> Result<i64, ClexErrorType> {
+        Ok(match reference_type {
+            ReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(gn)? as i64,
+            ReferenceType::ByLiteral(value) => value,
+        })
+    }
+
+    fn get_positive_value_from_reference(
+        &self,
+        reference_type: PositiveReferenceType,
+    ) -> Result<u64, ClexErrorType> {
+        Ok(match reference_type {
+            PositiveReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(gn)?,
+            PositiveReferenceType::ByLiteral(value) => value,
+        })
+    }
+
+    fn get_count_from_group(&self, group_number: u64) -> Result<u64, ClexErrorType> {
         match self.groups.get(&group_number) {
-            Some(t) => *t,
-            None => {
-                eprintln!("[GENERATOR ERROR] Can't find specified Group no. {group_number} in the language");
-                exit(1);
-            }
+            Some(value) => Ok(*value),
+            None => Err(ClexErrorType::UnknownGroupNumber(
+                ParentErrorType::GeneratorError,
+                group_number,
+            )),
         }
     }
 }

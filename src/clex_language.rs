@@ -8,11 +8,13 @@
 //! - `generator`: Implements the code generator responsible for producing code based on the `clex` language specification.
 //! - `lexer`: Provides lexical analysis capabilities for tokenizing input patterns in the `clex` language.
 //! - `parser`: Implements the parser for interpreting and structuring the `clex` language into an Abstract Syntax Tree (AST).
+//! - `clex_error_type` : Stores an enum for flexible error handling and management
 //!
 //! The `clex` language allows users to specify various data types, repetition patterns, and capturing groups,
 //! providing a flexible way to define input patterns for code testing and analysis.
 //! For detailed usage and syntax rules, refer to the Grammar Rules for Clex Generator in README.
 pub mod ast;
+pub mod clex_error_type;
 pub(crate) mod generator;
 pub mod lexer;
 pub(crate) mod parser;
