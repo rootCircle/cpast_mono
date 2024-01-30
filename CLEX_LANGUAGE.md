@@ -29,7 +29,7 @@ Refer [clex specs](./clex.specs.md)for more detailed explanation.
 - `\1 => Back-reference`
 - `(?:.....){} => Specify the number of occurrences of the group`
 - `N|F[m, n] => Specifying min and max values of N or F (Skip one of the values means MIN and MAX respectively), check for the string if it is within the range or not`
-- `S[l,c] => Specifying the length(l) and character set of String i.e. Alphabets, Alphanumeric, Numeric, Uppercase, Lowercase, All. If c is not specified then defaults to ALphanumeric.`
+- `S[l,c] => Specifying the length(l) and character set of String i.e. Alphabets, Alphanumeric, Numeric, Uppercase, Lowercase, Newline, All. If c is not specified then defaults to ALphanumeric.`
 
 ## Rule
 - Capturing group can only have **single** **non-negative** **INTEGER** element. If not specified its min value is set to 0.
@@ -50,7 +50,7 @@ Refer [clex specs](./clex.specs.md)for more detailed explanation.
 
 - `REFERENCE_TYPE := BY_GROUP(GROUP_NO) | BY_COUNT(POSITIVE_NUMBER) | NONE`
 
-- `CHARACTER_SET := 'U' | 'L' | '0'..='9' | 'D' | 'N' | CHARACTERS` 
+- `CHARACTER_SET := 'U' | 'L' | 'n' | '0'..='9' | 'D' | 'N' | CHARACTERS` 
 
 - MIN_VALUE, MAX_VALUE is of type Integer 
 - POSITIVE_NUMBER is non-negative Integer

@@ -167,6 +167,7 @@ impl Generator {
             CharacterSet::All => {
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789)(*&^%$#@!~"
             }
+            CharacterSet::Newline => "\n",
         };
         Ok(Self::generate_random_string_from_charset(charset, length))
     }

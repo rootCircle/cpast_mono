@@ -9,10 +9,12 @@
   <component name="ChangeListManager">
     <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/clex_language/clex_error_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/clex_error_type.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CLEX_LANGUAGE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLEX_LANGUAGE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clex.specs.md" beforeDir="false" afterPath="$PROJECT_DIR$/clex.specs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/clex_language/ast.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/ast.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/clex_language/generator.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/generator.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/clex_language/lexer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/lexer.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/clex_language/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/parser.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +222,7 @@
       <workItem from="1706030142537" duration="1062000" />
       <workItem from="1706031239654" duration="1408000" />
       <workItem from="1706115104596" duration="6233000" />
-      <workItem from="1706566471769" duration="15207000" />
+      <workItem from="1706566471769" duration="16400000" />
     </task>
     <servers />
   </component>
@@ -231,17 +233,6 @@
     <option featureType="dependencySupport" implementationName="executable:podman" />
     <option featureType="dependencySupport" implementationName="executable:kubectl" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/clex_language/generator.rs</url>
-          <line>128</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
