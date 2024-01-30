@@ -38,7 +38,7 @@ async fn main() {
                 } else {
                     let language = args.generator.unwrap_or_else(String::new);
                     let generated_testcases = generator(language).unwrap_or_else(|err| {
-                        eprintln!("{:#?} {}", err, err.get_msg());
+                        err.print_and_exit();
                         exit(1);
                     });
                     println!("{}", "Generated Testcase".green());
