@@ -7,10 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/clex_language/clex_error_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/clex_language/clex_error_type.rs" afterDir="false" />
-    </list>
+    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -218,7 +215,7 @@
       <workItem from="1706030142537" duration="1062000" />
       <workItem from="1706031239654" duration="1408000" />
       <workItem from="1706115104596" duration="6233000" />
-      <workItem from="1706566471769" duration="17152000" />
+      <workItem from="1706566471769" duration="17748000" />
     </task>
     <servers />
   </component>
