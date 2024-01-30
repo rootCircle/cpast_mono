@@ -114,6 +114,7 @@ pub enum PositiveReferenceType {
 pub enum CharacterSet {
     Alphabet,
     Numeric,
+    Newline,
     AlphaNumeric,
     UppercaseOnly,
     LowerCaseOnly,
@@ -133,6 +134,7 @@ impl CharacterSet {
             Self::UppercaseOnly => 'U',
             Self::LowerCaseOnly => 'L',
             Self::All => 'D',
+            Self::Newline => 'n',
         }
     }
 
@@ -142,7 +144,8 @@ impl CharacterSet {
             '0'..='9' => Self::Numeric,
             'N' => Self::AlphaNumeric,
             'U' => Self::UppercaseOnly,
-            'a'..='z' | 'L' => Self::LowerCaseOnly,
+            'n' => Self::Newline,
+            'a'..='m' | 'o'..='z' | 'L' => Self::LowerCaseOnly,
             'D' => Self::All,
             _ => Self::All,
         }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0
+
+Released on : Jan 30, 2024
+
+- Breaking changes
+- AST is reformatted to support new specifications found at clex.specs.md 
+- Error Handling done neater
+- Bugfix: Fix panic if length of string in StringModifier is negative
+- Refactored clex_language
+- Support for newline using String using `S[1,'n']`.
+
+
 ## 0.3.4
 
 Released on : Jan 25, 2024
