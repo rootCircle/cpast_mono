@@ -3,7 +3,6 @@ mod cli;
 use crate::cli::cli_parser::{Commands, CpastCli};
 use colored::Colorize;
 use cpast::{compile_and_test, generator};
-use std::process::exit;
 
 #[cfg(feature = "clipboard")]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
@@ -39,7 +38,6 @@ async fn main() {
                     let language = args.generator.unwrap_or_else(String::new);
                     let generated_testcases = generator(language).unwrap_or_else(|err| {
                         err.print_and_exit();
-                        exit(1);
                     });
                     println!("{}", "Generated Testcase".green());
                     println!("=====================================");

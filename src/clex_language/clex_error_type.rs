@@ -38,7 +38,7 @@ pub enum ClexErrorType {
 }
 
 impl ClexErrorType {
-    pub fn print_and_exit(&self) {
+    pub fn print_and_exit(&self) -> ! {
         eprintln!("{}", self.get_msg());
         exit(1);
     }
