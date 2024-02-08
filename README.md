@@ -7,6 +7,7 @@
 ![docs.rs](https://img.shields.io/docsrs/cpast)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/rust.yml)
 
+> We are working on making cpast, more accesssible and simple for all. If you have expereience with python and/or writing prompts, consider contributing to [cpast_llm](https://github.com/rootCircle/cpast_llm) repo.
 
 `cpast` is a versatile code testing and analysis tool that allows you to test correct and incorrect code files against a custom language generator called `clex`. It supports a variety of programming languages, including Python, C++, C, Rust, Ruby, JavaScript, and Java. You can specify the number of iterations and test your code against random input values, comparing the output against expected results.
 
