@@ -36,42 +36,50 @@ async fn main() {
                     println!("{}", "[GENERATOR] Generator language is required!".red());
                 } else {
                     let language = args.generator.unwrap_or_else(String::new);
-                    let generated_testcases = generator(language).unwrap_or_else(|err| {
-                        err.print_and_exit();
-                    });
-                    println!("{}", "Generated Testcase".green());
-                    println!("=====================================");
-                    println!("{}", &generated_testcases);
-                    println!("=====================================");
-                    if args.clipboard {
-                        #[cfg(all(
-                            any(target_os = "windows", target_os = "linux", target_os = "macos"),
-                            feature = "clipboard"
-                        ))]
-                        {
-                            let mut ctx = ClipboardContext::new().unwrap();
-                            ctx.set_contents(generated_testcases).unwrap();
+                    match generator(language) {
+                        Ok(testcase) => {
+                            let generated_testcases = testcase;
+                            println!("=====================================");
+                            println!("{}", &generated_testcases);
+                            println!("=====================================");
+                            if args.clipboard {
+                                #[cfg(all(
+                                    any(
+                                        target_os = "windows",
+                                        target_os = "linux",
+                                        target_os = "macos"
+                                    ),
+                                    feature = "clipboard"
+                                ))]
+                                {
+                                    let mut ctx = ClipboardContext::new().unwrap();
+                                    ctx.set_contents(generated_testcases).unwrap();
 
-                            // get_contents is required for set_contents to work
-                            // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
-                            let _ = ctx.get_contents();
-                            println!("{}", "Copied to clipboard successfully!".green());
-                        }
+                                    // get_contents is required for set_contents to work
+                                    // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
+                                    let _ = ctx.get_contents();
+                                    println!("{}", "Copied to clipboard successfully!".green());
+                                }
 
-                        #[cfg(any(
-                            not(any(
-                                target_os = "windows",
-                                target_os = "linux",
-                                target_os = "macos"
-                            )),
-                            not(feature = "clipboard")
-                        ))]
-                        println!(
+                                #[cfg(any(
+                                    not(any(
+                                        target_os = "windows",
+                                        target_os = "linux",
+                                        target_os = "macos"
+                                    )),
+                                    not(feature = "clipboard")
+                                ))]
+                                println!(
                             "{}",
                             "Clipboard Features not enabled during compilation/device not supported!"
                                 .yellow()
                         );
-                    }
+                            }
+                        }
+                        Err(err) => {
+                            err.print_and_exit();
+                        }
+                    };
                 }
             }
         }
