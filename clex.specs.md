@@ -1,6 +1,8 @@
 # Clex Language
 
-Clex is a generator language, that can generate a set of random numbers/string based on a given grammar rules. It doesn't supports arithmetic, logical or any other relationship except in case of back-references. The AST is same for a language in all the case, while the generated string from the language will vary.
+Clex is a generator language, that can generate a set of random numbers/string based on a given grammar rules. 
+
+It doesn't support arithmetic, logical or any other relationship except back-references. The AST is same for a language in all the case, while the generated string from the language will vary.
 
 For example: S[4,'U'] can generate "GAHS" or "JHAS" etc.
 
@@ -68,17 +70,20 @@ Denotes a set of characters from which a string is going to be randomly generate
 
 ### CharacterSet
 
-Just _Character_ enclosed within singles quotes to represent the character set. They are by design enclosed in single quotes, so as to differentiate character set from _DataType_, so as to avoid ambiguity.
+Just _Character_ enclosed within singles quotes to represent the character set. They are by design enclosed in single quotes, to differentiate character set from _DataType_, to avoid ambiguity.
 
 ### GroupNo
 
-Represents the group number for back-referencing. One awesome thing about clex language is its support for dynamic back-references as compared to static ones as found in regex. Each _CapturingGroup_ captures and stores a element by value indexed from 1. Obviously, it can't be more than the number of _CapturingGroup_ present in _ClexLanguage_.
+Represents the group number for back-referencing. One awesome thing about clex language is its support for dynamic back-references as compared to static ones as found in regex. Each _CapturingGroup_ captures and stores an element by value indexed from 1. Obviously, it can't be more than the number of _CapturingGroup_ present in _ClexLanguage_.
 
 ### Reference
 
 _Reference_ can be a back-reference to a capturing group (GroupNo) or a numeric value (i64). It is used in Range to specify the bounds. If not specified, default values are used. Prime purpose of _Reference_ is to act as an abstraction layer to store the literal value or the reference of the value that will be guaranteed to be available in future upon use.
 
 Back-referencing is done by using `"\\" GroupNo`, in this case the value in that specific Group is de-referenced upon use and put back in as a value.
+
+lex uses 1-based indexing for backreferences, rather than zero-based like many other regular expression engines.
+
 
 ### PositiveReference
 
@@ -90,11 +95,11 @@ _Quantifier_ specify the number of occurrences for the preceding expression. The
 
 ### Range
 
-_Range_ specifies a domain of values for numeric _DataType_ (Integer and Float) from which its value will be generated during generator phase. It includes _Reference_(s) for the lower and the upper bound for the number to be generated. If not specified, default values(INT64_MIN, INT64_MAX) are used. The upper and lower bound is always an integer.
+_Range_ specifies a domain of values for numeric _DataType_ (Integer and Float) from which its value will be generated during generator phase. It includes _Reference_(s) for the lower and the upper bound for the number to be generated. If not specified, default values(INT64_MIN, INT64_MAX) are used. The upper and lower bound is always an integer(even if defining range for float data types also). Range is always inclusive, so `[m, n]` would mean that value can be anywhere from `m` to including `n`.
 
 ### PositiveRange
 
-_PositiveRange_ is similar to _Range_ but ensures that the specified references are non-negative(using _PositiveReference_). It includes _PositiveReference_ for the lower and the upper bound for the number to be generated. If not specified, default values(0, INT64_MAX) are used. The upper and lower bound is always an non-negative integer.
+_PositiveRange_ is similar to _Range_ but ensures that the specified references are non-negative(using _PositiveReference_). It includes _PositiveReference_ for the lower and the upper bound for the number to be generated. If not specified, default values(0, INT64_MAX) are used. The upper and lower bound is always a non-negative integer.
 
 ### StringModifier
 
@@ -108,7 +113,7 @@ _DataType_ represents different types of data that can be generator. It includes
 
 A _NonCapturingGroup_ is a _UnitExpression_ that groups other expressions without capturing the matched text, i.e. no account in group register is hold for it. The "(?:" and ")" denote the start and end of the non-capturing group. It can contain other unit expressions and may have associated quantifiers. A NonCapturingGroup can be nested and/or store _CapturingGroup_ as well.
 
-However, it's worth mentioning that if the _NonCapturingGroup_ is repeated using _Quantifier_ and there is a _CapturingGroup_ inside that _NonCapturingGroup_, then the _CapturingGroup_ will only have only one group number, not many for each iterations.
+However, it's worth mentioning that if the _NonCapturingGroup_ is repeated using _Quantifier_ and there is a _CapturingGroup_ inside that _NonCapturingGroup_, then the _CapturingGroup_ will only have one group number, not many for each iteration.
 
 Example : (?:(N)){3} : In this the group number of N will always be one, irrespective of how many times it's called. It won't be 1, 2, 3.
 
@@ -141,7 +146,7 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 
 - Whitespace(s) introduced at any stages are eaten completely by the lexers. So, space are treated the same way as typical comments in other languages.
 
-- _PositiveReference_ must have their dereferenced values always positive. This rule is enforced by ensuring that the value generated in any _CapturingGroup_ is always an non-negative integer.
+- _PositiveReference_ must have their dereferenced values always positive. This rule is enforced by ensuring that the value generated in any _CapturingGroup_ is always a non-negative integer.
 
 - At any given instance, _GroupNo_ CANNOT EXCEED the **total number of occurrences of _CapturingGroup_** in that specific Language. So, if there are only three capturing group in that language, then language will not allow _GroupNo_ > 3.
 
@@ -165,10 +170,10 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 
 ## Examples
 
-- N{2}
-- (N) (?:N){\\1}
-- (N) (?:S[\\1,])
-- (N) (?:S[\\1,'U'])
-- N S C
-- F[-100,100]
-- (N[1,100]) (?:N[1,1000]){\\1} N[1,10000]
+- `N{2}` : Generates two random integers.
+- `(N) (?:N){\\1}` : Generates a random integer, then the same number of additional integers.
+- `(N) (?:S[\\1,])` : Generates a random integer, then a string of that length.
+- `(N) (?:S[\\1,'U'])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
+- `N S C` : Generates a random integer, string, and character.
+- `F[-100,100]` : Generates a random floating-point number between -100 and 100.
+- `(N[1,100]) (?:N[1,1000]){\\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
