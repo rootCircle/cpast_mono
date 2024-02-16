@@ -7,7 +7,9 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="" />
+    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +64,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/violow/Documents/Coding/Languages/lang/Rust/Projects/zen-project/zen-lang",
+    "last_opened_file_path": "/home/violow/Documents/Coding/Languages/lang/Rust/Projects/cpast-project/cpast",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -84,7 +86,7 @@
     <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager" selected="Cargo.Test test_get_ast_with_backreference">
+  <component name="RunManager">
     <configuration name="Build cpast" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="build --package cpast --lib" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -170,15 +172,6 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Cargo.Test test_get_ast_with_backreference" />
-        <item itemvalue="Cargo.Test test_generator_with_upper_string_expression" />
-        <item itemvalue="Cargo.Test test_characters" />
-        <item itemvalue="Cargo.Build cpast" />
-        <item itemvalue="Cargo.Test parser_integration" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="/usr/bin" />

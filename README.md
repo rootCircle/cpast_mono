@@ -138,7 +138,7 @@ cpast generate "S[10,'U']"
 ## Language Specification
 
 The `clex` language generator is based on a custom grammar specification. It allows you to define input patterns for testing.
-For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./CLEX_LANGUAGE.md).
+For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./clex.specs.md).
 
 ## Roadmap
 
