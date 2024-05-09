@@ -1,74 +1,39 @@
-#include<bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
-int main()
-{
+int main() {
 
-    int t;
+  int t;
+  cin >> t;
 
-    cin>>t;
+  while (t > 0) {
 
-    while(t>0)
+    int n;
+    cin >> n;
 
-    {
+    int arr[n];
+    int count = 0;
+    int flag = 0;
 
-        int n;
+    for (int i = 0; i < n; i++) {
 
-        cin>>n;
+      cin >> arr[i];
+      if (arr[i] == 0) {
+        flag = 1;
+      }
 
-        int arr[n];
-
-        int count=0;
-
-        int flag=0;
-
-        for(int i=0;i<n;i++)
-
-        {
-
-            cin>>arr[i];
-
-            
-
-            if(arr[i]==0)
-
-            {
-
-                flag=1;
-            }
-
-            
-
-            if(arr[i]<0)
-
-            {
-
-                count++;
-
-            }
-
-        }
-
-            
-
-                   
-
-        if(count%2==0 || flag!=0)
-
-        cout<<"0"<<endl;
-
-        
-
-        else
-
-        cout<<(count%2)<<endl;        
-
-        t--;
-
+      if (arr[i] < 0) {
+        count++;
+      }
     }
 
+    if (count % 2 == 0 || flag != 0) {
+      cout << "0" << endl;
+    } else {
+      cout << (count % 2) << endl;
+    }
+    t--;
+  }
 
-
-    return 0;
-
+  return 0;
 }
