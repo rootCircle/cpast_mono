@@ -1,8 +1,11 @@
+> [!IMPORTANT]
+> This specification is deprecated since v0.4.0 and is kept solely for archival purposes! See latest specs at [clex specs](./../../clex.specs.md)
+
 # Grammar Rules for Clex Generator
 
 Written similar to regex, just so that regex doesn't support Repeating Things through Back-references and Regex is unnecessary complex.
 
-Refer [clex specs](./clex.specs.md)for more detailed explanation.
+Refer [clex specs](../../clex.specs.md)for more detailed explanation.
 
 ## Rules
 
