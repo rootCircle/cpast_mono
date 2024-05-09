@@ -7,7 +7,7 @@
 ![docs.rs](https://img.shields.io/docsrs/cpast)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/rust.yml)
 
-> We are working on making cpast, more accesssible and simple for all. If you have experience with python and/or writing prompts, consider contributing to [cpast_llm](https://github.com/rootCircle/cpast_llm) repo.
+> We are working on making cpast, more accessible and simple for all. If you have experience with python and/or writing prompts, consider contributing to [cpast_llm](https://github.com/rootCircle/cpast_llm) repo.
 
 `cpast` is a versatile code testing and analysis tool that allows you to test correct and incorrect code files against a custom language generator called `clex`. It supports a variety of programming languages, including Python, C++, C, Rust, Ruby, JavaScript, and Java. You can specify the number of iterations and test your code against random input values, comparing the output against expected results.
 
@@ -142,12 +142,12 @@ For more information on the `clex` language and its usage, please refer to the [
 
 ## Roadmap
 
-- [x] Support for Capturing Group inside Non-capturing group
-- [x] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
-- [x] Allow only one time compilations in future
 - [ ] Support for lazy evaluations of group values.
 - [ ] Add docs about `clex` usage. For now try inferring from CLEX_LANGUAGE.md file.
 - [ ] Floating Limit support in Range Bounds for Numeral Data Type for Float
+- [x] Support for Capturing Group inside Non-capturing group
+- [x] Support strong strings checks like all lowercase, uppercase, alphabets, numbers, alphanumeric
+- [x] Allow only one time compilations in future
 - [x] Support Back-references in Range Bounds as well.
 
 Now you are ready to use `cpast` for testing your code against various programming languages and input patterns defined by the `clex` language. Happy testing!
@@ -157,48 +157,49 @@ Now you are ready to use `cpast` for testing your code against various programmi
 - Warning: User discretion is required! I don't take any responsibility for any issues faced, while using these alternatives. They are just for informational purposes only. I have not tested either of these.
 
 - Dynamic Testcase Generators
-    - [CP-test](https://github.com/ccd97/CP-test)
-    - [contest-testcase-generator](https://github.com/tmt514/contest-testcase-generator)
-    - [metagen](https://github.com/mingaleg/metagen)
-    - [TestCaseGenerator](https://github.com/masterashu/TestCaseGenerator)
-    - [testcase-gen](https://github.com/JacobLinCool/testcase-gen)
-    - [pycontest](https://github.com/matinhimself/pycontest)
-    - [testcase-generator](https://github.com/naskya/testcase-generator)
-    - [testcase-generator](https://github.com/Ninjaclasher/testcase-generator)
-    - [python-testcase-generator](https://github.com/tjkendev/python-testcase-generator)
-    - [inzva-testcase-generator](https://github.com/brkdnmz/inzva-testcase-generator)
-    - [MochaGen](https://github.com/CKEFGISC/MochaGen/)
-    - [TestcaseGenerator](https://github.com/phirasit/TestcaseGenerator)
-    - [genlib](https://github.com/MasterIceZ/genlib)
-    - [tc-lexer](https://github.com/bluebottlewize/tc-lexer)
-    - [tc-generator](https://github.com/rdxxer/tc-generator)
-    - [testcase_generator](https://github.com/hyeonseok92/testcase_generator)
-    - [Random_Testcases_Generator](https://github.com/dasilvaca/Random_Testcases_Generator)
-    - [python-testcase-generator](https://github.com/tuanpauet/python-testcase-generator)
-    - [TestCasesGenerator](https://github.com/khaled-hamam/TestCasesGenerator)
-    - [GenerateTestCase](https://github.com/Gingmzmzx/GenerateTestCase)
+    - [ccd97/CP-test](https://github.com/ccd97/CP-test)
+    - [tmt514/contest-testcase-generator](https://github.com/tmt514/contest-testcase-generator)
+    - [mingaleg/metagen](https://github.com/mingaleg/metagen)
+    - [masterashu/TestCaseGenerator](https://github.com/masterashu/TestCaseGenerator)
+    - [JacobLinCool/testcase-gen](https://github.com/JacobLinCool/testcase-gen)
+    - [matinhimself/pycontest](https://github.com/matinhimself/pycontest)
+    - [naskya/testcase-generator](https://github.com/naskya/testcase-generator)
+    - [Ninjaclasher/testcase-generator](https://github.com/Ninjaclasher/testcase-generator)
+    - [tjkendev/python-testcase-generator](https://github.com/tjkendev/python-testcase-generator)
+    - [brkdnmz/inzva-testcase-generator](https://github.com/brkdnmz/inzva-testcase-generator)
+    - [CKEFGISC/MochaGen](https://github.com/CKEFGISC/MochaGen/)
+    - [phirasit/TestcaseGenerator](https://github.com/phirasit/TestcaseGenerator)
+    - [MasterIceZ/genlib](https://github.com/MasterIceZ/genlib)
+    - [bluebottlewize/tc-lexer](https://github.com/bluebottlewize/tc-lexer)
+    - [rdxxer/tc-generator](https://github.com/rdxxer/tc-generator)
+    - [hyeonseok92/testcase_generator](https://github.com/hyeonseok92/testcase_generator)
+    - [dasilvaca/Random_Testcases_Generator](https://github.com/dasilvaca/Random_Testcases_Generator)
+    - [tuanpauet/python-testcase-generator](https://github.com/tuanpauet/python-testcase-generator)
+    - [khaled-hamam/TestCasesGenerator](https://github.com/khaled-hamam/TestCasesGenerator)
+    - [Gingmzmzx/GenerateTestCase](https://github.com/Gingmzmzx/GenerateTestCase)
+    - [dush1729/Auto-Tester](https://github.com/dush1729/Auto-Tester)
 
 - Static Testcase Generator
-    - [ojtest](https://github.com/f-fanfan/ojtest)
-    - [CHD2-12-09-2019](https://github.com/fextivity/CHD2-12-09-2019)
+    - [f-fanfan/ojtest](https://github.com/f-fanfan/ojtest)
+    - [fextivity/CHD2-12-09-2019](https://github.com/fextivity/CHD2-12-09-2019)
 
 - GPT Based Generators
-    - [GPT-testCase-Generator](https://github.com/voho0000/GPT-testCase-Generator)
-    - [testcase-generator](https://github.com/DragonBuilder/testcase-generator)
+    - [voho0000/GPT-testCase-Generator](https://github.com/voho0000/GPT-testCase-Generator)
+    - [DragonBuilder/testcase-generator](https://github.com/DragonBuilder/testcase-generator)
 
 - Misc
-    - [tokilib](https://github.com/fushar/tokilib)
-    - [testlib](https://github.com/MikeMirzayanov/testlib)
-    - [tcframe](https://github.com/ia-toki/tcframe)
-    - [tcg](https://github.com/huntzhan/tcg)
-    - [TestCase-generator-vscode-extension](https://github.com/yongsk0066/TestCase-generator-vscode-extension)
-    - [pnoj-tg](https://github.com/pnoj/pnoj-tg)
-    - [TomChienXuTestcaseGenerator](https://github.com/TomChienXuOrganization/TomChienXuTestcaseGenerator)
-    - [leetgen](https://github.com/sebnyberg/leetgen)
-    - [codeforces-companion](https://github.com/PanagiotisPtr/codeforces-companion)
-    - [lc_tcg](https://github.com/deweshsoc/lc_tcg)
-    - [code-cross-check](https://github.com/JacobLinCool/code-cross-check)
+    - [fushar/tokilib](https://github.com/fushar/tokilib)
+    - [MikeMirzayanov/testlib](https://github.com/MikeMirzayanov/testlib)
+    - [ia-toki/tcframe](https://github.com/ia-toki/tcframe)
+    - [huntzhan/tcg](https://github.com/huntzhan/tcg)
+    - [yongsk0066/TestCase-generator-vscode-extension](https://github.com/yongsk0066/TestCase-generator-vscode-extension)
+    - [pnoj/pnoj-tg](https://github.com/pnoj/pnoj-tg)
+    - [TomChienXuOrganization/TomChienXuTestcaseGenerator](https://github.com/TomChienXuOrganization/TomChienXuTestcaseGenerator)
+    - [sebnyberg/leetgen](https://github.com/sebnyberg/leetgen)
+    - [PanagiotisPtr/codeforces-companion](https://github.com/PanagiotisPtr/codeforces-companion)
+    - [deweshsoc/lc_tcg](https://github.com/deweshsoc/lc_tcg)
+    - [JacobLinCool/code-cross-check](https://github.com/JacobLinCool/code-cross-check)
 
 - Website
-    - [testcase-generator](https://github.com/xxxzc/testcase-generator)
+    - [xxxzc/testcase-generator](https://github.com/xxxzc/testcase-generator)
 
