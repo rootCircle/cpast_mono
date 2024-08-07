@@ -53,7 +53,7 @@ impl Language {
             Some("rs") => LanguageName::Rust,
             Some("py") => LanguageName::Python,
             Some("c") => LanguageName::C,
-            Some("cpp") | Some("cxx") | Some("c++") => LanguageName::Cpp,
+            Some("cpp") | Some("cxx") | Some("c++") | Some("cc") | Some("C") => LanguageName::Cpp,
             Some("java") => LanguageName::Java,
             Some("js") => LanguageName::Javascript,
             Some("rb") => LanguageName::Ruby,
