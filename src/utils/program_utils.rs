@@ -58,7 +58,7 @@ pub fn run_program_with_input(
 /// Adapted with modifications from GNU Make Project
 /// * `source_code_path` : Path of source code
 /// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of `source_code_path`
-/// Returns true if file needs to be recompiled
+///   Returns true if file needs to be recompiled
 pub fn remake(source_code_path: &Path, compiled_artifact_path: &Path) -> Result<bool, io::Error> {
     if compiled_artifact_path.exists() {
         let source_modified_time = source_code_path.metadata()?.modified()?;
