@@ -1,4 +1,7 @@
-use clap::Parser;
+use std::io;
+
+use clap::{Command, CommandFactory, Parser, Subcommand, ValueHint};
+use clap_complete::{generate, Generator, Shell};
 
 const DEFAULT_ITERATIONS_COUNT: usize = 5;
 
@@ -6,38 +9,44 @@ const DEFAULT_ITERATIONS_COUNT: usize = 5;
 #[command(name = "cpast", version, author, about, long_about = None)]
 #[command(bin_name = "cpast")]
 pub struct CpastCli {
+    /// Generate Shell Completions
+    #[arg(long = "completions", value_enum)]
+    completions: Option<Shell>,
     #[command(subcommand)]
     pub(crate) command: Option<Commands>,
 }
 
-#[derive(Parser)] // requires `derive` feature
-#[command(name = "cpast", version, author, about, long_about = None)]
-#[command(bin_name = "cpast")]
+#[derive(Subcommand)] // requires `derive` feature
 pub enum Commands {
     /// Compare two files to find the missing edge case
+    #[command(author)]
     Test(TestCliArgs),
 
     /// Just generate the testcase
+    #[command(author)]
     Generate(GeneratorCliArgs),
 }
 
+fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
+    generate(gen, cmd, cmd.get_name().to_string(), &mut io::stdout());
+}
+
 #[derive(clap::Args)]
-#[command(author, about, long_about = None)]
 pub struct TestCliArgs {
-    /// The correct reference file
-    #[arg(short, long, required = true)]
+    /// The correct file
+    #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
     pub correct_file: Option<String>,
 
     /// File against which you want to do test
-    #[arg(short, long, required = true)]
+    #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
     pub test_file: Option<String>,
 
-    /// Write Generator LanguageName for generating Tests
-    #[arg(short, long, required = true)]
+    /// Clex for generating Tests
+    #[arg(short, long, required = true, value_hint = ValueHint::Other)]
     pub(crate) generator: Option<String>,
 
-    /// Number of times to iterate before finding a correct output
-    #[arg(short, long, default_value_t = DEFAULT_ITERATIONS_COUNT)]
+    /// Max number of times of iterations
+    #[arg(short, long, default_value_t = DEFAULT_ITERATIONS_COUNT, value_hint = ValueHint::Other)]
     pub(crate) iterations: usize,
 
     /// Whether to not stop after finding one edge case
@@ -50,9 +59,8 @@ pub struct TestCliArgs {
 }
 
 #[derive(clap::Args)]
-#[command(author, about, long_about = None)]
 pub struct GeneratorCliArgs {
-    /// Write Generator LanguageName for generating Tests
+    /// Write Clex for generating Tests
     pub(crate) generator: Option<String>,
 
     /// Copy testcases to clipboard
@@ -61,7 +69,15 @@ pub struct GeneratorCliArgs {
 }
 
 impl CpastCli {
-    pub fn new() -> Self {
-        Self::parse()
+    pub fn new() -> Option<Self> {
+        let opt = Self::parse();
+        if let Some(completions) = opt.completions {
+            let mut cmd = CpastCli::command();
+            eprintln!("Generating completion file for {completions:?}...");
+            print_completions(completions, &mut cmd);
+            None
+        } else {
+            Some(opt)
+        }
     }
 }

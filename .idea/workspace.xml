@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
+    <option name="autoReloadType" value="ALL" />
   </component>
   <component name="CargoProjects">
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="48c7c302-0ff4-41eb-bec4-211ffe87f85e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,6 +61,7 @@
     "Cargo.Test test_whitespace_source.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "/home/violow/Documents/Coding/Languages/lang/Rust/Projects/cpast-project/cpast",
     "node.js.detected.package.eslint": "true",
@@ -86,7 +85,7 @@
     <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Cargo.Build cpast">
     <configuration name="Build cpast" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="build --package cpast --lib" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -209,6 +208,7 @@
       <workItem from="1706031239654" duration="1408000" />
       <workItem from="1706115104596" duration="6233000" />
       <workItem from="1706566471769" duration="17748000" />
+      <workItem from="1723049295137" duration="23000" />
     </task>
     <servers />
   </component>

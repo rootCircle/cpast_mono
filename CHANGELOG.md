@@ -1,16 +1,24 @@
 # Changelog
 
+## 0.4.1
+
+Released on : Aug 07, 2024
+
+- Shell completion support! Generate using 
+  - zsh: `cpast --completions=zsh | sudo tee /usr/local/share/zsh/site-functions/_cpast`
+  - fish: `cpast --completions=fish > ~/.local/share/fish/generated_completions/cpast.fish`
+  - bash: `cpast --completions=bash | sudo tee /etc/bash_completion.d/cpast.bash`
+
 ## 0.4.0
 
 Released on : Jan 30, 2024
 
 - Breaking changes
-- AST is reformatted to support new specifications found at clex.specs.md 
+- AST is reformatted to support new specifications found at clex.specs.md
 - Error Handling done neater
 - Bugfix: Fix panic if length of string in StringModifier is negative
 - Refactored clex_language
 - Support for newline using String using `S[1,'n']`.
-
 
 ## 0.3.4
 
@@ -33,7 +41,7 @@ Released on : Jan 19, 2024
 
 - Performance Fixes
   - remake implementation to reduce repeated compilation based on remake implementation in [GNU make](https://www.gnu.org/software/make/)
-  - Significant improvement in benchmark performance for `test` with files of compiled programming language. 
+  - Significant improvement in benchmark performance for `test` with files of compiled programming language.
 
 ## 0.3.1
 
@@ -45,15 +53,14 @@ Released on : Jan 19, 2024 (Hotfix to 0.3.0)
   - This release also address compilation issues of users using android, by using `--no-default-features` flag during compilation.
   - Dependencies update of clap to 4.4.18
 - Library
-  - compile_and_test method now requires an boolean argument at last to accord to changes in CLI. This argument as addressed earlier too is to whether or not to stop after one failing testcase is found. 
-
+  - compile_and_test method now requires an boolean argument at last to accord to changes in CLI. This argument as addressed earlier too is to whether or not to stop after one failing testcase is found.
 
 ## 0.3.0
 
 Released on : Jan 19, 2024
 
 - CLI
-  - Breaking CLI changes, introduction of two subcommands, `test` and `generate`. `test` for running and comparing two files and finding missing edge cases, while `generate` is just to generate the testcase and print it to 
+  - Breaking CLI changes, introduction of two subcommands, `test` and `generate`. `test` for running and comparing two files and finding missing edge cases, while `generate` is just to generate the testcase and print it to
   - `generate` now supports copying testcases over clipboard using `-c` flag, using which you can use testcases in other platforms as well
 
 - Library Changes
