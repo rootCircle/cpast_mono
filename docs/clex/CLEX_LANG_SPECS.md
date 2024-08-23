@@ -2,7 +2,10 @@
 
 Clex is a generator language, that can generate a set of random numbers/string based on a given grammar rules. 
 
-It doesn't support arithmetic, logical or any other relationship except back-references. The AST is same for a language in all the case, while the generated string from the language will vary.
+> [!NOTE]
+> Clex currently can't and won't support arithmetic, logical or any other relationship except back-references. So, a few things that can be testcases that might have a relationship between the generated values can't be possibly tested using Clex.
+
+The AST is same for a language in all the case, while the generated string from the language will vary.
 
 For example: S[4,'U'] can generate "GAHS" or "JHAS" etc.
 
@@ -177,3 +180,11 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 - `N S C` : Generates a random integer, string, and character.
 - `F[-100,100]` : Generates a random floating-point number between -100 and 100.
 - `(N[1,100]) (?:N[1,1000]){\\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
+
+## References
+
+For more details on the `clex` language and advanced usage, you can refer to the following references:
+
+- [Back-references in repetition construct regex](https://stackoverflow.com/questions/3407696/using-a-regex-back-reference-in-a-repetition-construct-n)
+- [Back-references S.O.](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count)
+- [Possible solution using Code Call-out](https://stackoverflow.com/questions/29728622/regex-with-backreference-as-repetition-count/61898415#61898415)
