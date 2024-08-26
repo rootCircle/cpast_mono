@@ -9,11 +9,13 @@
 
 > We are working on making cpast, more accessible and simple for all. If you have experience with python and/or writing prompts, consider contributing to [cpast\_llm](https://github.com/rootCircle/cpast_llm) repo.
 
-`cpast` is a versatile code testing and analysis tool that allows you to test correct and incorrect code files against a custom language generator called `clex`. It supports a variety of programming languages, including Python, C++, C, Rust, Ruby, JavaScript, and Java. You can specify the number of iterations and test your code against random input values, comparing the output against expected results.
-
 ## Introduction
 
-Meet **cpast**, the ultimate code testing and analysis tool for competitive programmers and developers. Written in Rust, cpast effortlessly compares outputs from different code files across multiple programming languages, helping you catch those tricky edge cases with ease. With its unique custom language generator, **clex**, you can define flexible input patterns just like regex, enabling rapid, automated testing without the hassle of manual debugging. Save time, increase your efficiency, and sharpen your problem-solving skills with cpast—your new secret weapon in competitive programming!
+Have you ever found yourself stuck in the middle of a coding contest, frustrated by a bug or an elusive edge case that just won’t reveal itself? Or maybe you’ve spent countless hours comparing outputs manually, only to find that the real problem was a tricky test case you hadn’t considered. Well, I’ve been there, and I have good news: there’s a solution that can change the way you approach competitive programming forever.
+
+Introducing **cpast**—the game-changing tool designed specifically for competitive programmers and developers who want to enhance their coding efficiency and solve problems faster. Written in Rust for speed and reliability, cpast simplifies the process of comparing outputs from different code files, regardless of the programming language. This allows you to focus on crafting the best solution to your problem without worrying about the technicalities of cross-language compatibility.
+
+Here’s the best part: with cpast, all you need is your solution file and the input format, and you can debug your code to perfection without having to look at or rely on anyone else’s code. No more peeking at other people's solutions to figure out what went wrong. Now, you can independently find those tricky cases that make all the difference, allowing you to learn and improve your problem-solving skills honestly and effectively.
 
 > Checkout the blog post [here](https://rootcircle.github.io/blog/project/cpast.html)
 
@@ -22,19 +24,7 @@ Meet **cpast**, the ultimate code testing and analysis tool for competitive prog
 0. Debugging your CP/DSA questions.
 1. Live hacking in during/post Codeforces contests.
 2. Generate testcases for problem setters.
-3. Use for reinforcement learning for large language models and stress testing their code generation accuracy.
-
-## Why?
-
-Have you ever found yourself stuck in the middle of a coding contest, frustrated by a bug or an elusive edge case that just won’t reveal itself? Or maybe you’ve spent countless hours comparing outputs manually, only to find that the real problem was a tricky test case you hadn’t considered. Well, I’ve been there, and I have good news: there’s a solution that can change the way you approach competitive programming forever.
-
-Introducing **cpast**—the game-changing tool designed specifically for competitive programmers and developers who want to enhance their coding efficiency and solve problems faster. Written in Rust for speed and reliability, cpast simplifies the process of comparing outputs from different code files, regardless of the programming language. This allows you to focus on crafting the best solution to your problem without worrying about the technicalities of cross-language compatibility.
-
-But that’s not all. At the heart of cpast is **clex**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
-
-Here’s the best part: with cpast, all you need is your solution file and the input format, and you can debug your code to perfection without having to look at or rely on anyone else’s code. No more peeking at other people's solutions to figure out what went wrong. Now, you can independently find those tricky cases that make all the difference, allowing you to learn and improve your problem-solving skills honestly and effectively.
-
-So why waste time on tedious manual checks when you can automate the process and focus on crafting the best solutions? Give cpast a try and revolutionize your coding experience. Let cpast do the heavy lifting, so you can concentrate on creating winning code with confidence and ease.
+3. Reinforcement learning for large language models and stress testing their code generation accuracy.
 
 ## Getting Started
 
@@ -116,7 +106,8 @@ cpast generate "S[10,'U']"
 
 ## Language Specification
 
-The `clex` language generator is based on a custom grammar specification. It allows you to define input patterns for testing.
+At the heart of cpast is **clex**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
+
 For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./docs/clex/CLEX_LANG_SPECS.md).
 
 ## Meta
