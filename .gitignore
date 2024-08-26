@@ -1,4 +1,6 @@
 /target
+/.vscode/
+/.idea/
 
 # Local Testing Files
 *.py
