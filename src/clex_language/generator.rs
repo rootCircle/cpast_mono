@@ -20,7 +20,7 @@ pub struct Generator {
 impl Generator {
     pub fn new(syntax_tree: Parser) -> Self {
         Self {
-            syntax_tree: syntax_tree.language,
+            syntax_tree: syntax_tree.get_language().clone(),
             output_text: String::new(),
             groups: HashMap::new(),
         }

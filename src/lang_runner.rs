@@ -1,2 +1,2 @@
-pub mod program_store;
+pub(crate) mod program_store;
 mod runner;
