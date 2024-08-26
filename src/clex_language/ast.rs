@@ -126,7 +126,7 @@ impl CharacterSet {
     pub fn default_charset() -> Self {
         DEFAULT_CHARSET
     }
-    pub(crate) fn get_code(character_set: Self) -> char {
+    pub fn get_code(character_set: Self) -> char {
         match character_set {
             Self::Alphabet => 'A',
             Self::Numeric => '0',
@@ -138,7 +138,7 @@ impl CharacterSet {
         }
     }
 
-    pub(crate) fn get_charset_from_code(code: char) -> Self {
+    pub fn get_charset_from_code(code: char) -> Self {
         match code {
             'A' => Self::Alphabet,
             '0'..='9' => Self::Numeric,

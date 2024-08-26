@@ -87,8 +87,8 @@ pub struct Token {
 
 /// Represents a collection of tokens produced by the lexer.
 #[derive(Debug, Clone)]
-pub(crate) struct Tokens {
-    pub(crate) tokens: Vec<Token>,
+pub struct Tokens {
+    tokens: Vec<Token>,
     start: usize,
     current: usize,
     source_language: String,
@@ -103,6 +103,10 @@ impl Tokens {
             current: 0,
             source_language,
         }
+    }
+
+    pub fn get_tokens(&self) -> Vec<Token> {
+        self.tokens.clone()
     }
 
     /// Scans tokens from the source language and adds them to the tokens vector.

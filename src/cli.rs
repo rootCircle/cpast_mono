@@ -1,1 +1,1 @@
-pub mod cli_parser;
+pub(crate) mod cli_parser;

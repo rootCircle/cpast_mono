@@ -29,7 +29,7 @@ fn run_program_common(output: Output, program: &str, args: &[&str]) -> io::Resul
     Ok(stdout_content)
 }
 
-pub fn run_program_with_input(
+pub(crate) fn run_program_with_input(
     program: &str,
     args: &Vec<&str>,
     stdin_content: &str,
@@ -59,7 +59,10 @@ pub fn run_program_with_input(
 /// * `source_code_path` : Path of source code
 /// * `compiled_artifact_path` : The name of compiled artifact, generally file-stem name of `source_code_path`
 ///   Returns true if file needs to be recompiled
-pub fn remake(source_code_path: &Path, compiled_artifact_path: &Path) -> Result<bool, io::Error> {
+pub(crate) fn remake(
+    source_code_path: &Path,
+    compiled_artifact_path: &Path,
+) -> Result<bool, io::Error> {
     if compiled_artifact_path.exists() {
         let source_modified_time = source_code_path.metadata()?.modified()?;
         let compiled_artifact_creation_time = compiled_artifact_path.metadata()?.created()?;
@@ -69,7 +72,7 @@ pub fn remake(source_code_path: &Path, compiled_artifact_path: &Path) -> Result<
     Ok(true)
 }
 
-pub fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
+pub(crate) fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
     if let Err(err) = program_exists(program) {
         return Err(io::Error::new(io::ErrorKind::Other, err));
     }

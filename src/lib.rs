@@ -204,7 +204,7 @@ pub async fn compile_and_test(
 pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexErrorType> {
     let mut token = lexer::Tokens::new(language);
     token.scan_tokens()?;
-    Ok(token.tokens)
+    Ok(token.get_tokens())
 }
 
 /// Get the Abstract Syntax Tree (AST) from the custom language parser.
@@ -225,7 +225,7 @@ pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexErrorType> {
 pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexErrorType> {
     let mut parser = parser::Parser::new(language)?;
     parser.parser()?;
-    Ok(parser.language)
+    Ok(parser.get_language().clone())
 }
 
 /// Generate code based on the custom language specification.

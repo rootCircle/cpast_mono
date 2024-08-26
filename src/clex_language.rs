@@ -15,6 +15,6 @@
 //! For detailed usage and syntax rules, refer to the Grammar Rules for Clex Generator in README.
 pub mod ast;
 pub mod clex_error_type;
-pub(crate) mod generator;
+pub mod generator;
 pub mod lexer;
-pub(crate) mod parser;
+pub mod parser;
