@@ -13,6 +13,12 @@ pub(crate) struct ProgramStore {
     test_file_bin_path: String,
 }
 
+#[derive(Debug)]
+enum FileType {
+    Correct,
+    Test,
+}
+
 impl ProgramStore {
     pub(crate) fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> Self {
         if !Self::exists(correct_file, test_file) {
@@ -39,18 +45,25 @@ impl ProgramStore {
         correct_file.exists() && test_file.exists()
     }
 
-    pub(crate) fn run_code(&self, stdin_content: &str) -> Result<(bool, String, String), &str> {
+    pub(crate) fn run_codes_and_compare_output(
+        &self,
+        stdin_content: &str,
+    ) -> Result<(bool, String, String), &str> {
+        //! Run the code and return the output of the correct and test files  
+        //! along with a boolean indicating if the output is different
+        //! Output is in the form of (is_different, correct_output, test_output)
+
         let correct_output = self.run_program_code_interface(
             &self.correct_file,
             &self.correct_file_bin_path,
             stdin_content,
-            "source file",
+            FileType::Correct,
         )?;
         let test_output = self.run_program_code_interface(
             &self.test_file,
             &self.test_file_bin_path,
             stdin_content,
-            "test file",
+            FileType::Test,
         )?;
 
         Ok((
@@ -65,13 +78,13 @@ impl ProgramStore {
         language: &Language,
         bin_path: &str,
         stdin_content: &str,
-        file_type: &str,
+        file_type: FileType,
     ) -> Result<String, &str> {
         language
             .run_program_code(bin_path, stdin_content)
             .map_err(|err| {
                 eprintln!(
-                    "[PROGRAM STORE ERROR] Failed to run {}!\n{}",
+                    "[PROGRAM STORE ERROR] Failed to run {:?}!\n{}",
                     file_type, err
                 );
                 "Error running file"

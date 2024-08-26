@@ -1,11 +1,11 @@
-use crate::cli::cli_parser::GeneratorCliArgs;
+use crate::cli::cli_parser::GenerateArgs;
 use colored::Colorize;
 use cpast::generator;
 
 #[cfg(feature = "clipboard")]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
 
-pub(crate) fn generate_call(args: GeneratorCliArgs) {
+pub(crate) fn generate_call(args: GenerateArgs) {
     match args.generator {
         Some(language) => {
             match generator(language) {

@@ -1,7 +1,7 @@
-use crate::cli::cli_parser::TestCliArgs;
+use crate::cli::cli_parser::TestArgs;
 use cpast::compile_and_test;
 
-pub(crate) async fn test_call(args: TestCliArgs) {
+pub(crate) async fn test_call(args: TestArgs) {
     let correct_binding = args.correct_file.unwrap_or_default();
     let test_binding = args.test_file.unwrap_or_default();
     let language = args.generator.unwrap_or_default();

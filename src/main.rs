@@ -1,19 +1,19 @@
 mod cli;
 mod cmd;
 
-use crate::cli::cli_parser::{Commands, CpastCli};
+use crate::cli::cli_parser::{CpastCommand, CpastSubcommands};
 use colored::Colorize;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 16)]
 async fn main() {
-    let cli_instance_wrap = CpastCli::new();
+    let cli_instance_wrap = CpastCommand::new();
     if let Some(cli_instance) = cli_instance_wrap {
-        if let Some(command) = cli_instance.command {
+        if let Some(command) = cli_instance.subcommand {
             match command {
-                Commands::Test(args) => {
+                CpastSubcommands::Test(args) => {
                     cmd::test::test_call(args).await;
                 }
-                Commands::Generate(args) => {
+                CpastSubcommands::Generate(args) => {
                     cmd::generate::generate_call(args);
                 }
             }
