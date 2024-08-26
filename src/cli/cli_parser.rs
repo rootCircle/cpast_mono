@@ -8,23 +8,23 @@ const DEFAULT_ITERATIONS_COUNT: usize = 5;
 #[derive(Parser)] // requires `derive` feature
 #[command(name = "cpast", version, author, about, long_about = None)]
 #[command(bin_name = "cpast")]
-pub(crate) struct CpastCli {
+pub(crate) struct CpastCommand {
     /// Generate Shell Completions
     #[arg(long = "completions", value_enum)]
     completions: Option<Shell>,
     #[command(subcommand)]
-    pub(crate) command: Option<Commands>,
+    pub(crate) subcommand: Option<CpastSubcommands>,
 }
 
 #[derive(Subcommand)] // requires `derive` feature
-pub(crate) enum Commands {
+pub(crate) enum CpastSubcommands {
     /// Compare two files to find the missing edge case
     #[command(author)]
-    Test(TestCliArgs),
+    Test(TestArgs),
 
     /// Just generate the testcase
     #[command(author)]
-    Generate(GeneratorCliArgs),
+    Generate(GenerateArgs),
 }
 
 fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
@@ -32,7 +32,7 @@ fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
 }
 
 #[derive(clap::Args)]
-pub(crate) struct TestCliArgs {
+pub(crate) struct TestArgs {
     /// The correct file
     #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
     pub(crate) correct_file: Option<String>,
@@ -59,7 +59,7 @@ pub(crate) struct TestCliArgs {
 }
 
 #[derive(clap::Args)]
-pub(crate) struct GeneratorCliArgs {
+pub(crate) struct GenerateArgs {
     /// Write Clex for generating Tests
     pub(crate) generator: Option<String>,
 
@@ -68,12 +68,12 @@ pub(crate) struct GeneratorCliArgs {
     pub(crate) clipboard: bool,
 }
 
-impl CpastCli {
+impl CpastCommand {
     pub(crate) fn new() -> Option<Self> {
         let opt = Self::parse();
 
         if let Some(completions) = opt.completions {
-            let mut cmd = CpastCli::command();
+            let mut cmd = CpastCommand::command();
             eprintln!("Generating completion file for {completions:?}...");
             print_completions(completions, &mut cmd);
             None
