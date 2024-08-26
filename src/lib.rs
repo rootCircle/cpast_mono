@@ -117,7 +117,7 @@ pub async fn compile_and_test(
                     err.print_and_exit()
                 });
 
-                match store.run_code(&gen.output_text) {
+                match store.run_codes_and_compare_output(&gen.output_text) {
                     Ok((true, _, _)) => {
                         if !no_stop {
                             println!("{}", format!("Testcase {} ran successfully!", iter).green());
