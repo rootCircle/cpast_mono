@@ -11,7 +11,7 @@ pub struct Parser {
     tokens: Tokens,
     start: usize,
     current: usize,
-    pub(crate) language: ClexLanguageAST,
+    language: ClexLanguageAST,
     current_group: u64, // for capturing groupCount, starts from 1.....
 }
 
@@ -27,6 +27,10 @@ impl Parser {
             language: ClexLanguageAST { expression: vec![] },
             current_group: 0,
         })
+    }
+
+    pub fn get_language(&self) -> &ClexLanguageAST {
+        &self.language
     }
 
     pub fn new_from_tokens(tokens: Tokens) -> Self {
@@ -179,7 +183,9 @@ impl Parser {
 
             self.expect(TokenType::Comma)?;
 
-            if let TokenType::LiteralCharacter(char) = self.tokens.tokens[self.current].token_type {
+            if let TokenType::LiteralCharacter(char) =
+                self.tokens.get_tokens()[self.current].token_type
+            {
                 char_set = CharacterSet::get_charset_from_code(char);
                 self.advance();
             }
@@ -349,7 +355,7 @@ impl Parser {
 
     fn advance(&mut self) -> Token {
         self.current += 1;
-        self.tokens.tokens[self.current - 1].clone()
+        self.tokens.get_tokens()[self.current - 1].clone()
     }
 
     fn peek(&mut self) -> Token {
@@ -359,13 +365,13 @@ impl Parser {
                 lexeme: String::new(),
             }
         } else {
-            self.tokens.tokens[self.current].clone()
+            self.tokens.get_tokens()[self.current].clone()
         }
     }
 
     fn match_token(&mut self, expected: TokenType) -> bool {
         // Move forward if expected token is present
-        if self.at_end() || self.tokens.tokens[self.current].token_type != expected {
+        if self.at_end() || self.tokens.get_tokens()[self.current].token_type != expected {
             false
         } else {
             self.current += 1;
@@ -374,6 +380,6 @@ impl Parser {
     }
 
     fn at_end(&mut self) -> bool {
-        self.current >= self.tokens.tokens.len()
+        self.current >= self.tokens.get_tokens().len()
     }
 }

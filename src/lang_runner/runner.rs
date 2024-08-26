@@ -8,7 +8,7 @@ const DEFAULT_PROGRAM_NAME: &str = "program";
 const COMPILATION_FAILED_EXIT_CODE: i32 = 2;
 
 #[derive(Debug)]
-pub enum LanguageName {
+pub(crate) enum LanguageName {
     Python,
     Cpp,
     C,
@@ -26,7 +26,7 @@ enum CompilationType {
 }
 
 #[derive(Debug)]
-pub struct Language {
+pub(crate) struct Language {
     pub file_path: PathBuf,
     lang_name: LanguageName,
     compilation_type: CompilationType,
@@ -48,7 +48,7 @@ impl Language {
         }
     }
 
-    pub fn get_programming_language_name(file_path: &Path) -> LanguageName {
+    pub(crate) fn get_programming_language_name(file_path: &Path) -> LanguageName {
         match file_path.extension().and_then(|ext| ext.to_str()) {
             Some("rs") => LanguageName::Rust,
             Some("py") => LanguageName::Python,
@@ -80,7 +80,7 @@ impl Language {
     }
 
     /// One time compilation/intermediate generation before code is actually run for the first time
-    pub fn warmup_precompile(&mut self) -> io::Result<String> {
+    pub(crate) fn warmup_precompile(&mut self) -> io::Result<String> {
         match self.compilation_type {
             CompilationType::AheadOfTime => match self.compile_language() {
                 Ok(bin_path) => Ok(bin_path),
@@ -97,7 +97,11 @@ impl Language {
     }
 
     /// Running single filed self executable program
-    pub fn run_program_code(&self, bin_path: &str, stdin_content: &str) -> io::Result<String> {
+    pub(crate) fn run_program_code(
+        &self,
+        bin_path: &str,
+        stdin_content: &str,
+    ) -> io::Result<String> {
         match self.compilation_type {
             CompilationType::AheadOfTime => {
                 if !self.is_compiled {

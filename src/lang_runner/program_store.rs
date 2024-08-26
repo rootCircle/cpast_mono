@@ -6,7 +6,7 @@ use std::process::exit;
 const FILE_NOT_FOUND_EXIT_CODE: i32 = 6;
 
 #[derive(Debug)]
-pub struct ProgramStore {
+pub(crate) struct ProgramStore {
     correct_file: Language,
     test_file: Language,
     correct_file_bin_path: String,
@@ -14,7 +14,7 @@ pub struct ProgramStore {
 }
 
 impl ProgramStore {
-    pub fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> Self {
+    pub(crate) fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> Self {
         if !Self::exists(correct_file, test_file) {
             eprintln!("[PROGRAM STORE ERROR] File(s) don't exist\nQuitting.....");
             exit(FILE_NOT_FOUND_EXIT_CODE);
@@ -39,7 +39,7 @@ impl ProgramStore {
         correct_file.exists() && test_file.exists()
     }
 
-    pub fn run_code(&self, stdin_content: &str) -> Result<(bool, String, String), &str> {
+    pub(crate) fn run_code(&self, stdin_content: &str) -> Result<(bool, String, String), &str> {
         let correct_output = self.run_program_code_interface(
             &self.correct_file,
             &self.correct_file_bin_path,

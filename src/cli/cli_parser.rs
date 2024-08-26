@@ -8,7 +8,7 @@ const DEFAULT_ITERATIONS_COUNT: usize = 5;
 #[derive(Parser)] // requires `derive` feature
 #[command(name = "cpast", version, author, about, long_about = None)]
 #[command(bin_name = "cpast")]
-pub struct CpastCli {
+pub(crate) struct CpastCli {
     /// Generate Shell Completions
     #[arg(long = "completions", value_enum)]
     completions: Option<Shell>,
@@ -17,7 +17,7 @@ pub struct CpastCli {
 }
 
 #[derive(Subcommand)] // requires `derive` feature
-pub enum Commands {
+pub(crate) enum Commands {
     /// Compare two files to find the missing edge case
     #[command(author)]
     Test(TestCliArgs),
@@ -32,14 +32,14 @@ fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
 }
 
 #[derive(clap::Args)]
-pub struct TestCliArgs {
+pub(crate) struct TestCliArgs {
     /// The correct file
     #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
-    pub correct_file: Option<String>,
+    pub(crate) correct_file: Option<String>,
 
-    /// File against which you want to do test
+    /// The test file
     #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
-    pub test_file: Option<String>,
+    pub(crate) test_file: Option<String>,
 
     /// Clex for generating Tests
     #[arg(short, long, required = true, value_hint = ValueHint::Other)]
@@ -49,17 +49,17 @@ pub struct TestCliArgs {
     #[arg(short, long, default_value_t = DEFAULT_ITERATIONS_COUNT, value_hint = ValueHint::Other)]
     pub(crate) iterations: usize,
 
-    /// Whether to not stop after finding one edge case
+    /// Continue even after finding one edge case
     #[arg(short, long)]
     pub(crate) no_stop: bool,
 
-    /// Whether or not to force recompile code even if binaries is up to date
+    /// Force recompile code even if binaries is up to date
     #[arg(short, long)]
     pub(crate) force_recompile: bool,
 }
 
 #[derive(clap::Args)]
-pub struct GeneratorCliArgs {
+pub(crate) struct GeneratorCliArgs {
     /// Write Clex for generating Tests
     pub(crate) generator: Option<String>,
 
@@ -69,8 +69,9 @@ pub struct GeneratorCliArgs {
 }
 
 impl CpastCli {
-    pub fn new() -> Option<Self> {
+    pub(crate) fn new() -> Option<Self> {
         let opt = Self::parse();
+
         if let Some(completions) = opt.completions {
             let mut cmd = CpastCli::command();
             eprintln!("Generating completion file for {completions:?}...");

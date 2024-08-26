@@ -1,2 +1,2 @@
-pub mod file_utils;
-pub mod program_utils;
+pub(crate) mod file_utils;
+pub(crate) mod program_utils;
