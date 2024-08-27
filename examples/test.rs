@@ -18,5 +18,7 @@ async fn main() {
         false,
     )
     .await
-    .unwrap_or_else(|err| err.print_and_exit());
+    .unwrap_or_else(|err| {
+        eprintln!("{}", err);
+    });
 }
