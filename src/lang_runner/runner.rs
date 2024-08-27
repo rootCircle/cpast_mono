@@ -1,13 +1,11 @@
 use crate::utils::program_utils;
 use crate::utils::program_utils::remake;
-use std::io;
+use std::error::Error;
 use std::path::{Path, PathBuf};
-use std::process::exit;
 
 use super::runner_error_types::RunnerErrorType;
 
 const DEFAULT_PROGRAM_NAME: &str = "program";
-const COMPILATION_FAILED_EXIT_CODE: i32 = 2;
 const EMPTY_STRING: &str = "";
 
 #[derive(Debug)]
@@ -38,35 +36,36 @@ pub(crate) struct Language {
 }
 
 impl Language {
-    pub(crate) fn new(file_path: &Path, do_force_compile: bool) -> Self {
-        let lang_name = Self::get_programming_language_name(file_path);
+    pub(crate) fn new(file_path: &Path, do_force_compile: bool) -> Result<Self, RunnerErrorType> {
+        let lang_name = match Self::get_programming_language_name(file_path) {
+            Some(lang) => lang,
+            None => {
+                return Err(RunnerErrorType::UnsupportedLanguage);
+            }
+        };
         let compilation_type = Self::get_language_compilation_type(&lang_name);
 
-        Self {
+        Ok(Self {
             file_path: file_path.to_owned(),
             lang_name,
             compilation_type,
             is_compiled: false,
             do_force_compile,
-        }
+        })
     }
 
-    fn get_programming_language_name(file_path: &Path) -> LanguageName {
+    fn get_programming_language_name(file_path: &Path) -> Option<LanguageName> {
         match file_path.extension().and_then(|ext| ext.to_str()) {
-            Some("rs") => LanguageName::Rust,
-            Some("py") => LanguageName::Python,
-            Some("c") => LanguageName::C,
-            Some("cpp") | Some("cxx") | Some("c++") | Some("cc") | Some("C") => LanguageName::Cpp,
-            Some("java") => LanguageName::Java,
-            Some("js") => LanguageName::Javascript,
-            Some("rb") => LanguageName::Ruby,
-            file_extension => {
-                eprintln!("[RUNNER ERROR] Unsupported Language: {:?}", file_extension);
-                eprintln!(
-                    "[RUNNER ERROR] Component: language::Language::get_programming_language_name"
-                );
-                exit(1);
+            Some("rs") => Some(LanguageName::Rust),
+            Some("py") => Some(LanguageName::Python),
+            Some("c") => Some(LanguageName::C),
+            Some("cpp") | Some("cxx") | Some("c++") | Some("cc") | Some("C") => {
+                Some(LanguageName::Cpp)
             }
+            Some("java") => Some(LanguageName::Java),
+            Some("js") => Some(LanguageName::Javascript),
+            Some("rb") => Some(LanguageName::Ruby),
+            _ => None,
         }
     }
 
@@ -83,17 +82,13 @@ impl Language {
     }
 
     /// One time compilation/intermediate generation before code is actually run for the first time
-    pub(crate) fn warmup_precompile(&mut self) -> io::Result<String> {
+    pub(crate) fn warmup_precompile(&mut self) -> Result<String, Box<dyn Error>> {
         Ok(match self.compilation_type {
-            CompilationType::AheadOfTime => self
-                .compile_language()
-                .unwrap_or_else(|err| err.print_and_exit(COMPILATION_FAILED_EXIT_CODE)),
+            CompilationType::AheadOfTime => self.compile_language()?,
             // No pre-compilations needed in this case, so return an empty string to signify success
             CompilationType::JustInTime => EMPTY_STRING.to_owned(),
             // Might require converting to intermediate before running (eg java)
-            CompilationType::AheadOfTimeInterpreted => self
-                .compile_language()
-                .unwrap_or_else(|err| err.print_and_exit(COMPILATION_FAILED_EXIT_CODE)),
+            CompilationType::AheadOfTimeInterpreted => self.compile_language()?,
         })
     }
 
@@ -102,7 +97,7 @@ impl Language {
         &self,
         bin_path: &str,
         stdin_content: &str,
-    ) -> io::Result<String> {
+    ) -> Result<String, Box<dyn Error>> {
         match self.compilation_type {
             CompilationType::AheadOfTime => {
                 if !self.is_compiled {
@@ -110,20 +105,15 @@ impl Language {
                         "Need to call warmup_precompile() method before run_program_code() is run."
                     );
                 }
-                program_utils::run_program_with_input(
+                Ok(program_utils::run_program_with_input(
                     &format!("./{}", bin_path),
                     &vec![],
                     stdin_content,
-                )
+                )?)
             }
             CompilationType::JustInTime => {
                 // Need to Just Run
-                match self.run_interpreted_language(stdin_content) {
-                    Ok(output) => Ok(output),
-                    Err(err) => {
-                        err.print_and_exit(COMPILATION_FAILED_EXIT_CODE);
-                    }
-                }
+                Ok(self.run_interpreted_language(stdin_content)?)
             }
             CompilationType::AheadOfTimeInterpreted => {
                 if !self.is_compiled {
@@ -133,18 +123,18 @@ impl Language {
                 }
                 match self.lang_name {
                     LanguageName::Java => match self.file_path.parent() {
-                        Some(file_parent) => program_utils::run_program_with_input(
+                        Some(file_parent) => Ok(program_utils::run_program_with_input(
                             "java",
                             &vec!["-cp", file_parent.to_str().unwrap_or_default(), bin_path],
                             stdin_content,
-                        ),
-                        None => program_utils::run_program_with_input(
+                        )?),
+                        None => Ok(program_utils::run_program_with_input(
                             "java",
                             &vec![bin_path],
                             stdin_content,
-                        ),
+                        )?),
                     },
-                    _ => RunnerErrorType::UnsupportedLanguage.print_and_exit(1),
+                    _ => Err(Box::new(RunnerErrorType::UnsupportedLanguage)),
                 }
             }
         }

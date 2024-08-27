@@ -46,6 +46,7 @@ mod utils;
 
 use colored::Colorize;
 use futures::future::join_all;
+use std::env;
 use std::path::Path;
 use std::process::exit;
 use std::sync::{Arc, Mutex};
@@ -55,6 +56,8 @@ use crate::clex_language::lexer::Token;
 use crate::clex_language::parser::Parser;
 use crate::clex_language::{ast::ClexLanguageAST, generator, lexer, parser};
 use crate::lang_runner::program_store::ProgramStore;
+
+pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;
 
 /// Compile and test code against custom language generator.
 ///
@@ -86,7 +89,11 @@ pub async fn compile_and_test(
         Path::new(&correct_binding),
         Path::new(&test_binding),
         do_force_compile,
-    );
+    )
+    .unwrap_or_else(|err| {
+        eprintln!("{}", err);
+        exit(DEFAULT_FAIL_EXIT_CODE);
+    });
 
     let store: &'static ProgramStore = Box::leak(store.into());
 
@@ -111,42 +118,54 @@ pub async fn compile_and_test(
         .map(|iter| {
             let has_failed_clone = Arc::clone(&has_failed);
             tokio::spawn(async move {
+                let has_failed_guard = has_failed_clone.lock().unwrap();
+                let has_failed_value = *has_failed_guard;
+                drop(has_failed_guard);
+                if !no_stop && has_failed_value {
+                    return;
+                }
+
                 let mut gen = generator::Generator::new(parser.to_owned());
 
-                let output_text = gen.generate_testcases().unwrap_or_else(|err| {
-                    err.print_and_exit()
-                });
-
-                match store.run_codes_and_compare_output(&output_text) {
-                    Ok((true, _, _)) => {
-                        if !no_stop {
-                            println!("{}", format!("Testcase {} ran successfully!", iter).green());
-                        }
-                    }
-                    Ok((false, expected, actual)) => {
-                        // Each usage of println!() puts a lock on stdout
-                        println!("{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
-                                 format!("Testcase {} failed!", iter).red(),
-                                 "INPUT".underline(),
-                                 &output_text.cyan(),
-                                 "EXPECTED OUTPUT".underline(),
-                                 expected.green(),
-                                 "ACTUAL OUTPUT".underline(),
-                                 actual.red());
-
-
-                        if !no_stop {
-                            exit(0);
-                        }
-                        else {
-                            let mut has_failed_guard = has_failed_clone.lock().unwrap();
-                            *has_failed_guard = true;
-                            drop(has_failed_guard);
-
-                        }
-                    }
+                match gen.generate_testcases() {
                     Err(err) => {
-                        println!("{}", format!("Error matching the file! {}", err).red())
+                        eprintln!("{}", err);
+                        let mut has_failed_guard = has_failed_clone.lock().unwrap();
+                        *has_failed_guard = true;
+                        drop(has_failed_guard);
+                    }
+                    Ok(output_text) => {
+                        match store.run_codes_and_compare_output(&output_text) {
+                            Ok((true, _, _)) => {
+                                let verbosity_level = env::var("CPAST_DEBUG").unwrap_or_default();
+                                if !no_stop && !verbosity_level.is_empty() {
+                                    eprintln!("{}", format!("Testcase {} ran successfully!", iter).green());
+                                }
+                            }
+                            Ok((false, expected, actual)) => {
+                                // Each usage of println!() puts a lock on stdout
+                                println!("{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
+                                        format!("Testcase {} failed!", iter).red(),
+                                        "INPUT".underline(),
+                                        &output_text.cyan(),
+                                        "EXPECTED OUTPUT".underline(),
+                                        expected.green(),
+                                        "ACTUAL OUTPUT".underline(),
+                                        actual.red());
+
+
+                                // if !no_stop {
+                                //     exit(0);
+                                // }
+                                let mut has_failed_guard = has_failed_clone.lock().unwrap();
+                                *has_failed_guard = true;
+                                drop(has_failed_guard);
+
+                            }
+                            Err(err) => {
+                                println!("{}", format!("Error matching the file! {}", err).red())
+                            }
+                        }
                     }
                 }
             })
