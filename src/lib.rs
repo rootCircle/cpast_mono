@@ -113,11 +113,11 @@ pub async fn compile_and_test(
             tokio::spawn(async move {
                 let mut gen = generator::Generator::new(parser.to_owned());
 
-                gen.traverse_ast().unwrap_or_else(|err| {
+                let output_text = gen.generate_testcases().unwrap_or_else(|err| {
                     err.print_and_exit()
                 });
 
-                match store.run_codes_and_compare_output(&gen.output_text) {
+                match store.run_codes_and_compare_output(&output_text) {
                     Ok((true, _, _)) => {
                         if !no_stop {
                             println!("{}", format!("Testcase {} ran successfully!", iter).green());
@@ -128,7 +128,7 @@ pub async fn compile_and_test(
                         println!("{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
                                  format!("Testcase {} failed!", iter).red(),
                                  "INPUT".underline(),
-                                 &gen.output_text.cyan(),
+                                 &output_text.cyan(),
                                  "EXPECTED OUTPUT".underline(),
                                  expected.green(),
                                  "ACTUAL OUTPUT".underline(),
@@ -149,8 +149,6 @@ pub async fn compile_and_test(
                         println!("{}", format!("Error matching the file! {}", err).red())
                     }
                 }
-
-                gen.reset_output();
             })
         })
         .collect::<Vec<_>>();
@@ -247,6 +245,5 @@ pub fn generator(language: String) -> Result<String, ClexErrorType> {
     let mut parser = parser::Parser::new(language)?;
     parser.parser()?;
     let mut gen = generator::Generator::new(parser);
-    gen.traverse_ast()?;
-    Ok(gen.output_text)
+    gen.generate_testcases()
 }

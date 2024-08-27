@@ -13,7 +13,7 @@ use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Generator {
     syntax_tree: ClexLanguageAST,
-    pub output_text: String,
+    output_text: String,
     groups: HashMap<u64, u64>, // group_no, repeat_count
 }
 
@@ -26,7 +26,7 @@ impl Generator {
         }
     }
 
-    pub fn reset_output(&mut self) {
+    fn reset_output(&mut self) {
         self.output_text = String::new();
     }
 
@@ -38,7 +38,21 @@ impl Generator {
         }
     }
 
-    pub fn traverse_ast(&mut self) -> Result<(), ClexErrorType> {
+    pub fn generate_testcases(&mut self) -> Result<String, ClexErrorType> {
+        if !self.output_text.is_empty() {
+            return Ok(self.output_text.clone());
+        }
+
+        self.traverse_ast()?;
+
+        let output = self.output_text.clone();
+
+        self.reset_output();
+
+        Ok(output)
+    }
+
+    fn traverse_ast(&mut self) -> Result<(), ClexErrorType> {
         for unit_expression in &self.syntax_tree.expression {
             match unit_expression {
                 UnitExpression::Primitives {
