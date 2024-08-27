@@ -1,9 +1,8 @@
 use crate::lang_runner::runner::Language;
+use crate::lang_runner::runner_error_types::RunnerErrorType;
 use crate::utils::file_utils;
+use std::error::Error;
 use std::path::Path;
-use std::process::exit;
-
-const FILE_NOT_FOUND_EXIT_CODE: i32 = 6;
 
 #[derive(Debug)]
 pub(crate) struct ProgramStore {
@@ -20,15 +19,18 @@ enum FileType {
 }
 
 impl ProgramStore {
-    pub(crate) fn new(correct_file: &Path, test_file: &Path, do_force_compile: bool) -> Self {
+    pub(crate) fn new(
+        correct_file: &Path,
+        test_file: &Path,
+        do_force_compile: bool,
+    ) -> Result<Self, Box<dyn Error>> {
         if !Self::exists(correct_file, test_file) {
-            eprintln!("[PROGRAM STORE ERROR] File(s) don't exist\nQuitting.....");
-            exit(FILE_NOT_FOUND_EXIT_CODE);
+            return Err(Box::new(RunnerErrorType::FileNotFound));
         }
 
         let mut program_store = ProgramStore {
-            correct_file: Language::new(correct_file, do_force_compile),
-            test_file: Language::new(test_file, do_force_compile),
+            correct_file: Language::new(correct_file, do_force_compile)?,
+            test_file: Language::new(test_file, do_force_compile)?,
             correct_file_bin_path: String::new(),
             test_file_bin_path: String::new(),
         };
@@ -38,7 +40,7 @@ impl ProgramStore {
             program_store.correct_file.warmup_precompile().unwrap();
         program_store.test_file_bin_path = program_store.test_file.warmup_precompile().unwrap();
 
-        program_store
+        Ok(program_store)
     }
 
     fn exists(correct_file: &Path, test_file: &Path) -> bool {

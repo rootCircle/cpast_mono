@@ -1,5 +1,6 @@
 use crate::clex_language::lexer::TokenType;
-use std::process::exit;
+use core::fmt;
+use std::error::Error;
 
 #[derive(Debug)]
 pub enum ParentErrorType {
@@ -37,15 +38,30 @@ pub enum ClexErrorType {
     UnknownGroupNumber(ParentErrorType, u64),
 }
 
-impl ClexErrorType {
-    pub fn print_and_exit(&self) -> ! {
-        eprintln!("{}", self.get_msg());
-        exit(1);
+impl fmt::Display for ClexErrorType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "[CLEX Error][{}] {}",
+            self.get_parent_error_type(),
+            self.get_error_message()
+        )
+    }
+}
+
+impl Error for ClexErrorType {
+    fn cause(&self) -> Option<&dyn Error> {
+        None
     }
 
-    pub fn get_msg(&self) -> String {
-        let parent_error_type = self.get_parent_error_type();
-        let error_message = match self {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+impl ClexErrorType {
+    fn get_error_message(&self) -> String {
+        match self {
             ClexErrorType::UnclosedSingleQuotes(_) => "Expected closing single quote (') after opening single quote (')".to_string(),
             ClexErrorType::MissingColonAfterQuestionMark(_) => "Expected colon (:) after question mark (?)".to_string(),
             ClexErrorType::MissingNumberAfterNegativeSign(_) => "Expected a number after negative sign (-)".to_string(),
@@ -68,9 +84,7 @@ impl ClexErrorType {
 
             ClexErrorType::InvalidRangeValues(_, min, max) => format!("Upper bound should be greater than lower bound in [{}, {}]", min, max),
             ClexErrorType::UnknownGroupNumber(_, group_number) => format!("Can't find specified Group no. {} in the language", group_number),
-        };
-
-        format!("[{}] : {}", parent_error_type, error_message)
+        }
     }
 
     fn get_parent_error_type(&self) -> &'static str {

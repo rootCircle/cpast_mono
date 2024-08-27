@@ -1,20 +1,35 @@
-use std::process::exit;
+use core::fmt;
+use std::error::Error;
 
+#[derive(Debug)]
 pub(crate) enum RunnerErrorType {
     UnsupportedLanguage,
     CodeRunFailed,
+    FileNotFound,
 }
 
-impl RunnerErrorType {
-    pub fn print_and_exit(&self, exit_code: i32) -> ! {
-        eprintln!("{}", self.get_msg());
-        exit(exit_code);
+impl fmt::Display for RunnerErrorType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let error_description = match self {
+            RunnerErrorType::UnsupportedLanguage => "Unsupported language",
+            RunnerErrorType::CodeRunFailed => "Code run failed",
+            RunnerErrorType::FileNotFound => "File not found",
+        };
+
+        write!(
+            f,
+            "[Runner Error] RunnerErrorType::{:?} {}",
+            self, error_description
+        )
+    }
+}
+
+impl Error for RunnerErrorType {
+    fn cause(&self) -> Option<&dyn Error> {
+        None
     }
 
-    fn get_msg(&self) -> String {
-        match self {
-            RunnerErrorType::UnsupportedLanguage => String::from("Unsupported language"),
-            RunnerErrorType::CodeRunFailed => String::from("Code run failed"),
-        }
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
     }
 }
