@@ -15,7 +15,7 @@ Have you ever found yourself stuck in the middle of a coding contest, frustrated
 
 Introducing **cpast**—the game-changing tool designed specifically for competitive programmers and developers who want to enhance their coding efficiency and solve problems faster. Written in Rust for speed and reliability, cpast simplifies the process of comparing outputs from different code files, regardless of the programming language. This allows you to focus on crafting the best solution to your problem without worrying about the technicalities of cross-language compatibility.
 
-Here’s the best part: with cpast, all you need is your solution file and the input format, and you can debug your code to perfection without having to look at or rely on anyone else’s code. No more peeking at other people's solutions to figure out what went wrong. Now, you can independently find those tricky cases that make all the difference, allowing you to learn and improve your problem-solving skills honestly and effectively.
+Here’s the best part: with cpast, all you need is your _solution file_ and the _input format_, and you can debug your code to perfection without having to look at or rely on anyone else’s code. No more peeking at other people's solutions to figure out what went wrong. Now, you can independently find those tricky cases that make all the difference, allowing you to learn and improve your problem-solving skills honestly and effectively.
 
 > Checkout the blog post [here](https://rootcircle.github.io/blog/project/cpast.html)
 

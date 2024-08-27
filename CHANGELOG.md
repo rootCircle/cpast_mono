@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0
+
+Released on : Aug 28 2024
+
+Critical Bug Fix:
+
+- [Critical High] Due to race condition, `cpast test ...` might leave a
+      oprhan child process in non `--no-stop` cases! This will eventually
+      eat all your system memory and potentially crash it as well! This
+      commit fixes that as well!
+    
+Major Changes:
+
+- improved error propogation, don't exit before erroring
+- improved error types
+- (breaking) modify public and private function signature to accomodate
+      error propogation
+- introduce CPAST_DEBUG env, to reduce verbosity of Success Testcase
+      message! It's now disabled by default! To enable use `CPAST_DEBUG=1
+      cpast test ...`
+
 ## 0.4.1
 
 Released on : Aug 07, 2024
