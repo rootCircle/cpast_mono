@@ -184,20 +184,10 @@ pub async fn compile_and_test(
         let has_failed_guard = has_failed_clone.lock().unwrap();
 
         if !*has_failed_guard {
-            println!(
-                "{}",
-                "All testcases ran successfully! No failures detected."
-                    .bold()
-                    .green()
-            );
+            println!("{}", "🐣 Vohoo! No testcases has failed!".bold().green());
         }
     } else {
-        println!(
-            "\n{}",
-            "All testcases ran successfully! No failures detected."
-                .bold()
-                .green()
-        );
+        println!("\n{}", "🐣 Vohoo! No testcases has failed!".bold().green());
     }
 
     Ok(())

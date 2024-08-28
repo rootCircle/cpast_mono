@@ -7,7 +7,7 @@ Clex is a generator language, that can generate a set of random numbers/string b
 
 The AST is same for a language in all the case, while the generated string from the language will vary.
 
-For example: S[4,'U'] can generate "GAHS" or "JHAS" etc.
+For example: S[4,@CH_UPPER@] can generate "GAHS" or "JHAS" etc.
 
 ## Rules for grammar
 
@@ -171,7 +171,7 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 - `N{2}` : Generates two random integers.
 - `(N) (?:N){\\1}` : Generates a random integer, then the same number of additional integers.
 - `(N) (?:S[\\1,])` : Generates a random integer, then a string of that length.
-- `(N) (?:S[\\1,CH_UPPER])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
+- `(N) (?:S[\\1,@CH_UPPER@])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
 - `N S C` : Generates a random integer, string, and character.
 - `F[-100,100]` : Generates a random floating-point number between -100 and 100.
 - `(N[1,100]) (?:N[1,1000]){\\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
