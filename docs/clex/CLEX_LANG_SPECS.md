@@ -1,6 +1,6 @@
 # Clex Language
 
-Clex is a generator language, that can generate a set of random numbers/string based on a given grammar rules. 
+Clex is a generator language, that can generate a set of random numbers/string based on a given grammar rules.
 
 > [!NOTE]
 > Clex currently can't and won't support arithmetic, logical or any other relationship except back-references. So, a few things that can be testcases that might have a relationship between the generated values can't be possibly tested using Clex.
@@ -23,7 +23,6 @@ NonCapturingGroup ::= "(?:" UnitExpression* ")" Quantifiers?
 DataType ::= "N" Range? Quantifiers?
           | "F" Range? Quantifiers?
           | "S" StringModifier? Quantifiers?
-          | "C" Quantifiers?
 
 StringModifier ::= "[" PositiveReference? "," CharacterSet? "]"
 
@@ -41,9 +40,9 @@ PositiveReference ::= "\\" GroupNo
 
 GroupNo ::= u64
 
-CharacterSet ::= "'" Character "'"
+CharacterSet ::= "'" ASCII_CHARACTER_SET+ "'" | "@" Character "@"
 
-Character ::= "A" | "0" | "N" | "U" | "L" | "D" | "n" | "1" | ... | "9" | "a" | ... | "z" | ASCII_CHARACTER_SET
+Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "CH_LOWER" | "CH_ALL"
 
 ASCII_CHARACTER_SET ::= <ANY_ASCII_CHARACTER>
 ```
@@ -60,20 +59,17 @@ Denotes a set of characters from which a string is going to be randomly generate
 
 | Character           | Meaning                                               |
 |---------------------|-------------------------------------------------------|
-| A                   | Set of Alphabetical characters                        |
-| 0                   | Set of Numeral characters                             |
-| 1..9                | Set of Numeral characters                             |
-| N                   | Set of AlphaNumeric characters                        |
-| U                   | Set of Uppercase Alphabets                            |
-| n                   | Newline Character                                     |
-| L                   | Set of Lowercase Alphabets                            |
-| a..m or o..z        | Set of Lowercase Alphabets                            |
-| D                   | Set of Alphabets, Numbers and some special characters |
-| ASCII_CHARACTER_SET | Defaults to the constant **DEFAULT_CHARSET**          |
+| CH_ALPHA            | Set of Alphabetical characters                        |
+| CH_NUM              | Set of Numeral characters                             |
+| CH_ALNUM            | Set of AlphaNumeric characters  (default)             |
+| CH_UPPER            | Set of Uppercase Alphabets                            |
+| CH_NEWLINE          | Newline Character                                     |
+| CH_LOWER            | Set of Lowercase Alphabets                            |
+| CH_ALL              | Set of Alphabets, Numbers and some special characters |
 
 ### CharacterSet
 
-Just _Character_ enclosed within singles quotes to represent the character set. They are by design enclosed in single quotes, to differentiate character set from _DataType_, to avoid ambiguity.
+Just _Character_ enclosed within at symbol(@) or custom strings into single quotes to represent the character set.
 
 ### GroupNo
 
@@ -86,7 +82,6 @@ _Reference_ can be a back-reference to a capturing group (GroupNo) or a numeric 
 Back-referencing is done by using `"\\" GroupNo`, in this case the value in that specific Group is de-referenced upon use and put back in as a value.
 
 lex uses 1-based indexing for backreferences, rather than zero-based like many other regular expression engines.
-
 
 ### PositiveReference
 
@@ -143,7 +138,7 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 ## Constants in Language
 
 - MAX_STRING_SIZE = 12
-- DEFAULT_CHARSET = "'N'"
+- DEFAULT_CHARSET = CharacterSet::AlphaNumeric
 
 ## Common Rules while deriving a language
 
@@ -176,7 +171,7 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 - `N{2}` : Generates two random integers.
 - `(N) (?:N){\\1}` : Generates a random integer, then the same number of additional integers.
 - `(N) (?:S[\\1,])` : Generates a random integer, then a string of that length.
-- `(N) (?:S[\\1,'U'])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
+- `(N) (?:S[\\1,CH_UPPER])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
 - `N S C` : Generates a random integer, string, and character.
 - `F[-100,100]` : Generates a random floating-point number between -100 and 100.
 - `(N[1,100]) (?:N[1,1000]){\\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.

@@ -2,10 +2,7 @@ use crate::clex_language::ast::{
     CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };
 use crate::clex_language::parser::Parser;
-use rand::{
-    distributions::{Alphanumeric, DistString},
-    Rng,
-};
+use rand::Rng;
 
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use std::collections::HashMap;
@@ -59,27 +56,24 @@ impl Generator {
                     data_type,
                     repetition,
                 } => {
-                    let repetition_count = self.get_positive_value_from_reference(*repetition)?;
+                    let repetition_count = self.get_positive_value_from_reference(repetition)?;
 
                     for _ in 1..=repetition_count {
                         match data_type {
                             DataType::String(length, charset) => self
                                 .output_text
-                                .push_str(&self.generate_random_string(*length, *charset)?),
-                            DataType::Character => self
-                                .output_text
-                                .push_str(&Self::generate_random_character()),
+                                .push_str(&self.generate_random_string(length, charset)?),
                             DataType::Float(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
-                                        .generate_random_float(*min_reference, *max_reference)?
+                                        .generate_random_float(min_reference, max_reference)?
                                         .to_string(),
                                 );
                             }
                             DataType::Integer(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
-                                        .generate_random_number(*min_reference, *max_reference)?
+                                        .generate_random_number(min_reference, max_reference)?
                                         .to_string(),
                                 );
                             }
@@ -92,7 +86,7 @@ impl Generator {
                     range: (min_reference, max_reference),
                 } => {
                     let random_number =
-                        self.generate_positive_random_number(*min_reference, *max_reference)?;
+                        self.generate_positive_random_number(min_reference, max_reference)?;
                     self.groups.insert(*group_number, random_number);
 
                     let mut random_number = random_number.to_string();
@@ -104,7 +98,7 @@ impl Generator {
                     nest_exp,
                     repetition,
                 } => {
-                    let repetition_count = self.get_positive_value_from_reference(*repetition)?;
+                    let repetition_count = self.get_positive_value_from_reference(repetition)?;
 
                     for _ in 1..=repetition_count {
                         let mut nest_gen = Self::new_from_program(
@@ -160,30 +154,14 @@ impl Generator {
         Ok(rand::thread_rng().gen_range(min..=max))
     }
 
-    fn generate_random_character() -> String {
-        Alphanumeric.sample_string(&mut rand::thread_rng(), 1)
-    }
-
     fn generate_random_string(
         &self,
-        length: PositiveReferenceType,
-        character_set: CharacterSet,
+        length: &PositiveReferenceType,
+        character_set: &CharacterSet,
     ) -> Result<String, ClexErrorType> {
         let length = self.get_positive_value_from_reference(length)? as usize;
-        let charset = match character_set {
-            CharacterSet::Alphabet => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-            CharacterSet::Numeric => "0123456789",
-            CharacterSet::AlphaNumeric => {
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-            }
-            CharacterSet::UppercaseOnly => "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            CharacterSet::LowerCaseOnly => "abcdefghijklmnopqrstuvwxyz",
-            CharacterSet::All => {
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789)(*&^%$#@!~"
-            }
-            CharacterSet::Newline => "\n",
-        };
-        Ok(Self::generate_random_string_from_charset(charset, length))
+        let charset = character_set.get_character_domain();
+        Ok(Self::generate_random_string_from_charset(&charset, length))
     }
 
     fn generate_random_string_from_charset(charset: &str, length: usize) -> String {
@@ -199,8 +177,8 @@ impl Generator {
 
     fn generate_random_number(
         &self,
-        min_reference: ReferenceType,
-        max_reference: ReferenceType,
+        min_reference: &ReferenceType,
+        max_reference: &ReferenceType,
     ) -> Result<i64, ClexErrorType> {
         let min = self.get_value_from_reference(min_reference)?;
         let max = self.get_value_from_reference(max_reference)?;
@@ -210,8 +188,8 @@ impl Generator {
 
     fn generate_positive_random_number(
         &self,
-        min_reference: PositiveReferenceType,
-        max_reference: PositiveReferenceType,
+        min_reference: &PositiveReferenceType,
+        max_reference: &PositiveReferenceType,
     ) -> Result<u64, ClexErrorType> {
         let min = self.get_positive_value_from_reference(min_reference)?;
         let max = self.get_positive_value_from_reference(max_reference)?;
@@ -221,8 +199,8 @@ impl Generator {
 
     fn generate_random_float(
         &self,
-        min_reference: ReferenceType,
-        max_reference: ReferenceType,
+        min_reference: &ReferenceType,
+        max_reference: &ReferenceType,
     ) -> Result<f64, ClexErrorType> {
         let min = self.get_value_from_reference(min_reference)? as f64;
         let max = self.get_value_from_reference(max_reference)? as f64;
@@ -240,21 +218,23 @@ impl Generator {
 
     fn get_value_from_reference(
         &self,
-        reference_type: ReferenceType,
+        reference_type: &ReferenceType,
     ) -> Result<i64, ClexErrorType> {
         Ok(match reference_type {
-            ReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(gn)? as i64,
-            ReferenceType::ByLiteral(value) => value,
+            ReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(*gn)? as i64,
+            ReferenceType::ByLiteral(value) => *value,
         })
     }
 
     fn get_positive_value_from_reference(
         &self,
-        reference_type: PositiveReferenceType,
+        reference_type: &PositiveReferenceType,
     ) -> Result<u64, ClexErrorType> {
         Ok(match reference_type {
-            PositiveReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(gn)?,
-            PositiveReferenceType::ByLiteral(value) => value,
+            PositiveReferenceType::ByGroup { group_number: gn } => {
+                self.get_count_from_group(*gn)?
+            }
+            PositiveReferenceType::ByLiteral(value) => *value,
         })
     }
 
