@@ -17,6 +17,8 @@ pub enum ClexErrorType {
     MissingNumberAfterNegativeSign(ParentErrorType),
     NumericParsingError(ParentErrorType),
     UnknownCharacter(ParentErrorType, &'static str),
+    UnclosedAtSymbol(ParentErrorType),
+    InvalidCharacterSet(ParentErrorType),
 
     // Parser Errors
     MissingClosingParensNonCapturingGroup(ParentErrorType),
@@ -67,10 +69,11 @@ impl ClexErrorType {
             ClexErrorType::MissingNumberAfterNegativeSign(_) => "Expected a number after negative sign (-)".to_string(),
             ClexErrorType::NumericParsingError(_) => "Error parsing the number".to_string(),
             ClexErrorType::UnknownCharacter(_, c) => format!("Unexpected character: '{}'", c),
-
+            ClexErrorType::UnclosedAtSymbol(_) => "Couldn't find closing @ after opening one!".to_string(),
             ClexErrorType::MissingClosingParensNonCapturingGroup(_) => "Expected closing parenthesis ')' after opening parenthesis '(' in Non-Capturing group".to_string(),
             ClexErrorType::UnclosedParens(_) => "Expected N) or ?:<UnitExpression> after opening parenthesis '('".to_string(),
             ClexErrorType::InvalidTokenFound(_, token_type) => format!("Invalid token found: {:#?}", token_type),
+            ClexErrorType::InvalidCharacterSet(_) => "Invalid character set! Expected CH_UPPER, CH_LOWER, CH_ALL, CH_NUM, CH_ALPHA, CH_ALNUM, CH_NEWLINE".to_string(),
 
             ClexErrorType::MissingCommaRangeExpression(_) => "Expected comma (,) after opening square bracket ('[') in Range Bound Expression".to_string(),
             ClexErrorType::MissingSquareBracketsRangeExpression(_) => "Expected closing square bracket (']') after opening square bracket ('[') in Range Bound Expression".to_string(),
@@ -105,7 +108,9 @@ impl ClexErrorType {
             | ClexErrorType::UnexpectedToken(parent_type, _)
             | ClexErrorType::UnreachableCodeReached(parent_type)
             | ClexErrorType::InvalidRangeValues(parent_type, _, _)
-            | ClexErrorType::UnknownGroupNumber(parent_type, _) => match parent_type {
+            | ClexErrorType::UnknownGroupNumber(parent_type, _)
+            | ClexErrorType::UnclosedAtSymbol(parent_type)
+            | ClexErrorType::InvalidCharacterSet(parent_type) => match parent_type {
                 ParentErrorType::LexerError => "LEXER ERROR",
                 ParentErrorType::ParserError => "PARSER ERROR",
                 ParentErrorType::GeneratorError => "GENERATOR ERROR",
