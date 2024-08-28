@@ -179,15 +179,12 @@ pub async fn compile_and_test(
             "\n{}",
             "Test case generation & matching done!".bold().bright_blue()
         );
+    }
+    let has_failed_clone = Arc::clone(&has_failed);
+    let has_failed_guard = has_failed_clone.lock().unwrap();
 
-        let has_failed_clone = Arc::clone(&has_failed);
-        let has_failed_guard = has_failed_clone.lock().unwrap();
-
-        if !*has_failed_guard {
-            println!("{}", "🐣 Vohoo! No testcases has failed!".bold().green());
-        }
-    } else {
-        println!("\n{}", "🐣 Vohoo! No testcases has failed!".bold().green());
+    if !*has_failed_guard {
+        println!("{}", "🐣 Vohoo! No testcases has failed!".bold().green());
     }
 
     Ok(())
