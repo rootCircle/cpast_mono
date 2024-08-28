@@ -99,7 +99,7 @@ cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
 #### generate
 
 ```bash
-cpast generate "S[10,'U']"
+cpast generate "S[10,@CH_UPPER@]"
 ```
 
 * Generates string of length 10, of uppercase characters only
