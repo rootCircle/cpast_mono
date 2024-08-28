@@ -8,9 +8,9 @@ Clex
 
 Introducing custom character types in String, breaking syntax!
 
-Now, for custom character sets use `@CH_ALL@`, `@CH_UPPER@` etc or literal string like `'abc'` it will generate either of ABC!
+Now, for custom character sets use `@CH_ALL@`, `@CH_UPPER@` etc(as found in [Clex Language Specs](https://github.com/rootCircle/cpast/blob/4caa7952f0632e7983cfa7a64c2c2ed41746cab0/docs/clex/CLEX_LANG_SPECS.md)) or literal string like `'abc'` it will generate either of ABC!
 
-We also dropped Character Types as it use was not profound!
+We also dropped Character Types as it use was not profound! For using Character Type simply replace it with `S[1,]`
 
 ## 0.5.0
 
@@ -19,16 +19,16 @@ Released on : Aug 28, 2024
 Critical Bug Fix:
 
 - [Critical High] Due to race condition, `cpast test ...` might leave a
-      oprhan child process in non `--no-stop` cases! This will eventually
+      orphan child process in non `--no-stop` cases! This will eventually
       eat all your system memory and potentially crash it as well! This
       commit fixes that as well!
 
 Major Changes:
 
-- improved error propogation, don't exit before erroring
+- improved error propagation, don't exit before erroring
 - improved error types
-- (breaking) modify public and private function signature to accomodate
-      error propogation
+- (breaking) modify public and private function signature to accommodate
+      error propagation
 - introduce CPAST_DEBUG env, to reduce verbosity of Success Testcase
       message! It's now disabled by default! To enable use `CPAST_DEBUG=1
       cpast test ...`
