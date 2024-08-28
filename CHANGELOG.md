@@ -8,9 +8,9 @@ Clex
 
 Introducing custom character types in String, breaking syntax!
 
-Now, for custom character sets use `@CH_ALL@`, `@CH_UPPER@` etc(as found in [Clex Language Specs](https://github.com/rootCircle/cpast/blob/7b999d957af246e03d9e7d258fab1fa4e21cb684/docs/clex/CLEX_LANG_SPECS.md)) or literal string like `'abc'` it will generate either of ABC!
+Now, for custom character sets use `@CH_ALL@`, `@CH_UPPER@` etc(as found in [Clex Language Specs](https://github.com/rootCircle/cpast/blob/7b999d957af246e03d9e7d258fab1fa4e21cb684/docs/clex/CLEX_LANG_SPECS.md)) or literal string like `'abc'` it will generate either of abc!
 
-We also dropped Character Types as it use was not profound! For using Character Type simply replace it with `S[1,]`
+We also _dropped Character Type_ as it use was not profound! For using Character Type simply replace it with `S[1,]`
 
 ## 0.5.0
 
