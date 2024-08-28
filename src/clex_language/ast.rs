@@ -79,7 +79,7 @@ pub enum UnitExpression {
 }
 
 /// Represents the data type of unit expression.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DataType {
     /// Integer data type with a specified minimum and maximum value (inclusive).
     Integer(ReferenceType, ReferenceType),
@@ -87,12 +87,10 @@ pub enum DataType {
     Float(ReferenceType, ReferenceType),
     /// String data type.
     String(PositiveReferenceType, CharacterSet),
-    /// Character data type.
-    Character,
 }
 
 /// Represents the repetition type of unit expression.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ReferenceType {
     /// Reference based on a capturing group with a specified group number.
     ByGroup { group_number: u64 },
@@ -101,7 +99,7 @@ pub enum ReferenceType {
 }
 
 /// Represents the repetition type of unit expression, which is guaranteed to dereference to a positive value only!
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PositiveReferenceType {
     /// Reference based on a capturing group with a specified group number.
     ByGroup { group_number: u64 },
@@ -110,44 +108,48 @@ pub enum PositiveReferenceType {
 }
 
 /// Represent character set for string domain
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CharacterSet {
+    // CH_ALPHA
     Alphabet,
+    // CH_NUM
     Numeric,
+    // CH_NEWLINE
     Newline,
+    // CH_ALNUM
     AlphaNumeric,
-    UppercaseOnly,
-    LowerCaseOnly,
+    // CH_UPPER
+    Uppercase,
+    // CH_LOWER
+    LowerCase,
+    // CH_ALL
     All,
+    // "<characters here>"
+    Custom(String),
 }
 
 impl CharacterSet {
-    #[must_use]
-    pub fn default_charset() -> Self {
+    pub fn get_default_charset() -> CharacterSet {
         DEFAULT_CHARSET
     }
-    pub fn get_code(character_set: Self) -> char {
-        match character_set {
-            Self::Alphabet => 'A',
-            Self::Numeric => '0',
-            Self::AlphaNumeric => 'N',
-            Self::UppercaseOnly => 'U',
-            Self::LowerCaseOnly => 'L',
-            Self::All => 'D',
-            Self::Newline => 'n',
-        }
-    }
 
-    pub fn get_charset_from_code(code: char) -> Self {
-        match code {
-            'A' => Self::Alphabet,
-            '0'..='9' => Self::Numeric,
-            'N' => Self::AlphaNumeric,
-            'U' => Self::UppercaseOnly,
-            'n' => Self::Newline,
-            'a'..='m' | 'o'..='z' | 'L' => Self::LowerCaseOnly,
-            'D' => Self::All,
-            _ => Self::All,
+    pub fn get_character_domain(&self) -> String {
+        match self {
+            CharacterSet::Alphabet => {
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".to_string()
+            }
+            CharacterSet::Numeric => "0123456789".to_string(),
+            CharacterSet::AlphaNumeric => {
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".to_string()
+            }
+            CharacterSet::Uppercase => "ABCDEFGHIJKLMNOPQRSTUVWXYZ".to_string(),
+            CharacterSet::LowerCase => "abcdefghijklmnopqrstuvwxyz".to_string(),
+            CharacterSet::All => {
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789)(*&^%$#@!~"
+                    .to_string()
+            }
+            CharacterSet::Newline => "\n".to_string(),
+            CharacterSet::Custom(charset) => charset.to_owned(),
         }
     }
 }

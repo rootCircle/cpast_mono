@@ -1,8 +1,20 @@
 # Changelog
 
+## 0.6.0
+
+Released on : Aug 29, 2024
+
+Clex
+
+Introducing custom character types in String, breaking syntax!
+
+Now, for custom character sets use `@CH_ALL@`, `@CH_UPPER@` etc or literal string like `'abc'` it will generate either of ABC!
+
+We also dropped Character Types as it use was not profound!
+
 ## 0.5.0
 
-Released on : Aug 28 2024
+Released on : Aug 28, 2024
 
 Critical Bug Fix:
 
@@ -10,7 +22,7 @@ Critical Bug Fix:
       oprhan child process in non `--no-stop` cases! This will eventually
       eat all your system memory and potentially crash it as well! This
       commit fixes that as well!
-    
+
 Major Changes:
 
 - improved error propogation, don't exit before erroring

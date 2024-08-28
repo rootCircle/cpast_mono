@@ -38,12 +38,11 @@
 //!
 //! For more details on the types and methods provided by the lexer, refer to the documentation for each type.
 
-use crate::clex_language::ast::CharacterSet;
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use unicode_segmentation::UnicodeSegmentation;
 
 /// Represents the different types of tokens in the lexer.
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum TokenType {
     // Metacharacters
     LeftParens,
@@ -63,14 +62,20 @@ pub enum TokenType {
     Float,
     /// String token type.
     String,
-    /// Character token type.
-    Character,
-    // Space,
+
+    // Character Sets
+    CharacterSetAlpha,
+    CharacterSetAlnum,
+    CharacterSetNewline,
+    CharacterSetNumeric,
+    CharacterSetUpper,
+    CharacterSetLower,
+    CharacterSetAll,
 
     // Literals
     /// Literal number token type with a specified value.
     LiteralNumber(i64),
-    LiteralCharacter(char),
+    LiteralString(String),
 
     // End of file
     Eof,
@@ -144,16 +149,58 @@ impl Tokens {
             "N" => self.add_token(TokenType::Integer),
             "F" => self.add_token(TokenType::Float),
             "S" => self.add_token(TokenType::String),
-            "C" => self.add_token(TokenType::Character),
+            "@" => {
+                self.start += 1; // Skip first character in lexeme
+
+                let mut literal = String::new();
+                while self.peek() != "@" && !self.at_end() {
+                    literal.push_str(self.advance());
+                }
+
+                // Unterminated string.
+                if self.at_end() {
+                    return Err(ClexErrorType::UnclosedAtSymbol(ParentErrorType::LexerError));
+                }
+
+                let token_type = match literal.trim().to_uppercase().as_str() {
+                    "CH_ALPHA" => TokenType::CharacterSetAlpha,
+                    "CH_NUM" => TokenType::CharacterSetNumeric,
+                    "CH_NEWLINE" => TokenType::CharacterSetNewline,
+                    "CH_ALNUM" => TokenType::CharacterSetAlnum,
+                    "CH_UPPER" => TokenType::CharacterSetUpper,
+                    "CH_LOWER" => TokenType::CharacterSetLower,
+                    "CH_ALL" => TokenType::CharacterSetAll,
+                    _ => {
+                        return Err(ClexErrorType::InvalidCharacterSet(
+                            ParentErrorType::LexerError,
+                        ))
+                    }
+                };
+
+                self.add_token(token_type);
+                if !self.match_str("@") {
+                    return Err(ClexErrorType::UnclosedAtSymbol(ParentErrorType::LexerError));
+                }
+            }
             " " | "\r" | "\t" | "\n" => {
                 // Do nothing, just ignore these spaces
             }
             "'" => {
-                let character = self
-                    .advance()
-                    .parse()
-                    .unwrap_or(CharacterSet::get_code(CharacterSet::default_charset()));
-                self.add_token(TokenType::LiteralCharacter(character));
+                self.start += 1; // Skip first character in lexeme
+
+                let mut literal = String::new();
+                while self.peek() != "'" && !self.at_end() {
+                    literal.push_str(self.advance());
+                }
+
+                // Unterminated string.
+                if self.at_end() {
+                    return Err(ClexErrorType::UnclosedSingleQuotes(
+                        ParentErrorType::LexerError,
+                    ));
+                }
+
+                self.add_token(TokenType::LiteralString(literal));
                 if !self.match_str("'") {
                     return Err(ClexErrorType::UnclosedSingleQuotes(
                         ParentErrorType::LexerError,
@@ -223,7 +270,7 @@ impl Tokens {
         self.source_language.graphemes(true).collect::<Vec<&str>>()[index]
     }
 
-    /// Checks if the current characters match the expected string.
+    /// Checks if the current characters match the expected string if yes then traverse as well.
     fn match_str(&mut self, expected: &str) -> bool {
         if self.at_end() || self.char_at(self.current) != expected {
             false

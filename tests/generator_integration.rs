@@ -25,8 +25,17 @@ fn test_generator_with_string_expression() {
 }
 
 #[test]
-fn test_generator_with_upper_string_expression() {
+fn test_generator_with_custom_string_expression() {
     let language = "S[,'0']";
+
+    // Validate the output_text based on the generated AST
+    let gen_language = generator(language.to_string()).unwrap();
+    assert!(!gen_language.is_empty() && gen_language.chars().all(|c| c == '0'));
+}
+
+#[test]
+fn test_generator_with_numeral_charset_string_expression() {
+    let language = "S[,@CH_NUM@]";
 
     // Validate the output_text based on the generated AST
     let gen_language = generator(language.to_string()).unwrap();
