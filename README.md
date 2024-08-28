@@ -28,7 +28,8 @@ Here’s the best part: with cpast, all you need is your _solution file_ and the
 
 ## Getting Started
 
-<https://github.com/rootCircle/cpast/assets/35325046/1229ce29-f142-4e7a-9008-10b280fb57b6>
+https://github.com/user-attachments/assets/3b7d5b88-5a2a-4d01-8d5b-31f86b9a96db
+
 
 ### Installation
 
