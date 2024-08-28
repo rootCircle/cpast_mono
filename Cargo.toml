@@ -1,6 +1,6 @@
 [package]
 name = "cpast"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 license = " GPL-3.0-or-later"
 authors = ["rootCircle <dev.frolics@gmail.com>"]
@@ -11,15 +11,15 @@ keywords = ["automata", "competitive-program", "generator", "language", "testcas
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.5.13", features = ["derive"] }
+clap = { version = "4.5.16", features = ["derive"] }
 cli-clipboard = { version = "0.4.0", optional = true }
 rand = "0.8.5"
 unicode-segmentation = "1.11.0"
-which = "6.0.2"
-tokio = { version = "1.39.2", features = ["full"] }
+which = "6.0.3"
+tokio = { version = "1.39.3", features = ["full"] }
 futures = "0.3.30"
 colored = "2.1.0"
-clap_complete = "4.5.12"
+clap_complete = "4.5.24"
 
 [features]
 default = ["clipboard"]
