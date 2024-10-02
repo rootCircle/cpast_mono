@@ -1,3 +1,5 @@
+mod commands;
+
 use anyhow::anyhow;
 use serenity::async_trait;
 use serenity::model::channel::Message;
@@ -11,7 +13,7 @@ struct Bot;
 #[async_trait]
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "!hello" {
+        if msg.content.starts_with("!cpast") {
             if let Err(e) = msg.channel_id.say(&ctx.http, "world!").await {
                 error!("Error sending message: {:?}", e);
             }
