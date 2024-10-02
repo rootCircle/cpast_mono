@@ -1,6 +1,6 @@
 [package]
-name = "cpast_mono"
-version = "0.1.0"
+name = "cpast"
+version = "0.7.0"
 edition = "2021"
 
 [dependencies]
