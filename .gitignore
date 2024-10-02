@@ -1,12 +1,1 @@
 /target
-/.vscode/
-/.idea/
-
-# Local Testing Files
-*.py
-*.c
-*.java
-*.class
-*.rb
-*.js
-*.cpp

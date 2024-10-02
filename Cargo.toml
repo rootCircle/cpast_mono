@@ -1,37 +1,16 @@
 [package]
-name = "cpast"
-version = "0.6.0"
+name = "cpast_mono"
+version = "0.1.0"
 edition = "2021"
-license = " GPL-3.0-or-later"
-authors = ["rootCircle <dev.frolics@gmail.com>"]
-repository = "https://github.com/rootCircle/cpast"
-description = "Run custom testcase with powerful clex lang powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
-categories = ["development-tools::testing", "command-line-utilities", "compilers", "development-tools"]
-keywords = ["automata", "competitive-program", "generator", "language", "testcase"]
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.5.16", features = ["derive"] }
-cli-clipboard = { version = "0.4.0", optional = true }
-rand = "0.8.5"
-unicode-segmentation = "1.11.0"
-which = "6.0.3"
-tokio = { version = "1.39.3", features = ["full"] }
-futures = "0.3.30"
-colored = "2.1.0"
-clap_complete = "4.5.24"
 
-[features]
-default = ["clipboard"]
-clipboard = ["dep:cli-clipboard"]
+[workspace]
 
-[profile.dev]
-opt-level = 0
-
-[profile.release]
-opt-level = "z"
-lto = true
-codegen-units = 1
-strip = true  # Automatically strip symbols from the binary.
-
+members = [
+    "cpast",
+    "clex",
+    "clex_llm",
+    "cquestion_scrapper"
+]
 
