@@ -82,4 +82,5 @@ test :
 # Usage :
 #	make precommit
 
-precommit : fmt clippy test
+precommit : 
+	cargo fmt --all --check && cargo clippy --all-features --all-targets -- -D warnings && cargo test --all-features
