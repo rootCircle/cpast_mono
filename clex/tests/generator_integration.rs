@@ -1,4 +1,4 @@
-use cpast::generator;
+use clex::generator;
 
 #[test]
 fn test_generator_with_integer_expression() {

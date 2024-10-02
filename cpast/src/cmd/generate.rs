@@ -1,11 +1,11 @@
 use std::process::exit;
 
 use crate::cli::cli_parser::GenerateArgs;
-use colored::Colorize;
-use cpast::{generator, DEFAULT_FAIL_EXIT_CODE};
-
+use clex::generator;
 #[cfg(feature = "clipboard")]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
+use colored::Colorize;
+use cpast::DEFAULT_FAIL_EXIT_CODE;
 
 pub(crate) fn generate_call(args: GenerateArgs) {
     match args.generator {
