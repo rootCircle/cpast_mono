@@ -1,5 +1,5 @@
-use cpast::clex_language::lexer::{Token, TokenType};
-use cpast::get_tokens;
+use clex::clex_language::lexer::{Token, TokenType};
+use clex::get_tokens;
 #[test]
 fn test_single_token() {
     let src = "N";

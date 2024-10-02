@@ -1,0 +1,18 @@
+[workspace]
+members = [
+    "cpast",
+    "clex",
+    # "clex_llm",
+    # "cquestion_scrapper"
+]
+resolver = "2"
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true  # Automatically strip symbols from the binary.
+

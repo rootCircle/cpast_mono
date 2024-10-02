@@ -1,7 +1,7 @@
-use cpast::clex_language::ast::{
+use clex::clex_language::ast::{
     CharacterSet, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };
-use cpast::{clex_language, get_ast};
+use clex::{clex_language, get_ast};
 
 #[test]
 fn test_get_ast_with_complex_pattern() {

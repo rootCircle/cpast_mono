@@ -6,7 +6,6 @@
 //!
 //! - `lang_runner`: Module for language-runner-related functionalities and handling the storage and management of code programs.
 //! - `utils`: Utility module with miscellaneous functions.
-//! - `clex_language`: Module containing lexer, parser, generator, and abstract syntax tree (AST) for the custom language `clex`.
 //!
 //! ## Introduction
 //!
@@ -17,30 +16,20 @@
 //! To get started with `cpast`, users can use the provided functions:
 //!
 //! - `compile_and_test`: Compiles and tests code against a custom language generator.
-//! - `get_tokens`: Retrieves tokens from the custom language lexer.
-//! - `get_ast`: Obtains the Abstract Syntax Tree (AST) from the custom language parser.
-//! - `generator`: Generates code based on the custom language specification.
 //!
 //! ## Example
 //!
 //! ```rust, no_run
-//! use cpast::{compile_and_test, get_tokens, get_ast, generator};
+//! use cpast::compile_and_test;
 //!
 //! async fn compile() {
 //!     compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false).await.unwrap();
 //! }
-//!
-//! let tokens = get_tokens("(N) (?:N){\\1}".to_string());
-//!
-//! let ast = get_ast("(N) (?:N){\\1}".to_string());
-//!
-//! let generated_code = generator("(N) (?:N){\\1}".to_string());
 //! ```
 //!
 //! For more details on usage and advanced features, refer to the README.
 //!
 
-pub mod clex_language;
 mod lang_runner;
 mod utils;
 
@@ -51,11 +40,10 @@ use std::path::Path;
 use std::process::exit;
 use std::sync::{Arc, Mutex};
 
-use crate::clex_language::clex_error_type::ClexErrorType;
-use crate::clex_language::lexer::Token;
-use crate::clex_language::parser::Parser;
-use crate::clex_language::{ast::ClexLanguageAST, generator, lexer, parser};
 use crate::lang_runner::program_store::ProgramStore;
+use clex::clex_language::clex_error_type::ClexErrorType;
+use clex::clex_language::parser::Parser;
+use clex::clex_language::{code_generator, lexer, parser};
 
 pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;
 
@@ -125,7 +113,7 @@ pub async fn compile_and_test(
                     return;
                 }
 
-                let mut gen = generator::Generator::new(parser.to_owned());
+                let mut gen = code_generator::Generator::new(parser.to_owned());
 
                 match gen.generate_testcases() {
                     Err(err) => {
@@ -188,68 +176,4 @@ pub async fn compile_and_test(
     }
 
     Ok(())
-}
-
-/// Get tokens from the custom language lexer.
-///
-/// # Arguments
-///
-/// * `language` - The custom language generator code for test generation.
-///
-/// # Returns
-///
-/// Result enum, if Ok contains a vector of `Token` representing the lexed tokens.
-///
-/// # Example
-///
-/// ```rust
-/// let tokens = cpast::get_tokens("(N) (?:N){\\1}".to_string()).unwrap();
-/// ```
-pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexErrorType> {
-    let mut token = lexer::Tokens::new(language);
-    token.scan_tokens()?;
-    Ok(token.get_tokens())
-}
-
-/// Get the Abstract Syntax Tree (AST) from the custom language parser.
-///
-/// # Arguments
-///
-/// * `language` - The custom language generator code for test generation.
-///
-/// # Returns
-///
-/// Result enum, if Ok contains the `ClexLanguageAST` AST representing the parsed program.
-///
-/// # Example
-///
-/// ```rust
-/// let ast = cpast::get_ast("(N) (?:N){\\1}".to_string()).unwrap();
-/// ```
-pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexErrorType> {
-    let mut parser = parser::Parser::new(language)?;
-    parser.parser()?;
-    Ok(parser.get_language().clone())
-}
-
-/// Generate code based on the custom language specification.
-///
-/// # Arguments
-///
-/// * `language` - The custom language generator code for test generation.
-///
-/// # Returns
-///
-/// Result enum, if Ok contains a string representing the generated test pattern.
-///
-/// # Example
-///
-/// ```rust
-/// let generated_code = cpast::generator("(N[1,10]) (?:N){\\1}".to_string()).unwrap();
-/// ```
-pub fn generator(language: String) -> Result<String, ClexErrorType> {
-    let mut parser = parser::Parser::new(language)?;
-    parser.parser()?;
-    let mut gen = generator::Generator::new(parser);
-    gen.generate_testcases()
 }
