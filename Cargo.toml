@@ -4,7 +4,7 @@ members = [
   "clex",
   "cpastord"
   # "clex_llm",
-, "cscrapper"]
+, "cscrapper", "clex_llm"]
 resolver = "2"
 
 [profile.dev]
