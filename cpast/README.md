@@ -53,10 +53,8 @@ cpast is pretty minimalistic by default, but to support basic CLI features like 
 
 We have first class support for macOS, Linux (GNOME, KDE, Hyprland) and Windows
 
-Default compilations won't be supported due to lack of clipboard API support in those systems, and hence you need to compile it with `--no-default-features` feature
-
 ```bash
-cargo install cpast --no-default-features
+cargo install cpast 
 ```
 
 </details>

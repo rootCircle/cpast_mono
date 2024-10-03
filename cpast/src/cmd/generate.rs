@@ -2,7 +2,10 @@ use std::process::exit;
 
 use crate::cli::cli_parser::GenerateArgs;
 use clex::generator;
-#[cfg(feature = "clipboard")]
+#[cfg(any(
+    all(unix, not(any(target_os = "android", target_os = "emscripten"))),
+    windows,
+))]
 use cli_clipboard::{ClipboardContext, ClipboardProvider};
 use colored::Colorize;
 use cpast::DEFAULT_FAIL_EXIT_CODE;
@@ -34,9 +37,9 @@ pub(crate) fn generate_call(args: GenerateArgs) {
 
 #[allow(unused_variables)]
 fn copy_content_to_clipboard(generated_testcases: String) {
-    #[cfg(all(
-        any(target_os = "windows", target_os = "linux", target_os = "macos"),
-        feature = "clipboard"
+    #[cfg(any(
+        all(unix, not(any(target_os = "android", target_os = "emscripten"))),
+        windows,
     ))]
     {
         let mut ctx = ClipboardContext::new().unwrap();
@@ -48,10 +51,10 @@ fn copy_content_to_clipboard(generated_testcases: String) {
         println!("{}", "Copied to clipboard successfully!".green());
     }
 
-    #[cfg(any(
-        not(any(target_os = "windows", target_os = "linux", target_os = "macos")),
-        not(feature = "clipboard")
-    ))]
+    #[cfg(not(any(
+        all(unix, not(any(target_os = "android", target_os = "emscripten"))),
+        windows,
+    )))]
     println!(
         "{}",
         "Clipboard Features not enabled during compilation/device not supported!".yellow()
