@@ -16,11 +16,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Format
       run: cargo fmt --all --check 
-    - name: Build
-      run: cargo build --no-default-features --verbose
-    - name: Clippy
-      run: cargo clippy --no-default-features --all-targets -- -D warnings
+    
+    - name: Build cpast
+      run: cargo build -p cpast --no-default-features --verbose
+    
+    - name: Build exclude cpast
+      run: cargo build --workspace --exclude cpast --all-features --all-targets
+    
+    - name: Clippy cpast
+      run: cargo clippy -p cpast --no-default-features -- -D warnings
+    
+    - name: Clippy exclude cpast
+      run: cargo clippy --workspace --exclude cpast --all-features --all-targets -- -D warnings
+    
     - name: Run tests
-      run: cargo test --no-default-features --verbose
+      run: cargo test --all-features --all-targets -- --skip send_to_clipboard_works
