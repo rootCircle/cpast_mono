@@ -1,7 +1,7 @@
 #[test]
-#[cfg(all(
-    any(target_os = "windows", target_os = "linux", target_os = "macos"),
-    feature = "clipboard"
+#[cfg(any(
+    all(unix, not(any(target_os = "android", target_os = "emscripten"))),
+    windows,
 ))]
 fn send_to_clipboard_works() {
     use cli_clipboard::{ClipboardContext, ClipboardProvider};
