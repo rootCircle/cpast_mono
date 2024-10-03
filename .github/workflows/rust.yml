@@ -5,32 +5,72 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+  
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Format
-      run: cargo fmt --all --check 
-    
+    - uses: actions/checkout@v4
+    - name: Install the Rust toolchain
+      uses: actions-rust-lang/setup-rust-toolchain@v1
     - name: Build cpast
       run: cargo build -p cpast --no-default-features --verbose
-    
     - name: Build exclude cpast
       run: cargo build --workspace --exclude cpast --all-features --all-targets
     
+
+  lint:
+    name: Lint using clippy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install the Rust toolchain
+      uses: actions-rust-lang/setup-rust-toolchain@v1
     - name: Clippy cpast
       run: cargo clippy -p cpast --no-default-features -- -D warnings
-    
     - name: Clippy exclude cpast
       run: cargo clippy --workspace --exclude cpast --all-features --all-targets -- -D warnings
-    
-    - name: Run tests
-      run: cargo test --all-features --all-targets -- --skip send_to_clipboard_works
+  
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Format
+        run: cargo fmt --all --check 
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Run tests
+        run: cargo test --all-features --all-targets -- --skip send_to_clipboard_works
+  
+  coverage:
+    name: Code coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: llvm-tools-preview
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Generate code coverage
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+      - name: Generate report
+        run: cargo llvm-cov report --html --output-dir coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "Coverage report"
+          path: coverage/
