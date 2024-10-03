@@ -30,9 +30,6 @@
 //! For more details on usage and advanced features, refer to the README.
 //!
 
-mod lang_runner;
-mod utils;
-
 use colored::Colorize;
 use futures::future::join_all;
 use std::env;
@@ -40,7 +37,7 @@ use std::path::Path;
 use std::process::exit;
 use std::sync::{Arc, Mutex};
 
-use crate::lang_runner::program_store::ProgramStore;
+use ccode_runner::lang_runner::program_store::ProgramStore;
 use clex::clex_language::clex_error_type::ClexErrorType;
 use clex::clex_language::parser::Parser;
 use clex::clex_language::{code_generator, lexer, parser};

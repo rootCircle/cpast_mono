@@ -5,7 +5,7 @@ use std::error::Error;
 use std::path::Path;
 
 #[derive(Debug)]
-pub(crate) struct ProgramStore {
+pub struct ProgramStore {
     correct_file: Language,
     test_file: Language,
     correct_file_bin_path: String,
@@ -19,7 +19,7 @@ enum FileType {
 }
 
 impl ProgramStore {
-    pub(crate) fn new(
+    pub fn new(
         correct_file: &Path,
         test_file: &Path,
         do_force_compile: bool,
@@ -47,7 +47,7 @@ impl ProgramStore {
         correct_file.exists() && test_file.exists()
     }
 
-    pub(crate) fn run_codes_and_compare_output(
+    pub fn run_codes_and_compare_output(
         &self,
         stdin_content: &str,
     ) -> Result<(bool, String, String), &str> {

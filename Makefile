@@ -74,13 +74,11 @@ clippy :
 #	make test
 
 test :
-	cargo test --all-features
-
+	CFLAGS="" CXXFLAGS="" cargo test --all-features
 
 # Run format clippy test and tests.
 #
 # Usage :
 #	make precommit
 
-precommit : 
-	cargo fmt --all --check && cargo clippy --all-features --all-targets -- -D warnings && cargo test --all-features
+precommit : fmt clippy test
