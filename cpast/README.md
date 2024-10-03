@@ -76,6 +76,8 @@ cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
 * `(N) (?:N){\1}` is the language generator.
 * `100` is the number of test iterations.
 
+`CPAST_DEBUG=1 cpast test ...` can be used to debug the test cases generated.
+
 #### generate
 
 ```bash

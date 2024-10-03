@@ -5,7 +5,7 @@ use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
-use shuttle_secrets::SecretStore;
+use shuttle_runtime::{SecretStore, Secrets};
 use tracing::{error, info};
 
 struct Bot;
@@ -26,9 +26,7 @@ impl EventHandler for Bot {
 }
 
 #[shuttle_runtime::main]
-async fn serenity(
-    #[shuttle_secrets::Secrets] secret_store: SecretStore,
-) -> shuttle_serenity::ShuttleSerenity {
+async fn serenity(#[Secrets] secret_store: SecretStore) -> shuttle_serenity::ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
     let token = if let Some(token) = secret_store.get("DISCORD_TOKEN") {
         token
