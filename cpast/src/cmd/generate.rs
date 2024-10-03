@@ -32,6 +32,7 @@ pub(crate) fn generate_call(args: GenerateArgs) {
     };
 }
 
+#[allow(unused_variables)]
 fn copy_content_to_clipboard(generated_testcases: String) {
     #[cfg(all(
         any(target_os = "windows", target_os = "linux", target_os = "macos"),
