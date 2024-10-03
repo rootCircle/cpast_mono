@@ -70,3 +70,9 @@ jobs:
         with:
           name: "Coverage report"
           path: coverage/
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: lcov.info
+          fail_ci_if_error: true
