@@ -1,0 +1,55 @@
+services:
+  code-execution:
+    build: .
+    container_name: code_execution_service
+    ports:
+      - "8080:8080"  # Expose port for the code execution service
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: code_exec_db
+    depends_on:
+      - postgres
+    networks:
+      - internal_network
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 2G
+      restart_policy:
+        condition: on-failure  # Restart service if it fails
+    security_opt:
+      - no-new-privileges:true  # Prevent privilege escalation
+    read_only: true  # Enforce read-only filesystem for extra security
+    tmpfs: /tmp  # Use in-memory filesystem for /tmp for better performance and security
+    cap_drop:
+      - ALL  # Drop all capabilities
+    cap_add:
+      - CAP_NET_BIND_SERVICE  # Add the specific capability to bind to low-numbered ports (e.g., below 1024)
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: code_exec_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent storage for Postgres data
+    networks:
+      - internal_network
+    deploy:
+      restart_policy:
+        condition: on-failure  # Ensure the container restarts on failure
+    security_opt:
+      - no-new-privileges:true  # Prevent privilege escalation
+
+networks:
+  internal_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
