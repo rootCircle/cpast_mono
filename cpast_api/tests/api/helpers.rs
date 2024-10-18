@@ -1,15 +1,15 @@
 use argon2::password_hash::SaltString;
 use argon2::{Algorithm, Argon2, Params, PasswordHasher, Version};
-use secrecy::SecretString;
-use sqlx::{Connection, Executor, PgConnection, PgPool};
-use std::sync::LazyLock;
-use uuid::Uuid;
-use wiremock::MockServer;
 use cpast_api::configuration::{get_configuration, DatabaseSettings};
 use cpast_api::email_client::EmailClient;
 use cpast_api::issue_delivery_worker::{try_execute_task, ExecutionOutcome};
 use cpast_api::startup::{get_connection_pool, Application};
 use cpast_api::telemetry::{get_subscriber, init_subscriber};
+use secrecy::SecretString;
+use sqlx::{Connection, Executor, PgConnection, PgPool};
+use std::sync::LazyLock;
+use uuid::Uuid;
+use wiremock::MockServer;
 
 // Ensure that the `tracing` stack is only initialised once using `once_cell`
 static TRACING: LazyLock<()> = LazyLock::new(|| {
@@ -205,6 +205,7 @@ pub async fn spawn_app() -> TestApp {
         .await
         .expect("Failed to build application.");
     let application_port = application.port();
+    #[allow(clippy::let_underscore_future)]
     let _ = tokio::spawn(application.run_until_stopped());
 
     let client = reqwest::Client::builder()

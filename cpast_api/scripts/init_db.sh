@@ -65,6 +65,8 @@ fi
 # Create the application database
 DATABASE_URL=postgres://${APP_USER}:${APP_USER_PWD}@localhost:${DB_PORT}/${APP_DB_NAME}
 export DATABASE_URL
+
+cd cpast_api
 sqlx database create
 sqlx migrate run
 

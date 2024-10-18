@@ -1,9 +1,9 @@
-use std::fmt::{Debug, Display};
-use tokio::task::JoinError;
 use cpast_api::configuration::get_configuration;
 use cpast_api::issue_delivery_worker::run_worker_until_stopped;
 use cpast_api::startup::Application;
 use cpast_api::telemetry::{get_subscriber, init_subscriber};
+use std::fmt::{Debug, Display};
+use tokio::task::JoinError;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
