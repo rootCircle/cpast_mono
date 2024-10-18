@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-serde = { version = "1.0.210", features = ["derive"] }
-google-generative-ai-rs = "0.3.2"
-tokio = { version = "1.40.0", features = ["full"] }
+serde = { workspace = true, features = ["derive"] }
+google-generative-ai-rs = { workspace = true }
+tokio = { workspace = true, features = ["full"] }

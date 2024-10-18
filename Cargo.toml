@@ -2,10 +2,22 @@
 members = [
   "cpast",
   "clex",
-  "cpastord"
-  # "clex_llm",
-, "cscrapper", "clex_llm", "ccode_runner"]
+  "cpastord", 
+  "cscrapper", 
+  "clex_llm", 
+  "ccode_runner",
+  "cpast_api"
+]
 resolver = "2"
+
+[workspace.package]
+authors = ["rootCircle <dev.frolics@gmail.com>"]
+edition = "2021"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/rootCircle/cpast"
+description = "Run custom testcase with powerful clex lang powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
+categories = ["development-tools::testing", "command-line-utilities", "compilers", "development-tools"]
+keywords = ["automata", "competitive-program", "generator", "language", "testcase"]
 
 [profile.dev]
 opt-level = 0
@@ -16,3 +28,60 @@ lto = true
 codegen-units = 1
 strip = true  # Automatically strip symbols from the binary.
 
+[workspace.dependencies]
+actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
+actix-web = "4.9.0"
+actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
+anyhow = "1.0.90"
+argon2 = { version = "0.5.3", features = ["std"] }
+base64 = "0.22.1"
+chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
+claims = "0.7.1"
+cli-clipboard = { version = "0.4.0" }
+clap = { version = "4.5.20", features = ["derive"] }
+clap_complete = "4.5.33"
+colored = "2.1.0"
+config = { version = "0.14.0", default-features = false, features = ["yaml"] }
+fake = "2.10.0"
+futures = "0.3.31"
+google-generative-ai-rs = "0.3.2"
+log = "0.4.22"
+linkify = "0.10"
+quickcheck = "1.0.3"
+quickcheck_macros = "1.0.0"
+rand = "0.8.5"
+regex = "1.11.0"
+reqwest = { version = "0.12.8", default-features = false, features = [
+    "json",
+    "rustls-tls",
+    "cookies",
+] }
+scraper = "0.20.0"
+serde = { version = "1.0.210", features = ["derive"] }
+serde-aux = "4.5.0"
+serde_json = "1.0.129"
+serde_urlencoded = "0.7.1"
+secrecy = { version = "0.10.3", features = ["serde"] }
+serenity = { version = "0.12.2", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+shuttle-runtime = "0.48.0"
+shuttle-serenity = "0.48.0"
+sqlx = { version = "0.8.2", default-features = false, features = [
+    "runtime-tokio-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate",
+] }
+thiserror = "1.0.64"
+tokio = { version = "1.40.0", features = ["full"] }
+tracing = "0.1.40"
+tracing-actix-web = "0.7.13"
+tracing-bunyan-formatter = { version = "0.3.9" }
+tracing-log = "0.2.0"
+tracing-subscriber = { version = "0.3.18", features = ["registry", "env-filter"] }
+unicode-segmentation = "1.12.0"
+validator = "0.18.1"
+wiremock = "0.6.2"
+which = "6.0.3"
+uuid = { version = "1.11.0", features = ["v4", "serde"] }
