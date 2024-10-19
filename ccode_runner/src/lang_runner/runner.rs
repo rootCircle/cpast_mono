@@ -9,7 +9,7 @@ const DEFAULT_PROGRAM_NAME: &str = "program";
 const EMPTY_STRING: &str = "";
 
 #[derive(Debug)]
-pub(crate) enum LanguageName {
+pub enum LanguageName {
     Python,
     Cpp,
     C,

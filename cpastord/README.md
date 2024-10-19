@@ -1,69 +1,25 @@
-# cpast - Code Testing and Analysis Tool
+# cpastcord
 
-![Crates.io](https://img.shields.io/crates/d/cpast)
-![Crates.io](https://img.shields.io/crates/v/cpast)
-![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast)
-![Crates.io](https://img.shields.io/crates/l/cpast)
-![docs.rs](https://img.shields.io/docsrs/cpast)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/rust.yml)
+**cpastcord** is a Discord bot designed to integrate with the cpast tool, providing competitive programmers with a seamless experience for running and testing their code directly within Discord. This project is currently in its early stages, with the basic framework set up.
 
-> We are working on making cpast, more accessible and simple for all. If you have experience with python and/or writing prompts, consider contributing to [cpast\_llm](https://github.com/rootCircle/cpast_llm) repo.
+## Features
 
-## Introduction
+- **Command Handling**: Responds to specific commands with predefined messages.
+- **Integration with cpast**: Future integration with the cpast tool for enhanced debugging and testing.
 
-Have you ever found yourself stuck in the middle of a coding contest, frustrated by a bug or an elusive edge case that just won’t reveal itself? Or maybe you’ve spent countless hours comparing outputs manually, only to find that the real problem was a tricky test case you hadn’t considered. Well, I’ve been there, and I have good news: there’s a solution that can change the way you approach competitive programming forever.
+## Serenity Hello World Bot with Shuttle
 
-Introducing **cpast**—the game-changing tool designed specifically for competitive programmers and developers who want to enhance their coding efficiency and solve problems faster. Written in Rust for speed and reliability, cpast simplifies the process of comparing outputs from different code files, regardless of the programming language. This allows you to focus on crafting the best solution to your problem without worrying about the technicalities of cross-language compatibility.
+In this example we will deploy a Serenity bot with Shuttle that responds to the `!hello` command with `world!`. To run this bot we need a valid Discord Token. To get started log in to the [Discord developer portal](https://discord.com/developers/applications).
 
-Here’s the best part: with cpast, all you need is your _solution file_ and the _input format_, and you can debug your code to perfection without having to look at or rely on anyone else’s code. No more peeking at other people's solutions to figure out what went wrong. Now, you can independently find those tricky cases that make all the difference, allowing you to learn and improve your problem-solving skills honestly and effectively.
+1. Click the New Application button, name your application and click Create.
+2. Navigate to the Bot tab in the lefthand menu, and add a new bot.
+3. On the bot page click the Reset Token button to reveal your token. Put this token in your `Secrets.toml`. It's very important that you don't reveal your token to anyone, as it can be abused. Create a `.gitignore` file to omit your `Secrets.toml` from version control.
+4. For the sake of this example, you also need to scroll down on the bot page to the Message Content Intent section and enable that option.
 
-> Checkout the blog post [here](https://rootcircle.github.io/blog/project/cpast.html)
+To add the bot to a server we need to create an invite link.
 
-## Usecases
+1. On your bot's application page, open the OAuth2 page via the lefthand panel.
+2. Go to the URL Generator via the lefthand panel, and select the `bot` scope as well as the `Send Messages` permission in the Bot Permissions section.
+3. Copy the URL, open it in your browser and select a Discord server you wish to invite the bot to.
 
-0. Debugging your CP/DSA questions.
-1. Live hacking in during/post Codeforces contests.
-2. Generate testcases for problem setters.
-3. Reinforcement learning for large language models and stress testing their code generation accuracy.
-
-## Getting Started
-
-https://github.com/user-attachments/assets/3b7d5b88-5a2a-4d01-8d5b-31f86b9a96db
-
-
-### Installation
-
-For installation instructions, refer to [cpast README](./cpast/README.md#installation).
-
-### Usage
-
-Here's a simple example of how to use `cpast`:
-
-#### test
-
-```bash
-cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
-```
-
-* `correct.cpp` should contain the correct code.
-* `incorrect.cpp` should contain the incorrect code.
-* `(N) (?:N){\1}` is the language generator.
-* `100` is the number of test iterations.
-
-#### generate
-
-```bash
-cpast generate "S[10,@CH_UPPER@]"
-```
-
-* Generates string of length 10, of uppercase characters only
-
-## Language Specification
-
-At the heart of cpast is **clex**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
-
-For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./clex/docs/CLEX_LANG_SPECS.md).
-
-## Meta
-
-* [cpast\_llm](https://github.com/rootCircle/cpast_llm)
+For more information please refer to the [Discord docs](https://discord.com/developers/docs/getting-started) as well as the [Serenity repo](https://github.com/serenity-rs/serenity) for more examples.

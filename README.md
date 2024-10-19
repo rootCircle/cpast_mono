@@ -1,15 +1,10 @@
-# cpast - Code Testing and Analysis Tool
+# cpast_mono - Code Testing and Analysis Tool
 
 ![Crates.io](https://img.shields.io/crates/d/cpast)
-![Crates.io](https://img.shields.io/crates/v/cpast)
 ![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast)
-![Crates.io](https://img.shields.io/crates/l/cpast)
-![docs.rs](https://img.shields.io/docsrs/cpast)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/general.yml)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/audit.yml?label=audit)
 [![codecov](https://codecov.io/github/rootCircle/cpast/graph/badge.svg?token=O9UJP30T89)](https://codecov.io/github/rootCircle/cpast)
-
-> We are working on making cpast, more accessible and simple for all. If you have experience with python and/or writing prompts, consider contributing to [cpast\_llm](https://github.com/rootCircle/cpast_llm) repo.
 
 ## Introduction
 
@@ -30,21 +25,21 @@ Here’s the best part: with cpast, all you need is your _solution file_ and the
 
 ## Getting Started
 
-https://github.com/user-attachments/assets/3b7d5b88-5a2a-4d01-8d5b-31f86b9a96db
-
+<https://github.com/user-attachments/assets/3b7d5b88-5a2a-4d01-8d5b-31f86b9a96db>
 
 ### Installation
 
-For installation instructions, refer to [cpast README](./cpast/README.md#installation).
+There are two ways to use cpast:
 
-Install docker and (optionally) [mold](https://github.com/rui314/mold) linker for faster compilation times.
-```bash
-cargo install --version='~0.8' sqlx-cli --no-default-features --features rustls,postgres
-./cpast_api/scripts/init_db.sh
-./cpast_api/scripts/init_redis.sh
-```
+1. **Local Installation**: Install cpast locally and get it running on your machine.
+For running cpast locally, refer to [cpast README](./cpast/README.md#installation).
 
-### Usage
+2. **cpast_api**: Use cpast_api, which utilizes clex and ccode_runner in parallel for optimized performance and speed.
+For running cpast API locally, refer to [cpast_api README](./cpast_api/README.md).
+
+For development it's recommended(optional) to install [mold](https://github.com/rui314/mold) linker for faster compilation times.
+
+### CLI Usage
 
 Here's a simple example of how to use `cpast`:
 
@@ -72,6 +67,20 @@ cpast generate "S[10,@CH_UPPER@]"
 At the heart of cpast is **clex**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
 
 For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./clex/docs/CLEX_LANG_SPECS.md).
+
+## Workspace Meta
+
+We welcome you to the cpast mono-repo, where you can find all the tools and components that make up the cpast ecosystem. Here’s a brief overview of the different components you’ll find in this workspace:
+
+| Component    | Description                                                                                           | Status                |
+|--------------|-------------------------------------------------------------------------------------------------------|-----------------------|
+| cpast_api    | Backend for cpast, handles server-side operations and API requests.                                   | 🚧 Work in Progress   |
+| cpast        | CLI interface for cpast, used locally to run tests and generate inputs.                               | ✅ Active             |
+| ccode_runner | Runs arbitrary program code on local devices/server side, compiles/interprets code, and sends output. | 🔄 Needs Change       |
+| cpastord     | Integration of cpast for Discord, allowing users to run cpast commands within Discord.                | ❌ Abandoned          |
+| clex         | Parser and generator for the clex language, generates random input for programs based on clex syntax. | ✅ Active             |
+| cscrapper    | Scrapes question descriptions from competitive programming sites like Codeforces and CodeChef.        | 🔄 Needs Improvement  |
+| clex_llm     | Generates clex language from input format, constraints, and problem descriptions using LLM.           | 🤔 Under Consideration|
 
 ## Meta
 

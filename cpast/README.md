@@ -1,14 +1,16 @@
-# cpast - Code Testing and Analysis Tool
+# cpast_cli - Code Testing and Analysis Tool
 
 ![Crates.io](https://img.shields.io/crates/d/cpast)
 ![Crates.io](https://img.shields.io/crates/v/cpast)
-![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast)
 ![Crates.io](https://img.shields.io/crates/l/cpast)
 ![docs.rs](https://img.shields.io/docsrs/cpast)
 
 ## Introduction
 
-**cpast** is a game-changing tool designed specifically for competitive programmers and developers who want to enhance their coding efficiency. Written in Rust for speed and reliability, cpast simplifies the process of comparing outputs from different code files, allowing you to focus on solving problems effectively.
+> [!WARNING]
+> Builds are currently broken for android mobiles as we recently removed clipboard support feature! We are thinking more for the fix along the way
+
+**cpast_cli**(from now on cpast) is a game-changing _CLI_ tool designed specifically for competitive programmers and developers who want to enhance their coding efficiency. Written in Rust for speed and reliability, cpast simplifies the process of comparing outputs from different code files, allowing you to focus on solving problems effectively.
 
 ### Installation
 
