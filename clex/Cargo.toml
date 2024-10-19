@@ -1,7 +1,12 @@
 [package]
 name = "clex"
 version = "0.2.0"
-edition = "2021"
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 rand = { workspace = true }

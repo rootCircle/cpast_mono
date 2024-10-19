@@ -15,9 +15,8 @@ authors = ["rootCircle <dev.frolics@gmail.com>"]
 edition = "2021"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/rootCircle/cpast"
-description = "Run custom testcase with powerful clex lang powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
-categories = ["development-tools::testing", "command-line-utilities", "compilers", "development-tools"]
-keywords = ["automata", "competitive-program", "generator", "language", "testcase"]
+homepage = "https://rootcircle.github.io/blog/project/cpast.html"
+rust-version = "1.80"
 
 [profile.dev]
 opt-level = 0
