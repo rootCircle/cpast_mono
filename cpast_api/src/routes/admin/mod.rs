@@ -1,4 +1,4 @@
-mod dashboard;
+pub(crate) mod dashboard;
 mod logout;
 mod newsletter;
 mod password;

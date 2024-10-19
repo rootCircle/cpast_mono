@@ -1,4 +1,4 @@
-mod admin;
+pub(super) mod admin;
 mod health_check;
 mod home;
 mod login;

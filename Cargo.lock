@@ -5202,6 +5202,7 @@ checksum = "5fadf94f07d67df4b15e6490dd9a9d59d7374849413e7f137eafe52fdcbd0db5"
 dependencies = [
  "proc-macro2",
  "quote",
+ "regex",
  "syn 2.0.79",
 ]
 

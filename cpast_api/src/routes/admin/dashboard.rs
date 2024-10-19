@@ -1,11 +1,21 @@
 use crate::session_state::TypedSession;
 use crate::utils::e500;
+use actix_web::get;
 use actix_web::http::header::LOCATION;
 use actix_web::{http::header::ContentType, web, HttpResponse};
 use anyhow::Context;
 use sqlx::PgPool;
 use uuid::Uuid;
 
+#[utoipa::path(
+    context_path = "/admin",
+    responses(
+        (status = 200, description = "Dashboard response", body = String),
+        (status = 303, description = "Redirect to login", body = String),
+        (status = 500, description = "Internal server error", body = String),
+    )
+)]
+#[get("/dashboard")]
 pub async fn admin_dashboard(
     session: TypedSession,
     pool: web::Data<PgPool>,
