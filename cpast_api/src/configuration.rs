@@ -81,9 +81,14 @@ impl EmailClientSettings {
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
-    let base_path = match std::env::var("CARGO_MANIFEST_DIR") {
-        Ok(manifest_dir) => Ok(std::path::PathBuf::from(manifest_dir)),
-        Err(_) => std::env::current_dir(),
+    // TODO: Improve the error handling for this
+    // Possibly add the config at compile time, using build.rs?
+    let base_path = match option_env!("CARGO_MANIFEST_DIR") {
+        Some(manifest_dir) => Ok(std::path::PathBuf::from(manifest_dir)),
+        None => match std::env::current_dir() {
+            Ok(curr_dir) => Ok(curr_dir.join("cpast_api")),
+            Err(e) => Err(e),
+        },
     }
     .expect("Failed to determine the current directory");
 
