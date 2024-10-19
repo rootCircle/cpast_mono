@@ -1,14 +1,16 @@
 [package]
 name = "cpast"
 version = "0.7.0"
-edition = "2021"
-license = "GPL-3.0-or-later"
-authors = ["rootCircle <dev.frolics@gmail.com>"]
-repository = "https://github.com/rootCircle/cpast"
 description = "Run custom testcase with powerful clex lang powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
 categories = ["development-tools::testing", "command-line-utilities", "compilers", "development-tools"]
 keywords = ["automata", "competitive-program", "generator", "language", "testcase"]
 default-run = "cpast"
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
