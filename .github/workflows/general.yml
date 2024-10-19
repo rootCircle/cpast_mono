@@ -165,6 +165,8 @@ jobs:
 
   msrv:
     runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: true
     steps:
       - uses: actions/checkout@v4
       - uses: taiki-e/install-action@cargo-hack
