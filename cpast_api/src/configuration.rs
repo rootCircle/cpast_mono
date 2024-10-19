@@ -81,7 +81,12 @@ impl EmailClientSettings {
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
-    let base_path = std::env::current_dir().expect("Failed to determine the current directory");
+    let base_path = match std::env::var("CARGO_MANIFEST_DIR") {
+        Ok(manifest_dir) => Ok(std::path::PathBuf::from(manifest_dir)),
+        Err(_) => std::env::current_dir(),
+    }
+    .expect("Failed to determine the current directory");
+
     let configuration_directory = base_path.join("configuration");
 
     // Detect the running environment.

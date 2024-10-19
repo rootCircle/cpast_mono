@@ -1,9 +1,9 @@
 [package]
 name = "cpast_api"
 version = "0.1.0"
-authors = ["LukeMathWalker <rust@lpalmieri.com>"]
+authors = ["rootCircle <dev.frolics@gmail.com>"]
 edition = "2021"
-
+license = "MIT OR Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 path = "src/lib.rs"
@@ -50,7 +50,7 @@ secrecy = { workspace = true, features = ["serde"] }
 actix-web-flash-messages = { workspace = true, features = ["cookies"] }
 actix-session = { workspace = true, features = ["redis-session-rustls"] }
 serde_json = { workspace = true }
-utoipa = { workspace = true }
+utoipa = { workspace = true, features = [ "actix_extras" ] }
 utoipa-swagger-ui = { workspace = true, features = ["actix-web", "vendored"] }
 utoipa-redoc = { workspace = true, features = ["actix-web"] }
 utoipa-rapidoc = { workspace = true, features = ["actix-web"] }

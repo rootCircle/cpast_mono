@@ -11,7 +11,7 @@ use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::middleware::from_fn;
 use actix_web::web::Data;
-use actix_web::{web, App, HttpServer};
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
 use secrecy::{ExposeSecret, SecretString};
@@ -19,6 +19,11 @@ use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
+use utoipa::OpenApi;
+use utoipa_rapidoc::RapiDoc;
+use utoipa_redoc::{Redoc, Servable};
+use utoipa_scalar::{Scalar, Servable as ScalarServable};
+use utoipa_swagger_ui::SwaggerUi;
 
 pub struct Application {
     port: u16,
@@ -64,6 +69,12 @@ pub fn get_connection_pool(configuration: &DatabaseSettings) -> PgPool {
 
 pub struct ApplicationBaseUrl(pub String);
 
+async fn redirect_swagger_ui() -> impl Responder {
+    HttpResponse::Found()
+        .append_header(("Location", "/swagger-ui/"))
+        .finish()
+}
+
 async fn run(
     listener: TcpListener,
     db_pool: PgPool,
@@ -72,6 +83,10 @@ async fn run(
     hmac_secret: SecretString,
     redis_uri: SecretString,
 ) -> Result<Server, anyhow::Error> {
+    #[derive(OpenApi)]
+    #[openapi(paths(crate::routes::admin::dashboard::admin_dashboard))]
+    struct ApiDoc;
+
     let db_pool = Data::new(db_pool);
     let email_client = Data::new(email_client);
     let base_url = Data::new(ApplicationBaseUrl(base_url));
@@ -79,8 +94,10 @@ async fn run(
     let message_store = CookieMessageStore::builder(secret_key.clone()).build();
     let message_framework = FlashMessagesFramework::builder(message_store).build();
     let redis_store = RedisSessionStore::new(redis_uri.expose_secret()).await?;
+
+    let openapi = ApiDoc::openapi();
     let server = HttpServer::new(move || {
-        App::new()
+        let mut app = App::new()
             .wrap(message_framework.clone())
             .wrap(SessionMiddleware::new(
                 redis_store.clone(),
@@ -91,14 +108,30 @@ async fn run(
             .service(
                 web::scope("/admin")
                     .wrap(from_fn(reject_anonymous_users))
-                    .route("/dashboard", web::get().to(admin_dashboard))
+                    .service(admin_dashboard)
                     .route("/newsletters", web::get().to(publish_newsletter_form))
                     .route("/newsletters", web::post().to(publish_newsletter))
                     .route("/password", web::get().to(change_password_form))
                     .route("/password", web::post().to(change_password))
                     .route("/logout", web::post().to(log_out)),
-            )
-            .route("/login", web::get().to(login_form))
+            );
+        if std::env::var("APP_ENVIRONMENT").unwrap_or_default() != "production" {
+            app = app
+                .service(Redoc::with_url("/redoc", openapi.clone()))
+                .service(
+                    SwaggerUi::new("/swagger-ui/{_:.*}")
+                        .url("/api-docs/openapi.json", openapi.clone()),
+                )
+                .route("/swagger-ui", web::get().to(redirect_swagger_ui))
+                // There is no need to create RapiDoc::with_openapi because the OpenApi is served
+                // via SwaggerUi. Instead we only make rapidoc to point to the existing doc.
+                //
+                // If we wanted to serve the schema, the following would work:
+                // .service(RapiDoc::with_openapi("/api-docs/openapi2.json", openapi.clone()).path("/rapidoc"))
+                .service(RapiDoc::new("/api-docs/openapi.json").path("/rapidoc"))
+                .service(Scalar::with_url("/scalar", openapi.clone()))
+        }
+        app.route("/login", web::get().to(login_form))
             .route("/login", web::post().to(login))
             .route("/health_check", web::get().to(health_check))
             .route("/subscriptions", web::post().to(subscribe))

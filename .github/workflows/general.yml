@@ -70,7 +70,7 @@ jobs:
 
       - name: Migrate database
         run: |
-          SKIP_DOCKER=true ./scripts/init_db.sh
+          SKIP_DOCKER=true ./cpast_api/scripts/init_db.sh
 
       - name: Run tests
         run: cargo test --all-features --all-targets
@@ -145,7 +145,7 @@ jobs:
           GRANT_QUERY="ALTER USER ${APP_USER} CREATEDB;"
           PGPASSWORD="password" psql -U "postgres" -h "localhost" -c "${GRANT_QUERY}"
       - name: Migrate database
-        run: SKIP_DOCKER=true ./scripts/init_db.sh
+        run: SKIP_DOCKER=true ./cpast_api/scripts/init_db.sh
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
