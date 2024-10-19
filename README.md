@@ -6,7 +6,7 @@
 ![Crates.io](https://img.shields.io/crates/l/cpast)
 ![docs.rs](https://img.shields.io/docsrs/cpast)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/general.yml)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/audit.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/audit.yml?label=audit)
 [![codecov](https://codecov.io/github/rootCircle/cpast/graph/badge.svg?token=O9UJP30T89)](https://codecov.io/github/rootCircle/cpast)
 
 > We are working on making cpast, more accessible and simple for all. If you have experience with python and/or writing prompts, consider contributing to [cpast\_llm](https://github.com/rootCircle/cpast_llm) repo.
