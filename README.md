@@ -36,6 +36,13 @@ https://github.com/user-attachments/assets/3b7d5b88-5a2a-4d01-8d5b-31f86b9a96db
 
 For installation instructions, refer to [cpast README](./cpast/README.md#installation).
 
+Install docker and (optionally) [mold](https://github.com/rui314/mold) linker for faster compilation times.
+```bash
+cargo install --version='~0.8' sqlx-cli --no-default-features --features rustls,postgres
+./cpast_api/scripts/init_db.sh
+./cpast_api/scripts/init_redis.sh
+```
+
 ### Usage
 
 Here's a simple example of how to use `cpast`:

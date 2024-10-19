@@ -84,4 +84,10 @@ unicode-segmentation = "1.12.0"
 validator = "0.18.1"
 wiremock = "0.6.2"
 which = "6.0.3"
+utoipa = "5.1.1"
+utoipa-swagger-ui = { version = "8.0.1", features = ["actix-web", "vendored"] }
+utoipa-redoc = { version = "5.0.0", features = ["actix-web"] }
+utoipa-rapidoc = { version = "5.0.0", features = ["actix-web"] }
+utoipa-scalar = { version = "0.2.0", features = ["actix-web"] }
 uuid = { version = "1.11.0", features = ["v4", "serde"] }
+
