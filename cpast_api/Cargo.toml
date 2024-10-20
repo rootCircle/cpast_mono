@@ -29,7 +29,7 @@ sqlx = { workspace = true, default-features = false, features = [
     "chrono",
     "migrate",
 ] }
-uuid = { workspace = true, features = ["v4", "serde"] }
+uuid = { workspace = true, features = ["v4", "serde", "v7"] }
 chrono = { workspace = true, default-features = false, features = ["clock"] }
 reqwest = { workspace = true, default-features = false, features = [
     "json",
@@ -59,6 +59,7 @@ utoipa-swagger-ui = { workspace = true, features = ["actix-web", "vendored"] }
 utoipa-redoc = { workspace = true, features = ["actix-web"] }
 utoipa-rapidoc = { workspace = true, features = ["actix-web"] }
 utoipa-scalar = { workspace = true, features = ["actix-web"] }
+ccode_runner = { path = "../ccode_runner" }
 
 [dev-dependencies]
 quickcheck = { workspace = true }
