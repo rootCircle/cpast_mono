@@ -1,6 +1,5 @@
-use actix_web::http::StatusCode;
+use actix_web::post;
 use actix_web::web::Json;
-use actix_web::{post, ResponseError};
 use actix_web::{web, HttpResponse};
 use anyhow::Context;
 use ccode_runner::lang_runner::runner::LanguageName;
@@ -8,6 +7,8 @@ use serde::{Deserialize, Serialize};
 use sqlx::{Executor, PgPool, Postgres, Transaction};
 use utoipa::ToSchema;
 use uuid::{ContextV7, Timestamp, Uuid};
+
+use super::ShareError;
 
 #[derive(Serialize, Deserialize, ToSchema, Clone, Debug)]
 struct CodeRequest {
@@ -27,38 +28,21 @@ struct CodeResponse {
     share_id: String,
 }
 
-#[derive(thiserror::Error)]
-pub enum ShareError {
-    #[error(transparent)]
-    UnexpectedError(#[from] anyhow::Error),
-}
-
-impl std::fmt::Debug for ShareError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        error_chain_fmt(self, f)
-    }
-}
-
-impl ResponseError for ShareError {
-    fn status_code(&self) -> StatusCode {
-        match self {
-            ShareError::UnexpectedError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-        }
-    }
-}
-
 #[utoipa::path(
     responses(
         (status = 200, description = "Share_id", body = CodeResponse),
+        (status = 400, description = "Invalid clex", body = String),
         (status = 500, description = "Internal server error", body = String),
     )
 )]
 #[post("/share")]
-pub async fn share_code(
+pub async fn post_share_code(
     pool: web::Data<PgPool>,
     code_request: Json<CodeRequest>,
 ) -> Result<HttpResponse, ShareError> {
     let transaction = pool.begin().await.context("Failed to start transaction")?;
+    verify_clex(&code_request.clex)?;
+
     let share_id = push_code(transaction, code_request.0)
         .await
         .context("Failed to generate share code")?;
@@ -90,15 +74,7 @@ pub(crate) async fn push_code(
     Ok(share_id)
 }
 
-pub fn error_chain_fmt(
-    e: &impl std::error::Error,
-    f: &mut std::fmt::Formatter<'_>,
-) -> std::fmt::Result {
-    writeln!(f, "{}\n", e)?;
-    let mut current = e.source();
-    while let Some(cause) = current {
-        writeln!(f, "Caused by:\n\t{}", cause)?;
-        current = cause.source();
-    }
+fn verify_clex(clex: &str) -> Result<(), ShareError> {
+    clex::generator(clex.to_string()).map_err(|err| ShareError::InvalidClex(err.to_string()))?;
     Ok(())
 }

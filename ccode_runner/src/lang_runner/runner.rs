@@ -12,7 +12,7 @@ use super::runner_error_types::RunnerErrorType;
 const DEFAULT_PROGRAM_NAME: &str = "program";
 const EMPTY_STRING: &str = "";
 
-#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema, PartialEq)]
 pub enum LanguageName {
     Python,
     Cpp,

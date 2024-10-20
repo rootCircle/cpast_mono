@@ -44,6 +44,14 @@ impl TestApp {
             .await
             .expect("Failed to execute request.")
     }
+
+    pub async fn get_shared_code(&self, share_id: &str) -> reqwest::Response {
+        self.api_client
+            .get(format!("{}/api/v1/share/{}", &self.address, share_id))
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
 }
 
 pub async fn spawn_app() -> TestApp {
