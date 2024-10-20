@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT code, code_language AS \"language\", clex\n        FROM shared_code\n        WHERE share_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "language",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "clex",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "37449a2c2b38d397414346a4b7e6c6a84ca7c9cb0c95468909030f066ec844c8"
+}

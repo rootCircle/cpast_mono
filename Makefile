@@ -30,6 +30,10 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 	rm \
 	release
 
+init-repo:
+	cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
+	./cpast_api/scripts/init_db.sh
+	./cpast_api/scripts/init_redis.sh
 
 # Compile application for running on local machine
 #
@@ -74,11 +78,24 @@ clippy :
 #	make test
 
 test :
-	CFLAGS="" CXXFLAGS="" cargo test --all-features
+	cargo test --all-features
 
+# Usage
+# make migrate-run new_fancy_table
+migrate-create:
+	cd cpast_api && cargo sqlx migrate add -r $(1)
+
+migrate-run:
+	cd cpast_api && cargo sqlx migrate run
+
+prepare:
+	cargo sqlx prepare --workspace -- --all-targets
+
+prepare-check:
+	cargo sqlx prepare --workspace --check -- --all-targets
 # Run format clippy test and tests.
 #
 # Usage :
 #	make precommit
 
-precommit : fmt clippy test
+precommit : fmt clippy test prepare-check
