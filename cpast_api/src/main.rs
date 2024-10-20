@@ -1,5 +1,4 @@
 use cpast_api::configuration::get_configuration;
-use cpast_api::issue_delivery_worker::run_worker_until_stopped;
 use cpast_api::startup::Application;
 use cpast_api::telemetry::{get_subscriber, init_subscriber};
 use std::fmt::{Debug, Display};
@@ -13,11 +12,9 @@ async fn main() -> anyhow::Result<()> {
     let configuration = get_configuration().expect("Failed to read configuration.");
     let application = Application::build(configuration.clone()).await?;
     let application_task = tokio::spawn(application.run_until_stopped());
-    let worker_task = tokio::spawn(run_worker_until_stopped(configuration));
 
     tokio::select! {
         o = application_task => report_exit("API", o),
-        o = worker_task =>  report_exit("Background worker", o),
     };
 
     Ok(())

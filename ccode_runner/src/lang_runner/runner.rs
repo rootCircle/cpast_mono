@@ -1,5 +1,9 @@
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
 use crate::utils::program_utils;
 use crate::utils::program_utils::remake;
+use core::fmt;
 use std::error::Error;
 use std::path::{Path, PathBuf};
 
@@ -8,7 +12,7 @@ use super::runner_error_types::RunnerErrorType;
 const DEFAULT_PROGRAM_NAME: &str = "program";
 const EMPTY_STRING: &str = "";
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub enum LanguageName {
     Python,
     Cpp,
@@ -17,6 +21,40 @@ pub enum LanguageName {
     Ruby,
     Javascript,
     Java,
+}
+
+impl fmt::Display for LanguageName {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            LanguageName::Python => write!(f, "python"),
+            LanguageName::Cpp => write!(f, "cpp"),
+            LanguageName::C => write!(f, "c"),
+            LanguageName::Rust => write!(f, "rust"),
+            LanguageName::Ruby => write!(f, "ruby"),
+            LanguageName::Javascript => write!(f, "javascript"),
+            LanguageName::Java => write!(f, "java"),
+        }
+    }
+}
+
+impl TryFrom<String> for LanguageName {
+    type Error = String;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        match s.to_lowercase().as_str() {
+            "python" => Ok(LanguageName::Python),
+            "cpp" => Ok(LanguageName::Cpp),
+            "c" => Ok(LanguageName::C),
+            "rust" => Ok(LanguageName::Rust),
+            "ruby" => Ok(LanguageName::Ruby),
+            "javascript" => Ok(LanguageName::Javascript),
+            "java" => Ok(LanguageName::Java),
+            other => Err(format!(
+                "{} is not a supported language. Use either `python`, `cpp`, `c`, `rust`, `ruby`, `javascript` or `java`.",
+                other
+            )),
+        }
+    }
 }
 
 #[derive(Debug)]
