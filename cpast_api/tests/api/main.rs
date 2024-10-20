@@ -1,4 +1,4 @@
 mod health_check;
 mod helpers;
-mod share_code;
+mod share;
 mod test_user;

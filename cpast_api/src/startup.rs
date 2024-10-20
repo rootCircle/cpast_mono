@@ -1,7 +1,8 @@
 use crate::authentication::reject_anonymous_users;
 use crate::configuration::{DatabaseSettings, Settings};
 use crate::email_client::EmailClient;
-use crate::routes::api::v1::share::share_code;
+use crate::routes::api::v1::share::get::get_share_code;
+use crate::routes::api::v1::share::post::post_share_code;
 use crate::routes::{health_check, home};
 use actix_session::storage::RedisSessionStore;
 use actix_session::SessionMiddleware;
@@ -106,7 +107,11 @@ async fn run(
             ))
             .wrap(TracingLogger::default())
             .route("/", web::get().to(home))
-            .service(web::scope("/api/v1").service(share_code))
+            .service(
+                web::scope("/api/v1")
+                    .service(get_share_code)
+                    .service(post_share_code),
+            )
             .service(web::scope("/admin").wrap(from_fn(reject_anonymous_users)));
         if std::env::var("APP_ENVIRONMENT").unwrap_or_default() != "production" {
             app = app
