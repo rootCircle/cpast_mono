@@ -1,6 +1,11 @@
 use crate::authentication::reject_anonymous_users;
 use crate::configuration::{DatabaseSettings, Settings};
 use crate::email_client::EmailClient;
+use crate::routes::api::v1::evaluate::with_code_and_clex::post_with_code_and_clex;
+use crate::routes::api::v1::evaluate::with_code_and_constraint::post_with_code_and_constraint;
+use crate::routes::api::v1::evaluate::with_code_and_platform::post_with_code_and_platform;
+use crate::routes::api::v1::evaluate::with_platform::post_with_platform;
+use crate::routes::api::v1::evaluate::with_shared_id::post_with_shared_id;
 use crate::routes::api::v1::share::get::get_share_code;
 use crate::routes::api::v1::share::post::post_share_code;
 use crate::routes::{health_check, home};
@@ -84,8 +89,8 @@ async fn run(
 ) -> Result<Server, anyhow::Error> {
     #[derive(OpenApi)]
     #[openapi(
-        nest((path = "/api/v1", api = crate::routes::api::v1::EvaluateApiv1)),
-        tags((name = "evaluate code", description = "Operations related to code evaluation")),
+        nest((path = "/api/v1", api = crate::routes::api::v1::Apiv1)),
+        tags((name = "webserver api", description = "core webserver api for sharing and evaluating code")),
         )]
     struct ApiDoc;
 
@@ -110,7 +115,15 @@ async fn run(
             .service(
                 web::scope("/api/v1")
                     .service(get_share_code)
-                    .service(post_share_code),
+                    .service(post_share_code)
+                    .service(
+                        web::scope("/evaluate")
+                            .service(post_with_code_and_platform)
+                            .service(post_with_code_and_clex)
+                            .service(post_with_code_and_constraint)
+                            .service(post_with_platform)
+                            .service(post_with_shared_id),
+                    ),
             )
             .service(web::scope("/admin").wrap(from_fn(reject_anonymous_users)));
         if std::env::var("APP_ENVIRONMENT").unwrap_or_default() != "production" {

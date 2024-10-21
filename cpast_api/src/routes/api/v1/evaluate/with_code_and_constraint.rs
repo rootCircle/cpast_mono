@@ -9,16 +9,27 @@ use utoipa::ToSchema;
 use super::{EvaluateAPIError, EvaluateCodeResponse};
 
 #[derive(Serialize, Deserialize, ToSchema, Clone, Debug)]
-struct EvaluateCodeWithOnlyPlatformRequest {
+struct EvaluateCodeWithConstraintRequest {
+    #[schema(example = "print('Hello,', input(), '!')")]
+    correct_code: String,
+
+    #[schema(example = "python")]
+    correct_code_language: LanguageName,
+
     #[schema(example = "print('Hello, worldd!')")]
     test_code: String,
 
     #[schema(example = "python")]
     test_code_language: LanguageName,
 
-    // TODO: Use custom in house URL type instead of String
-    #[schema(example = "https://codeforces.com/problemset/problem/4/A")]
-    problem_url: String,
+    #[schema(example = "Print hello followed by inputted name")]
+    problem_description: String,
+
+    #[schema(example = "One string input")]
+    input_format: String,
+
+    #[schema(example = "length of name is less than 50")]
+    constraints: String,
 }
 
 #[utoipa::path(
@@ -28,10 +39,10 @@ struct EvaluateCodeWithOnlyPlatformRequest {
         (status = 500, description = "Internal server error", body = String),
     )
 )]
-#[post("/with_platform")]
-pub async fn post_with_platform(
+#[post("/with_code_and_constraint")]
+pub async fn post_with_code_and_constraint(
     pool: web::Data<PgPool>,
-    code_request: Json<EvaluateCodeWithOnlyPlatformRequest>,
+    code_request: Json<EvaluateCodeWithConstraintRequest>,
 ) -> Result<HttpResponse, EvaluateAPIError> {
-    todo!("Implement post_with_code_and_platform");
+    todo!("Implement post_with_code_and_clex");
 }
