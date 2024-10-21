@@ -9,16 +9,15 @@ use utoipa::ToSchema;
 use super::{EvaluateAPIError, EvaluateCodeResponse};
 
 #[derive(Serialize, Deserialize, ToSchema, Clone, Debug)]
-struct EvaluateCodeWithOnlyPlatformRequest {
+struct EvaluateCodeWithOnlySharedIDRequest {
     #[schema(example = "print('Hello, worldd!')")]
     test_code: String,
 
     #[schema(example = "python")]
     test_code_language: LanguageName,
 
-    // TODO: Use custom in house URL type instead of String
-    #[schema(example = "https://codeforces.com/problemset/problem/4/A")]
-    problem_url: String,
+    #[schema(example = "1e23fdh-sdf23-23sdf")]
+    share_id: String,
 }
 
 #[utoipa::path(
@@ -28,10 +27,10 @@ struct EvaluateCodeWithOnlyPlatformRequest {
         (status = 500, description = "Internal server error", body = String),
     )
 )]
-#[post("/with_platform")]
-pub async fn post_with_platform(
+#[post("/with_shared_id")]
+pub async fn post_with_shared_id(
     pool: web::Data<PgPool>,
-    code_request: Json<EvaluateCodeWithOnlyPlatformRequest>,
+    code_request: Json<EvaluateCodeWithOnlySharedIDRequest>,
 ) -> Result<HttpResponse, EvaluateAPIError> {
     todo!("Implement post_with_code_and_platform");
 }

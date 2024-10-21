@@ -8,7 +8,7 @@ use utoipa::ToSchema;
 use uuid::{Uuid, Version};
 
 #[derive(Serialize, ToSchema)]
-struct CodeDetailResponse {
+struct ShareGetResponse {
     #[schema(example = "print('Hello, world!')")]
     code: String,
 
@@ -21,7 +21,7 @@ struct CodeDetailResponse {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Code details", body = CodeDetailResponse),
+        (status = 200, description = "Code details", body = ShareGetResponse),
         (status = 400, description = "Invalid input", body = String),
         (status = 404, description = "Share ID not found", body = String),
         (status = 500, description = "Internal server error", body = String),
@@ -50,7 +50,7 @@ pub async fn get_share_code(
 pub(crate) async fn get_code_from_share_id(
     pool: &PgPool,
     share_id: &str,
-) -> Result<CodeDetailResponse, anyhow::Error> {
+) -> Result<ShareGetResponse, anyhow::Error> {
     let query = sqlx::query!(
         r#"
         SELECT code, code_language AS "language", clex
@@ -65,7 +65,7 @@ pub(crate) async fn get_code_from_share_id(
         .await
         .context("Failed to fetch code details")?;
 
-    Ok(CodeDetailResponse {
+    Ok(ShareGetResponse {
         code: code_details.code,
         language: code_details
             .language

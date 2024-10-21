@@ -9,7 +9,13 @@ use utoipa::ToSchema;
 use super::{EvaluateAPIError, EvaluateCodeResponse};
 
 #[derive(Serialize, Deserialize, ToSchema, Clone, Debug)]
-struct EvaluateCodeWithOnlyPlatformRequest {
+struct EvaluateCodeWithPlatformRequest {
+    #[schema(example = "print('Hello,', input(), '!')")]
+    correct_code: String,
+
+    #[schema(example = "python")]
+    correct_code_language: LanguageName,
+
     #[schema(example = "print('Hello, worldd!')")]
     test_code: String,
 
@@ -28,10 +34,10 @@ struct EvaluateCodeWithOnlyPlatformRequest {
         (status = 500, description = "Internal server error", body = String),
     )
 )]
-#[post("/with_platform")]
-pub async fn post_with_platform(
+#[post("/with_code_and_platform")]
+pub async fn post_with_code_and_platform(
     pool: web::Data<PgPool>,
-    code_request: Json<EvaluateCodeWithOnlyPlatformRequest>,
+    code_request: Json<EvaluateCodeWithPlatformRequest>,
 ) -> Result<HttpResponse, EvaluateAPIError> {
     todo!("Implement post_with_code_and_platform");
 }

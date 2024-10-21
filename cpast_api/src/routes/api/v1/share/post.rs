@@ -11,7 +11,7 @@ use uuid::{ContextV7, Timestamp, Uuid};
 use super::ShareError;
 
 #[derive(Serialize, Deserialize, ToSchema, Clone, Debug)]
-struct CodeRequest {
+struct SharePostRequest {
     #[schema(example = "print('Hello, world!')")]
     code: String,
 
@@ -23,14 +23,14 @@ struct CodeRequest {
 }
 
 #[derive(Serialize, ToSchema)]
-struct CodeResponse {
+struct SharePostResponse {
     #[schema(example = "123e4567-e89b-12d3-a456-426614174000")]
     share_id: String,
 }
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Share_id", body = CodeResponse),
+        (status = 200, description = "Share_id", body = SharePostResponse),
         (status = 400, description = "Invalid clex", body = String),
         (status = 500, description = "Internal server error", body = String),
     )
@@ -38,7 +38,7 @@ struct CodeResponse {
 #[post("/share")]
 pub async fn post_share_code(
     pool: web::Data<PgPool>,
-    code_request: Json<CodeRequest>,
+    code_request: Json<SharePostRequest>,
 ) -> Result<HttpResponse, ShareError> {
     let transaction = pool.begin().await.context("Failed to start transaction")?;
     verify_clex(&code_request.clex)?;
@@ -46,13 +46,13 @@ pub async fn post_share_code(
     let share_id = push_code(transaction, code_request.0)
         .await
         .context("Failed to generate share code")?;
-    Ok(HttpResponse::Ok().json(CodeResponse { share_id }))
+    Ok(HttpResponse::Ok().json(SharePostResponse { share_id }))
 }
 
 #[tracing::instrument(name = "Push code", skip(transaction, code_request))]
 pub(crate) async fn push_code(
     mut transaction: Transaction<'_, Postgres>,
-    code_request: CodeRequest,
+    code_request: SharePostRequest,
 ) -> Result<String, anyhow::Error> {
     let context = ContextV7::new();
     let share_id = Uuid::new_v7(Timestamp::now(&context)).to_string();
