@@ -91,3 +91,53 @@ Launch `cargo`:
 ```bash
 cargo test 
 ```
+
+## Architecture
+
+### Workflow
+
+```mermaid
+graph TD
+    A[User Interface] -->|Submits Code| B[API Layer]
+    B -->|Enqueues Task| D[Task Queue: RabbitMQ/Kafka]
+    D -->|Distributes Tasks| E[Worker Nodes]
+    E -->|Requests Compilation and Execution| C1[Code Runner]
+    
+    subgraph Docker Container
+        C1[Code Runner] 
+        C2[Family of Compilers]
+    end
+
+    C1 -->|Returns Output| E
+    C1 -->|Uses| C2
+    E -->|Sends Result via WebSocket| B
+    B -->|WebSocket Connection| A
+
+    subgraph Cache Layer
+        H[Redis] -->|Cached Response| B
+    end
+
+    C1 -->|Task Results| H
+```
+
+### High level architecture
+
+
+```mermaid
+architecture-beta
+    group api(cloud)[API]
+    group docker(cloud)[Docker container] in api
+
+    service redis(database)[Redis Cache] in api
+    service kafka(server)[Kafka or RabbitMQ] in api
+    service server(internet)[Server] in api
+    service code_runner(server)[Code Runner] in docker
+    service family_of_compilers(disk)[Family of Compilers] in docker
+
+    server:R -- L:redis
+    server:T -- B:kafka
+    kafka:R -- L:code_runner
+    code_runner:R -- L:family_of_compilers
+    code_runner:T -- B:redis
+```
+
