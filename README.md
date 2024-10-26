@@ -74,14 +74,14 @@ We welcome you to the cpast mono-repo, where you can find all the tools and comp
 
 | Component    | Description                                                                                           | Status                |
 |--------------|-------------------------------------------------------------------------------------------------------|-----------------------|
-| cpast_api    | Backend for cpast, handles server-side operations and API requests.                                   | 🚧 Work in Progress   |
-| cpast        | CLI interface for cpast, used locally to run tests and generate inputs.                               | ✅ Active             |
-| ccode_runner | Runs arbitrary program code on local devices/server side, compiles/interprets code, and sends output. | 🔄 Needs Change       |
-| cpastord     | Integration of cpast for Discord, allowing users to run cpast commands within Discord.                | ❌ Abandoned          |
-| clex         | Parser and generator for the clex language, generates random input for programs based on clex syntax. | ✅ Active             |
-| cscrapper    | Scrapes question descriptions from competitive programming sites like Codeforces and CodeChef.        | 🔄 Needs Improvement  |
-| clex_llm     | Generates clex language from input format, constraints, and problem descriptions using LLM.           | 🤔 Under Consideration|
+| [cpast_api](./cpast_api/README.md)    | Backend for cpast, handles server-side operations and API requests.                                   | 🚧 Work in Progress   |
+| [cpast](./cpast/README.md)        | CLI interface for cpast, used locally to run tests and generate inputs.                               | ✅ Active             |
+| [ccode_runner](./ccode_runner/README.md) | Runs arbitrary program code on local devices/server side, compiles/interprets code, and sends output. | 🔄 Needs Change       |
+| [cpastord](./cpastord/README.md)     | Integration of cpast for Discord, allowing users to run cpast commands within Discord.                | ❌ Abandoned          |
+| [clex](./clex/README.md)         | Parser and generator for the clex language, generates random input for programs based on clex syntax. | ✅ Active             |
+| [cscrapper](./cscrapper/README.md)    | Scrapes question descriptions from competitive programming sites like Codeforces and CodeChef.        | 🔄 Needs Improvement  |
+| [clex_llm](./clex_llm/README.md)     | Generates clex language from input format, constraints, and problem descriptions using LLM.           | 🤔 Under Consideration|
 
 ## Meta
 
-* [cpast\_llm](https://github.com/rootCircle/cpast_llm)
+* Archived effort - [cpast\_llm](https://github.com/rootCircle/cpast_llm)

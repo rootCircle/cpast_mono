@@ -15,6 +15,11 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 #
 
 .PHONY : \
+	init-repo \
+	migrate-run \
+	migrate-create \
+	prepare \
+	prepare-check \
 	doc \
 	fmt \
 	clippy \
@@ -28,7 +33,8 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 	start \
 	stop \
 	rm \
-	release
+	release \
+	coverage
 
 init-repo:
 	cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
@@ -52,7 +58,7 @@ doc :
 ifeq ($(clean),yes)
 	@rm -rf target/doc/
 endif
-	cargo doc --all-features --no-deps\
+	SQLX_OFFLINE=true cargo doc --all-features --no-deps\
 		$(if $(call eq,$(private),no),,--document-private-items) \
 		$(if $(call eq,$(open),no),,--open)
 
@@ -98,4 +104,8 @@ prepare-check:
 # Usage :
 #	make precommit
 
+coverage:
+	cargo llvm-cov clean --workspace --html --output-dir=coverage
+	cargo llvm-cov --all-features --workspace --no-clean --html --output-dir=coverage --open
+	
 precommit : fmt clippy test prepare-check

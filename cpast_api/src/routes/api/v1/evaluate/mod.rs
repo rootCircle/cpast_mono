@@ -21,6 +21,9 @@ pub(crate) struct EvaluateCodeApiv1;
 
 #[derive(Serialize, ToSchema)]
 struct EvaluateCodeInputDiff {
+    #[schema(example = "world")]
+    input: String,
+
     #[schema(example = "Hello, world!")]
     expected_output: String,
 
@@ -34,6 +37,7 @@ struct EvaluateCodeResponse {
     has_output_matched: bool,
 
     #[schema(example = json!(Vec::from([EvaluateCodeInputDiff {
+        input: "world".to_string(),
         expected_output: "Hello, world!".to_string(),
         actual_output: "Hello, worldd!".to_string(),
     }])))]
