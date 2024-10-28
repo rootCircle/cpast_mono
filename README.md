@@ -1,10 +1,10 @@
 # cpast_mono - Code Testing and Analysis Tool
 
 ![Crates.io](https://img.shields.io/crates/d/cpast)
-![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/general.yml)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast/audit.yml?label=audit)
-[![codecov](https://codecov.io/github/rootCircle/cpast/graph/badge.svg?token=O9UJP30T89)](https://codecov.io/github/rootCircle/cpast)
+![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast_mono)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast_mono/general.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast_mono/audit.yml?label=audit)
+[![codecov](https://codecov.io/gh/rootCircle/cpast_mono/graph/badge.svg?token=B4E8O14XPA)](https://codecov.io/gh/rootCircle/cpast_mono)
 
 ## Introduction
 

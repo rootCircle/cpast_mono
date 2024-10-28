@@ -24,8 +24,8 @@ Ensure you have Rust installed on your machine. You can install Rust using [rust
 Clone the repository and navigate to the `clex_llm` directory:
 
 ```bash
-git clone https://github.com/rootCircle/cpast.git
-cd cpast/clex_llm
+git clone https://github.com/rootCircle/cpast_mono.git
+cd cpast_mono/clex_llm
 ```
 
 ### Usage

@@ -14,7 +14,7 @@ resolver = "2"
 authors = ["rootCircle <dev.frolics@gmail.com>"]
 edition = "2021"
 license = "GPL-3.0-or-later"
-repository = "https://github.com/rootCircle/cpast"
+repository = "https://github.com/rootCircle/cpast_mono"
 homepage = "https://rootcircle.github.io/blog/project/cpast.html"
 rust-version = "1.80"
 

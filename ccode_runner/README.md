@@ -19,8 +19,8 @@ Ensure you have the necessary compilers and interpreters installed for the langu
 Clone the repository and navigate to the `ccode_runner` directory:
 
 ```bash
-git clone https://github.com/rootCircle/cpast.git
-cd cpast/ccode_runner
+git clone https://github.com/rootCircle/cpast_mono.git
+cd cpast_mono/ccode_runner
 ```
 
 ### Usage
