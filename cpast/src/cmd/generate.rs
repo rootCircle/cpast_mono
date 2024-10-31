@@ -16,9 +16,9 @@ pub(crate) fn generate_call(args: GenerateArgs) {
             match generator(language) {
                 Ok(testcase) => {
                     let generated_testcases = testcase;
-                    println!("=====================================");
+                    eprintln!("=====================================");
                     println!("{}", &generated_testcases);
-                    println!("=====================================");
+                    eprintln!("=====================================");
                     if args.clipboard {
                         copy_content_to_clipboard(generated_testcases);
                     }
