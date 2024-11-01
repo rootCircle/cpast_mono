@@ -57,8 +57,8 @@ impl TryFrom<String> for LanguageName {
     }
 }
 
-#[derive(Debug)]
-enum CompilationType {
+#[derive(Debug, PartialEq)]
+pub(super) enum CompilationType {
     AheadOfTime,            // Compiled language like C, C++, Rust, Java, Go etc
     JustInTime,             // Python etc
     AheadOfTimeInterpreted, // Java
@@ -92,7 +92,7 @@ impl Language {
         })
     }
 
-    fn get_programming_language_name(file_path: &Path) -> Option<LanguageName> {
+    pub(super) fn get_programming_language_name(file_path: &Path) -> Option<LanguageName> {
         match file_path.extension().and_then(|ext| ext.to_str()) {
             Some("rs") => Some(LanguageName::Rust),
             Some("py") => Some(LanguageName::Python),
@@ -107,8 +107,8 @@ impl Language {
         }
     }
 
-    fn get_language_compilation_type(lang_type: &LanguageName) -> CompilationType {
-        match lang_type {
+    pub(super) fn get_language_compilation_type(lang_name: &LanguageName) -> CompilationType {
+        match lang_name {
             LanguageName::Rust | LanguageName::Cpp | LanguageName::C => {
                 CompilationType::AheadOfTime
             }
