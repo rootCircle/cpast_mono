@@ -20,7 +20,7 @@ Add `cscrapper` as a dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-cscrapper = "0.1"  // Adjust the version as necessary
+cscrapper = "0.1" 
 ```
 
 ### Usage

@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! clex = "0.1"  // Adjust the version as necessary
+//! clex = "0.1"
 //! ```
 //!
 //! Import the module in your Rust code:

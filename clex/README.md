@@ -21,7 +21,7 @@ To install clex, add it as a dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-clex = "0.1"  // Adjust the version as necessary
+clex = "0.1" 
 ```
 
 ### Usage
