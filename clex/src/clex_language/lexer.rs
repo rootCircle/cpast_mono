@@ -173,7 +173,7 @@ impl Tokens {
                     _ => {
                         return Err(ClexErrorType::InvalidCharacterSet(
                             ParentErrorType::LexerError,
-                        ))
+                        ));
                     }
                 };
 

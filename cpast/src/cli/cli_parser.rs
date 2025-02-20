@@ -1,7 +1,7 @@
 use std::io;
 
 use clap::{Command, CommandFactory, Parser, Subcommand, ValueHint};
-use clap_complete::{generate, Generator, Shell};
+use clap_complete::{Generator, Shell, generate};
 
 const DEFAULT_ITERATIONS_COUNT: usize = 5;
 
@@ -27,8 +27,13 @@ pub(crate) enum CpastSubcommands {
     Generate(GenerateArgs),
 }
 
-fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
-    generate(gen, cmd, cmd.get_name().to_string(), &mut io::stdout());
+fn print_completions<G: Generator>(generator: G, cmd: &mut Command) {
+    generate(
+        generator,
+        cmd,
+        cmd.get_name().to_string(),
+        &mut io::stdout(),
+    );
 }
 
 #[derive(clap::Args)]

@@ -1,4 +1,4 @@
-use cscrapper::{get_problem_statement, CodePlatform};
+use cscrapper::{CodePlatform, get_problem_statement};
 
 #[test]
 #[ignore]
@@ -9,9 +9,11 @@ fn test_codeforces_1992_b() {
     let response = result.unwrap();
 
     assert!(response.statement.contains("April's Fool"));
-    assert!(response
-        .input_format
-        .contains("The input contains a single integer"));
+    assert!(
+        response
+            .input_format
+            .contains("The input contains a single integer")
+    );
     assert!(response.constraints.is_empty());
 }
 

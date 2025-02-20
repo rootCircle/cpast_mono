@@ -2,8 +2,8 @@ use reqwest::blocking::Client;
 use std::{thread, time::Duration};
 
 use crate::{
+    CODECHEF_PREFIX, CodePlatform,
     qscrapper::{ProblemScraper, ScrapeAPIResponse, ScraperError},
-    CodePlatform, CODECHEF_PREFIX,
 };
 
 pub(crate) struct CodeChef {

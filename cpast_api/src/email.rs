@@ -29,10 +29,10 @@ impl std::fmt::Display for SubscriberEmail {
 mod tests {
     use super::SubscriberEmail;
     use claims::assert_err;
-    use fake::faker::internet::en::SafeEmail;
     use fake::Fake;
-    use rand::rngs::StdRng;
+    use fake::faker::internet::en::SafeEmail;
     use rand::SeedableRng;
+    use rand::rngs::StdRng;
 
     #[test]
     fn empty_string_is_rejected() {

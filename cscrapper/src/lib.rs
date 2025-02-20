@@ -1,5 +1,5 @@
 use crate::qscrapper::ProblemScraper;
-use qscrapper::{codechef::CodeChef, codeforces::CodeForces, ScrapeAPIResponse, ScraperError};
+use qscrapper::{ScrapeAPIResponse, ScraperError, codechef::CodeChef, codeforces::CodeForces};
 mod qscrapper;
 
 const CODECHEF_PREFIX: &str =

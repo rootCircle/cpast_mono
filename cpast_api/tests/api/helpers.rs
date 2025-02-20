@@ -1,7 +1,7 @@
 use argon2::password_hash::SaltString;
 use argon2::{Algorithm, Argon2, Params, PasswordHasher, Version};
-use cpast_api::configuration::{get_configuration, DatabaseSettings};
-use cpast_api::startup::{get_connection_pool, Application};
+use cpast_api::configuration::{DatabaseSettings, get_configuration};
+use cpast_api::startup::{Application, get_connection_pool};
 use cpast_api::telemetry::{get_subscriber, init_subscriber};
 use secrecy::SecretString;
 use sqlx::{Connection, Executor, PgConnection, PgPool};

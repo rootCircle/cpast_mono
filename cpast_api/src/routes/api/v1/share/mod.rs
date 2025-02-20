@@ -1,4 +1,4 @@
-use actix_web::{http::StatusCode, ResponseError};
+use actix_web::{ResponseError, http::StatusCode};
 
 pub(crate) mod get;
 pub(crate) mod post;

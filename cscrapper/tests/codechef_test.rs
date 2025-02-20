@@ -1,4 +1,4 @@
-use cscrapper::{get_problem_statement, CodePlatform};
+use cscrapper::{CodePlatform, get_problem_statement};
 
 #[test]
 fn test_codechef_nonnegprod() {

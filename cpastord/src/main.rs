@@ -28,10 +28,11 @@ impl EventHandler for Bot {
 #[shuttle_runtime::main]
 async fn serenity(#[Secrets] secret_store: SecretStore) -> shuttle_serenity::ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
-    let token = if let Some(token) = secret_store.get("DISCORD_TOKEN") {
-        token
-    } else {
-        return Err(anyhow!("'DISCORD_TOKEN' was not found").into());
+    let token = match secret_store.get("DISCORD_TOKEN") {
+        Some(token) => token,
+        _ => {
+            return Err(anyhow!("'DISCORD_TOKEN' was not found").into());
+        }
     };
 
     // Set gateway intents, which decides what events the bot will be notified about

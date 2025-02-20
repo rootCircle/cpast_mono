@@ -12,11 +12,11 @@ resolver = "2"
 
 [workspace.package]
 authors = ["rootCircle <dev.frolics@gmail.com>"]
-edition = "2021"
+edition = "2024"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/rootCircle/cpast_mono"
 homepage = "https://rootcircle.github.io/blog/project/cpast.html"
-rust-version = "1.80"
+rust-version = "1.85"
 
 [profile.dev]
 opt-level = 0
@@ -31,40 +31,40 @@ strip = true  # Automatically strip symbols from the binary.
 actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
 actix-web = "4.9.0"
 actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
-anyhow = "1.0.90"
+anyhow = "1.0.96"
 argon2 = { version = "0.5.3", features = ["std"] }
 base64 = "0.22.1"
-chrono = { version = "0.4.38", default-features = false, features = ["clock"] }
-claims = "0.7.1"
+chrono = { version = "0.4.39", default-features = false, features = ["clock"] }
+claims = "0.8.0"
 cli-clipboard = { version = "0.4.0" }
-clap = { version = "4.5.20", features = ["derive"] }
-clap_complete = "4.5.33"
-colored = "2.1.0"
-config = { version = "0.14.0", default-features = false, features = ["yaml"] }
-fake = "2.10.0"
+clap = { version = "4.5.30", features = ["derive"] }
+clap_complete = "4.5.45"
+colored = "3.0.0"
+config = { version = "0.15.8", default-features = false, features = ["yaml"] }
+fake = "3.1.0"
 futures = "0.3.31"
-google-generative-ai-rs = "0.3.2"
-log = "0.4.22"
+google-generative-ai-rs = "0.3.4"
+log = "0.4.25"
 linkify = "0.10"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
 rand = "0.8.5"
-regex = "1.11.0"
-reqwest = { version = "0.12.8", default-features = false, features = [
+regex = "1.11.1"
+reqwest = { version = "0.12.12", default-features = false, features = [
     "json",
     "rustls-tls",
     "cookies",
 ] }
-scraper = "0.20.0"
-serde = { version = "1.0.210", features = ["derive"] }
-serde-aux = "4.5.0"
-serde_json = "1.0.129"
+scraper = "0.22.0"
+serde = { version = "1.0.218", features = ["derive"] }
+serde-aux = "4.6.0"
+serde_json = "1.0.139"
 serde_urlencoded = "0.7.1"
 secrecy = { version = "0.10.3", features = ["serde"] }
-serenity = { version = "0.12.2", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
-shuttle-runtime = "0.48.0"
-shuttle-serenity = "0.48.0"
-sqlx = { version = "0.8.2", default-features = false, features = [
+serenity = { version = "0.12.4", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+shuttle-runtime = "0.52.0"
+shuttle-serenity = "0.52.0"
+sqlx = { version = "0.8.3", default-features = false, features = [
     "runtime-tokio-rustls",
     "macros",
     "postgres",
@@ -72,21 +72,21 @@ sqlx = { version = "0.8.2", default-features = false, features = [
     "chrono",
     "migrate",
 ] }
-thiserror = "1.0.64"
-tokio = { version = "1.40.0", features = ["full"] }
-tracing = "0.1.40"
-tracing-actix-web = "0.7.13"
-tracing-bunyan-formatter = { version = "0.3.9" }
+thiserror = "2.0.11"
+tokio = { version = "1.43.0", features = ["full"] }
+tracing = "0.1.41"
+tracing-actix-web = "0.7.15"
+tracing-bunyan-formatter = { version = "0.3.10" }
 tracing-log = "0.2.0"
-tracing-subscriber = { version = "0.3.18", features = ["registry", "env-filter"] }
+tracing-subscriber = { version = "0.3.19", features = ["registry", "env-filter"] }
 unicode-segmentation = "1.12.0"
-validator = "0.18.1"
+validator = "0.20.0"
 wiremock = "0.6.2"
-which = "6.0.3"
-utoipa = { version = "5.1.1", features = [ "actix_extras" ] }
-utoipa-swagger-ui = { version = "8.0.1", features = ["actix-web", "vendored"] }
-utoipa-redoc = { version = "5.0.0", features = ["actix-web"] }
-utoipa-rapidoc = { version = "5.0.0", features = ["actix-web"] }
-utoipa-scalar = { version = "0.2.0", features = ["actix-web"] }
-uuid = { version = "1.11.0", features = ["v4", "serde", "v7"] }
+which = "7.0.2"
+utoipa = { version = "5.3.1", features = [ "actix_extras" ] }
+utoipa-swagger-ui = { version = "9.0.0", features = ["actix-web", "vendored"] }
+utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
+utoipa-rapidoc = { version = "6.0.0", features = ["actix-web"] }
+utoipa-scalar = { version = "0.3.0", features = ["actix-web"] }
+uuid = { version = "1.13.2", features = ["v4", "serde", "v7"] }
 

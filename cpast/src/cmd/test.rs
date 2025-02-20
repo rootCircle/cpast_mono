@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use crate::cli::cli_parser::TestArgs;
-use cpast::{compile_and_test, DEFAULT_FAIL_EXIT_CODE};
+use cpast::{DEFAULT_FAIL_EXIT_CODE, compile_and_test};
 
 pub(crate) async fn test_call(args: TestArgs) {
     let correct_binding = args.correct_file.unwrap_or_default();

@@ -1,7 +1,7 @@
 use google_generative_ai_rs::v1::{
     api::{Client, PostResult},
     errors::GoogleAPIError,
-    gemini::{request::Request, Content, Part, Role},
+    gemini::{Content, Part, Role, request::Request},
 };
 
 use crate::examples::{self, Example};

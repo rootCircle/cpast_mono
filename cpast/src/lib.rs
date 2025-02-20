@@ -110,9 +110,9 @@ pub async fn compile_and_test(
                     return;
                 }
 
-                let mut gen = code_generator::Generator::new(parser.to_owned());
+                let mut generator = code_generator::Generator::new(parser.to_owned());
 
-                match gen.generate_testcases() {
+                match generator.generate_testcases() {
                     Err(err) => {
                         eprintln!("{}", err);
                         let mut has_failed_guard = has_failed_clone.lock().unwrap();

@@ -18,12 +18,12 @@ fn run_program_common(output: Output, program: &str, args: &[&str]) -> io::Resul
                 output.status,
                 String::from_utf8_lossy(&output.stdout),
                 String::from_utf8_lossy(&output.stderr)
-            )
+            ),
         ));
     }
 
     let stdout_content = String::from_utf8(output.stdout)
-        .map_err(|non_utf8| return String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
+        .map_err(|non_utf8| String::from_utf8_lossy(non_utf8.as_bytes()).into_owned())
         .expect("Found invalid UTF-8");
 
     Ok(stdout_content)

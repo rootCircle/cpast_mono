@@ -3,8 +3,8 @@ use scraper::{Html, Selector};
 use std::time::Duration;
 
 use crate::{
+    CODEFORCES_PREFIX, CodePlatform,
     qscrapper::{ScrapeAPIResponse, ScraperError},
-    CodePlatform, CODEFORCES_PREFIX,
 };
 
 use super::ProblemScraper;

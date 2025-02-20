@@ -7,10 +7,10 @@ use core::fmt;
 use std::error::Error;
 use std::path::{Path, PathBuf};
 
+use super::file_store::SourceCodeInfo;
 use super::runner_error_types::RunnerErrorType;
 
 const DEFAULT_PROGRAM_NAME: &str = "program";
-const EMPTY_STRING: &str = "";
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema, PartialEq)]
 pub enum LanguageName {
@@ -57,118 +57,95 @@ impl TryFrom<String> for LanguageName {
     }
 }
 
-#[derive(Debug)]
-enum CompilationType {
-    AheadOfTime,            // Compiled language like C, C++, Rust, Java, Go etc
-    JustInTime,             // Python etc
-    AheadOfTimeInterpreted, // Java
+#[derive(Debug, PartialEq)]
+pub(crate) enum CompilationType {
+    Compiled,         // Compiled language like C, C++, Rust, Go, etc.
+    Interpreted,      // Interpreted language like Python, etc.
+    BytecodeCompiled, // Java, compiled to bytecode, executed by JVM
 }
 
 #[derive(Debug)]
 pub(crate) struct Language {
-    pub(crate) file_path: PathBuf,
-    lang_name: LanguageName,
-    compilation_type: CompilationType,
+    pub(crate) code: SourceCodeInfo,
     is_compiled: bool, // For program optimization
     do_force_compile: bool,
 }
 
 impl Language {
-    pub(crate) fn new(file_path: &Path, do_force_compile: bool) -> Result<Self, RunnerErrorType> {
-        let lang_name = match Self::get_programming_language_name(file_path) {
-            Some(lang) => lang,
-            None => {
-                return Err(RunnerErrorType::UnsupportedLanguage);
-            }
-        };
-        let compilation_type = Self::get_language_compilation_type(&lang_name);
+    pub(crate) fn new(
+        file_path: &Path,
+        do_force_compile: bool,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        let code = SourceCodeInfo::new(file_path)?;
 
-        Ok(Self {
-            file_path: file_path.to_owned(),
-            lang_name,
-            compilation_type,
+        let mut lang = Self {
+            code,
             is_compiled: false,
             do_force_compile,
-        })
-    }
+        };
 
-    fn get_programming_language_name(file_path: &Path) -> Option<LanguageName> {
-        match file_path.extension().and_then(|ext| ext.to_str()) {
-            Some("rs") => Some(LanguageName::Rust),
-            Some("py") => Some(LanguageName::Python),
-            Some("c") => Some(LanguageName::C),
-            Some("cpp") | Some("cxx") | Some("c++") | Some("cc") | Some("C") => {
-                Some(LanguageName::Cpp)
-            }
-            Some("java") => Some(LanguageName::Java),
-            Some("js") => Some(LanguageName::Javascript),
-            Some("rb") => Some(LanguageName::Ruby),
-            _ => None,
-        }
-    }
+        lang.warmup_precompile()?;
 
-    fn get_language_compilation_type(lang_type: &LanguageName) -> CompilationType {
-        match lang_type {
-            LanguageName::Rust | LanguageName::Cpp | LanguageName::C => {
-                CompilationType::AheadOfTime
-            }
-            LanguageName::Python | LanguageName::Ruby | LanguageName::Javascript => {
-                CompilationType::JustInTime
-            }
-            LanguageName::Java => CompilationType::AheadOfTimeInterpreted,
-        }
+        Ok(lang)
     }
 
     /// One time compilation/intermediate generation before code is actually run for the first time
-    pub(crate) fn warmup_precompile(&mut self) -> Result<String, Box<dyn Error>> {
-        Ok(match self.compilation_type {
-            CompilationType::AheadOfTime => self.compile_language()?,
+    fn warmup_precompile(&mut self) -> Result<(), Box<RunnerErrorType>> {
+        match self.code.compilation_type {
+            CompilationType::Compiled => {
+                let compiled_path = self.compile_language()?;
+                self.code.register_dest_file(Path::new(&compiled_path))
+            }
             // No pre-compilations needed in this case, so return an empty string to signify success
-            CompilationType::JustInTime => EMPTY_STRING.to_owned(),
+            CompilationType::Interpreted => {}
             // Might require converting to intermediate before running (eg java)
-            CompilationType::AheadOfTimeInterpreted => self.compile_language()?,
-        })
+            CompilationType::BytecodeCompiled => {
+                let compiled_path = self.compile_language()?;
+                self.code.register_dest_file(Path::new(&compiled_path))
+            }
+        };
+        Ok(())
     }
 
     /// Running single filed self executable program
-    pub(crate) fn run_program_code(
-        &self,
-        bin_path: &str,
-        stdin_content: &str,
-    ) -> Result<String, Box<dyn Error>> {
-        match self.compilation_type {
-            CompilationType::AheadOfTime => {
+    pub(crate) fn run_program_code(&self, stdin_content: &str) -> Result<String, Box<dyn Error>> {
+        match self.code.compilation_type {
+            CompilationType::Compiled => {
                 if !self.is_compiled {
                     panic!(
                         "Need to call warmup_precompile() method before run_program_code() is run."
                     );
                 }
                 Ok(program_utils::run_program_with_input(
-                    &format!("./{}", bin_path),
+                    &format!("./{}", self.code.get_dest_file_str().unwrap()),
                     &vec![],
                     stdin_content,
                 )?)
             }
-            CompilationType::JustInTime => {
+            CompilationType::Interpreted => {
                 // Need to Just Run
                 Ok(self.run_interpreted_language(stdin_content)?)
             }
-            CompilationType::AheadOfTimeInterpreted => {
+            CompilationType::BytecodeCompiled => {
                 if !self.is_compiled {
                     panic!(
                         "Need to call warmup_precompile() method before run_program_code() is run."
                     );
                 }
-                match self.lang_name {
-                    LanguageName::Java => match self.file_path.parent() {
+                match self.code.language {
+                    LanguageName::Java => match self.code.source_path.parent() {
                         Some(file_parent) => Ok(program_utils::run_program_with_input(
                             "java",
-                            &vec!["-cp", file_parent.to_str().unwrap_or_default(), bin_path],
+                            &vec![
+                                "-cp",
+                                file_parent.to_str().unwrap_or_default(),
+                                self.code.get_dest_file_str().unwrap(),
+                            ],
                             stdin_content,
                         )?),
                         None => Ok(program_utils::run_program_with_input(
                             "java",
-                            &vec![bin_path],
+                            &vec![self.code.get_dest_file_str().unwrap()],
                             stdin_content,
                         )?),
                     },
@@ -180,7 +157,8 @@ impl Language {
 
     fn compile_language(&mut self) -> Result<String, RunnerErrorType> {
         let program_name_stem = self
-            .file_path
+            .code
+            .source_path
             .file_stem()
             .and_then(|stem| stem.to_str())
             .unwrap_or(DEFAULT_PROGRAM_NAME);
@@ -188,22 +166,31 @@ impl Language {
         // Checking if the file is already compiled/doesn't need recompilation
         if self.is_compiled
             || (!self.do_force_compile
-                && !remake(&self.file_path, &PathBuf::from(program_name_stem)).unwrap_or(true))
+                && !remake(&self.code.source_path, &PathBuf::from(program_name_stem))
+                    .unwrap_or(true))
         {
             self.is_compiled = true; // Helps a lot in saving time, checking for need for compilations
             return Ok(program_name_stem.to_string());
         }
 
-        let file_path_str = self.file_path.to_str().unwrap_or("");
-        let compilers = match self.lang_name {
+        let file_path_str = self.code.source_path.to_str().unwrap();
+        let compilers = match self.code.language {
             LanguageName::C => vec![
                 (
                     "gcc",
-                    vec!["-o", program_name_stem, &self.file_path.to_str().unwrap()],
+                    vec![
+                        "-o",
+                        program_name_stem,
+                        &self.code.source_path.to_str().unwrap(),
+                    ],
                 ),
                 (
                     "clang",
-                    vec!["-o", program_name_stem, &self.file_path.to_str().unwrap()],
+                    vec![
+                        "-o",
+                        program_name_stem,
+                        &self.code.source_path.to_str().unwrap(),
+                    ],
                 ),
                 (
                     "zig",
@@ -211,18 +198,26 @@ impl Language {
                         "cc",
                         "-o",
                         program_name_stem,
-                        &self.file_path.to_str().unwrap(),
+                        &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
             ],
             LanguageName::Cpp => vec![
                 (
                     "g++",
-                    vec!["-o", program_name_stem, &self.file_path.to_str().unwrap()],
+                    vec![
+                        "-o",
+                        program_name_stem,
+                        &self.code.source_path.to_str().unwrap(),
+                    ],
                 ),
                 (
                     "clang++",
-                    vec!["-o", program_name_stem, &self.file_path.to_str().unwrap()],
+                    vec![
+                        "-o",
+                        program_name_stem,
+                        &self.code.source_path.to_str().unwrap(),
+                    ],
                 ),
                 (
                     "zig",
@@ -230,13 +225,17 @@ impl Language {
                         "c++",
                         "-o",
                         program_name_stem,
-                        &self.file_path.to_str().unwrap(),
+                        &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
             ],
             LanguageName::Rust => vec![(
                 "rustc",
-                vec!["-o", program_name_stem, &self.file_path.to_str().unwrap()],
+                vec![
+                    "-o",
+                    program_name_stem,
+                    &self.code.source_path.to_str().unwrap(),
+                ],
             )],
             LanguageName::Java => vec![("javac", vec![file_path_str])],
             _ => return Err(RunnerErrorType::UnsupportedLanguage),
@@ -266,16 +265,16 @@ impl Language {
     }
 
     fn run_interpreted_language(&self, stdin_content: &str) -> Result<String, RunnerErrorType> {
-        let interpreters = match self.lang_name {
+        let interpreters = match self.code.language {
             LanguageName::Python => vec![
-                ("python3", vec![self.file_path.to_str().unwrap()]),
-                ("python", vec![self.file_path.to_str().unwrap()]),
+                ("python3", vec![self.code.source_path.to_str().unwrap()]),
+                ("python", vec![self.code.source_path.to_str().unwrap()]),
             ],
-            LanguageName::Ruby => vec![("ruby", vec![self.file_path.to_str().unwrap()])],
+            LanguageName::Ruby => vec![("ruby", vec![self.code.source_path.to_str().unwrap()])],
             LanguageName::Javascript => vec![
-                ("node", vec![self.file_path.to_str().unwrap()]),
-                ("deno", vec!["run", self.file_path.to_str().unwrap()]),
-                ("bun", vec![self.file_path.to_str().unwrap()]),
+                ("node", vec![self.code.source_path.to_str().unwrap()]),
+                ("deno", vec!["run", self.code.source_path.to_str().unwrap()]),
+                ("bun", vec![self.code.source_path.to_str().unwrap()]),
             ],
             _ => return Err(RunnerErrorType::UnsupportedLanguage),
         };
@@ -289,7 +288,7 @@ impl Language {
                 Err(err) => {
                     eprintln!(
                         "[INTERPRETER WARNING] Failed to run {} code with {} with reason {}",
-                        self.file_path.to_str().unwrap(),
+                        self.code.source_path.to_str().unwrap(),
                         interpreter,
                         err
                     );

@@ -1,5 +1,5 @@
 #![allow(dead_code, unused_variables)]
-use actix_web::{http::StatusCode, ResponseError};
+use actix_web::{ResponseError, http::StatusCode};
 use serde::Serialize;
 use utoipa::{OpenApi, ToSchema};
 
