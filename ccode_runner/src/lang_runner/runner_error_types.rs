@@ -8,7 +8,7 @@ pub enum RunnerErrorType {
     UnsupportedLanguage(PathBuf),
     InvalidLanguageMapping(LanguageName, CompilationType),
     InvalidCompilationMapping(LanguageName),
-    CodeRunFailed,
+    CodeRunFailed(PathBuf),
     FileNotFound(PathBuf),
     /// Warmup compilation is not done before running the code
     WarmupCompileFatal,
@@ -31,8 +31,11 @@ impl fmt::Display for RunnerErrorType {
                 "No valid compilation configuration found for language '{:?}'",
                 lang
             ),
-            RunnerErrorType::CodeRunFailed => {
-                String::from("Program execution failed! All possible compilers/runners failed!")
+            RunnerErrorType::CodeRunFailed(filepath) => {
+                format!(
+                    "Failed to execute code at '{}'. All available compilers and runners encountered errors. Please verify the code and ensure it's compatible with the target environment.",
+                    filepath.display()
+                )
             }
             RunnerErrorType::FileNotFound(filepath) => {
                 format!("{} file could not be found", filepath.display())
@@ -45,7 +48,7 @@ impl fmt::Display for RunnerErrorType {
 
         write!(
             f,
-            "[Runner Error] RunnerErrorType::{:?} {}",
+            "[RUNNER ERROR] RunnerErrorType::{:?} {}",
             self, error_description
         )
     }

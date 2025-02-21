@@ -905,6 +905,7 @@ dependencies = [
  "cli-clipboard",
  "colored",
  "futures",
+ "thiserror 2.0.11",
  "tokio",
 ]
 

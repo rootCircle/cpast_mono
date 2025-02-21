@@ -214,11 +214,9 @@ impl Language {
             }
         }
 
-        eprintln!(
-            "[RUNNER ERROR] Couldn't compile the code {}.",
-            self.code.source_path.display()
-        );
-        Err(RunnerErrorType::CodeRunFailed)
+        Err(RunnerErrorType::CodeRunFailed(
+            self.code.source_path.to_path_buf(),
+        ))
     }
 
     fn run_interpreted_language(&self, stdin_content: &str) -> Result<String, RunnerErrorType> {
@@ -258,11 +256,8 @@ impl Language {
             }
         }
 
-        eprintln!(
-            "[INTERPRETER ERROR] Couldn't run the code {}.",
-            self.code.source_path.display()
-        );
-
-        Err(RunnerErrorType::CodeRunFailed)
+        Err(RunnerErrorType::CodeRunFailed(
+            self.code.source_path.to_path_buf(),
+        ))
     }
 }

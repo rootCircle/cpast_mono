@@ -33,15 +33,24 @@
 use colored::Colorize;
 use futures::future::join_all;
 use std::path::Path;
-use std::process::exit;
 use std::sync::{Arc, Mutex};
 
 use ccode_runner::lang_runner::program_store::ProgramStore;
+use ccode_runner::lang_runner::runner_error_types::RunnerErrorType;
 use clex::clex_language::clex_error_type::ClexErrorType;
 use clex::clex_language::parser::Parser;
 use clex::clex_language::{code_generator, lexer, parser};
 
 pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;
+
+#[derive(thiserror::Error, Debug)]
+pub enum GenericCpastError {
+    #[error("{0}")]
+    ClexError(#[from] ClexErrorType),
+
+    #[error("{0}")]
+    RunnerError(#[from] Box<RunnerErrorType>),
+}
 
 /// Compile and test code against custom language generator.
 ///
@@ -70,16 +79,12 @@ pub async fn compile_and_test(
     no_stop: bool,
     do_force_compile: bool,
     debug: bool,
-) -> Result<(), ClexErrorType> {
+) -> Result<(), GenericCpastError> {
     let store = ProgramStore::new(
         Path::new(&correct_binding),
         Path::new(&test_binding),
         do_force_compile,
-    )
-    .unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        exit(DEFAULT_FAIL_EXIT_CODE);
-    });
+    )?;
 
     let store: &'static ProgramStore = Box::leak(store.into());
 
@@ -94,11 +99,14 @@ pub async fn compile_and_test(
     // Storing state if testcase matching has failed or not
     let has_failed = Arc::new(Mutex::new(false));
 
-    println!(
-        "{}\n",
-        "[INFO] Using multi-threading to speed up the process, testcase order might vary!"
-            .bright_blue()
-    );
+    if debug {
+        eprintln!("{}", "Debug mode enabled!".bold().yellow());
+        eprintln!(
+            "{}\n",
+            "[INFO] Using multi-threading to speed up the process, testcase order might vary!"
+                .bright_blue()
+        );
+    }
 
     let tasks = (1..=iterations)
         .map(|iter| {
@@ -139,9 +147,6 @@ pub async fn compile_and_test(
                                         actual.red());
 
 
-                                // if !no_stop {
-                                //     exit(0);
-                                // }
                                 let mut has_failed_guard = has_failed_clone.lock().unwrap();
                                 *has_failed_guard = true;
                                 drop(has_failed_guard);

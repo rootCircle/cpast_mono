@@ -22,4 +22,5 @@ colored = { workspace = true }
 clap_complete = { workspace = true }
 clex = { path = "../clex" }
 ccode_runner = { path = "../ccode_runner" }
+thiserror = { workspace = true }
 
