@@ -1,6 +1,9 @@
 [package]
 name = "clex"
 version = "0.2.1"
+description = "A generator for clex language"
+categories = ["development-tools::testing", "command-line-utilities", "development-tools"]
+keywords = ["automata", "competitive-program", "generator", "language", "testcase"]
 repository.workspace = true
 authors.workspace = true
 homepage.workspace = true

@@ -1,6 +1,9 @@
 [package]
 name = "ccode_runner"
 version = "0.2.0"
+description = "Run/compiles files and executes them efficiently"
+categories = ["development-tools::testing", "command-line-utilities", "development-tools"]
+keywords = ["compiler", "code runner"]
 repository.workspace = true
 authors.workspace = true
 homepage.workspace = true

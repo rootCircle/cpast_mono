@@ -57,7 +57,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 21 commits contributed to the release over the course of 116 calendar days.
+ - 22 commits contributed to the release over the course of 116 calendar days.
  - 20 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -68,6 +68,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`963e502`](https://github.com/rootCircle/cpast_mono/commit/963e502270f0a01c5e985012847abbe0e3d3551b))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`3a51aa2`](https://github.com/rootCircle/cpast_mono/commit/3a51aa22d214a8a10dfdee47f3a23f965a0744b2))
     - Cpast_cli clex ccode_runner ([`8a000e0`](https://github.com/rootCircle/cpast_mono/commit/8a000e047deebefdbe34b6c52656c342f149f099))
     - Use atomicbool instead of mutex in compile_and_test ([`27ba21a`](https://github.com/rootCircle/cpast_mono/commit/27ba21a737a84005359317eb48cca12100405b32))
