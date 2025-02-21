@@ -32,6 +32,7 @@
 
 use colored::Colorize;
 use futures::future::join_all;
+use std::io;
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 
@@ -153,7 +154,20 @@ pub async fn compile_and_test(
 
                             }
                             Err(err) => {
-                                println!("{}", format!("Error matching the file! {}", err).red())
+                                eprintln!("{}", format!("Error matching the file! {}", err).red());
+                                if let RunnerErrorType::ProgramRunError(run_err) = *err {
+                                    if let Some(io_err) = run_err.downcast_ref::<io::Error>() {
+                                        if io_err.kind() == io::ErrorKind::BrokenPipe {
+                                            eprintln!("Broken pipe detected!");
+                                            eprintln!("This usually happens when your clex is incorrect and it doesn't generate what your codes are expecting!");
+                                            eprintln!("Please check your clex and try again!"); 
+                                        }
+                                    }
+                                }
+
+                                let mut has_failed_guard = has_failed_clone.lock().unwrap();
+                                *has_failed_guard = true;
+                                drop(has_failed_guard);
                             }
                         }
                     }
