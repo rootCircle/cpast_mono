@@ -34,13 +34,13 @@ use colored::Colorize;
 use futures::future::join_all;
 use std::io;
 use std::path::Path;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 use ccode_runner::lang_runner::program_store::ProgramStore;
 use ccode_runner::lang_runner::runner_error_types::RunnerErrorType;
 use clex::clex_language::clex_error_type::ClexErrorType;
-use clex::clex_language::parser::Parser;
 use clex::clex_language::{code_generator, lexer, parser};
+use std::sync::atomic::{AtomicBool, Ordering};
 
 pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;
 
@@ -86,19 +86,15 @@ pub async fn compile_and_test(
         Path::new(&test_binding),
         do_force_compile,
     )?;
-
-    let store: &'static ProgramStore = Box::leak(store.into());
+    let store = Arc::new(store);
 
     let mut token = lexer::Tokens::new(language);
     token.scan_tokens()?;
-
     let mut parser = parser::Parser::new_from_tokens(token);
     parser.parser()?;
+    let parser = Arc::new(parser);
 
-    let parser: &'static Parser = Box::leak(parser.into());
-
-    // Storing state if testcase matching has failed or not
-    let has_failed = Arc::new(Mutex::new(false));
+    let has_failed = Arc::new(AtomicBool::new(false));
 
     if debug {
         eprintln!("{}", "Debug mode enabled!".bold().yellow());
@@ -112,49 +108,52 @@ pub async fn compile_and_test(
     let tasks = (1..=iterations)
         .map(|iter| {
             let has_failed_clone = Arc::clone(&has_failed);
+            let store_clone = Arc::clone(&store);
+            let parser_clone = Arc::clone(&parser);
+
             tokio::spawn(async move {
-                let has_failed_guard = has_failed_clone.lock().unwrap();
-                let has_failed_value = *has_failed_guard;
-                drop(has_failed_guard);
-                if !no_stop && has_failed_value {
+                // Check if a failure has already been recorded.
+                if !no_stop && has_failed_clone.load(Ordering::Relaxed) {
                     return;
                 }
 
-                let mut generator = code_generator::Generator::new(parser.to_owned());
+                // Create a new generator by cloning the parser.
+                let mut generator = code_generator::Generator::new((*parser_clone).clone());
 
                 match generator.generate_testcases() {
                     Err(err) => {
                         eprintln!("{}", err);
-                        let mut has_failed_guard = has_failed_clone.lock().unwrap();
-                        *has_failed_guard = true;
-                        drop(has_failed_guard);
+                        has_failed_clone.store(true, Ordering::Relaxed);
                     }
                     Ok(output_text) => {
-                        match store.run_codes_and_compare_output(&output_text) {
+                        match store_clone.run_codes_and_compare_output(&output_text) {
                             Ok((true, _, _)) => {
                                 if !no_stop && debug {
-                                    eprintln!("{}", format!("Testcase {} ran successfully!", iter).green());
+                                    eprintln!(
+                                        "{}",
+                                        format!("Testcase {} ran successfully!", iter)
+                                            .green()
+                                    );
                                 }
                             }
                             Ok((false, expected, actual)) => {
-                                // Each usage of println!() puts a lock on stdout
-                                println!("{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
-                                        format!("Testcase {} failed!", iter).red(),
-                                        "INPUT".underline(),
-                                        &output_text.cyan(),
-                                        "EXPECTED OUTPUT".underline(),
-                                        expected.green(),
-                                        "ACTUAL OUTPUT".underline(),
-                                        actual.red());
-
-
-                                let mut has_failed_guard = has_failed_clone.lock().unwrap();
-                                *has_failed_guard = true;
-                                drop(has_failed_guard);
-
+                                println!(
+                                    "{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
+                                    format!("Testcase {} failed!", iter).red(),
+                                    "INPUT".underline(),
+                                    &output_text.cyan(),
+                                    "EXPECTED OUTPUT".underline(),
+                                    expected.green(),
+                                    "ACTUAL OUTPUT".underline(),
+                                    actual.red()
+                                );
+                                has_failed_clone.store(true, Ordering::Relaxed);
                             }
                             Err(err) => {
-                                eprintln!("{}", format!("Error matching the file! {}", err).red());
+                                eprintln!(
+                                    "{}",
+                                    format!("Error matching the file! {}", err).red()
+                                );
                                 if let RunnerErrorType::ProgramRunError(run_err) = *err {
                                     if let Some(io_err) = run_err.downcast_ref::<io::Error>() {
                                         if io_err.kind() == io::ErrorKind::BrokenPipe {
@@ -165,9 +164,7 @@ pub async fn compile_and_test(
                                     }
                                 }
 
-                                let mut has_failed_guard = has_failed_clone.lock().unwrap();
-                                *has_failed_guard = true;
-                                drop(has_failed_guard);
+                                has_failed_clone.store(true, Ordering::Relaxed);
                             }
                         }
                     }
@@ -184,11 +181,9 @@ pub async fn compile_and_test(
             "Test case generation & matching done!".bold().bright_blue()
         );
     }
-    let has_failed_clone = Arc::clone(&has_failed);
-    let has_failed_guard = has_failed_clone.lock().unwrap();
 
-    if !*has_failed_guard {
-        println!("{}", "🐣 Vohoo! No testcases has failed!".bold().green());
+    if !has_failed.load(Ordering::Relaxed) {
+        println!("{}", "🐣 Vohoo! No testcases have failed!".bold().green());
     }
 
     Ok(())
