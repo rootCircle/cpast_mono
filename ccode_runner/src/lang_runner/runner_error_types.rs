@@ -2,7 +2,7 @@ use core::fmt;
 use std::error::Error;
 
 #[derive(Debug)]
-pub(crate) enum RunnerErrorType {
+pub enum RunnerErrorType {
     UnsupportedLanguage,
     CodeRunFailed,
     FileNotFound,

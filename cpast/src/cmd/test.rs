@@ -10,6 +10,7 @@ pub(crate) async fn test_call(args: TestArgs) {
     let iterations = args.iterations;
     let no_stop = args.no_stop;
     let do_force_compile = args.force_recompile;
+    let debug = args.debug;
 
     compile_and_test(
         correct_binding,
@@ -18,6 +19,7 @@ pub(crate) async fn test_call(args: TestArgs) {
         iterations,
         no_stop,
         do_force_compile,
+        debug,
     )
     .await
     .unwrap_or_else(|err| {

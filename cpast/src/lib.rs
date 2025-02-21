@@ -23,7 +23,7 @@
 //! use cpast::compile_and_test;
 //!
 //! async fn compile() {
-//!     compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false).await.unwrap();
+//!     compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false, false).await.unwrap();
 //! }
 //! ```
 //!
@@ -32,7 +32,6 @@
 
 use colored::Colorize;
 use futures::future::join_all;
-use std::env;
 use std::path::Path;
 use std::process::exit;
 use std::sync::{Arc, Mutex};
@@ -54,12 +53,13 @@ pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;
 /// * `iterations` - The number of test iterations to run.
 /// * `no_stop` - Whether to stop after a failing testcase is found or not.
 /// * `do_force_compile` - Whether to forcefully recompile files, even though it is updated
+/// * `debug` - Whether to print debug information or not analogous to CPAST_DEBUG=1.
 ///
 /// # Example
 ///
 /// ```rust,no_run
 /// async fn compile() {
-///     cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false).await.unwrap();
+///     cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false, false).await.unwrap();
 /// }
 /// ```
 pub async fn compile_and_test(
@@ -69,6 +69,7 @@ pub async fn compile_and_test(
     iterations: usize,
     no_stop: bool,
     do_force_compile: bool,
+    debug: bool,
 ) -> Result<(), ClexErrorType> {
     let store = ProgramStore::new(
         Path::new(&correct_binding),
@@ -122,8 +123,7 @@ pub async fn compile_and_test(
                     Ok(output_text) => {
                         match store.run_codes_and_compare_output(&output_text) {
                             Ok((true, _, _)) => {
-                                let verbosity_level = env::var("CPAST_DEBUG").unwrap_or_default();
-                                if !no_stop && !verbosity_level.is_empty() {
+                                if !no_stop && debug {
                                     eprintln!("{}", format!("Testcase {} ran successfully!", iter).green());
                                 }
                             }

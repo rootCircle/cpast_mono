@@ -61,6 +61,10 @@ pub(crate) struct TestArgs {
     /// Force recompile code even if binaries is up to date
     #[arg(short, long)]
     pub(crate) force_recompile: bool,
+
+    /// Debug mode for verbose output
+    #[arg(short, long)]
+    pub(crate) debug: bool,
 }
 
 #[derive(clap::Args)]

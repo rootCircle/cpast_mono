@@ -1,7 +1,8 @@
 use crate::lang_runner::runner::Language;
 use crate::utils::file_utils;
-use std::error::Error;
 use std::path::Path;
+
+use super::runner_error_types::RunnerErrorType;
 
 #[derive(Debug)]
 pub struct ProgramStore {
@@ -20,7 +21,7 @@ impl ProgramStore {
         correct_file: &Path,
         test_file: &Path,
         do_force_compile: bool,
-    ) -> Result<Self, Box<dyn Error>> {
+    ) -> Result<Self, Box<RunnerErrorType>> {
         Ok(ProgramStore {
             correct_file: Language::new(correct_file, do_force_compile)?,
             test_file: Language::new(test_file, do_force_compile)?,

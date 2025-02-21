@@ -12,7 +12,7 @@ fn run_program_common(output: Output, program: &str, args: &[&str]) -> io::Resul
         return Err(io::Error::new(
             io::ErrorKind::Other,
             format!(
-                "Process `{} {}` failed to run successfully!\nStatus Code: {}\n Output: {}\nError: {}",
+                "Process `{} {}` failed to run successfully!\nStatus Code: {}\nOutput: {}\nError: {}",
                 program,
                 args.join(" "),
                 output.status,

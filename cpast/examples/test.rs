@@ -16,6 +16,7 @@ async fn main() {
         100,
         true,
         false,
+        false,
     )
     .await
     .unwrap_or_else(|err| {
