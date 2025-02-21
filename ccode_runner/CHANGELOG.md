@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.2.0 (2025-02-22)
 
+<csr-id-8a000e047deebefdbe34b6c52656c342f149f099/>
+<csr-id-e98a8df53a173d3a51ec2a30cf126802793d0990/>
+<csr-id-139c68a9a1f7178749e6297875fd01437d8b4ac4/>
+<csr-id-0a04f6f80d8f1c544aeee6fad96a8c366dd2b9ca/>
+
 ### Documentation
 
  - <csr-id-e670b0ca127f2755ea7ad090f0283cc2bf4cdbc7/> modified/add README for better segregation
@@ -32,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 12 commits contributed to the release over the course of 116 calendar days.
+ - 13 commits contributed to the release over the course of 116 calendar days.
  - 12 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -43,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`3a51aa2`](https://github.com/rootCircle/cpast_mono/commit/3a51aa22d214a8a10dfdee47f3a23f965a0744b2))
     - Cpast_cli clex ccode_runner ([`8a000e0`](https://github.com/rootCircle/cpast_mono/commit/8a000e047deebefdbe34b6c52656c342f149f099))
     - Improves error types ([`0d1e7e0`](https://github.com/rootCircle/cpast_mono/commit/0d1e7e089c9f682a95918feddd139a0e33f9d67a))
     - Improve the error propogation ([`4a2df5d`](https://github.com/rootCircle/cpast_mono/commit/4a2df5d564aa4a47229c220f98a927f10db860b2))

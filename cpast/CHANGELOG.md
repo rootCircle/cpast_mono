@@ -2,6 +2,19 @@
 
 ## 0.7.1 (2025-02-22)
 
+<csr-id-be396e164ba64e5cda157ce5ad4d93fe503bf976/>
+<csr-id-1a1d5113a4797c98ce15f4c8467e3807806139a8/>
+<csr-id-a898f15e10691ff4d2389ba9baa1eebaf81c6421/>
+<csr-id-bd06417f6935b916ab6647ddbb40880fd9388c7d/>
+<csr-id-03199312b8347f21e93b44dab9cbce3c538182f1/>
+<csr-id-8a000e047deebefdbe34b6c52656c342f149f099/>
+<csr-id-e98a8df53a173d3a51ec2a30cf126802793d0990/>
+<csr-id-139c68a9a1f7178749e6297875fd01437d8b4ac4/>
+<csr-id-0a04f6f80d8f1c544aeee6fad96a8c366dd2b9ca/>
+<csr-id-05cc73bdc5887c67fdf86d02df60fc90e2109683/>
+<csr-id-c4e4fe1a126481c850a4f78bd4011125ff988b06/>
+<csr-id-27ba21a737a84005359317eb48cca12100405b32/>
+
 ### Chore
 
  - <csr-id-be396e164ba64e5cda157ce5ad4d93fe503bf976/> catch os 32 broken pipe errors
@@ -44,7 +57,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 20 commits contributed to the release over the course of 116 calendar days.
+ - 21 commits contributed to the release over the course of 116 calendar days.
  - 20 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -55,6 +68,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`3a51aa2`](https://github.com/rootCircle/cpast_mono/commit/3a51aa22d214a8a10dfdee47f3a23f965a0744b2))
     - Cpast_cli clex ccode_runner ([`8a000e0`](https://github.com/rootCircle/cpast_mono/commit/8a000e047deebefdbe34b6c52656c342f149f099))
     - Use atomicbool instead of mutex in compile_and_test ([`27ba21a`](https://github.com/rootCircle/cpast_mono/commit/27ba21a737a84005359317eb48cca12100405b32))
     - Catch os 32 broken pipe errors ([`be396e1`](https://github.com/rootCircle/cpast_mono/commit/be396e164ba64e5cda157ce5ad4d93fe503bf976))
