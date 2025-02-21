@@ -1,11 +1,9 @@
-use std::{
-    error::Error,
-    path::{Path, PathBuf},
-};
+use std::path::{Path, PathBuf};
 
 use super::{
-    language_ext_mapping::{get_language_compilation_type, get_programming_language_name},
-    runner::{CompilationType, LanguageName},
+    language_name::{
+        CompilationType, LanguageName, get_language_compilation_type, get_programming_language_name,
+    },
     runner_error_types::RunnerErrorType,
 };
 
@@ -21,12 +19,18 @@ pub(crate) struct SourceCodeInfo {
 impl SourceCodeInfo {
     pub fn new(source_file: &Path) -> Result<Self, Box<RunnerErrorType>> {
         if !Self::exists(source_file) {
-            return Err(Box::new(RunnerErrorType::FileNotFound));
+            return Err(Box::new(RunnerErrorType::FileNotFound(
+                source_file.to_path_buf(),
+            )));
         }
 
         let lang = match get_programming_language_name(source_file) {
             Some(lang) => lang,
-            None => return Err(Box::new(RunnerErrorType::UnsupportedLanguage)),
+            None => {
+                return Err(Box::new(RunnerErrorType::UnsupportedLanguage(
+                    source_file.to_path_buf(),
+                )));
+            }
         };
 
         Ok(SourceCodeInfo {
@@ -52,14 +56,20 @@ impl SourceCodeInfo {
     pub fn new_from_source_dest(
         source_file: &Path,
         dest_file: Option<&Path>,
-    ) -> Result<Self, Box<dyn Error>> {
+    ) -> Result<Self, Box<RunnerErrorType>> {
         if !Self::exists(source_file) {
-            return Err(Box::new(RunnerErrorType::FileNotFound));
+            return Err(Box::new(RunnerErrorType::FileNotFound(
+                source_file.to_path_buf(),
+            )));
         }
 
         let lang = match get_programming_language_name(source_file) {
             Some(lang) => lang,
-            None => return Err(Box::new(RunnerErrorType::UnsupportedLanguage)),
+            None => {
+                return Err(Box::new(RunnerErrorType::UnsupportedLanguage(
+                    source_file.to_path_buf(),
+                )));
+            }
         };
 
         let lang_type = get_language_compilation_type(&lang);
@@ -81,7 +91,10 @@ impl SourceCodeInfo {
     }
 
     #[allow(dead_code)]
-    pub fn new_from_text(_source_text: &str, _lang: LanguageName) -> Result<Self, Box<dyn Error>> {
+    pub fn new_from_text(
+        _source_text: &str,
+        _lang: LanguageName,
+    ) -> Result<Self, Box<RunnerErrorType>> {
         unimplemented!(
             "Not implemented yet, create a temp file like mktemp and compile the binary in that dir and then return separate dest as well"
         );

@@ -1,7 +1,7 @@
 use crate::routes::api::v1::share::ShareError;
 use actix_web::{HttpResponse, get, web};
 use anyhow::Context;
-use ccode_runner::lang_runner::runner::LanguageName;
+use ccode_runner::lang_runner::language_name::LanguageName;
 use serde::Serialize;
 use sqlx::PgPool;
 use utoipa::ToSchema;

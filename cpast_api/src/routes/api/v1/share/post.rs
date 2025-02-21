@@ -2,7 +2,7 @@ use actix_web::post;
 use actix_web::web::Json;
 use actix_web::{HttpResponse, web};
 use anyhow::Context;
-use ccode_runner::lang_runner::runner::LanguageName;
+use ccode_runner::lang_runner::language_name::LanguageName;
 use serde::{Deserialize, Serialize};
 use sqlx::{Executor, PgPool, Postgres, Transaction};
 use utoipa::ToSchema;

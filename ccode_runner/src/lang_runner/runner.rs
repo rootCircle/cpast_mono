@@ -1,68 +1,12 @@
-use serde::{Deserialize, Serialize};
-use utoipa::ToSchema;
-
 use crate::utils::program_utils;
 use crate::utils::program_utils::remake;
-use core::fmt;
-use std::error::Error;
 use std::path::{Path, PathBuf};
 
 use super::file_store::SourceCodeInfo;
+use super::language_name::{CompilationType, LanguageName};
 use super::runner_error_types::RunnerErrorType;
 
 const DEFAULT_PROGRAM_NAME: &str = "program";
-
-#[derive(Debug, Serialize, Deserialize, Clone, ToSchema, PartialEq)]
-pub enum LanguageName {
-    Python,
-    Cpp,
-    C,
-    Rust,
-    Ruby,
-    Javascript,
-    Java,
-}
-
-impl fmt::Display for LanguageName {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            LanguageName::Python => write!(f, "python"),
-            LanguageName::Cpp => write!(f, "cpp"),
-            LanguageName::C => write!(f, "c"),
-            LanguageName::Rust => write!(f, "rust"),
-            LanguageName::Ruby => write!(f, "ruby"),
-            LanguageName::Javascript => write!(f, "javascript"),
-            LanguageName::Java => write!(f, "java"),
-        }
-    }
-}
-
-impl TryFrom<String> for LanguageName {
-    type Error = String;
-
-    fn try_from(s: String) -> Result<Self, Self::Error> {
-        match s.to_lowercase().as_str() {
-            "python" => Ok(LanguageName::Python),
-            "cpp" => Ok(LanguageName::Cpp),
-            "c" => Ok(LanguageName::C),
-            "rust" => Ok(LanguageName::Rust),
-            "ruby" => Ok(LanguageName::Ruby),
-            "javascript" => Ok(LanguageName::Javascript),
-            "java" => Ok(LanguageName::Java),
-            other => Err(format!(
-                "{} is not a supported language. Use either `python`, `cpp`, `c`, `rust`, `ruby`, `javascript` or `java`.",
-                other
-            )),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq)]
-pub(crate) enum CompilationType {
-    Compiled,         // Compiled language like C, C++, Rust, Go, etc.
-    Interpreted,      // Interpreted language like Python, etc.
-    BytecodeCompiled, // Java, compiled to bytecode, executed by JVM
-}
 
 #[derive(Debug)]
 pub(crate) struct Language {
@@ -108,19 +52,21 @@ impl Language {
     }
 
     /// Running single filed self executable program
-    pub(crate) fn run_program_code(&self, stdin_content: &str) -> Result<String, Box<dyn Error>> {
+    pub(crate) fn run_program_code(
+        &self,
+        stdin_content: &str,
+    ) -> Result<String, Box<RunnerErrorType>> {
         match self.code.compilation_type {
             CompilationType::Compiled => {
                 if !self.is_compiled {
-                    panic!(
-                        "Need to call warmup_precompile() method before run_program_code() is run."
-                    );
+                    return Err(Box::new(RunnerErrorType::WarmupCompileFatal));
                 }
                 Ok(program_utils::run_program_with_input(
                     &format!("./{}", self.code.get_dest_file_str().unwrap()),
                     &vec![],
                     stdin_content,
-                )?)
+                )
+                .map_err(|err| Box::new(RunnerErrorType::ProgramRunError(Box::new(err))))?)
             }
             CompilationType::Interpreted => {
                 // Need to Just Run
@@ -128,9 +74,7 @@ impl Language {
             }
             CompilationType::BytecodeCompiled => {
                 if !self.is_compiled {
-                    panic!(
-                        "Need to call warmup_precompile() method before run_program_code() is run."
-                    );
+                    return Err(Box::new(RunnerErrorType::WarmupCompileFatal));
                 }
                 match self.code.language {
                     LanguageName::Java => match self.code.source_path.parent() {
@@ -142,14 +86,23 @@ impl Language {
                                 self.code.get_dest_file_str().unwrap(),
                             ],
                             stdin_content,
-                        )?),
+                        )
+                        .map_err(|err| {
+                            Box::new(RunnerErrorType::ProgramRunError(Box::new(err)))
+                        })?),
                         None => Ok(program_utils::run_program_with_input(
                             "java",
                             &vec![self.code.get_dest_file_str().unwrap()],
                             stdin_content,
-                        )?),
+                        )
+                        .map_err(|err| {
+                            Box::new(RunnerErrorType::ProgramRunError(Box::new(err)))
+                        })?),
                     },
-                    _ => Err(Box::new(RunnerErrorType::UnsupportedLanguage)),
+                    _ => Err(Box::new(RunnerErrorType::InvalidLanguageMapping(
+                        self.code.language.clone(),
+                        self.code.compilation_type.clone(),
+                    ))),
                 }
             }
         }
@@ -238,7 +191,11 @@ impl Language {
                 ],
             )],
             LanguageName::Java => vec![("javac", vec![file_path_str])],
-            _ => return Err(RunnerErrorType::UnsupportedLanguage),
+            _ => {
+                return Err(RunnerErrorType::InvalidCompilationMapping(
+                    self.code.language.clone(),
+                ));
+            }
         };
 
         for (compiler, args) in compilers {
@@ -259,7 +216,7 @@ impl Language {
 
         eprintln!(
             "[RUNNER ERROR] Couldn't compile the code {}.",
-            program_name_stem
+            self.code.source_path.display()
         );
         Err(RunnerErrorType::CodeRunFailed)
     }
@@ -276,7 +233,12 @@ impl Language {
                 ("deno", vec!["run", self.code.source_path.to_str().unwrap()]),
                 ("bun", vec![self.code.source_path.to_str().unwrap()]),
             ],
-            _ => return Err(RunnerErrorType::UnsupportedLanguage),
+            _ => {
+                return Err(RunnerErrorType::InvalidLanguageMapping(
+                    self.code.language.clone(),
+                    self.code.compilation_type.clone(),
+                ));
+            }
         };
 
         for (interpreter, args) in interpreters {
@@ -295,6 +257,11 @@ impl Language {
                 }
             }
         }
+
+        eprintln!(
+            "[INTERPRETER ERROR] Couldn't run the code {}.",
+            self.code.source_path.display()
+        );
 
         Err(RunnerErrorType::CodeRunFailed)
     }

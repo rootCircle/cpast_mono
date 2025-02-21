@@ -1,5 +1,5 @@
 use crate::helpers::spawn_app;
-use ccode_runner::lang_runner::runner::LanguageName;
+use ccode_runner::lang_runner::language_name::LanguageName;
 use reqwest::StatusCode;
 use serde::Deserialize;
 use uuid::{ContextV7, Timestamp, Uuid};

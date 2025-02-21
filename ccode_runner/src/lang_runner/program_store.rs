@@ -31,7 +31,7 @@ impl ProgramStore {
     pub fn run_codes_and_compare_output(
         &self,
         stdin_content: &str,
-    ) -> Result<(bool, String, String), &str> {
+    ) -> Result<(bool, String, String), Box<RunnerErrorType>> {
         //! Run the code and return the output of the correct and test files  
         //! along with a boolean indicating if the output is different
         //! Output is in the form of (is_different, correct_output, test_output)
@@ -53,13 +53,15 @@ impl ProgramStore {
         language: &Language,
         stdin_content: &str,
         file_type: FileType,
-    ) -> Result<String, &str> {
-        language.run_program_code(stdin_content).map_err(|err| {
-            eprintln!(
-                "[PROGRAM STORE ERROR] Failed to run {:?}!\n{}",
-                file_type, err
-            );
-            "Error running file"
-        })
+    ) -> Result<String, Box<RunnerErrorType>> {
+        language
+            .run_program_code(stdin_content)
+            .map_err(move |err| {
+                eprintln!(
+                    "[PROGRAM STORE ERROR] Failed to run {:?}!\n{}",
+                    file_type, err
+                );
+                err
+            })
     }
 }
