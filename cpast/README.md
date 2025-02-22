@@ -1,9 +1,11 @@
 # cpast_cli - Code Testing and Analysis Tool
 
-![Crates.io](https://img.shields.io/crates/d/cpast)
-![Crates.io](https://img.shields.io/crates/v/cpast)
-![Crates.io](https://img.shields.io/crates/l/cpast)
-![docs.rs](https://img.shields.io/docsrs/cpast)
+![Crates.io](https://img.shields.io/crates/v/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/d/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/l/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![docs.rs](https://img.shields.io/docsrs/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io Size](https://img.shields.io/crates/size/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io MSRV](https://img.shields.io/crates/msrv/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
 
 ## Introduction
 

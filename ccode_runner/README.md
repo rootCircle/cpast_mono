@@ -1,5 +1,12 @@
 # ccode_runner
 
+![Crates.io](https://img.shields.io/crates/v/ccode_runner?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/d/ccode_runner?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/l/ccode_runner?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![docs.rs](https://img.shields.io/docsrs/ccode_runner?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io Size](https://img.shields.io/crates/size/ccode_runner?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io MSRV](https://img.shields.io/crates/msrv/ccode_runner?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+
 `ccode_runner` is a component designed to run arbitrary program code on local devices. It compiles or interprets code and sends the output, making it an essential part of the cpast ecosystem.
 
 ## Features

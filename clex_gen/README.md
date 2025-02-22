@@ -1,5 +1,12 @@
 # clex - Custom Language Generator
 
+![Crates.io](https://img.shields.io/crates/v/clex_gen?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/d/clex_gen?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/l/clex_gen?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![docs.rs](https://img.shields.io/docsrs/clex_gen?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io Size](https://img.shields.io/crates/size/clex_gen?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io MSRV](https://img.shields.io/crates/msrv/clex_gen?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+
 > [!NOTE]
 > Since clex name was already reserved we moved to clex_gen for this generator.
 

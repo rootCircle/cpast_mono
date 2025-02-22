@@ -1,10 +1,12 @@
 # cpast_mono - Code Testing and Analysis Tool
 
-![Crates.io](https://img.shields.io/crates/d/cpast)
-![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast_mono)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast_mono/general.yml)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast_mono/audit.yml?label=audit)
-[![codecov](https://codecov.io/gh/rootCircle/cpast_mono/graph/badge.svg?token=B4E8O14XPA)](https://codecov.io/gh/rootCircle/cpast_mono)
+![Crates.io](https://img.shields.io/crates/d/cpast?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![GitHub repo size](https://img.shields.io/github/repo-size/rootCircle/cpast_mono?style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast_mono/general.yml?style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rootCircle/cpast_mono/audit.yml?label=audit&style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
+[![Codecov](https://img.shields.io/codecov/c/github/rootCircle/cpast_mono?label=Coverage&style=for-the-badge&logo=codecov&logoColor=D9E0EE&labelColor=292324)](https://codecov.io/gh/rootCircle/cpast_mono)
+![GitHub License](https://img.shields.io/github/license/rootCircle/cpast_mono?label=License&style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
+![GitHub Release](https://img.shields.io/github/v/release/rootCircle/cpast_mono?label=Release&style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
 
 ## Introduction
 
