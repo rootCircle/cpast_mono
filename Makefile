@@ -27,6 +27,7 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 	audit \
 	git.sync \
 	build \
+	release-cli \
 	push \
 	shell \
 	run \
@@ -103,6 +104,9 @@ prepare-check:
 #
 # Usage :
 #	make precommit
+
+release-cli:
+	cargo smart-release cpast --execute
 
 coverage:
 	cargo llvm-cov clean --workspace --html --output-dir=coverage
