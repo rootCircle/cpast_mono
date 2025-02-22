@@ -88,6 +88,26 @@ cpast generate "S[10,@CH_UPPER@]"
 
 * Generates string of length 10, of uppercase characters only
 
+
+### Shell Completions
+
+To generate shell completions for `cpast`, use the following commands based on your shell:
+
+- **zsh**: 
+  ```bash
+  cpast --completions=zsh | sudo tee /usr/local/share/zsh/site-functions/_cpast
+  ```
+
+- **fish**: 
+  ```bash
+  cpast --completions=fish > ~/.local/share/fish/generated_completions/cpast.fish
+  ```
+
+- **bash**: 
+  ```bash
+  cpast --completions=bash | sudo tee /etc/bash_completion.d/cpast.bash
+  ```
+
 ## Language Specification
 
 At the heart of cpast is **clex_gen**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
