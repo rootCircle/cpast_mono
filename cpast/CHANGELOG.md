@@ -14,6 +14,7 @@
 <csr-id-05cc73bdc5887c67fdf86d02df60fc90e2109683/>
 <csr-id-c4e4fe1a126481c850a4f78bd4011125ff988b06/>
 <csr-id-27ba21a737a84005359317eb48cca12100405b32/>
+<csr-id-9a63c718ab3848503f75ff7e9bb1b5fbc022021b/>
 
 ### Chore
 
@@ -61,7 +62,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 27 commits contributed to the release over the course of 116 calendar days.
+ - 28 commits contributed to the release over the course of 116 calendar days.
  - 21 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -72,6 +73,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_gen v0.2.1, cpast v0.7.1 ([`322a597`](https://github.com/rootCircle/cpast_mono/commit/322a5976a09ebb1c49241d08d2b11c07d0d9cd5e))
     - Rename clex package to clex_gen ([`9a63c71`](https://github.com/rootCircle/cpast_mono/commit/9a63c718ab3848503f75ff7e9bb1b5fbc022021b))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`7e750cc`](https://github.com/rootCircle/cpast_mono/commit/7e750cc72b592bd491f4f503fc72c19043934f1b))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`2cfb445`](https://github.com/rootCircle/cpast_mono/commit/2cfb44521a215d57afe95139a830ed442518e2b8))
