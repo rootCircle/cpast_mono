@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use crate::cli::cli_parser::GenerateArgs;
-use clex::generator;
+use clex_gen::generator;
 #[cfg(any(
     all(unix, not(any(target_os = "android", target_os = "emscripten"))),
     windows,

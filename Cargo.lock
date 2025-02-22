@@ -718,7 +718,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
-name = "clex"
+name = "clex_gen"
 version = "0.2.1"
 dependencies = [
  "rand 0.8.5",
@@ -901,7 +901,7 @@ dependencies = [
  "ccode_runner",
  "clap",
  "clap_complete",
- "clex",
+ "clex_gen",
  "cli-clipboard",
  "colored",
  "futures",
@@ -922,7 +922,7 @@ dependencies = [
  "ccode_runner",
  "chrono",
  "claims",
- "clex",
+ "clex_gen",
  "config",
  "cscrapper",
  "fake",

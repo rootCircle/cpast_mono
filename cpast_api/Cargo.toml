@@ -61,7 +61,7 @@ utoipa-redoc = { workspace = true, features = ["actix-web"] }
 utoipa-rapidoc = { workspace = true, features = ["actix-web"] }
 utoipa-scalar = { workspace = true, features = ["actix-web"] }
 ccode_runner = { path = "../ccode_runner" }
-clex = { path = "../clex" }
+clex_gen = { path = "../clex_gen" }
 cscrapper = { path = "../cscrapper" }
 
 [dev-dependencies]

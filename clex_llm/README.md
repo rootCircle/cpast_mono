@@ -6,7 +6,7 @@
 > [!NOTE]
 > See previous efforts at  [cpast_llm](https://github.com/rootCircle/cpast_llm).
 
-**clex_llm** is a tool designed to generate [Clex](../clex/README.md) language expressions from input formats and constraints using a language model. It simplifies the process of creating complex test cases by converting human-readable descriptions into formal Clex grammar representations.
+**clex_llm** is a tool designed to generate [Clex](../clex_gen/README.md) language expressions from input formats and constraints using a language model. It simplifies the process of creating complex test cases by converting human-readable descriptions into formal Clex grammar representations.
 
 ## Features
 

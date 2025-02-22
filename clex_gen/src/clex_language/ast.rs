@@ -15,7 +15,7 @@
 //! # Example
 //!
 //! ```rust
-//! use clex::clex_language::ast::{ClexLanguageAST, UnitExpression, DataType, ReferenceType, PositiveReferenceType};
+//! use clex_gen::clex_language::ast::{ClexLanguageAST, UnitExpression, DataType, ReferenceType, PositiveReferenceType};
 //!
 //! // Define a simple program AST
 //! let program_ast = ClexLanguageAST {

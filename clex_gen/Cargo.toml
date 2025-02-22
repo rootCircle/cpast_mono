@@ -1,5 +1,5 @@
 [package]
-name = "clex"
+name = "clex_gen"
 version = "0.2.1"
 description = "A generator for clex language"
 categories = ["development-tools::testing", "command-line-utilities", "development-tools"]

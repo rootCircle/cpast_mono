@@ -1,6 +1,6 @@
 //! # cpast - Code Testing and Analysis Tool
 //!
-//! `cpast` is a versatile code testing and analysis tool that empowers users in competitive programming and coding practice. It allows testing correct and incorrect code files against a custom language generator called `clex`. This crate supports various programming languages, such as Python, C++, C, Rust, Ruby, JavaScript, and Java, and enables users to specify the number of iterations for testing code against random input values.
+//! `cpast` is a versatile code testing and analysis tool that empowers users in competitive programming and coding practice. It allows testing correct and incorrect code files against a custom language generator called `clex_gen`. This crate supports various programming languages, such as Python, C++, C, Rust, Ruby, JavaScript, and Java, and enables users to specify the number of iterations for testing code against random input values.
 //!
 //! ## Main Modules
 //!
@@ -38,8 +38,8 @@ use std::sync::Arc;
 
 use ccode_runner::lang_runner::program_store::ProgramStore;
 use ccode_runner::lang_runner::runner_error_types::RunnerErrorType;
-use clex::clex_language::clex_error_type::ClexErrorType;
-use clex::clex_language::{code_generator, lexer, parser};
+use clex_gen::clex_language::clex_error_type::ClexErrorType;
+use clex_gen::clex_language::{code_generator, lexer, parser};
 use std::sync::atomic::{AtomicBool, Ordering};
 
 pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;

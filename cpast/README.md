@@ -88,9 +88,9 @@ cpast generate "S[10,@CH_UPPER@]"
 
 ## Language Specification
 
-At the heart of cpast is **clex**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
+At the heart of cpast is **clex_gen**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
 
-For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](../clex/docs/CLEX_LANG_SPECS.md).
+For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](../clex_gen/docs/CLEX_LANG_SPECS.md).
 
 ## Meta
 

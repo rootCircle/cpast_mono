@@ -14,8 +14,8 @@
 //! # Example
 //!
 //! ```rust
-//! use clex::clex_language::lexer::{TokenType, Token};
-//! use clex::get_tokens;
+//! use clex_gen::clex_language::lexer::{TokenType, Token};
+//! use clex_gen::get_tokens;
 //!
 //! // Example input pattern
 //! let src = "N";

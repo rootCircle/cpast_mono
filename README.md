@@ -66,7 +66,7 @@ cpast generate "S[10,@CH_UPPER@]"
 
 At the heart of cpast is **clex**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
 
-For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./clex/docs/CLEX_LANG_SPECS.md).
+For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](./clex_gen/docs/CLEX_LANG_SPECS.md).
 
 ## Workspace Meta
 
@@ -78,7 +78,7 @@ We welcome you to the cpast mono-repo, where you can find all the tools and comp
 | [cpast](./cpast/README.md) (aka cpast_cli)      | CLI interface for cpast, used locally to run tests and generate inputs.                               | ✅ Active             |
 | [ccode_runner](./ccode_runner/README.md) | Runs arbitrary program code on local devices/server side, compiles/interprets code, and sends output. | 🔄 Needs Change       |
 | [cpastord](./cpastord/README.md)     | Integration of cpast for Discord, allowing users to run cpast commands within Discord.                | ❌ Blocked on cpast_api          |
-| [clex](./clex/README.md)         | Parser and generator for the clex language, generates random input for programs based on clex syntax. | ✅ Active             |
+| [clex](./clex_gen/README.md)         | Parser and generator for the clex language, generates random input for programs based on clex syntax. | ✅ Active             |
 | [cscrapper](./cscrapper/README.md)    | Scrapes question descriptions from competitive programming sites like Codeforces and CodeChef.        | 🔄 Needs Improvement  |
 | [clex_llm](./clex_llm/README.md)     | Generates clex language from input format, constraints, and problem descriptions using LLM.           | 🔄 Needs Improvement |
 

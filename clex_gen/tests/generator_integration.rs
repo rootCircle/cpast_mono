@@ -1,4 +1,4 @@
-use clex::generator;
+use clex_gen::generator;
 
 #[test]
 fn test_generator_with_integer_expression() {

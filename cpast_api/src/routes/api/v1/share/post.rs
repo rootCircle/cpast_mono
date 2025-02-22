@@ -75,6 +75,7 @@ pub(crate) async fn push_code(
 }
 
 fn verify_clex(clex: &str) -> Result<(), ShareError> {
-    clex::generator(clex.to_string()).map_err(|err| ShareError::InvalidClex(err.to_string()))?;
+    clex_gen::generator(clex.to_string())
+        .map_err(|err| ShareError::InvalidClex(err.to_string()))?;
     Ok(())
 }

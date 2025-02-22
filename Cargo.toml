@@ -1,7 +1,7 @@
 [workspace]
 members = [
   "cpast",
-  "clex",
+  "clex_gen",
   "cpastord", 
   "cscrapper", 
   "clex_llm", 

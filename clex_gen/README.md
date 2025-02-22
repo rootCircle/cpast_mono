@@ -1,5 +1,8 @@
 # clex - Custom Language Generator
 
+> [!NOTE]
+> Since clex name was already reserved we moved to clex_gen for this generator.
+
 **clex** is a powerful language generator designed specifically for creating random test cases. It allows you to automate the generation of complex input scenarios, enabling developers to stress-test their code effectively.
 
 ## Features
@@ -21,15 +24,15 @@ To install clex, add it as a dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-clex = "0.1" 
+clex_gen = "0.1" 
 ```
 
 ### Usage
 
-Here’s a complete example demonstrating how to use the functions provided by the `clex` module:
+Here’s a complete example demonstrating how to use the functions provided by the `clex_gen` module:
 
 ```rust
-use clex::{get_tokens, get_ast, generator};
+use clex_gen::{get_tokens, get_ast, generator};
 
 // Get tokens from custom language
 let tokens = get_tokens("(N) (?:N){\\1}".to_string()).unwrap();
