@@ -23,6 +23,10 @@
  - <csr-id-bd06417f6935b916ab6647ddbb40880fd9388c7d/> new release
  - <csr-id-03199312b8347f21e93b44dab9cbce3c538182f1/> restructing folder structure cpast
 
+### Refactor
+
+ - <csr-id-9a63c718ab3848503f75ff7e9bb1b5fbc022021b/> rename clex package to clex_gen
+
 ### Documentation
 
  - <csr-id-e670b0ca127f2755ea7ad090f0283cc2bf4cdbc7/> modified/add README for better segregation
@@ -57,8 +61,8 @@
 
 <csr-read-only-do-not-edit/>
 
- - 25 commits contributed to the release over the course of 116 calendar days.
- - 20 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 27 commits contributed to the release over the course of 116 calendar days.
+ - 21 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -68,6 +72,8 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Rename clex package to clex_gen ([`9a63c71`](https://github.com/rootCircle/cpast_mono/commit/9a63c718ab3848503f75ff7e9bb1b5fbc022021b))
+    - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`7e750cc`](https://github.com/rootCircle/cpast_mono/commit/7e750cc72b592bd491f4f503fc72c19043934f1b))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`2cfb445`](https://github.com/rootCircle/cpast_mono/commit/2cfb44521a215d57afe95139a830ed442518e2b8))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`447fbef`](https://github.com/rootCircle/cpast_mono/commit/447fbef5fb82b81391a2a8a6e827e3870756f961))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`a5478ea`](https://github.com/rootCircle/cpast_mono/commit/a5478ea8c1548147655142d73b6d82e8d7676cb7))
