@@ -11,7 +11,11 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
-## 0.8.0 [Unreleased] (2025-02-23)
+## 0.8.0 (2025-02-23)
+
+### Breaking
+
+- String modifier syntax now accepts three arguments, instead of two. New format: `S[min,max,charset]` (e.g., `S[1,10,'cpast is awesome']`)
 
 ### clex_gen
 
@@ -25,8 +29,63 @@ For changelogs of packages, see:
 
 - Switched to Gemini2_0Flash model from Gemini1_0
 
-## 0.7.1 (2025-02-22)
-
 ### cpast_cli
 
-- Introduced `--debug` flag to enable debug mode for cpast_cli. This is breaking changes that replaces `CPAST_DEBUG` environment variable.
+- Support AI based clex generation using input format and constraints.
+
+## 0.7.1 (2025-02-22)
+
+### Overview
+
+Version 0.7.1 marks a significant step forward as cpast transition to a monorepo structure. Building upon the foundation of `cpast_cli`, I'm excited to introduce several new tools to enhance the user experience.
+
+### Breaking Changes
+
+- Removed the `clipboard` feature from `cpast_cli`. (builds might be broken for android[low priority])
+- Replaced the `CPAST_DEBUG=1` environment variable with the `--debug` flag in `cpast_cli`.
+
+### Crates
+
+- **ccode_runner**: <https://crates.io/crates/ccode_runner> v0.2.0 (new)
+- **clex_gen**: <https://crates.io/crates/clex_gen> v0.2.1 (new)
+- **cpast**: <https://crates.io/crates/cpast> v0.7.1 (updated)
+
+### Key Updates
+
+#### Monorepo Migration
+
+- The codebase has been moved to a monorepo, making it easier to manage and allowing for smoother growth in the future.
+
+#### New Tools
+
+- **`cpast_api`**: A Work In Progress (WIP) backend service, currently under development, to facilitate API interactions.
+- **`cscrapper`**: A tool for gathering competitive programming questions from CodeChef and Codeforces.
+- **`cpastord`**: A service that connects cpast features with Discord.
+- **`ccode_runner`**: A flexible engine for running and testing code snippets for various languages. Optimized for repeated runs, robustness, and speed.
+- **`clex_gen`**: The core of cpast, this tool generates random test cases using the Clex language. Renamed from `clex` to avoid potential naming conflicts.
+- **`clex_llm`**: An AI-powered tool leveraging Google Gemini to generate Clex expressions from natural language.
+
+#### CLI Improvements
+
+- **Verbose Output:** The `cpast_cli` now supports a `--debug` flag for detailed output, replacing the `CPAST_DEBUG` environment variable (See issue #5).
+- **Piping in generate:** Improved piping capabilities within the `cpast generate` command.
+
+#### Performance and Security
+
+- **Enhanced Storage Performance:** Optimized the `file_store` component of `ccode_runner` for improved efficiency.
+- **Security Audit:** Implemented a security audit workflow using `cargo deny` to scan dependencies for vulnerabilities, ensuring a more secure codebase.
+
+#### Development and Infrastructure
+
+- **Rust 2024 Upgrade:** Updated the codebase to Rust 2024, enabling the use of the latest language features and improvements.
+- **Refined Code Structure:** Restructured `cpast_cli` into `ccode_runner` and `clex_gen` for better code organization and maintainability.
+- **MSRV:** Set the Minimum Supported Rust Version (MSRV) to 1.85.0.
+
+#### General Improvements
+
+- Improved error propagation across the project.
+- Enhanced code quality, documentation, and performance.
+- Fixed various bugs, including race conditions and panics.
+- Updated dependencies to their latest versions.
+
+For a full list of changes, check out the [Full Changelog](https://github.com/rootCircle/cpast_mono/commits/cpast-v0.7.1).

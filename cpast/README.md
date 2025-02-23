@@ -88,6 +88,20 @@ cpast generate "S[10,10,@CH_UPPER@]"
 
 * Generates string of length 10, of uppercase characters only
 
+### ai
+
+```bash
+GEMINI_API_KEY="<gemini-api-key>" cpast ai --input-format="The first line contains an integer T (number of test cases). Each of the next T lines contains two integers N and M." --constraints="1 ≤ T ≤ 10\n1 ≤ N, M ≤ 10^5"
+```
+
+* Generates clex using LLM from input format and constraints.
+* Get API key from <https://makersuite.google.com/app/apikey>
+* Alternatively, expose the API key from the shell configuration file like bashrc, zshrc etc using:
+
+  ```bash
+  export GEMINI_API_KEY='<api key here>';
+  ```
+
 ### Shell Completions
 
 To generate shell completions for `cpast`, use the following commands based on your shell:
@@ -115,6 +129,18 @@ To generate shell completions for `cpast`, use the following commands based on y
 At the heart of cpast is **clex_gen**, a powerful custom language generator that gives you complete control over input patterns. Imagine regex, but specifically designed for generating random test cases. With clex, you can easily define and automate complex input scenarios to stress-test your code, uncover hidden bugs, and identify edge cases that might otherwise go unnoticed.
 
 For more information on the `clex` language and its usage, please refer to the [Grammar Rules for Clex Generator](../clex_gen/docs/CLEX_LANG_SPECS.md).
+
+## Backslash Plague in CLI
+
+When using cpast in the CLI, you'll need to properly escape special characters in clex expressions, particularly backslashes in repetition patterns. For example:
+
+```bash
+# Incorrect usage
+cpast test -g "(N) N{\1}"
+
+# Correct usage with escaped backslash
+cpast test -g "(N) N{\\1}"
+```
 
 ## Meta
 
