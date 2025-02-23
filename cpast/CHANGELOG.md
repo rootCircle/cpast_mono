@@ -18,6 +18,7 @@
  - <csr-id-1fa604a848dc960908c7148efde4621a38f2a573/> add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash
  - <csr-id-bc8f08ba637c113645a417d558e149dbe16bdd3a/> introduce ai subcommand to generate clex form input format and constraints
  - <csr-id-7fbe621497981a93f390f1857537b540420c8d18/> introduce ai subcommand to generate clex form input format and constraints
+ - <csr-id-d7f610314c38fdad56d297a1371a72e343085212/> introduce ai subcommand to generate clex form input format and constraints
 
 ### Commit Statistics
 
@@ -35,7 +36,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - Introduce ai subcommand to generate clex form input format and constraints ([`7fbe621`](https://github.com/rootCircle/cpast_mono/commit/7fbe621497981a93f390f1857537b540420c8d18))
+    - Introduce ai subcommand to generate clex form input format and constraints ([`d7f6103`](https://github.com/rootCircle/cpast_mono/commit/d7f610314c38fdad56d297a1371a72e343085212))
     - Add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash ([`1fa604a`](https://github.com/rootCircle/cpast_mono/commit/1fa604a848dc960908c7148efde4621a38f2a573))
     - Add shell completion instructions ([`92ee0a4`](https://github.com/rootCircle/cpast_mono/commit/92ee0a4ff8513df123f3a67844cd048d607be264))
     - Improved shields badges and README ([`0d6e667`](https://github.com/rootCircle/cpast_mono/commit/0d6e667a7a3087106e377efd5c2c96881f63caa7))
