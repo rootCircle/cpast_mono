@@ -1,5 +1,12 @@
 # clex_llm
 
+![Crates.io](https://img.shields.io/crates/v/clex_llm?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/d/clex_llm?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io](https://img.shields.io/crates/l/clex_llm?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![docs.rs](https://img.shields.io/docsrs/clex_llm?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io Size](https://img.shields.io/crates/size/clex_llm?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+![Crates.io MSRV](https://img.shields.io/crates/msrv/clex_llm?style=for-the-badge&logo=rust&logoColor=D9E0EE&labelColor=292324)
+
 > [!NOTE]
 > Builds are currently broken for android mobiles, but we have no intention as of now to support it at this moment.
 
