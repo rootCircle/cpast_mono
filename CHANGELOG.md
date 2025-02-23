@@ -11,6 +11,16 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.9.0 (2025-02-24)
+
+### ccode_runner
+
+- Migrate from sync to async tokio process spawn to improve performance and scalability.
+
+### cpast
+
+- Using updated ccode_runner to improve performance and scalability.
+
 ## 0.8.1 (2025-02-23)
 
 ### clex_cli

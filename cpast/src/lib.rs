@@ -91,7 +91,8 @@ pub async fn compile_and_test(
         Path::new(&correct_binding),
         Path::new(&test_binding),
         do_force_compile,
-    )?;
+    )
+    .await?;
     let store = Arc::new(store);
 
     let mut token = lexer::Tokens::new(language);
@@ -132,7 +133,7 @@ pub async fn compile_and_test(
                         has_failed_clone.store(true, Ordering::Relaxed);
                     }
                     Ok(output_text) => {
-                        match store_clone.run_codes_and_compare_output(&output_text) {
+                        match store_clone.run_codes_and_compare_output(&output_text).await {
                             Ok((true, _, _)) => {
                                 if !no_stop && debug {
                                     eprintln!(

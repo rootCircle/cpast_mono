@@ -1,6 +1,6 @@
 [package]
 name = "ccode_runner"
-version = "0.2.2"
+version = "0.3.0"
 description = "Run/compiles files and executes them efficiently"
 categories = ["development-tools::testing", "command-line-utilities", "development-tools"]
 keywords = ["compiler", "code_runner"]
@@ -15,3 +15,4 @@ rust-version.workspace = true
 which = { workspace = true }
 serde = { features = ["derive"], workspace = true }
 utoipa = { workspace = true }
+tokio.workspace = true
