@@ -89,6 +89,10 @@ pub(crate) struct AiArgs {
     /// Constraints
     #[arg(short, long, required = true, value_hint = ValueHint::Other)]
     pub(crate) constraints: Option<String>,
+
+    /// Copy clex to clipboard
+    #[arg(long)]
+    pub(crate) clipboard: bool,
 }
 
 impl CpastCommand {

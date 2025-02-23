@@ -11,6 +11,12 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.8.1 (2025-02-23)
+
+### clex_cli
+
+- Add `--clipboard` flag to copy clex to clipboard. Improved `cpast ai` output.
+
 ## 0.8.0 (2025-02-23)
 
 ### Breaking

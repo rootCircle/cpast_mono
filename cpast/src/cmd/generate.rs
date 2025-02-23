@@ -48,14 +48,14 @@ fn copy_content_to_clipboard(generated_testcases: String) {
         // get_contents is required for set_contents to work
         // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
         let _ = ctx.get_contents();
-        println!("{}", "Copied to clipboard successfully!".green());
+        eprintln!("{}", "Copied to clipboard successfully!".green());
     }
 
     #[cfg(not(any(
         all(unix, not(any(target_os = "android", target_os = "emscripten"))),
         windows,
     )))]
-    println!(
+    eprintln!(
         "{}",
         "Clipboard Features not enabled during compilation/device not supported!".yellow()
     );
