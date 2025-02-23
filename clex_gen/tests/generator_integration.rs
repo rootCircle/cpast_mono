@@ -26,7 +26,7 @@ fn test_generator_with_string_expression() {
 
 #[test]
 fn test_generator_with_custom_string_expression() {
-    let language = "S[,'0']";
+    let language = "S[,,'0']";
 
     // Validate the output_text based on the generated AST
     let gen_language = generator(language.to_string()).unwrap();
@@ -35,7 +35,7 @@ fn test_generator_with_custom_string_expression() {
 
 #[test]
 fn test_generator_with_numeral_charset_string_expression() {
-    let language = "S[,@CH_NUM@]";
+    let language = "S[,,@CH_NUM@]";
 
     // Validate the output_text based on the generated AST
     let gen_language = generator(language.to_string()).unwrap();

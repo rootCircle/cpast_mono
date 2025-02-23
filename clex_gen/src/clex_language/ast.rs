@@ -40,7 +40,8 @@
 //////////////////////////////////////////
 // CONSTANTS
 //////////////////////////////////////////
-pub const MAX_STRING_SIZE: usize = 12;
+pub const DEFAULT_MIN_STRING_SIZE: usize = 1;
+pub const DEFAULT_MAX_STRING_SIZE: usize = 12;
 pub const DEFAULT_CHARSET: CharacterSet = CharacterSet::AlphaNumeric;
 pub const DEFAULT_QUANTIFIER_VALUE: u64 = 1;
 pub const DEFAULT_RANGE_MIN_VALUE: i64 = i64::MIN;
@@ -85,8 +86,8 @@ pub enum DataType {
     Integer(ReferenceType, ReferenceType),
     /// Float data type with a specified minimum and maximum value (inclusive).
     Float(ReferenceType, ReferenceType),
-    /// String data type.
-    String(PositiveReferenceType, CharacterSet),
+    /// String data type with specified minimum and maximum length.
+    String(PositiveReferenceType, PositiveReferenceType, CharacterSet),
 }
 
 /// Represents the repetition type of unit expression.

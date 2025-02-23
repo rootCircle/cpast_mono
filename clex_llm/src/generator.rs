@@ -1,7 +1,10 @@
 use google_generative_ai_rs::v1::{
     api::{Client, PostResult},
     errors::GoogleAPIError,
-    gemini::{Content, Part, Role, request::Request},
+    gemini::{
+        Content, Model, Part, Role,
+        request::{Request, SystemInstructionContent, SystemInstructionPart},
+    },
 };
 
 use crate::examples::{self, Example};
@@ -15,7 +18,7 @@ impl ClexPromptGenerator {
     pub(crate) fn new(api_key: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let examples = examples::get_examples();
 
-        let client = Client::new(api_key.to_string());
+        let client = Client::new_from_model(Model::Gemini2_0Flash, api_key.to_string());
 
         Ok(ClexPromptGenerator { examples, client })
     }
@@ -61,9 +64,9 @@ PositiveRange ::= "[" PositiveReference? "," PositiveReference? "]"
 
 Quantifiers ::= "{" PositiveReference "}"
 
-Reference ::= "\\" GroupNo | i64
+Reference ::= "\" GroupNo | i64
 
-PositiveReference ::= "\\" GroupNo | u64
+PositiveReference ::= "\" GroupNo | u64
 
 GroupNo ::= u64
 
@@ -78,10 +81,10 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
 - **S**: Generates strings
 - **CapturingGroup**: (N) captures a non-negative integer for later reference
 - **NonCapturingGroup**: (?:...) groups expressions without capturing
-- **Quantifiers**: {n} or {\\n} specifies repetition count
+- **Quantifiers**: {n} or {\n} specifies repetition count
 - **Range**: [min,max] specifies value range for N and F
 - **StringModifier**: [length,@CHARACTER_SET@] specifies string length and character set
-- **Back-reference**: \\n refers to the nth captured group
+- **Back-reference**: \n refers to the nth captured group
 
 ## Character Sets
 - **@CH_ALPHA@**: Alphabetical characters
@@ -90,6 +93,7 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
 - **@CH_UPPER@**: Uppercase alphabets
 - **@CH_LOWER@**: Lowercase alphabets
 - **@CH_ALL@**: Alphabets, numbers, and some special characters
+- **ASCII_CHARACTER_SET**: Set of all ASCII characters, including escape sequences: `\n`, `\t`, `\r`, `\`, `\'`, `\"`, `\0`, `\a`, `\b`, `\f`, `\v`.
 
 ## Constants
 - **MAX_STRING_SIZE** = 12 (default max string length)
@@ -128,13 +132,13 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
 - Ranges within data types are limited to numeric values
 - Generated numbers always adhere to the specified range bounds
 - Clex uses the standard `double` type for floating-point numbers
-- Backreferences use backslash notation (e.g., \\1) to distinguish from literal values
+- Backreferences use backslash notation (e.g., \1) to distinguish from literal values
 - Clex doesn't support floating values in ranges, so truncate the decimal part while giving response for ranges like N[5.5, 6] to N[5,6].
 
 ## Example
 - **Input Format**: "The first line contains an integer K, followed by K lines each containing a floating-point number P."
 - **Constraints**: "1 ≤ K ≤ 50\n0.0 ≤ P ≤ 1000.0"
-- **Generated Clex**: (N[1,50]) (?:F[0,1000]){\\1}
+- **Generated Clex**: (N[1,50]) (?:F[0,1000]){\1}
 - **Explanation**: Captures an integer K between 1 and 50, then generates K float values between 0 and 1000.
 
 ## Response
@@ -151,24 +155,6 @@ Respond only with the generated Clex expression in single line. Do not include a
 
         // System prompt
         let system_prompt = self.get_system_prompt();
-        content.push(Content {
-            role: Role::User,
-            parts: vec![Part {
-                text: Some(system_prompt.to_string()),
-                inline_data: None,
-                file_data: None,
-                video_metadata: None,
-            }],
-        });
-        content.push(Content {
-            role: Role::Model,
-            parts: vec![Part {
-                text: Some("Understood. I'm ready to generate Clex expressions based on the given input formats and constraints.".to_string()),
-                inline_data: None,
-                file_data: None,
-                video_metadata: None,
-            }],
-        });
 
         for example in &self.examples {
             content.push(Content {
@@ -215,6 +201,11 @@ Respond only with the generated Clex expression in single line. Do not include a
             tools: vec![],
             safety_settings: vec![],
             generation_config: None,
+            system_instruction: Some(SystemInstructionContent {
+                parts: vec![SystemInstructionPart {
+                    text: Some(system_prompt.to_string()),
+                }],
+            }),
         };
 
         let result = self.client.post(30, &request).await?;

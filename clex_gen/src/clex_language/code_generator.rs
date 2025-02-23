@@ -60,9 +60,12 @@ impl Generator {
 
                     for _ in 1..=repetition_count {
                         match data_type {
-                            DataType::String(length, charset) => self
-                                .output_text
-                                .push_str(&self.generate_random_string(length, charset)?),
+                            DataType::String(min_length, max_length, charset) => {
+                                self.output_text.push_str(
+                                    &self
+                                        .generate_random_string(min_length, max_length, charset)?,
+                                )
+                            }
                             DataType::Float(min_reference, max_reference) => {
                                 self.output_text.push_str(
                                     &self
@@ -156,15 +159,18 @@ impl Generator {
 
     fn generate_random_string(
         &self,
-        length: &PositiveReferenceType,
+        min_length: &PositiveReferenceType,
+        max_length: &PositiveReferenceType,
         character_set: &CharacterSet,
     ) -> Result<String, ClexErrorType> {
-        let length = self.get_positive_value_from_reference(length)? as usize;
+        let min_length = self.get_positive_value_from_reference(min_length)? as usize;
+        let max_length = self.get_positive_value_from_reference(max_length)? as usize;
+        let length = self.generate_positive_random_integer(min_length as u64, max_length as u64)?;
         let charset = character_set.get_character_domain();
         Ok(Self::generate_random_string_from_charset(&charset, length))
     }
 
-    fn generate_random_string_from_charset(charset: &str, length: usize) -> String {
+    fn generate_random_string_from_charset(charset: &str, length: u64) -> String {
         let charset = charset.as_bytes();
         let mut rng = rand::thread_rng();
         (0..length)

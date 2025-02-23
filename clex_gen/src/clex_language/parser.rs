@@ -93,11 +93,11 @@ impl Parser {
                 })
             }
             TokenType::String => {
-                let (length, charset) = self.parse_string_modifiers()?;
+                let (min_length, max_length, charset) = self.parse_string_modifiers()?;
                 let repetition_type = self.parse_quantifier()?;
 
                 Ok(UnitExpression::Primitives {
-                    data_type: DataType::String(length, charset),
+                    data_type: DataType::String(min_length, max_length, charset),
                     repetition: repetition_type,
                 })
             }
@@ -164,14 +164,21 @@ impl Parser {
 
     fn parse_string_modifiers(
         &mut self,
-    ) -> Result<(PositiveReferenceType, CharacterSet), ClexErrorType> {
-        let mut length_reference =
-            PositiveReferenceType::ByLiteral(clex_language::ast::MAX_STRING_SIZE as u64);
+    ) -> Result<(PositiveReferenceType, PositiveReferenceType, CharacterSet), ClexErrorType> {
+        let mut min_length_reference =
+            PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64);
+        let mut max_length_reference =
+            PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64);
         let mut char_set = CharacterSet::get_default_charset();
 
         if self.match_token(&TokenType::LeftSquareBracket) {
-            length_reference =
-                self.parse_positive_reference(clex_language::ast::MAX_STRING_SIZE as u64)?;
+            min_length_reference =
+                self.parse_positive_reference(clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64)?;
+
+            self.expect(&TokenType::Comma)?;
+
+            max_length_reference =
+                self.parse_positive_reference(clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64)?;
 
             self.expect(&TokenType::Comma)?;
 
@@ -214,7 +221,7 @@ impl Parser {
             self.expect(&TokenType::RightSquareBracket)?;
         }
 
-        Ok((length_reference, char_set))
+        Ok((min_length_reference, max_length_reference, char_set))
     }
 
     fn parse_range(&mut self) -> Result<(ReferenceType, ReferenceType), ClexErrorType> {

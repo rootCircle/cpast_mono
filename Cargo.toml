@@ -43,7 +43,7 @@ colored = "3.0.0"
 config = { version = "0.15.8", default-features = false, features = ["yaml"] }
 fake = "3.1.0"
 futures = "0.3.31"
-google-generative-ai-rs = "0.3.4"
+google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 log = "0.4.25"
 linkify = "0.10"
 quickcheck = "1.0.3"

@@ -11,5 +11,5 @@ publish = false
 
 [dependencies]
 serde = { workspace = true, features = ["derive"] }
-google-generative-ai-rs = { workspace = true }
+google-generative-ai-rs = { workspace = true, features = ["beta"] }
 tokio = { workspace = true, features = ["full"] }

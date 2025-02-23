@@ -52,7 +52,12 @@ fn test_get_ast_with_backreference() {
         vec![
             UnitExpression::Primitives {
                 data_type: DataType::String(
-                    PositiveReferenceType::ByLiteral(clex_language::ast::MAX_STRING_SIZE as u64),
+                    PositiveReferenceType::ByLiteral(
+                        clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64
+                    ),
+                    PositiveReferenceType::ByLiteral(
+                        clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64
+                    ),
                     CharacterSet::get_default_charset()
                 ),
                 repetition: PositiveReferenceType::ByGroup { group_number: 1 },
@@ -64,7 +69,7 @@ fn test_get_ast_with_backreference() {
 
 #[test]
 fn test_custom_charset_with_string() {
-    let language = "S[10, 'asghdgad']";
+    let language = "S[1, 10, 'asghdgad']";
     let ast = get_ast(language.to_string()).unwrap();
 
     assert_eq!(
@@ -72,6 +77,7 @@ fn test_custom_charset_with_string() {
         vec![
             UnitExpression::Primitives {
                 data_type: DataType::String(
+                    PositiveReferenceType::ByLiteral(1),
                     PositiveReferenceType::ByLiteral(10),
                     CharacterSet::Custom("asghdgad".to_string())
                 ),
@@ -84,7 +90,7 @@ fn test_custom_charset_with_string() {
 
 #[test]
 fn test_charset_with_string() {
-    let language = "S[10, @CH_ALL@]";
+    let language = "S[10, 10, @CH_ALL@]";
     let ast = get_ast(language.to_string()).unwrap();
 
     assert_eq!(
@@ -92,6 +98,7 @@ fn test_charset_with_string() {
         vec![
             UnitExpression::Primitives {
                 data_type: DataType::String(
+                    PositiveReferenceType::ByLiteral(10),
                     PositiveReferenceType::ByLiteral(10),
                     CharacterSet::All
                 ),

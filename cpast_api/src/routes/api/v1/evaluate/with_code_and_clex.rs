@@ -22,7 +22,7 @@ struct EvaluateCodeWithClexRequest {
     #[schema(example = "python")]
     test_code_language: LanguageName,
 
-    #[schema(example = "N[1,50] S[1, @CH_UPPER@]")]
+    #[schema(example = "N[1,50] S[1, 10, @CH_UPPER@]")]
     clex: String,
 }
 

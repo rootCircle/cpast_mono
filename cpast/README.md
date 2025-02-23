@@ -70,7 +70,7 @@ Here's a simple example of how to use `cpast`:
 #### test
 
 ```bash
-cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
+cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\\1}" --iterations 100
 ```
 
 * `correct.cpp` should contain the correct code.
@@ -83,27 +83,29 @@ cpast test -c correct.cpp -t incorrect.cpp -g "(N) (?:N){\1}" --iterations 100
 #### generate
 
 ```bash
-cpast generate "S[10,@CH_UPPER@]"
+cpast generate "S[10,10,@CH_UPPER@]"
 ```
 
 * Generates string of length 10, of uppercase characters only
-
 
 ### Shell Completions
 
 To generate shell completions for `cpast`, use the following commands based on your shell:
 
-- **zsh**: 
+* **zsh**:
+
   ```bash
   cpast --completions=zsh | sudo tee /usr/local/share/zsh/site-functions/_cpast
   ```
 
-- **fish**: 
+* **fish**:
+
   ```bash
   cpast --completions=fish > ~/.local/share/fish/generated_completions/cpast.fish
   ```
 
-- **bash**: 
+* **bash**:
+
   ```bash
   cpast --completions=bash | sudo tee /etc/bash_completion.d/cpast.bash
   ```

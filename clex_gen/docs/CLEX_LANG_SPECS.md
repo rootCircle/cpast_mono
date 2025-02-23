@@ -7,7 +7,7 @@ Clex is a generator language, that can generate a set of random numbers/string b
 
 The AST is same for a language in all the case, while the generated string from the language will vary.
 
-For example: S[4,@CH_UPPER@] can generate "GAHS" or "JHAS" etc.
+For example: S[1, 4, @CH_UPPER@] can generate "G", "GAHS" or "JHAS" etc.
 
 ## Rules for grammar
 
@@ -24,7 +24,7 @@ DataType ::= "N" Range? Quantifiers?
           | "F" Range? Quantifiers?
           | "S" StringModifier? Quantifiers?
 
-StringModifier ::= "[" PositiveReference? "," CharacterSet? "]"
+StringModifier ::= "[" PositiveReference? "," PositiveReference? "," CharacterSet? "]"
 
 Range ::= "[" Reference? "," Reference? "]"
 
@@ -32,10 +32,10 @@ PositiveRange ::= "[" PositiveReference? "," PositiveReference? "]"
 
 Quantifiers ::= "{" PositiveReference "}"
 
-Reference ::= "\\" GroupNo
+Reference ::= "\" GroupNo
             | i64
 
-PositiveReference ::= "\\" GroupNo
+PositiveReference ::= "\" GroupNo
                     | u64
 
 GroupNo ::= u64
@@ -51,7 +51,7 @@ ASCII_CHARACTER_SET ::= <ANY_ASCII_CHARACTER>
 
 ### ASCII_CHARACTER_SET
 
-Denotes the set of all ASCII characters, that can be represented.
+Denotes the set of all ASCII characters, that can be represented. Includes espace characters like `\n`, `\t`, `\r`, `\\`, `\'`, `\"`, `\0` `\a`, `\b`, `\f` and `\v`. Other escape characters excluding these might be treated as two characters.
 
 ### Character
 
@@ -79,7 +79,7 @@ Represents the group number for back-referencing. One awesome thing about clex l
 
 _Reference_ can be a back-reference to a capturing group (GroupNo) or a numeric value (i64). It is used in Range to specify the bounds. If not specified, default values are used. Prime purpose of _Reference_ is to act as an abstraction layer to store the literal value or the reference of the value that will be guaranteed to be available in future upon use.
 
-Back-referencing is done by using `"\\" GroupNo`, in this case the value in that specific Group is de-referenced upon use and put back in as a value.
+Back-referencing is done by using `"\" GroupNo`, in this case the value in that specific Group is de-referenced upon use and put back in as a value.
 
 lex uses 1-based indexing for backreferences, rather than zero-based like many other regular expression engines.
 
@@ -101,7 +101,7 @@ _PositiveRange_ is similar to _Range_ but ensures that the specified references 
 
 ### StringModifier
 
-_StringModifier_ is an optional modifier for the String ("S") _DataType_, specifying additional properties for generating strings. It includes a _PositiveReference_ for the length of the string and a _CharacterSet_ for the set of characters from which string has to be generated.
+_StringModifier_ is an optional modifier for the String ("S") _DataType_, specifying additional properties for generating strings. It includes two _PositiveReference_ for the minimum and maximum length of the string and a _CharacterSet_ for the set of characters from which string has to be generated.
 
 ### DataType
 
@@ -169,12 +169,12 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 ## Examples
 
 - `N{2}` : Generates two random integers.
-- `(N) (?:N){\\1}` : Generates a random integer, then the same number of additional integers.
-- `(N) (?:S[\\1,])` : Generates a random integer, then a string of that length.
-- `(N) (?:S[\\1,@CH_UPPER@])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
+- `(N) (?:N){\1}` : Generates a random integer, then the same number of additional integers.
+- `(N) (?:S[\1,\1,])` : Generates a random integer, then a string of that length.
+- `(N) (?:S[\1,\1,@CH_UPPER@])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
 - `N S C` : Generates a random integer, string, and character.
 - `F[-100,100]` : Generates a random floating-point number between -100 and 100.
-- `(N[1,100]) (?:N[1,1000]){\\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
+- `(N[1,100]) (?:N[1,1000]){\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
 
 ## References
 

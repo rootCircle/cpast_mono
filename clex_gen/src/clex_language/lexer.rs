@@ -190,10 +190,29 @@ impl Tokens {
 
                 let mut literal = String::new();
                 while self.peek() != "'" && !self.at_end() {
-                    literal.push_str(self.advance());
+                    let c = self.advance();
+                    if c == "\\" {
+                        let escaped = match self.peek() {
+                            "n" => '\n',   // newline
+                            "t" => '\t',   // tab
+                            "r" => '\r',   // carriage return
+                            "\\" => '\\',  // backslash
+                            "'" => '\'',   // single quote
+                            "\"" => '\"',  // double quote
+                            "0" => '\0',   // null
+                            "a" => '\x07', // bell
+                            "b" => '\x08', // backspace
+                            "f" => '\x0C', // form feed
+                            "v" => '\x0B', // vertical tab
+                            _ => '\\',
+                        };
+                        self.advance();
+                        literal.push(escaped);
+                    } else {
+                        literal.push_str(c);
+                    }
                 }
 
-                // Unterminated string.
                 if self.at_end() {
                     return Err(ClexErrorType::UnclosedSingleQuotes(
                         ParentErrorType::LexerError,

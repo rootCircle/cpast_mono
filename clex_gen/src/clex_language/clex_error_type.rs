@@ -79,7 +79,7 @@ impl ClexErrorType {
             ClexErrorType::MissingSquareBracketsRangeExpression(_) => "Expected closing square bracket (']') after opening square bracket ('[') in Range Bound Expression".to_string(),
 
             ClexErrorType::NegativeGroupNumber(_) => "Group number in back-reference can't be 0 or negative!".to_string(),
-            ClexErrorType::MissingGroupNumber(_) => "Expected <Group Number> after '{{\\' in Quantifiers".to_string(),
+            ClexErrorType::MissingGroupNumber(_) => "Expected <Group Number> after '{\\' in Quantifiers".to_string(),
             ClexErrorType::NegativeValueInPositiveReference(_) => "Literal can't be negative!".to_string(),
 
             ClexErrorType::UnexpectedToken(_, token_type) => format!("Expected {:?}, but not found", token_type),
