@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.2.0 (2025-02-23)
 
+<csr-id-e98a8df53a173d3a51ec2a30cf126802793d0990/>
+<csr-id-139c68a9a1f7178749e6297875fd01437d8b4ac4/>
+<csr-id-0a04f6f80d8f1c544aeee6fad96a8c366dd2b9ca/>
+<csr-id-9a63c718ab3848503f75ff7e9bb1b5fbc022021b/>
+
 ### Documentation
 
  - <csr-id-e670b0ca127f2755ea7ad090f0283cc2bf4cdbc7/> modified/add README for better segregation
@@ -18,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - <csr-id-18f1c5182c4fd105242aeb7f851edbbeafd778d7/> introduce --debug flag (closes #5)
  - <csr-id-a29a4c1da0732dbf2e9cf3f86873a635b7896592/> new file store interface and mig to rust 2024
  - <csr-id-d473aa8e95145a2815e910c877f98788c2cb5bc5/> integrated clex llm with gemini
+ - <csr-id-bc8f08ba637c113645a417d558e149dbe16bdd3a/> introduce ai subcommand to generate clex form input format and constraints
 
 ### Other
 
@@ -44,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - Introduce ai subcommand to generate clex form input format and constraints ([`ebc1e6e`](https://github.com/rootCircle/cpast_mono/commit/ebc1e6e3d20e2fdee80ba6c0cb780f2c0d4db06e))
+    - Introduce ai subcommand to generate clex form input format and constraints ([`bc8f08b`](https://github.com/rootCircle/cpast_mono/commit/bc8f08ba637c113645a417d558e149dbe16bdd3a))
     - Add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash ([`1fa604a`](https://github.com/rootCircle/cpast_mono/commit/1fa604a848dc960908c7148efde4621a38f2a573))
     - Rename clex package to clex_gen ([`9a63c71`](https://github.com/rootCircle/cpast_mono/commit/9a63c718ab3848503f75ff7e9bb1b5fbc022021b))
     - Introduce --debug flag (closes #5) ([`18f1c51`](https://github.com/rootCircle/cpast_mono/commit/18f1c5182c4fd105242aeb7f851edbbeafd778d7))
