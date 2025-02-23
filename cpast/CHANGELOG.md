@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.8.1 (2025-02-23)
+
+### New Features
+
+ - <csr-id-f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e/> add --clipboard for cpast ai
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release clex_llm v0.2.0, cpast v0.8.0 ([`f9beff1`](https://github.com/rootCircle/cpast_mono/commit/f9beff1c3efe2ba5ec8347b7f0dbf71ddf66ef1b))
+    - Add --clipboard for cpast ai ([`f8cb2b0`](https://github.com/rootCircle/cpast_mono/commit/f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e))
+</details>
+
 ## 0.8.0 (2025-02-23)
 
 <csr-id-92ee0a4ff8513df123f3a67844cd048d607be264/>
@@ -25,8 +50,9 @@
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 5 commits contributed to the release.
+ - 1 day passed between releases.
+ - 4 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -36,8 +62,11 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - Release clex_llm v0.2.0, cpast v0.8.0 ([`d6131c8`](https://github.com/rootCircle/cpast_mono/commit/d6131c80a0c84a000a1787a10301c74390cce088))
-    - Add --clipboard for cpast ai ([`f8cb2b0`](https://github.com/rootCircle/cpast_mono/commit/f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e))
+    - Release ccode_runner v0.2.2, clex_llm v0.2.0, cpast v0.8.0 ([`4b064ed`](https://github.com/rootCircle/cpast_mono/commit/4b064ed89427efe30093dfc0432380945436f8e0))
+    - Introduce ai subcommand to generate clex form input format and constraints ([`d7f6103`](https://github.com/rootCircle/cpast_mono/commit/d7f610314c38fdad56d297a1371a72e343085212))
+    - Add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash ([`1fa604a`](https://github.com/rootCircle/cpast_mono/commit/1fa604a848dc960908c7148efde4621a38f2a573))
+    - Add shell completion instructions ([`92ee0a4`](https://github.com/rootCircle/cpast_mono/commit/92ee0a4ff8513df123f3a67844cd048d607be264))
+    - Improved shields badges and README ([`0d6e667`](https://github.com/rootCircle/cpast_mono/commit/0d6e667a7a3087106e377efd5c2c96881f63caa7))
 </details>
 
 ## 0.7.1 (2025-02-22)

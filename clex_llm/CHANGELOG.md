@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.2.1 (2025-02-23)
+
+### Documentation
+
+ - <csr-id-5d48fdc64ef4d36aacfa3b24aa893bfc02ce6eb5/> add badges for clex_llm
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release clex_llm v0.2.0, cpast v0.8.0 ([`f9beff1`](https://github.com/rootCircle/cpast_mono/commit/f9beff1c3efe2ba5ec8347b7f0dbf71ddf66ef1b))
+    - Add badges for clex_llm ([`5d48fdc`](https://github.com/rootCircle/cpast_mono/commit/5d48fdc64ef4d36aacfa3b24aa893bfc02ce6eb5))
+</details>
+
 ## v0.2.0 (2025-02-23)
 
 <csr-id-e98a8df53a173d3a51ec2a30cf126802793d0990/>
@@ -42,8 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 11 commits contributed to the release over the course of 117 calendar days.
+ - 10 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -53,7 +78,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - Release clex_llm v0.2.0, cpast v0.8.0 ([`d6131c8`](https://github.com/rootCircle/cpast_mono/commit/d6131c80a0c84a000a1787a10301c74390cce088))
-    - Add badges for clex_llm ([`5d48fdc`](https://github.com/rootCircle/cpast_mono/commit/5d48fdc64ef4d36aacfa3b24aa893bfc02ce6eb5))
+    - Release ccode_runner v0.2.2, clex_llm v0.2.0, cpast v0.8.0 ([`4b064ed`](https://github.com/rootCircle/cpast_mono/commit/4b064ed89427efe30093dfc0432380945436f8e0))
+    - Introduce ai subcommand to generate clex form input format and constraints ([`d7f6103`](https://github.com/rootCircle/cpast_mono/commit/d7f610314c38fdad56d297a1371a72e343085212))
+    - Add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash ([`1fa604a`](https://github.com/rootCircle/cpast_mono/commit/1fa604a848dc960908c7148efde4621a38f2a573))
+    - Rename clex package to clex_gen ([`9a63c71`](https://github.com/rootCircle/cpast_mono/commit/9a63c718ab3848503f75ff7e9bb1b5fbc022021b))
+    - Introduce --debug flag (closes #5) ([`18f1c51`](https://github.com/rootCircle/cpast_mono/commit/18f1c5182c4fd105242aeb7f851edbbeafd778d7))
+    - New file store interface and mig to rust 2024 ([`a29a4c1`](https://github.com/rootCircle/cpast_mono/commit/a29a4c1da0732dbf2e9cf3f86873a635b7896592))
+    - Rename to cpast_mono from cpast ([`e98a8df`](https://github.com/rootCircle/cpast_mono/commit/e98a8df53a173d3a51ec2a30cf126802793d0990))
+    - Modified/add README for better segregation ([`e670b0c`](https://github.com/rootCircle/cpast_mono/commit/e670b0ca127f2755ea7ad090f0283cc2bf4cdbc7))
+    - Update msrv ([`139c68a`](https://github.com/rootCircle/cpast_mono/commit/139c68a9a1f7178749e6297875fd01437d8b4ac4))
+    - Use worspace deps ([`0a04f6f`](https://github.com/rootCircle/cpast_mono/commit/0a04f6f80d8f1c544aeee6fad96a8c366dd2b9ca))
+    - Integrated clex llm with gemini ([`d473aa8`](https://github.com/rootCircle/cpast_mono/commit/d473aa8e95145a2815e910c877f98788c2cb5bc5))
 </details>
 
