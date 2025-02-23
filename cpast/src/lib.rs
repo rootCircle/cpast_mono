@@ -31,6 +31,7 @@
 //!
 
 use colored::Colorize;
+use error_types::cli_error::CliErrorType;
 use futures::future::join_all;
 use std::io;
 use std::path::Path;
@@ -42,6 +43,8 @@ use clex_gen::clex_language::clex_error_type::ClexErrorType;
 use clex_gen::clex_language::{code_generator, lexer, parser};
 use std::sync::atomic::{AtomicBool, Ordering};
 
+pub(crate) mod error_types;
+
 pub const DEFAULT_FAIL_EXIT_CODE: i32 = 1;
 
 #[derive(thiserror::Error, Debug)]
@@ -51,6 +54,9 @@ pub enum GenericCpastError {
 
     #[error("{0}")]
     RunnerError(#[from] Box<RunnerErrorType>),
+
+    #[error("{0}")]
+    CliError(#[from] CliErrorType),
 }
 
 /// Compile and test code against custom language generator.

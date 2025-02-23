@@ -618,7 +618,7 @@ dependencies = [
 
 [[package]]
 name = "ccode_runner"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "serde",
  "utoipa",
@@ -719,7 +719,7 @@ checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
 name = "clex_gen"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "rand 0.8.5",
  "unicode-segmentation",
@@ -727,7 +727,7 @@ dependencies = [
 
 [[package]]
 name = "clex_llm"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "google-generative-ai-rs",
  "serde",
@@ -896,12 +896,13 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
 name = "cpast"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "ccode_runner",
  "clap",
  "clap_complete",
  "clex_gen",
+ "clex_llm",
  "cli-clipboard",
  "colored",
  "futures",

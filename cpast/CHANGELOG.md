@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.8.0 (2025-02-23)
+
+### Chore
+
+ - <csr-id-92ee0a4ff8513df123f3a67844cd048d607be264/> add shell completion instructions
+
+### Documentation
+
+ - <csr-id-0d6e667a7a3087106e377efd5c2c96881f63caa7/> improved shields badges and README
+
+### New Features
+
+ - <csr-id-ebc1e6e3d20e2fdee80ba6c0cb780f2c0d4db06e/> introduce ai subcommand to generate clex form input format and constraints
+ - <csr-id-1fa604a848dc960908c7148efde4621a38f2a573/> add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release.
+ - 1 day passed between releases.
+ - 4 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Introduce ai subcommand to generate clex form input format and constraints ([`ebc1e6e`](https://github.com/rootCircle/cpast_mono/commit/ebc1e6e3d20e2fdee80ba6c0cb780f2c0d4db06e))
+    - Add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash ([`1fa604a`](https://github.com/rootCircle/cpast_mono/commit/1fa604a848dc960908c7148efde4621a38f2a573))
+    - Add shell completion instructions ([`92ee0a4`](https://github.com/rootCircle/cpast_mono/commit/92ee0a4ff8513df123f3a67844cd048d607be264))
+    - Improved shields badges and README ([`0d6e667`](https://github.com/rootCircle/cpast_mono/commit/0d6e667a7a3087106e377efd5c2c96881f63caa7))
+</details>
+
 ## 0.7.1 (2025-02-22)
 
 <csr-id-be396e164ba64e5cda157ce5ad4d93fe503bf976/>
@@ -62,7 +99,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 28 commits contributed to the release over the course of 116 calendar days.
+ - 29 commits contributed to the release over the course of 116 calendar days.
  - 21 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -73,6 +110,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_gen v0.2.1, cpast v0.7.1 ([`e50930b`](https://github.com/rootCircle/cpast_mono/commit/e50930bcf32be4bf4a29f6cfea8fb51d72226482))
     - Release clex_gen v0.2.1, cpast v0.7.1 ([`322a597`](https://github.com/rootCircle/cpast_mono/commit/322a5976a09ebb1c49241d08d2b11c07d0d9cd5e))
     - Rename clex package to clex_gen ([`9a63c71`](https://github.com/rootCircle/cpast_mono/commit/9a63c718ab3848503f75ff7e9bb1b5fbc022021b))
     - Release ccode_runner v0.2.0, clex v0.2.1, cpast v0.7.1 ([`7e750cc`](https://github.com/rootCircle/cpast_mono/commit/7e750cc72b592bd491f4f503fc72c19043934f1b))

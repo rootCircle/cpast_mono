@@ -25,6 +25,9 @@ pub(crate) enum CpastSubcommands {
     /// Just generate the testcase
     #[command(author)]
     Generate(GenerateArgs),
+
+    /// Generate clex using AI from input format and constraints
+    Ai(AiArgs),
 }
 
 fn print_completions<G: Generator>(generator: G, cmd: &mut Command) {
@@ -75,6 +78,17 @@ pub(crate) struct GenerateArgs {
     /// Copy testcases to clipboard
     #[arg(short, long)]
     pub(crate) clipboard: bool,
+}
+
+#[derive(clap::Args)]
+pub(crate) struct AiArgs {
+    /// Input format
+    #[arg(short, long, required = true, value_hint = ValueHint::Other)]
+    pub(crate) input_format: Option<String>,
+
+    /// Constraints
+    #[arg(short, long, required = true, value_hint = ValueHint::Other)]
+    pub(crate) constraints: Option<String>,
 }
 
 impl CpastCommand {

@@ -1,5 +1,6 @@
 mod cli;
 mod cmd;
+mod error_types;
 
 use crate::cli::cli_parser::{CpastCommand, CpastSubcommands};
 use colored::Colorize;
@@ -15,6 +16,13 @@ async fn main() {
                 }
                 CpastSubcommands::Generate(args) => {
                     cmd::generate::generate_call(args);
+                }
+                CpastSubcommands::Ai(args) => {
+                    cmd::ai::generate_clex_from_input_format_and_constraints(args)
+                        .await
+                        .unwrap_or_else(|err| {
+                            eprintln!("{}", err);
+                        });
                 }
             }
         } else {
