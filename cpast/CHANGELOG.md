@@ -1,16 +1,16 @@
 # Changelog
 
-## 0.8.1 (2025-02-23)
+## 0.9.0 (2025-02-24)
 
 ### New Features
 
- - <csr-id-f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e/> add --clipboard for cpast ai
+ - <csr-id-936d57702cb88bbb028fd66f69d8508e6ef8093f/> moved to tokio::process::Command async framework
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 1 commit contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -21,6 +21,31 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Moved to tokio::process::Command async framework ([`936d577`](https://github.com/rootCircle/cpast_mono/commit/936d57702cb88bbb028fd66f69d8508e6ef8093f))
+</details>
+
+## 0.8.1 (2025-02-23)
+
+### New Features
+
+ - <csr-id-f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e/> add --clipboard for cpast ai
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release clex_llm v0.2.1, cpast v0.8.1 ([`8bfc4c8`](https://github.com/rootCircle/cpast_mono/commit/8bfc4c8d37ea0ba4a495ef8f8eab7b955354c259))
     - Release clex_llm v0.2.0, cpast v0.8.0 ([`f9beff1`](https://github.com/rootCircle/cpast_mono/commit/f9beff1c3efe2ba5ec8347b7f0dbf71ddf66ef1b))
     - Add --clipboard for cpast ai ([`f8cb2b0`](https://github.com/rootCircle/cpast_mono/commit/f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e))
 </details>
