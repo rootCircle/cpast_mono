@@ -13,7 +13,7 @@ pub enum RunnerErrorType {
     /// Warmup compilation is not done before running the code
     WarmupCompileFatal,
 
-    ProgramRunError(Box<dyn Error>),
+    ProgramRunError(Box<dyn Error + Send + Sync>),
 }
 
 impl fmt::Display for RunnerErrorType {

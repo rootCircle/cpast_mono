@@ -36,7 +36,6 @@ use futures::future::join_all;
 use std::io;
 use std::path::Path;
 use std::sync::Arc;
-use tokio::sync::Semaphore;
 
 use ccode_runner::lang_runner::program_store::ProgramStore;
 use ccode_runner::lang_runner::runner_error_types::RunnerErrorType;
@@ -92,8 +91,7 @@ pub async fn compile_and_test(
         Path::new(&correct_binding),
         Path::new(&test_binding),
         do_force_compile,
-    )
-    .await?;
+    )?;
     let store = Arc::new(store);
 
     let mut token = lexer::Tokens::new(language);
@@ -104,7 +102,7 @@ pub async fn compile_and_test(
     let generator = Arc::new(generator);
 
     let has_failed = Arc::new(AtomicBool::new(false));
-    let semaphore = Arc::new(Semaphore::new(100)); // Limit concurrency to 64
+    // let semaphore = Arc::new(Semaphore::new(100)); // Limit concurrency to 64
 
     if debug {
         eprintln!("{}", "Debug mode enabled!".bold().yellow());
@@ -120,10 +118,10 @@ pub async fn compile_and_test(
             let has_failed_clone = Arc::clone(&has_failed);
             let store_clone = Arc::clone(&store);
             let generator_clone = Arc::clone(&generator);
-            let semaphore_clone = Arc::clone(&semaphore);
+            // let semaphore_clone = Arc::clone(&semaphore);
 
             tokio::spawn(async move {
-                let permit = semaphore_clone.acquire().await.unwrap(); // Acquire a permit
+                // let permit = semaphore_clone.acquire().await.unwrap(); // Acquire a permit
                 process_test_case(
                     no_stop,
                     debug,
@@ -133,7 +131,7 @@ pub async fn compile_and_test(
                     generator_clone,
                 )
                 .await;
-                drop(permit);
+                // drop(permit);
             })
         })
         .collect::<Vec<_>>();
@@ -171,7 +169,7 @@ async fn process_test_case(
             eprintln!("{}", err);
             has_failed_clone.store(true, Ordering::Relaxed);
         }
-        Ok(output_text) => match store_clone.run_codes_and_compare_output(&output_text).await {
+        Ok(output_text) => match store_clone.run_codes_and_compare_output(&output_text) {
             Ok((true, _, _)) => {
                 if !no_stop && debug {
                     eprintln!("{}", format!("Testcase {} ran successfully!", iter).green());

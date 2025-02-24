@@ -16,7 +16,7 @@ pub(crate) struct Language {
 }
 
 impl Language {
-    pub(crate) async fn new(
+    pub(crate) fn new(
         file_path: &Path,
         do_force_compile: bool,
     ) -> Result<Self, Box<RunnerErrorType>> {
@@ -28,23 +28,23 @@ impl Language {
             do_force_compile,
         };
 
-        lang.warmup_precompile().await?;
+        lang.warmup_precompile()?;
 
         Ok(lang)
     }
 
     /// One time compilation/intermediate generation before code is actually run for the first time
-    async fn warmup_precompile(&mut self) -> Result<(), Box<RunnerErrorType>> {
+    fn warmup_precompile(&mut self) -> Result<(), Box<RunnerErrorType>> {
         match self.code.compilation_type {
             CompilationType::Compiled => {
-                let compiled_path = self.compile_language().await?;
+                let compiled_path = self.compile_language()?;
                 self.code.register_dest_file(Path::new(&compiled_path))
             }
             // No pre-compilations needed in this case, so return an empty string to signify success
             CompilationType::Interpreted => {}
             // Might require converting to intermediate before running (eg java)
             CompilationType::BytecodeCompiled => {
-                let compiled_path = self.compile_language().await?;
+                let compiled_path = self.compile_language()?;
                 self.code.register_dest_file(Path::new(&compiled_path))
             }
         };
@@ -52,7 +52,7 @@ impl Language {
     }
 
     /// Running single filed self executable program
-    pub(crate) async fn run_program_code(
+    pub(crate) fn run_program_code(
         &self,
         stdin_content: &str,
     ) -> Result<String, Box<RunnerErrorType>> {
@@ -66,12 +66,11 @@ impl Language {
                     &vec![],
                     stdin_content,
                 )
-                .await
                 .map_err(|err| Box::new(RunnerErrorType::ProgramRunError(Box::new(err))))?)
             }
             CompilationType::Interpreted => {
                 // Need to Just Run
-                Ok(self.run_interpreted_language(stdin_content).await?)
+                Ok(self.run_interpreted_language(stdin_content)?)
             }
             CompilationType::BytecodeCompiled => {
                 if !self.is_compiled {
@@ -88,7 +87,6 @@ impl Language {
                             ],
                             stdin_content,
                         )
-                        .await
                         .map_err(|err| {
                             Box::new(RunnerErrorType::ProgramRunError(Box::new(err)))
                         })?),
@@ -97,7 +95,6 @@ impl Language {
                             &vec![self.code.get_dest_file_str().unwrap()],
                             stdin_content,
                         )
-                        .await
                         .map_err(|err| {
                             Box::new(RunnerErrorType::ProgramRunError(Box::new(err)))
                         })?),
@@ -111,7 +108,7 @@ impl Language {
         }
     }
 
-    async fn compile_language(&mut self) -> Result<String, RunnerErrorType> {
+    fn compile_language(&mut self) -> Result<String, RunnerErrorType> {
         let program_name_stem = self
             .code
             .source_path
@@ -202,7 +199,7 @@ impl Language {
         };
 
         for (compiler, args) in compilers {
-            let std_out = program_utils::run_program(compiler, &args).await;
+            let std_out = program_utils::run_program(compiler, &args);
             match std_out {
                 Ok(_) => {
                     self.is_compiled = true;
@@ -222,10 +219,7 @@ impl Language {
         ))
     }
 
-    async fn run_interpreted_language(
-        &self,
-        stdin_content: &str,
-    ) -> Result<String, RunnerErrorType> {
+    fn run_interpreted_language(&self, stdin_content: &str) -> Result<String, RunnerErrorType> {
         let interpreters = match self.code.language {
             LanguageName::Python => vec![
                 ("python3", vec![self.code.source_path.to_str().unwrap()]),
@@ -246,8 +240,7 @@ impl Language {
         };
 
         for (interpreter, args) in interpreters {
-            let std_out =
-                program_utils::run_program_with_input(interpreter, &args, stdin_content).await;
+            let std_out = program_utils::run_program_with_input(interpreter, &args, stdin_content);
             match std_out {
                 Ok(output) => {
                     return Ok(output);

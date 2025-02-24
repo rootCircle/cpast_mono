@@ -1,8 +1,7 @@
-use std::io;
 use std::path::Path;
+use std::process::Command;
 use std::process::{Output, Stdio};
-use tokio::io::AsyncWriteExt;
-use tokio::process::Command;
+use std::{io, io::Write};
 use which::which;
 
 fn program_exists(program: &str) -> Result<std::path::PathBuf, which::Error> {
@@ -31,7 +30,7 @@ fn run_program_common(output: Output, program: &str, args: &[&str]) -> io::Resul
     Ok(stdout_content)
 }
 
-pub(crate) async fn run_program_with_input(
+pub(crate) fn run_program_with_input(
     program: &str,
     args: &Vec<&str>,
     stdin_content: &str,
@@ -49,10 +48,10 @@ pub(crate) async fn run_program_with_input(
 
     if let Some(mut stdin) = child.stdin.take() {
         // Close stdin to finish and avoid indefinite blocking
-        stdin.write_all(stdin_content.as_ref()).await?; // drop would happen here
+        stdin.write_all(stdin_content.as_ref())?; // drop would happen here
     }
 
-    let output = child.wait_with_output().await?;
+    let output = child.wait_with_output()?;
 
     run_program_common(output, program, args)
 }
@@ -74,7 +73,7 @@ pub(crate) fn remake(
     Ok(true)
 }
 
-pub(crate) async fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
+pub(crate) fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
     if let Err(err) = program_exists(program) {
         return Err(io::Error::new(io::ErrorKind::Other, err));
     }
@@ -86,7 +85,7 @@ pub(crate) async fn run_program(program: &str, args: &Vec<&str>) -> io::Result<S
         .stderr(Stdio::piped())
         .output();
 
-    let output = match child.await {
+    let output = match child {
         Ok(out) => out,
         Err(err) => {
             eprintln!(
