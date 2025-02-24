@@ -36,6 +36,7 @@ use futures::future::join_all;
 use std::io;
 use std::path::Path;
 use std::sync::Arc;
+use tokio::sync::Semaphore;
 
 use ccode_runner::lang_runner::program_store::ProgramStore;
 use ccode_runner::lang_runner::runner_error_types::RunnerErrorType;
@@ -99,9 +100,11 @@ pub async fn compile_and_test(
     token.scan_tokens()?;
     let mut parser = parser::Parser::new_from_tokens(token);
     parser.parser()?;
-    let parser = Arc::new(parser);
+    let generator = code_generator::Generator::new(&parser);
+    let generator = Arc::new(generator);
 
     let has_failed = Arc::new(AtomicBool::new(false));
+    let semaphore = Arc::new(Semaphore::new(100)); // Limit concurrency to 64
 
     if debug {
         eprintln!("{}", "Debug mode enabled!".bold().yellow());
@@ -116,66 +119,21 @@ pub async fn compile_and_test(
         .map(|iter| {
             let has_failed_clone = Arc::clone(&has_failed);
             let store_clone = Arc::clone(&store);
-            let parser_clone = Arc::clone(&parser);
+            let generator_clone = Arc::clone(&generator);
+            let semaphore_clone = Arc::clone(&semaphore);
 
             tokio::spawn(async move {
-                // Check if a failure has already been recorded.
-                if !no_stop && has_failed_clone.load(Ordering::Relaxed) {
-                    return;
-                }
-
-                // Create a new generator by cloning the parser.
-                let mut generator = code_generator::Generator::new((*parser_clone).clone());
-
-                match generator.generate_testcases() {
-                    Err(err) => {
-                        eprintln!("{}", err);
-                        has_failed_clone.store(true, Ordering::Relaxed);
-                    }
-                    Ok(output_text) => {
-                        match store_clone.run_codes_and_compare_output(&output_text).await {
-                            Ok((true, _, _)) => {
-                                if !no_stop && debug {
-                                    eprintln!(
-                                        "{}",
-                                        format!("Testcase {} ran successfully!", iter)
-                                            .green()
-                                    );
-                                }
-                            }
-                            Ok((false, expected, actual)) => {
-                                println!(
-                                    "{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
-                                    format!("Testcase {} failed!", iter).red(),
-                                    "INPUT".underline(),
-                                    &output_text.cyan(),
-                                    "EXPECTED OUTPUT".underline(),
-                                    expected.green(),
-                                    "ACTUAL OUTPUT".underline(),
-                                    actual.red()
-                                );
-                                has_failed_clone.store(true, Ordering::Relaxed);
-                            }
-                            Err(err) => {
-                                eprintln!(
-                                    "{}",
-                                    format!("Error matching the file! {}", err).red()
-                                );
-                                if let RunnerErrorType::ProgramRunError(run_err) = *err {
-                                    if let Some(io_err) = run_err.downcast_ref::<io::Error>() {
-                                        if io_err.kind() == io::ErrorKind::BrokenPipe {
-                                            eprintln!("Broken pipe detected!");
-                                            eprintln!("This usually happens when your clex is incorrect and it doesn't generate what your codes are expecting!");
-                                            eprintln!("Please check your clex and try again!"); 
-                                        }
-                                    }
-                                }
-
-                                has_failed_clone.store(true, Ordering::Relaxed);
-                            }
-                        }
-                    }
-                }
+                let permit = semaphore_clone.acquire().await.unwrap(); // Acquire a permit
+                process_test_case(
+                    no_stop,
+                    debug,
+                    iter,
+                    has_failed_clone,
+                    store_clone,
+                    generator_clone,
+                )
+                .await;
+                drop(permit);
             })
         })
         .collect::<Vec<_>>();
@@ -194,4 +152,60 @@ pub async fn compile_and_test(
     }
 
     Ok(())
+}
+
+async fn process_test_case(
+    no_stop: bool,
+    debug: bool,
+    iter: usize,
+    has_failed_clone: Arc<AtomicBool>,
+    store_clone: Arc<ProgramStore>,
+    generator_clone: Arc<code_generator::Generator>,
+) {
+    if !no_stop && has_failed_clone.load(Ordering::Relaxed) {
+        return;
+    }
+
+    match generator_clone.generate_testcases() {
+        Err(err) => {
+            eprintln!("{}", err);
+            has_failed_clone.store(true, Ordering::Relaxed);
+        }
+        Ok(output_text) => match store_clone.run_codes_and_compare_output(&output_text).await {
+            Ok((true, _, _)) => {
+                if !no_stop && debug {
+                    eprintln!("{}", format!("Testcase {} ran successfully!", iter).green());
+                }
+            }
+            Ok((false, expected, actual)) => {
+                println!(
+                    "{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
+                    format!("Testcase {} failed!", iter).red(),
+                    "INPUT".underline(),
+                    &output_text.cyan(),
+                    "EXPECTED OUTPUT".underline(),
+                    expected.green(),
+                    "ACTUAL OUTPUT".underline(),
+                    actual.red()
+                );
+                has_failed_clone.store(true, Ordering::Relaxed);
+            }
+            Err(err) => {
+                eprintln!("{}", format!("Error matching the file! {}", err).red());
+                if let RunnerErrorType::ProgramRunError(run_err) = *err {
+                    if let Some(io_err) = run_err.downcast_ref::<io::Error>() {
+                        if io_err.kind() == io::ErrorKind::BrokenPipe {
+                            eprintln!("Broken pipe detected!");
+                            eprintln!(
+                                "This usually happens when your clex is incorrect and it doesn't generate what your codes are expecting!"
+                            );
+                            eprintln!("Please check your clex and try again!");
+                        }
+                    }
+                }
+
+                has_failed_clone.store(true, Ordering::Relaxed);
+            }
+        },
+    }
 }

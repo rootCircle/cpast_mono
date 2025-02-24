@@ -10,78 +10,51 @@ use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Generator {
     syntax_tree: ClexLanguageAST,
-    output_text: String,
-    groups: HashMap<u64, u64>, // group_no, repeat_count
 }
 
 impl Generator {
-    pub fn new(syntax_tree: Parser) -> Self {
+    pub fn new(syntax_tree: &Parser) -> Self {
         Self {
             syntax_tree: syntax_tree.get_language().clone(),
-            output_text: String::new(),
-            groups: HashMap::new(),
         }
     }
 
-    fn reset_output(&mut self) {
-        self.output_text = String::new();
-    }
-
-    fn new_from_program(program: ClexLanguageAST, groups: &HashMap<u64, u64>) -> Self {
+    fn new_from_program(program: ClexLanguageAST) -> Self {
         Self {
             syntax_tree: program,
-            output_text: String::new(),
-            groups: groups.clone(),
         }
     }
 
-    pub fn generate_testcases(&mut self) -> Result<String, ClexErrorType> {
-        if !self.output_text.is_empty() {
-            return Ok(self.output_text.clone());
-        }
-
-        self.traverse_ast()?;
-
-        let output = self.output_text.clone();
-
-        self.reset_output();
-
-        Ok(output)
+    pub fn generate_testcases(&self) -> Result<String, ClexErrorType> {
+        let mut groups = HashMap::new();
+        self.traverse_ast(&mut groups)
     }
 
-    fn traverse_ast(&mut self) -> Result<(), ClexErrorType> {
+    fn traverse_ast(&self, groups: &mut HashMap<u64, u64>) -> Result<String, ClexErrorType> {
+        let mut output_text = String::new();
+
         for unit_expression in &self.syntax_tree.expression {
             match unit_expression {
                 UnitExpression::Primitives {
                     data_type,
                     repetition,
                 } => {
-                    let repetition_count = self.get_positive_value_from_reference(repetition)?;
+                    let repetition_count =
+                        self.get_positive_value_from_reference(repetition, groups)?;
 
                     for _ in 1..=repetition_count {
-                        match data_type {
-                            DataType::String(min_length, max_length, charset) => {
-                                self.output_text.push_str(
-                                    &self
-                                        .generate_random_string(min_length, max_length, charset)?,
-                                )
-                            }
-                            DataType::Float(min_reference, max_reference) => {
-                                self.output_text.push_str(
-                                    &self
-                                        .generate_random_float(min_reference, max_reference)?
-                                        .to_string(),
-                                );
-                            }
-                            DataType::Integer(min_reference, max_reference) => {
-                                self.output_text.push_str(
-                                    &self
-                                        .generate_random_number(min_reference, max_reference)?
-                                        .to_string(),
-                                );
-                            }
-                        }
-                        self.output_text.push(' ');
+                        let generated_text = match data_type {
+                            DataType::String(min_length, max_length, charset) => self
+                                .generate_random_string(min_length, max_length, charset, groups)?,
+                            DataType::Float(min_reference, max_reference) => self
+                                .generate_random_float(min_reference, max_reference, groups)?
+                                .to_string(),
+                            DataType::Integer(min_reference, max_reference) => self
+                                .generate_random_number(min_reference, max_reference, groups)?
+                                .to_string(),
+                        };
+                        output_text.push_str(&generated_text);
+                        output_text.push(' ');
                     }
                 }
                 UnitExpression::CapturingGroup {
@@ -89,48 +62,36 @@ impl Generator {
                     range: (min_reference, max_reference),
                 } => {
                     let random_number =
-                        self.generate_positive_random_number(min_reference, max_reference)?;
-                    self.groups.insert(*group_number, random_number);
+                        self.generate_positive_random_number(min_reference, max_reference, groups)?;
+                    groups.insert(*group_number, random_number);
 
-                    let mut random_number = random_number.to_string();
-                    random_number.push(' ');
-
-                    self.output_text.push_str(&random_number);
+                    output_text.push_str(&random_number.to_string());
+                    output_text.push(' ');
                 }
                 UnitExpression::NonCapturingGroup {
                     nest_exp,
                     repetition,
                 } => {
-                    let repetition_count = self.get_positive_value_from_reference(repetition)?;
+                    let repetition_count =
+                        self.get_positive_value_from_reference(repetition, groups)?;
 
                     for _ in 1..=repetition_count {
-                        let mut nest_gen = Self::new_from_program(
-                            ClexLanguageAST {
-                                expression: nest_exp.clone(),
-                            },
-                            &self.groups,
-                        );
-                        nest_gen.traverse_ast()?;
-                        self.groups = nest_gen.groups;
-                        self.output_text.push_str(&nest_gen.output_text);
-                        self.output_text.push(' ');
+                        let nest_gen = Self::new_from_program(ClexLanguageAST {
+                            expression: nest_exp.clone(),
+                        });
+                        let nested_output = nest_gen.traverse_ast(groups)?;
+                        output_text.push_str(&nested_output);
                     }
                 }
                 UnitExpression::Eof => {
+                    // Removes the last character introduced by the last iteration before Eof
+                    output_text.pop();
                     break;
                 }
             }
         }
 
-        self.post_generation_cleanup();
-
-        Ok(())
-    }
-
-    fn post_generation_cleanup(&mut self) {
-        // Trims out extra whitespaces
-        self.output_text = self.output_text.replace("  ", " ");
-        self.output_text = self.output_text.trim().to_string();
+        Ok(output_text)
     }
 
     // Helper method for generating random integers
@@ -162,9 +123,10 @@ impl Generator {
         min_length: &PositiveReferenceType,
         max_length: &PositiveReferenceType,
         character_set: &CharacterSet,
+        groups: &HashMap<u64, u64>,
     ) -> Result<String, ClexErrorType> {
-        let min_length = self.get_positive_value_from_reference(min_length)? as usize;
-        let max_length = self.get_positive_value_from_reference(max_length)? as usize;
+        let min_length = self.get_positive_value_from_reference(min_length, groups)? as usize;
+        let max_length = self.get_positive_value_from_reference(max_length, groups)? as usize;
         let length = self.generate_positive_random_integer(min_length as u64, max_length as u64)?;
         let charset = character_set.get_character_domain();
         Ok(Self::generate_random_string_from_charset(&charset, length))
@@ -185,9 +147,10 @@ impl Generator {
         &self,
         min_reference: &ReferenceType,
         max_reference: &ReferenceType,
+        groups: &HashMap<u64, u64>,
     ) -> Result<i64, ClexErrorType> {
-        let min = self.get_value_from_reference(min_reference)?;
-        let max = self.get_value_from_reference(max_reference)?;
+        let min = self.get_value_from_reference(min_reference, groups)?;
+        let max = self.get_value_from_reference(max_reference, groups)?;
 
         self.generate_random_integer(min, max)
     }
@@ -196,9 +159,10 @@ impl Generator {
         &self,
         min_reference: &PositiveReferenceType,
         max_reference: &PositiveReferenceType,
+        groups: &HashMap<u64, u64>,
     ) -> Result<u64, ClexErrorType> {
-        let min = self.get_positive_value_from_reference(min_reference)?;
-        let max = self.get_positive_value_from_reference(max_reference)?;
+        let min = self.get_positive_value_from_reference(min_reference, groups)?;
+        let max = self.get_positive_value_from_reference(max_reference, groups)?;
 
         self.generate_positive_random_integer(min, max)
     }
@@ -207,9 +171,10 @@ impl Generator {
         &self,
         min_reference: &ReferenceType,
         max_reference: &ReferenceType,
+        groups: &HashMap<u64, u64>,
     ) -> Result<f64, ClexErrorType> {
-        let min = self.get_value_from_reference(min_reference)? as f64;
-        let max = self.get_value_from_reference(max_reference)? as f64;
+        let min = self.get_value_from_reference(min_reference, groups)? as f64;
+        let max = self.get_value_from_reference(max_reference, groups)? as f64;
 
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
@@ -225,9 +190,12 @@ impl Generator {
     fn get_value_from_reference(
         &self,
         reference_type: &ReferenceType,
+        groups: &HashMap<u64, u64>,
     ) -> Result<i64, ClexErrorType> {
         Ok(match reference_type {
-            ReferenceType::ByGroup { group_number: gn } => self.get_count_from_group(*gn)? as i64,
+            ReferenceType::ByGroup { group_number: gn } => {
+                self.get_count_from_group(groups, *gn)? as i64
+            }
             ReferenceType::ByLiteral(value) => *value,
         })
     }
@@ -235,17 +203,22 @@ impl Generator {
     fn get_positive_value_from_reference(
         &self,
         reference_type: &PositiveReferenceType,
+        groups: &HashMap<u64, u64>,
     ) -> Result<u64, ClexErrorType> {
         Ok(match reference_type {
             PositiveReferenceType::ByGroup { group_number: gn } => {
-                self.get_count_from_group(*gn)?
+                self.get_count_from_group(groups, *gn)?
             }
             PositiveReferenceType::ByLiteral(value) => *value,
         })
     }
 
-    fn get_count_from_group(&self, group_number: u64) -> Result<u64, ClexErrorType> {
-        match self.groups.get(&group_number) {
+    fn get_count_from_group(
+        &self,
+        groups: &HashMap<u64, u64>,
+        group_number: u64,
+    ) -> Result<u64, ClexErrorType> {
+        match groups.get(&group_number) {
             Some(value) => Ok(*value),
             None => Err(ClexErrorType::UnknownGroupNumber(
                 ParentErrorType::GeneratorError,

@@ -11,6 +11,16 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.9.1 (2025-02-25)
+
+### clex_gen
+
+- Reduce mutations by segregating states making `generate_testcase` method functional, and removing the need of cloning in case of `cpast_cli`.
+
+### cpast_cli
+
+- hotfix: add semaphore to control max file open errors in cases. Currently defaulted to 100
+
 ## 0.9.0 (2025-02-24)
 
 ### ccode_runner

@@ -112,6 +112,6 @@ pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexErrorType> {
 pub fn generator(language: String) -> Result<String, ClexErrorType> {
     let mut parser = parser::Parser::new(language)?;
     parser.parser()?;
-    let mut generator = code_generator::Generator::new(parser);
+    let generator = code_generator::Generator::new(&parser);
     generator.generate_testcases()
 }

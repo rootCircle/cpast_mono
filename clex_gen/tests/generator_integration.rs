@@ -9,6 +9,21 @@ fn test_generator_with_integer_expression() {
 }
 
 #[test]
+fn test_group_not_found_edge_case() {
+    let language = "(?:(N)){\\1}";
+
+    assert!(generator(language.to_string()).is_err());
+}
+
+#[test]
+fn test_generator_with_nested_expression() {
+    let language = "(N[3,3]) (?:(N[1,1]) N[2,2]{\\2}) N[1,1]{\\2}";
+
+    // Validate the output_text based on the generated AST
+    assert_eq!(generator(language.to_string()).unwrap(), "3 1 2 1");
+}
+
+#[test]
 fn test_generator_with_float_expression() {
     let language = "F[1, 1]";
 
