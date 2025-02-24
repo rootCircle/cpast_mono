@@ -1,6 +1,6 @@
 [package]
 name = "clex_gen"
-version = "0.3.0"
+version = "0.3.1"
 description = "A generator for clex language"
 categories = ["development-tools::testing", "command-line-utilities", "development-tools"]
 keywords = ["automata", "competitive-program", "generator", "language", "testcase"]

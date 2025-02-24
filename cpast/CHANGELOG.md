@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.9.1 (2025-02-24)
+
+### Performance
+
+ - <csr-id-09e5ef1dad1dd6fed69463208870025298b1071c/> Reduce mutations by segregating states making `generate_testcase` method functional, and removing the need of cloning in case of `cpast_cli`.
+
+### Reverted
+
+ - <csr-id-5412a2598514f36495a853e177889e753bfbc01f/> revert to blocking api in std::process::Command due to perf degredation
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Revert to blocking api in std::process::Command due to perf degredation ([`5412a25`](https://github.com/rootCircle/cpast_mono/commit/5412a2598514f36495a853e177889e753bfbc01f))
+    - Reduce mutations by segregating states making `generate_testcase` method functional, and removing the need of cloning in case of `cpast_cli`. ([`09e5ef1`](https://github.com/rootCircle/cpast_mono/commit/09e5ef1dad1dd6fed69463208870025298b1071c))
+</details>
+
 ## 0.9.0 (2025-02-24)
 
 ### New Features
@@ -10,7 +39,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -21,6 +50,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.0, cpast v0.9.0 ([`abfdf15`](https://github.com/rootCircle/cpast_mono/commit/abfdf156cfa1bceb09a65e6ef03a22c39e7e26aa))
     - Moved to tokio::process::Command async framework ([`936d577`](https://github.com/rootCircle/cpast_mono/commit/936d57702cb88bbb028fd66f69d8508e6ef8093f))
 </details>
 

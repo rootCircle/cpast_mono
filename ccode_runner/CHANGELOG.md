@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.3.0 (2025-02-24)
+## v0.3.1 (2025-02-24)
 
-### New Features
+### Reverted
 
- - <csr-id-936d57702cb88bbb028fd66f69d8508e6ef8093f/> moved to tokio::process::Command async framework
+ - <csr-id-5412a2598514f36495a853e177889e753bfbc01f/> revert to blocking api in std::process::Command due to perf degredation
 
 ### Commit Statistics
 
@@ -26,6 +26,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Revert to blocking api in std::process::Command due to perf degredation ([`5412a25`](https://github.com/rootCircle/cpast_mono/commit/5412a2598514f36495a853e177889e753bfbc01f))
+</details>
+
+## v0.3.0 (2025-02-24)
+
+### New Features
+
+ - <csr-id-936d57702cb88bbb028fd66f69d8508e6ef8093f/> moved to tokio::process::Command async framework
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release ccode_runner v0.3.0, cpast v0.9.0 ([`abfdf15`](https://github.com/rootCircle/cpast_mono/commit/abfdf156cfa1bceb09a65e6ef03a22c39e7e26aa))
     - Moved to tokio::process::Command async framework ([`936d577`](https://github.com/rootCircle/cpast_mono/commit/936d57702cb88bbb028fd66f69d8508e6ef8093f))
 </details>
 

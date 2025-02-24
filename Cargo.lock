@@ -618,7 +618,7 @@ dependencies = [
 
 [[package]]
 name = "ccode_runner"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "serde",
  "tokio",
@@ -720,7 +720,7 @@ checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
 name = "clex_gen"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "rand 0.8.5",
  "unicode-segmentation",
