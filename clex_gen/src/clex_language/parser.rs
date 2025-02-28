@@ -1,3 +1,33 @@
+//! The `parser` module is responsible for analyzing and converting tokenized input into an Abstract Syntax Tree (AST)
+//! representation following the `clex` language grammar rules.
+//!
+//! The Parser takes a sequence of tokens produced by the lexer and constructs a structured AST that represents
+//! the hierarchical relationships between different language constructs. It handles various expressions including:
+//!
+//! - Primitive expressions (Integer, Float, String)
+//! - Capturing groups with ranges
+//! - Non-capturing groups with nested expressions
+//! - Quantifiers and modifiers
+//! - Character sets for strings
+//!
+//! # Examples
+//!
+//! ```rust
+//! use clex_gen::clex_language::parser::Parser;
+//!
+//! let source = "N[1,100]";
+//! let mut parser = Parser::new(source.to_string()).unwrap();
+//! parser.parser().unwrap();
+//! let ast = parser.get_language();
+//! ```
+//!
+//! The parser performs recursive descent parsing and maintains state about:
+//! - Current token position
+//! - Number of capturing groups
+//! - The AST being constructed
+//!
+//! It provides detailed error reporting for syntax violations and invalid constructs.
+
 use super::lexer::{TokenType, Tokens};
 use crate::clex_language;
 use crate::clex_language::ast::{

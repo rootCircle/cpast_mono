@@ -1,42 +1,67 @@
+//! Error handling module for the clex language implementation.
+//!
+//! This module provides error types and implementations for handling various errors
+//! that can occur during lexical analysis, parsing, and code generation phases.
+
 use crate::clex_language::lexer::TokenType;
 use core::fmt;
 use std::error::Error;
-
+/// Represents the main categories of errors that can occur in the CLEX system.
 #[derive(Debug)]
 pub enum ParentErrorType {
+    /// Errors that occur during lexical analysis
     LexerError,
+    /// Errors that occur during parsing
     ParserError,
+    /// Errors that occur during code generation
     GeneratorError,
 }
 
+/// Specific error types that can occur during CLEX processing.
 #[derive(Debug)]
 pub enum ClexErrorType {
     // Lexical Errors
+    /// Error when a single quote is not properly closed
     UnclosedSingleQuotes(ParentErrorType),
+    /// Error when a colon is missing after a question mark
     MissingColonAfterQuestionMark(ParentErrorType),
+    /// Error when a negative sign is not followed by a number
     MissingNumberAfterNegativeSign(ParentErrorType),
+    /// Error when parsing numeric values
     NumericParsingError(ParentErrorType),
+    /// Error when encountering an unknown character
     UnknownCharacter(ParentErrorType, &'static str),
+    /// Error when an @ symbol is not properly closed
     UnclosedAtSymbol(ParentErrorType),
+    /// Error when an invalid character set is specified, all valid character sets are specified in <https://github.com/rootCircle/cpast_mono/blob/main/clex_gen/docs/CLEX_LANG_SPECS.md#character>
     InvalidCharacterSet(ParentErrorType),
 
     // Parser Errors
+    /// Error when a non-capturing group is missing closing parenthesis
     MissingClosingParensNonCapturingGroup(ParentErrorType),
+    /// Error when parentheses are not properly closed
     UnclosedParens(ParentErrorType),
+    /// Error when an invalid token is encountered
     InvalidTokenFound(ParentErrorType, TokenType),
-
+    /// Error when a comma is missing in a range expression
     MissingCommaRangeExpression(ParentErrorType),
+    /// Error when square brackets are missing in a range expression
     MissingSquareBracketsRangeExpression(ParentErrorType),
-
+    /// Error when a negative group number is specified
     NegativeGroupNumber(ParentErrorType),
+    /// Error when a group number is missing
     MissingGroupNumber(ParentErrorType),
+    /// Error when a negative value is used in a positive reference
     NegativeValueInPositiveReference(ParentErrorType),
-
+    /// Error when an unexpected token is encountered
     UnexpectedToken(ParentErrorType, TokenType),
+    /// Error when unreachable code is executed
     UnreachableCodeReached(ParentErrorType),
 
-    // Generator Error
+    // Generator Errors
+    /// Error when range values are invalid
     InvalidRangeValues(ParentErrorType, i64, i64),
+    /// Error when referencing an unknown group number
     UnknownGroupNumber(ParentErrorType, u64),
 }
 

@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Example {
+pub(crate) struct Example {
     pub input_format: String,
     pub constraints: String,
     pub generated_language: String,
 }
 
-pub fn get_examples() -> Vec<Example> {
+pub(crate) fn get_examples() -> Vec<Example> {
     vec![
             Example {
                 input_format: "The first line contains an integer T (number of test cases). Each of the next T lines contains two integers N and M.".to_string(),

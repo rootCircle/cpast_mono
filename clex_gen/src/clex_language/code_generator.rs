@@ -1,3 +1,44 @@
+//! The `code_generator` module is responsible for generating test cases based on the Abstract Syntax Tree (AST)
+//! produced by parsing `clex` language patterns. It converts the structured AST into concrete test data
+//! following the specified patterns and constraints.
+//!
+//! # Core Components
+//!
+//! - `Generator`: The main struct that handles test case generation from an AST
+//! - Random value generation for different data types (Integer, Float, String)
+//! - Support for capturing and non-capturing groups
+//! - Reference resolution for group values
+//!
+//! # Features
+//!
+//! - Random number generation within specified ranges
+//! - String generation with customizable character sets
+//! - Support for nested expressions and repetitions
+//! - Group value tracking and reference resolution
+//! - Float, Integer and String data type generation
+//!
+//! # Example
+//!
+//! ```rust
+//! use clex_gen::clex_language::parser::Parser;
+//! use clex_gen::clex_language::code_generator::Generator;
+//!
+//! let source = "N[1,100]";
+//! let mut parser = Parser::new(source.to_string()).unwrap();
+//! parser.parser().unwrap();
+//!
+//! let generator = Generator::new(&parser);
+//! let test_case = generator.generate_testcases().unwrap();
+//! ```
+//!
+//! The generator maintains state about:
+//! - The AST being processed
+//! - Currently defined capturing groups
+//! - Generated values for references
+//!
+//! It provides comprehensive error handling for invalid ranges, unknown group references,
+//! and other potential generation-time issues.
+
 use crate::clex_language::ast::{
     CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };

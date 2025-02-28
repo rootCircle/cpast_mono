@@ -9,6 +9,15 @@ use google_generative_ai_rs::v1::{
 
 use crate::examples::{self, Example};
 
+/// A generator for creating Clex language expressions using Google's Generative AI.
+///
+/// This struct holds a collection of examples and a client for making API requests to
+/// generate Clex expressions based on input formats and constraints.
+///
+/// # Fields
+///
+/// * `examples` - A vector of `Example` structs containing sample input/output pairs for training
+/// * `client` - A Google Generative AI client for making API requests
 pub struct ClexPromptGenerator {
     examples: Vec<Example>,
     client: Client,

@@ -1,9 +1,18 @@
+//! This module provides functionalities for managing and interacting with stored programs.
+//! It includes utilities for running program files.
 use crate::lang_runner::runner::Language;
 use crate::utils::file_utils;
 use std::path::Path;
 
 use super::runner_error_types::RunnerErrorType;
 
+/// A structure that holds two language files for comparison.
+///
+/// `ProgramStore` maintains references to two files:
+/// * A correct implementation file
+/// * A test implementation file
+///
+/// Both files are represented using the `Language` type.
 #[derive(Debug)]
 pub struct ProgramStore {
     correct_file: Language,
@@ -28,14 +37,23 @@ impl ProgramStore {
         })
     }
 
+    /// Run both correct and test files with the given input and compare their outputs
+    ///
+    /// # Arguments
+    ///
+    /// * `stdin_content` - The input content to pass to both programs
+    ///
+    /// # Returns
+    ///
+    /// * `Ok((bool, String, String))` - A tuple containing:
+    ///   * A boolean indicating if outputs differ (true if different)
+    ///   * The output string from the correct file
+    ///   * The output string from the test file
+    /// * `Err(Box<RunnerErrorType>)` - If there was an error running either program
     pub fn run_codes_and_compare_output(
         &self,
         stdin_content: &str,
     ) -> Result<(bool, String, String), Box<RunnerErrorType>> {
-        //! Run the code and return the output of the correct and test files  
-        //! along with a boolean indicating if the output is different
-        //! Output is in the form of (is_different, correct_output, test_output)
-
         let correct_output =
             self.run_program_code_interface(&self.correct_file, stdin_content, FileType::Correct)?;
         let test_output =

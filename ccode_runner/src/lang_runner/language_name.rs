@@ -1,8 +1,42 @@
+//! Provides functionality for handling programming language names and their associated file extensions.
+//!
+//! This module manages the classification, validation, and conversion of programming language identifiers
+//! and their corresponding compilation types. It offers a type-safe way to work with supported programming
+//! languages in the system.
+//!
+//! # Features
+//!
+//! * Language name enumeration with serialization support
+//! * File extension to language name mapping
+//! * Compilation type classification
+//!
+//! # Types
+//!
+//! - [`LanguageName`]: Enumeration of supported programming languages
+//! - [`CompilationType`]: Classification of how languages are executed
+//!
+//! # Supported Languages
+//!
+//! - Python (.py)
+//! - C++ (.cpp, .cxx, .c++, .cc, .C)
+//! - C (.c)
+//! - Rust (.rs)
+//! - Ruby (.rb)
+//! - JavaScript (.js)
+//! - Java (.java)
+//!
+//! This module includes utilities for:
+//! - Converting between file extensions and language names
+//! - Validating language support based on file paths
+//! - Formatting language names for display
+//!
+
 use std::{fmt, path::Path};
 
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
+/// Enumeration of supported programming languages.
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema, PartialEq)]
 pub enum LanguageName {
     Python,
@@ -48,6 +82,9 @@ impl TryFrom<String> for LanguageName {
     }
 }
 
+/// Classification of how programming languages are executed.
+/// This enum categorizes languages based on their compilation and execution model.
+/// Helps in optimizing on repeated compilations and executions.
 #[derive(Debug, PartialEq, Clone)]
 pub enum CompilationType {
     Compiled,         // Compiled language like C, C++, Rust, Go, etc.
