@@ -46,7 +46,7 @@ pub(crate) async fn generate_clex_from_input_format_and_constraints(
 
             println!("\n2. {}:", "Test two codes based on this".bright_cyan());
             let cpast_test = format!(
-                "cpast test -g \"{}\" -c <correct code> -t <test code>",
+                "cpast test -g \"{}\" -c \"<correct code>\" -t \"<test code>\"",
                 response
             );
             println!("   {}", cpast_test.bright_yellow());

@@ -8,7 +8,7 @@ members = [
   "ccode_runner",
   "cpast_api"
 ]
-resolver = "2"
+resolver = "3"
 
 [workspace.package]
 authors = ["rootCircle <dev.frolics@gmail.com>"]
