@@ -11,6 +11,20 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.9.2 (2025-03-01)
+
+### clex_gen
+
+- Change default range values to i32_min, i32_max and u32_min and u32_max for positive range.
+
+### cpast_cli
+
+- Improve the completions support.
+
+### general
+
+- Improved crate documentation
+
 ## 0.9.1 (2025-02-25)
 
 ### clex_gen

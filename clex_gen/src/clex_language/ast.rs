@@ -44,10 +44,10 @@ pub const DEFAULT_MIN_STRING_SIZE: usize = 1;
 pub const DEFAULT_MAX_STRING_SIZE: usize = 12;
 pub const DEFAULT_CHARSET: CharacterSet = CharacterSet::AlphaNumeric;
 pub const DEFAULT_QUANTIFIER_VALUE: u64 = 1;
-pub const DEFAULT_RANGE_MIN_VALUE: i64 = i64::MIN;
-pub const DEFAULT_RANGE_MAX_VALUE: i64 = i64::MAX;
-pub const DEFAULT_POSITIVE_RANGE_MIN_VALUE: u64 = u64::MIN;
-pub const DEFAULT_POSITIVE_RANGE_MAX_VALUE: u64 = u64::MAX;
+pub const DEFAULT_RANGE_MIN_VALUE: i64 = i32::MIN as i64;
+pub const DEFAULT_RANGE_MAX_VALUE: i64 = i32::MAX as i64;
+pub const DEFAULT_POSITIVE_RANGE_MIN_VALUE: u64 = u32::MIN as u64;
+pub const DEFAULT_POSITIVE_RANGE_MAX_VALUE: u64 = u32::MAX as u64;
 
 #[derive(Debug, Clone)]
 pub struct ClexLanguageAST {

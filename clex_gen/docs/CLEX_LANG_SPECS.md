@@ -93,11 +93,11 @@ _Quantifier_ specify the number of occurrences for the preceding expression. The
 
 ### Range
 
-_Range_ specifies a domain of values for numeric _DataType_ (Integer and Float) from which its value will be generated during generator phase. It includes _Reference_(s) for the lower and the upper bound for the number to be generated. If not specified, default values(INT64_MIN, INT64_MAX) are used. The upper and lower bound is always an integer(even if defining range for float data types also). Range is always inclusive, so `[m, n]` would mean that value can be anywhere from `m` to including `n`.
+_Range_ specifies a domain of values for numeric _DataType_ (Integer and Float) from which its value will be generated during generator phase. It includes _Reference_(s) for the lower and the upper bound for the number to be generated. If not specified, default values(INT32_MIN, INT32_MAX) are used. The upper and lower bound is always an integer(even if defining range for float data types also). Range is always inclusive, so `[m, n]` would mean that value can be anywhere from `m` to including `n`. The minimum and maximum value in range can be INT64_MIN and INT64_MAX respectively.
 
 ### PositiveRange
 
-_PositiveRange_ is similar to _Range_ but ensures that the specified references are non-negative(using _PositiveReference_). It includes _PositiveReference_ for the lower and the upper bound for the number to be generated. If not specified, default values(0, INT64_MAX) are used. The upper and lower bound is always a non-negative integer.
+_PositiveRange_ is similar to _Range_ but ensures that the specified references are non-negative(using _PositiveReference_). It includes _PositiveReference_ for the lower and the upper bound for the number to be generated. If not specified, default values(UINT32_MIN, UINT32_MAX) are used. The upper and lower bound is always a non-negative integer. The minimum and maximum value in range can be UINT64_MIN and UINT64_MAX respectively.
 
 ### StringModifier
 
@@ -162,9 +162,9 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 
 - In case of _StringModifier_, if the CharacterSet is not given, then it defaults to the constant **DEFAULT_CHARSET** i.e., "'N'".
 
-- If _Reference_ in _Range_ is not given then it defaults to INT64_MIN and INT64_MAX respectively for the corresponding missing value.
+- If _Reference_ in _Range_ is not given then it defaults to INT32_MIN and INT32_MAX respectively for the corresponding missing value.
 
-- If _PositiveReference_ in _PositiveRange_ is not given then it defaults to 0 and INT64_MAX respectively for the corresponding missing value.
+- If _PositiveReference_ in _PositiveRange_ is not given then it defaults to UINT32_MIN and UINT32_MAX respectively for the corresponding missing value.
 
 ## Examples
 

@@ -108,13 +108,13 @@ To generate shell completions for `cpast`, use the following commands based on y
 
 * **zsh**:
 
-  ```bash
+  ```zsh
   cpast --completions=zsh | sudo tee /usr/local/share/zsh/site-functions/_cpast
   ```
 
 * **fish**:
 
-  ```bash
+  ```fish
   cpast --completions=fish > ~/.local/share/fish/generated_completions/cpast.fish
   ```
 

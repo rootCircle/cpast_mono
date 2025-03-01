@@ -133,7 +133,7 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
    - Confirm that it covers all aspects of the input format and constraints
 
 ## Rules to Remember
-- If no range is specified for N or F, default to [INT64_MIN, INT64_MAX] for N and [-DBL_MAX, DBL_MAX] for F
+- If no range is specified for N or F, default to [INT32_MIN, INT32_MAX] for N and [INT32_MIN, INT32_MAX] for F
 - If no length is specified for S, default to MAX_STRING_SIZE (12)
 - If no character set is specified for S, default to @CH_ALNUM@
 - Capturing groups cannot be nested

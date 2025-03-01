@@ -106,7 +106,7 @@ prepare-check:
 #	make precommit
 
 release-cli:
-	cargo smart-release cpast --execute
+	cargo smart-release cpast --execute --update-crates-index
 
 coverage:
 	cargo llvm-cov clean --workspace --html --output-dir=coverage

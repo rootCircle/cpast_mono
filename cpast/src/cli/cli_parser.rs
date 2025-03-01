@@ -2,6 +2,7 @@ use std::io;
 
 use clap::{Command, CommandFactory, Parser, Subcommand, ValueHint};
 use clap_complete::{Generator, Shell, generate};
+use colored::Colorize;
 
 const DEFAULT_ITERATIONS_COUNT: usize = 5;
 
@@ -102,7 +103,44 @@ impl CpastCommand {
         if let Some(completions) = opt.completions {
             let mut cmd = CpastCommand::command();
             eprintln!("Generating completion file for {completions:?}...");
+
             print_completions(completions, &mut cmd);
+
+            match completions {
+                Shell::Zsh => {
+                    eprintln!("\n\n{}\n    {}",
+                        "Run the following command below to add it permanently to your shell:".bright_blue(),
+                        "cpast --completions=zsh | sudo tee /usr/local/share/zsh/site-functions/_cpast".yellow()
+                    );
+                }
+                Shell::Bash => {
+                    eprintln!(
+                        "\n\n{}\n    {}",
+                        "Run the following command below to add it permanently to your shell:"
+                            .bright_blue(),
+                        "cpast --completions=bash | sudo tee /etc/bash_completion.d/cpast.bash"
+                            .yellow()
+                    );
+                }
+                Shell::Fish => {
+                    eprintln!("\n\n{}\n    {}",
+                        "Run the following command below to add it permanently to your shell:".bright_blue(),
+                        "cpast --completions=fish > ~/.local/share/fish/generated_completions/cpast.fish".yellow()
+                    );
+                }
+                Shell::PowerShell => {
+                    eprintln!(
+                        "{}\n    {}",
+                        "Run the following command below to add it permanently to your shell:"
+                            .bright_blue(),
+                        "cpast --completions=powershell | Out-File -FilePath $PROFILE -Append"
+                            .yellow()
+                    );
+                }
+                // Figure it out yourself XD
+                _ => {}
+            }
+
             None
         } else {
             Some(opt)
