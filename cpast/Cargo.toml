@@ -20,8 +20,8 @@ tokio = { workspace = true, features = ["full"] }
 futures = { workspace = true }
 colored = { workspace = true }
 clap_complete = { workspace = true }
-clex_gen = { version = "^0.3.1", path = "../clex_gen" }
-ccode_runner = { version = "^0.3.1", path = "../ccode_runner" }
-clex_llm = { version = "^0.2.1", path = "../clex_llm" }
+clex_gen = { version = "^0.3.2", path = "../clex_gen" }
+ccode_runner = { version = "^0.3.2", path = "../ccode_runner" }
+clex_llm = { version = "^0.2.2", path = "../clex_llm" }
 thiserror = { workspace = true }
 

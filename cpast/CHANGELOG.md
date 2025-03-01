@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.9.2 (2025-03-01)
+
+### Chore
+
+ - <csr-id-f93b38cd00306356503de16b84202333ea3baee4/> update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation
+ - <csr-id-98decaeb5f61596e592b4c73236deec4c9979fcc/> update resolver to 3
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 5 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation ([`f93b38c`](https://github.com/rootCircle/cpast_mono/commit/f93b38cd00306356503de16b84202333ea3baee4))
+    - Update resolver to 3 ([`98decae`](https://github.com/rootCircle/cpast_mono/commit/98decaeb5f61596e592b4c73236deec4c9979fcc))
+</details>
+
 ## 0.9.1 (2025-02-24)
 
 ### Performance
@@ -14,7 +41,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -25,6 +52,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.1, clex_gen v0.3.1, cpast v0.9.1 ([`0ff6d5d`](https://github.com/rootCircle/cpast_mono/commit/0ff6d5d65fbd5c65dbf7edf1e82c5c87818c3308))
     - Revert to blocking api in std::process::Command due to perf degredation ([`5412a25`](https://github.com/rootCircle/cpast_mono/commit/5412a2598514f36495a853e177889e753bfbc01f))
     - Reduce mutations by segregating states making `generate_testcase` method functional, and removing the need of cloning in case of `cpast_cli`. ([`09e5ef1`](https://github.com/rootCircle/cpast_mono/commit/09e5ef1dad1dd6fed69463208870025298b1071c))
 </details>

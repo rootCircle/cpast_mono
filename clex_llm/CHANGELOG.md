@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.2.2 (2025-03-01)
+
+### Chore
+
+ - <csr-id-f93b38cd00306356503de16b84202333ea3baee4/> update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation
+
+### Documentation
+
+ - <csr-id-ea9fa36e4852bd8af718fe6abe6190be725ed292/> rust docs
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 6 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation ([`f93b38c`](https://github.com/rootCircle/cpast_mono/commit/f93b38cd00306356503de16b84202333ea3baee4))
+    - Rust docs ([`ea9fa36`](https://github.com/rootCircle/cpast_mono/commit/ea9fa36e4852bd8af718fe6abe6190be725ed292))
+</details>
+
 ## v0.2.1 (2025-02-23)
 
 ### Documentation
@@ -15,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -26,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_llm v0.2.1, cpast v0.8.1 ([`8bfc4c8`](https://github.com/rootCircle/cpast_mono/commit/8bfc4c8d37ea0ba4a495ef8f8eab7b955354c259))
     - Release clex_llm v0.2.0, cpast v0.8.0 ([`f9beff1`](https://github.com/rootCircle/cpast_mono/commit/f9beff1c3efe2ba5ec8347b7f0dbf71ddf66ef1b))
     - Add badges for clex_llm ([`5d48fdc`](https://github.com/rootCircle/cpast_mono/commit/5d48fdc64ef4d36aacfa3b24aa893bfc02ce6eb5))
 </details>
