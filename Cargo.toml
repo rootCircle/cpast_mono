@@ -89,4 +89,4 @@ utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-rapidoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-scalar = { version = "0.3.0", features = ["actix-web"] }
 uuid = { version = "1.15.1", features = ["v4", "serde", "v7"] }
-
+criterion = "0.5.1" 

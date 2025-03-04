@@ -22,8 +22,10 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 	prepare-check \
 	doc \
 	fmt \
+	bench \
 	clippy \
 	test \
+	nextest \
 	audit \
 	git.sync \
 	build \
@@ -79,6 +81,9 @@ fmt :
 clippy :
 	cargo clippy --all-features --all-targets -- -D warnings
 
+bench:
+	cargo bench --all
+
 # Run Rust tests of project.
 #
 # Usage :
@@ -86,6 +91,9 @@ clippy :
 
 test :
 	cargo test --all-features
+
+nextest:
+	cargo nextest run --all-features --all-targets
 
 # Usage
 # make migrate-run new_fancy_table
@@ -112,4 +120,4 @@ coverage:
 	cargo llvm-cov clean --workspace --html --output-dir=coverage
 	cargo llvm-cov --all-features --workspace --no-clean --html --output-dir=coverage --open
 	
-precommit : fmt clippy test prepare-check
+precommit : fmt clippy test prepare-check bench

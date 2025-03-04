@@ -25,3 +25,9 @@ ccode_runner = { version = "^0.3.2", path = "../ccode_runner" }
 clex_llm = { version = "^0.2.2", path = "../clex_llm" }
 thiserror = { workspace = true }
 
+[dev-dependencies]
+criterion = { workspace = true } 
+
+[[bench]]
+name = "generate"
+harness = false
