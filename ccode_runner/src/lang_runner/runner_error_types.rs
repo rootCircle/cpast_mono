@@ -28,6 +28,11 @@ pub enum RunnerErrorType {
     /// The associated `PathBuf` contains the path to the file with no extension.
     InvalidFileExtension(PathBuf),
 
+    /// Indicates that the provided file has an invalid name, may contain some non-parseable characters.
+    ///
+    /// The associated `PathBuf` contains the path to the invalid file.
+    InvalidFileName(PathBuf),
+
     /// Indicates that the provided file has an unsupported language extension.
     ///
     /// The associated `PathBuf` contains the path to the unsupported file.
@@ -83,6 +88,16 @@ pub enum RunnerErrorType {
     ///
     /// The associated `PathBuf`, `LanguageName`, and `CompilationType` provide details about the missing destination path.
     EmptyDestinationPath(PathBuf, LanguageName, CompilationType),
+
+    /// Indicates that the temporary directory is empty. It is expected to contain the compiled code.
+    ///
+    /// The associated `PathBuf`, `LanguageName`, and `CompilationType` provide details about the empty temporary directory.
+    EmptyTempDir(PathBuf, LanguageName, CompilationType),
+
+    /// Indicates that the source file stem could not be extracted.
+    ///
+    /// The associated `PathBuf` contains the path to the source file.
+    SourceFileStemExtractionError(PathBuf),
 }
 
 impl fmt::Display for RunnerErrorType {
@@ -93,6 +108,9 @@ impl fmt::Display for RunnerErrorType {
                     "Cannot determine file extension for file: {}",
                     path_buf.display()
                 )
+            }
+            RunnerErrorType::InvalidFileName(path_buf) => {
+                format!("Invalid file name for file: {}", path_buf.display())
             }
             RunnerErrorType::UnsupportedLanguage(filepath) => format!(
                 "Cannot process file with unsupported language extension: {}",
@@ -125,6 +143,16 @@ impl fmt::Display for RunnerErrorType {
                 path_buf.display(),
                 lang,
                 compilation_type
+            ),
+            RunnerErrorType::EmptyTempDir(path_buf, lang, compilation_type) => format!(
+                "Temporary directory is empty for file: {}. Expected to contain the compiled code for language '{:?}' and compilation type '{:?}'",
+                path_buf.display(),
+                lang,
+                compilation_type
+            ),
+            RunnerErrorType::SourceFileStemExtractionError(path_buf) => format!(
+                "Error extracting source file stem for file: {}",
+                path_buf.display()
             ),
         };
 

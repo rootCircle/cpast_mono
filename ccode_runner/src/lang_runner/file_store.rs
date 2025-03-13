@@ -75,10 +75,7 @@ impl SourceCodeInfo {
     }
 
     pub(crate) fn get_dest_file_str(&self) -> Option<&str> {
-        match &self.dest_path {
-            Some(dest) => Some(dest.to_str().unwrap()),
-            None => None,
-        }
+        self.dest_path.as_ref().and_then(|dest| dest.to_str())
     }
 
     pub(crate) fn new_from_custom_dest(

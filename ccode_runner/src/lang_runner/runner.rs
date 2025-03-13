@@ -86,7 +86,13 @@ impl Language {
                     return Err(Box::new(RunnerErrorType::WarmupCompileFatal));
                 }
                 Ok(program_utils::run_program_with_input(
-                    self.code.get_dest_file_str().unwrap(),
+                    self.code
+                        .get_dest_file_str()
+                        .ok_or(RunnerErrorType::EmptyDestinationPath(
+                            self.code.source_path.to_path_buf(),
+                            self.code.language.clone(),
+                            self.code.compilation_type.clone(),
+                        ))?,
                     &vec![],
                     stdin_content,
                 )
@@ -109,10 +115,23 @@ impl Language {
                             self.code
                                 .temp_dir
                                 .as_ref()
-                                .unwrap()
+                                .ok_or(RunnerErrorType::EmptyTempDir(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?
                                 .to_str()
                                 .unwrap_or_default(),
-                            self.code.source_path.file_stem().unwrap().to_str().unwrap(),
+                            self.code
+                                .source_path
+                                .file_stem()
+                                .ok_or(RunnerErrorType::SourceFileStemExtractionError(
+                                    self.code.source_path.to_path_buf(),
+                                ))?
+                                .to_str()
+                                .ok_or(RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ))?,
                         ],
                         stdin_content,
                     )
@@ -153,84 +172,174 @@ impl Language {
             return Ok(());
         }
 
-        let file_path_str = self.code.source_path.to_str().unwrap();
-        let compilers = match self.code.language {
-            LanguageName::C => vec![
-                (
-                    "gcc",
-                    vec![
-                        "-o",
-                        dest_file.to_str().unwrap(),
-                        &self.code.source_path.to_str().unwrap(),
-                    ],
-                ),
-                (
-                    "clang",
-                    vec![
-                        "-o",
-                        dest_file.to_str().unwrap(),
-                        &self.code.source_path.to_str().unwrap(),
-                    ],
-                ),
-                (
-                    "zig",
-                    vec![
-                        "cc",
-                        "-o",
-                        dest_file.to_str().unwrap(),
-                        &self.code.source_path.to_str().unwrap(),
-                    ],
-                ),
-            ],
-            LanguageName::Cpp => vec![
-                (
-                    "g++",
-                    vec![
-                        "-o",
-                        dest_file.to_str().unwrap(),
-                        &self.code.source_path.to_str().unwrap(),
-                    ],
-                ),
-                (
-                    "clang++",
-                    vec![
-                        "-o",
-                        dest_file.to_str().unwrap(),
-                        &self.code.source_path.to_str().unwrap(),
-                    ],
-                ),
-                (
-                    "zig",
-                    vec![
-                        "c++",
-                        "-o",
-                        dest_file.to_str().unwrap(),
-                        &self.code.source_path.to_str().unwrap(),
-                    ],
-                ),
-            ],
-            LanguageName::Rust => vec![(
-                "rustc",
-                vec![
-                    "-o",
-                    dest_file.to_str().unwrap(),
-                    &self.code.source_path.to_str().unwrap(),
+        let file_path_str =
+            self.code
+                .source_path
+                .to_str()
+                .ok_or(RunnerErrorType::InvalidFileName(
+                    self.code.source_path.to_path_buf(),
+                ))?;
+        let compilers =
+            match self.code.language {
+                LanguageName::C => vec![
+                    (
+                        "gcc",
+                        vec![
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
+                    (
+                        "clang",
+                        vec![
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
+                    (
+                        "zig",
+                        vec![
+                            "cc",
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
                 ],
-            )],
-            LanguageName::Java => vec![(
-                "javac",
-                vec![
-                    "-d",
-                    self.code.temp_dir.as_ref().unwrap().to_str().unwrap(),
-                    file_path_str,
+                LanguageName::Cpp => vec![
+                    (
+                        "g++",
+                        vec![
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
+                    (
+                        "clang++",
+                        vec![
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
+                    (
+                        "zig",
+                        vec![
+                            "c++",
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
                 ],
-            )],
-            _ => {
-                return Err(RunnerErrorType::InvalidCompilationMapping(
-                    self.code.language.clone(),
-                ));
-            }
-        };
+                LanguageName::Rust => {
+                    vec![(
+                        "rustc",
+                        vec![
+                            "-o",
+                            dest_file
+                                .to_str()
+                                .ok_or(RunnerErrorType::EmptyDestinationPath(
+                                    self.code.source_path.to_path_buf(),
+                                    self.code.language.clone(),
+                                    self.code.compilation_type.clone(),
+                                ))?,
+                            &self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    )]
+                }
+                LanguageName::Java => vec![(
+                    "javac",
+                    vec![
+                        "-d",
+                        self.code
+                            .temp_dir
+                            .as_ref()
+                            .ok_or(RunnerErrorType::EmptyTempDir(
+                                self.code.source_path.to_path_buf(),
+                                self.code.language.clone(),
+                                self.code.compilation_type.clone(),
+                            ))?
+                            .to_str()
+                            .ok_or(RunnerErrorType::InvalidFileName(
+                                self.code.source_path.to_path_buf(),
+                            ))?,
+                        file_path_str,
+                    ],
+                )],
+                _ => {
+                    return Err(RunnerErrorType::InvalidCompilationMapping(
+                        self.code.language.clone(),
+                    ));
+                }
+            };
 
         for (compiler, args) in compilers {
             let std_out = program_utils::run_program(compiler, &args);
@@ -254,24 +363,60 @@ impl Language {
     }
 
     fn run_interpreted_language(&self, stdin_content: &str) -> Result<String, RunnerErrorType> {
-        let interpreters = match self.code.language {
-            LanguageName::Python => vec![
-                ("python3", vec![self.code.source_path.to_str().unwrap()]),
-                ("python", vec![self.code.source_path.to_str().unwrap()]),
-            ],
-            LanguageName::Ruby => vec![("ruby", vec![self.code.source_path.to_str().unwrap()])],
-            LanguageName::Javascript => vec![
-                ("node", vec![self.code.source_path.to_str().unwrap()]),
-                ("deno", vec!["run", self.code.source_path.to_str().unwrap()]),
-                ("bun", vec![self.code.source_path.to_str().unwrap()]),
-            ],
-            _ => {
-                return Err(RunnerErrorType::InvalidLanguageMapping(
-                    self.code.language.clone(),
-                    self.code.compilation_type.clone(),
-                ));
-            }
-        };
+        let interpreters =
+            match self.code.language {
+                LanguageName::Python => vec![
+                    (
+                        "python3",
+                        vec![self.code.source_path.to_str().ok_or(
+                            RunnerErrorType::InvalidFileName(self.code.source_path.to_path_buf()),
+                        )?],
+                    ),
+                    (
+                        "python",
+                        vec![self.code.source_path.to_str().ok_or(
+                            RunnerErrorType::InvalidFileName(self.code.source_path.to_path_buf()),
+                        )?],
+                    ),
+                ],
+                LanguageName::Ruby => vec![(
+                    "ruby",
+                    vec![self.code.source_path.to_str().ok_or(
+                        RunnerErrorType::InvalidFileName(self.code.source_path.to_path_buf()),
+                    )?],
+                )],
+                LanguageName::Javascript => vec![
+                    (
+                        "node",
+                        vec![self.code.source_path.to_str().ok_or(
+                            RunnerErrorType::InvalidFileName(self.code.source_path.to_path_buf()),
+                        )?],
+                    ),
+                    (
+                        "deno",
+                        vec![
+                            "run",
+                            self.code.source_path.to_str().ok_or(
+                                RunnerErrorType::InvalidFileName(
+                                    self.code.source_path.to_path_buf(),
+                                ),
+                            )?,
+                        ],
+                    ),
+                    (
+                        "bun",
+                        vec![self.code.source_path.to_str().ok_or(
+                            RunnerErrorType::InvalidFileName(self.code.source_path.to_path_buf()),
+                        )?],
+                    ),
+                ],
+                _ => {
+                    return Err(RunnerErrorType::InvalidLanguageMapping(
+                        self.code.language.clone(),
+                        self.code.compilation_type.clone(),
+                    ));
+                }
+            };
 
         for (interpreter, args) in interpreters {
             let std_out = program_utils::run_program_with_input(interpreter, &args, stdin_content);
@@ -282,7 +427,12 @@ impl Language {
                 Err(err) => {
                     eprintln!(
                         "[INTERPRETER WARNING] Failed to run {} code with {} with reason {}",
-                        self.code.source_path.to_str().unwrap(),
+                        self.code
+                            .source_path
+                            .to_str()
+                            .ok_or(RunnerErrorType::InvalidFileName(
+                                self.code.source_path.to_path_buf(),
+                            ))?,
                         interpreter,
                         err
                     );
