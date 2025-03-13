@@ -124,7 +124,7 @@ pub(super) fn get_programming_language_name(file_path: &Path) -> Option<Language
 
 impl LanguageName {
     /// Gets the default file extension for this programming language.
-    pub fn file_extension(&self) -> &'static str {
+    pub(crate) fn file_extension(&self) -> &'static str {
         match self {
             LanguageName::Rust => "rs",
             LanguageName::Python => "py",

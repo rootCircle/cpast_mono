@@ -24,7 +24,7 @@ pub(crate) struct SourceCodeInfo {
 }
 
 impl SourceCodeInfo {
-    pub fn new(source_file: &Path) -> Result<Self, Box<RunnerErrorType>> {
+    pub(crate) fn new(source_file: &Path) -> Result<Self, Box<RunnerErrorType>> {
         if !Self::exists(source_file) {
             return Err(Box::new(RunnerErrorType::FileNotFound(
                 source_file.to_path_buf(),
@@ -74,15 +74,14 @@ impl SourceCodeInfo {
         })
     }
 
-    pub fn get_dest_file_str(&self) -> Option<&str> {
+    pub(crate) fn get_dest_file_str(&self) -> Option<&str> {
         match &self.dest_path {
             Some(dest) => Some(dest.to_str().unwrap()),
             None => None,
         }
     }
 
-    #[allow(dead_code)]
-    pub fn new_from_source_dest(
+    pub(crate) fn new_from_custom_dest(
         source_file: &Path,
         dest_file: Option<&Path>,
     ) -> Result<Self, Box<RunnerErrorType>> {
@@ -121,8 +120,7 @@ impl SourceCodeInfo {
         })
     }
 
-    #[allow(dead_code)]
-    pub fn new_from_text(
+    pub(crate) fn new_from_text(
         source_text: &str,
         lang: LanguageName,
     ) -> Result<Self, Box<RunnerErrorType>> {

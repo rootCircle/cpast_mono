@@ -34,6 +34,47 @@ impl Language {
         Ok(lang)
     }
 
+    pub(crate) fn new_from_custom_dest(
+        file_path: &Path,
+        dest_path: Option<&Path>,
+        do_force_compile: bool,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        let code = SourceCodeInfo::new_from_custom_dest(file_path, dest_path)?;
+
+        let mut lang = Self {
+            code,
+            is_compiled: false,
+            do_force_compile,
+        };
+
+        // One time compilation/intermediate generation before code is actually run for the first time
+        // For intreperted languages, no need to compile
+        // For bytecode compiled languages, compile to bytecode as it might require intermediate compilation (eg Java)
+        lang.compile_language()?;
+
+        Ok(lang)
+    }
+
+    pub(crate) fn new_from_text(
+        source_text: &str,
+        lang: LanguageName,
+        do_force_compile: bool,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        let code = SourceCodeInfo::new_from_text(source_text, lang)?;
+
+        let mut lang = Self {
+            code,
+            is_compiled: false,
+            do_force_compile,
+        };
+
+        // One time compilation/intermediate generation before code is actually run for the first time
+        // For intreperted languages, no need to compile
+        // For bytecode compiled languages, compile to bytecode as it might require intermediate compilation (eg Java)
+        lang.compile_language()?;
+        Ok(lang)
+    }
+
     /// Running single filed self executable program
     pub(crate) fn run_program_code(
         &self,

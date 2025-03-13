@@ -4,6 +4,7 @@ use crate::lang_runner::runner::Language;
 use crate::utils::file_utils;
 use std::path::Path;
 
+use super::language_name::LanguageName;
 use super::runner_error_types::RunnerErrorType;
 
 /// A structure that holds two language files for comparison.
@@ -34,6 +35,36 @@ impl ProgramStore {
         Ok(ProgramStore {
             correct_file: Language::new(correct_file, do_force_compile)?,
             test_file: Language::new(test_file, do_force_compile)?,
+        })
+    }
+
+    pub fn new_from_custom_dest(
+        correct_file: &Path,
+        test_file: &Path,
+        correct_dest: Option<&Path>,
+        test_dest: Option<&Path>,
+        do_force_compile: bool,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        Ok(ProgramStore {
+            correct_file: Language::new_from_custom_dest(
+                correct_file,
+                correct_dest,
+                do_force_compile,
+            )?,
+            test_file: Language::new_from_custom_dest(test_file, test_dest, do_force_compile)?,
+        })
+    }
+
+    pub fn new_from_text(
+        correct_text: &str,
+        test_text: &str,
+        correct_lang: LanguageName,
+        test_lang: LanguageName,
+        do_force_compile: bool,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        Ok(ProgramStore {
+            correct_file: Language::new_from_text(correct_text, correct_lang, do_force_compile)?,
+            test_file: Language::new_from_text(test_text, test_lang, do_force_compile)?,
         })
     }
 
