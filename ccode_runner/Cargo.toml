@@ -16,3 +16,4 @@ which = { workspace = true }
 serde = { features = ["derive"], workspace = true }
 utoipa = { workspace = true }
 tokio.workspace = true
+tempfile = { workspace = true}

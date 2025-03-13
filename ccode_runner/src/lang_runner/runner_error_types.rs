@@ -22,6 +22,12 @@ use super::language_name::{CompilationType, LanguageName};
 /// about the nature of the error encountered.
 #[derive(Debug)]
 pub enum RunnerErrorType {
+    /// Indicates that the provided file extension can't be determined.
+    /// Mostly because the file extension has no extension. This is very common in UNIX environments.
+    ///
+    /// The associated `PathBuf` contains the path to the file with no extension.
+    InvalidFileExtension(PathBuf),
+
     /// Indicates that the provided file has an unsupported language extension.
     ///
     /// The associated `PathBuf` contains the path to the unsupported file.
@@ -57,7 +63,7 @@ pub enum RunnerErrorType {
     /// Indicates that a warmup compilation was not completed before attempting
     /// to run the code.
     ///
-    /// This error suggests that the user should call `warmup_precompile()`
+    /// This error suggests that the user should call `compile_language()`
     /// before running the code.
     WarmupCompileFatal,
 
@@ -66,11 +72,28 @@ pub enum RunnerErrorType {
     /// The associated `Box<dyn Error + Send + Sync>` contains the underlying
     /// error that caused the runtime failure.
     ProgramRunError(Box<dyn Error + Send + Sync>),
+
+    /// Indicates an error occurred while creating a temporary file.
+    ///
+    /// The associated `Box<dyn Error + Send + Sync>` contains the underlying
+    /// error that occurred during file creation.
+    FileCreationError(Box<dyn Error + Send + Sync>),
+
+    /// Indicates that the destination path for the compiled code is None. It is expected to be Some(PathBuf).
+    ///
+    /// The associated `PathBuf`, `LanguageName`, and `CompilationType` provide details about the missing destination path.
+    EmptyDestinationPath(PathBuf, LanguageName, CompilationType),
 }
 
 impl fmt::Display for RunnerErrorType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let error_description = match self {
+            RunnerErrorType::InvalidFileExtension(path_buf) => {
+                format!(
+                    "Cannot determine file extension for file: {}",
+                    path_buf.display()
+                )
+            }
             RunnerErrorType::UnsupportedLanguage(filepath) => format!(
                 "Cannot process file with unsupported language extension: {}",
                 filepath.display()
@@ -93,9 +116,16 @@ impl fmt::Display for RunnerErrorType {
                 format!("{} file could not be found", filepath.display())
             }
             RunnerErrorType::WarmupCompileFatal => String::from(
-                "Fatal Error: Compilation environment not initialized. Call warmup_precompile() first",
+                "Fatal Error: Compilation environment not initialized. Call compile_language() first",
             ),
             RunnerErrorType::ProgramRunError(err) => format!("Runtime error occurred: {}", err),
+            RunnerErrorType::FileCreationError(err) => format!("Error creating tempfile: {}", err),
+            RunnerErrorType::EmptyDestinationPath(path_buf, lang, compilation_type) => format!(
+                "Destination path is None for file: {}. Expected Some(PathBuf) for language '{:?}' and compilation type '{:?}'",
+                path_buf.display(),
+                lang,
+                compilation_type
+            ),
         };
 
         write!(

@@ -36,6 +36,8 @@ use std::{fmt, path::Path};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
+use super::runner_error_types::RunnerErrorType;
+
 /// Enumeration of supported programming languages.
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema, PartialEq)]
 pub enum LanguageName {
@@ -92,17 +94,51 @@ pub enum CompilationType {
     BytecodeCompiled, // Java, compiled to bytecode, executed by JVM
 }
 
-pub(super) fn get_programming_language_name(file_path: &Path) -> Option<LanguageName> {
-    match file_path.extension().and_then(|ext| ext.to_str()) {
-        Some("rs") => Some(LanguageName::Rust),
-        Some("py") => Some(LanguageName::Python),
-        Some("c") => Some(LanguageName::C),
-        Some("cpp") | Some("cxx") | Some("c++") | Some("cc") | Some("C") => Some(LanguageName::Cpp),
-        Some("java") => Some(LanguageName::Java),
-        Some("js") => Some(LanguageName::Javascript),
-        Some("rb") => Some(LanguageName::Ruby),
-        _ => None,
+impl TryFrom<&Path> for LanguageName {
+    type Error = RunnerErrorType;
+
+    fn try_from(file_path: &Path) -> Result<Self, Self::Error> {
+        match file_path.extension().and_then(|ext| ext.to_str()) {
+            Some("rs") => Ok(LanguageName::Rust),
+            Some("py") => Ok(LanguageName::Python),
+            Some("c") => Ok(LanguageName::C),
+            Some("cpp") | Some("cxx") | Some("c++") | Some("cc") | Some("C") => {
+                Ok(LanguageName::Cpp)
+            }
+            Some("java") => Ok(LanguageName::Java),
+            Some("js") => Ok(LanguageName::Javascript),
+            Some("rb") => Ok(LanguageName::Ruby),
+            Some(_) => Err(RunnerErrorType::UnsupportedLanguage(
+                file_path.to_path_buf(),
+            )),
+            None => Err(RunnerErrorType::InvalidFileExtension(
+                file_path.to_path_buf(),
+            )),
+        }
     }
+}
+
+pub(super) fn get_programming_language_name(file_path: &Path) -> Option<LanguageName> {
+    LanguageName::try_from(file_path).ok()
+}
+
+impl LanguageName {
+    /// Gets the default file extension for this programming language.
+    pub fn file_extension(&self) -> &'static str {
+        match self {
+            LanguageName::Rust => "rs",
+            LanguageName::Python => "py",
+            LanguageName::C => "c",
+            LanguageName::Cpp => "cpp",
+            LanguageName::Java => "java",
+            LanguageName::Javascript => "js",
+            LanguageName::Ruby => "rb",
+        }
+    }
+}
+
+pub(super) fn get_file_extension(lang_name: &LanguageName) -> &'static str {
+    lang_name.file_extension()
 }
 
 pub(super) fn get_language_compilation_type(lang_name: &LanguageName) -> CompilationType {

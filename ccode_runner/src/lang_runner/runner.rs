@@ -6,8 +6,6 @@ use super::file_store::SourceCodeInfo;
 use super::language_name::{CompilationType, LanguageName};
 use super::runner_error_types::RunnerErrorType;
 
-const DEFAULT_PROGRAM_NAME: &str = "program";
-
 #[derive(Debug)]
 pub(crate) struct Language {
     pub(crate) code: SourceCodeInfo,
@@ -28,27 +26,12 @@ impl Language {
             do_force_compile,
         };
 
-        lang.warmup_precompile()?;
+        // One time compilation/intermediate generation before code is actually run for the first time
+        // For intreperted languages, no need to compile
+        // For bytecode compiled languages, compile to bytecode as it might require intermediate compilation (eg Java)
+        lang.compile_language()?;
 
         Ok(lang)
-    }
-
-    /// One time compilation/intermediate generation before code is actually run for the first time
-    fn warmup_precompile(&mut self) -> Result<(), Box<RunnerErrorType>> {
-        match self.code.compilation_type {
-            CompilationType::Compiled => {
-                let compiled_path = self.compile_language()?;
-                self.code.register_dest_file(Path::new(&compiled_path))
-            }
-            // No pre-compilations needed in this case, so return an empty string to signify success
-            CompilationType::Interpreted => {}
-            // Might require converting to intermediate before running (eg java)
-            CompilationType::BytecodeCompiled => {
-                let compiled_path = self.compile_language()?;
-                self.code.register_dest_file(Path::new(&compiled_path))
-            }
-        };
-        Ok(())
     }
 
     /// Running single filed self executable program
@@ -62,7 +45,7 @@ impl Language {
                     return Err(Box::new(RunnerErrorType::WarmupCompileFatal));
                 }
                 Ok(program_utils::run_program_with_input(
-                    &format!("./{}", self.code.get_dest_file_str().unwrap()),
+                    self.code.get_dest_file_str().unwrap(),
                     &vec![],
                     stdin_content,
                 )
@@ -76,29 +59,23 @@ impl Language {
                 if !self.is_compiled {
                     return Err(Box::new(RunnerErrorType::WarmupCompileFatal));
                 }
+
                 match self.code.language {
-                    LanguageName::Java => match self.code.source_path.parent() {
-                        Some(file_parent) => Ok(program_utils::run_program_with_input(
-                            "java",
-                            &vec![
-                                "-cp",
-                                file_parent.to_str().unwrap_or_default(),
-                                self.code.get_dest_file_str().unwrap(),
-                            ],
-                            stdin_content,
-                        )
-                        .map_err(|err| {
-                            Box::new(RunnerErrorType::ProgramRunError(Box::new(err)))
-                        })?),
-                        None => Ok(program_utils::run_program_with_input(
-                            "java",
-                            &vec![self.code.get_dest_file_str().unwrap()],
-                            stdin_content,
-                        )
-                        .map_err(|err| {
-                            Box::new(RunnerErrorType::ProgramRunError(Box::new(err)))
-                        })?),
-                    },
+                    LanguageName::Java => Ok(program_utils::run_program_with_input(
+                        "java",
+                        &vec![
+                            "-cp",
+                            self.code
+                                .temp_dir
+                                .as_ref()
+                                .unwrap()
+                                .to_str()
+                                .unwrap_or_default(),
+                            self.code.source_path.file_stem().unwrap().to_str().unwrap(),
+                        ],
+                        stdin_content,
+                    )
+                    .map_err(|err| Box::new(RunnerErrorType::ProgramRunError(Box::new(err))))?),
                     _ => Err(Box::new(RunnerErrorType::InvalidLanguageMapping(
                         self.code.language.clone(),
                         self.code.compilation_type.clone(),
@@ -108,22 +85,31 @@ impl Language {
         }
     }
 
-    fn compile_language(&mut self) -> Result<String, RunnerErrorType> {
-        let program_name_stem = self
-            .code
-            .source_path
-            .file_stem()
-            .and_then(|stem| stem.to_str())
-            .unwrap_or(DEFAULT_PROGRAM_NAME);
+    fn compile_language(&mut self) -> Result<(), RunnerErrorType> {
+        if self.code.compilation_type != CompilationType::Compiled
+            && self.code.compilation_type != CompilationType::BytecodeCompiled
+        {
+            return Ok(()); // No compilation needed
+        }
+
+        let dest_file = match &self.code.dest_path {
+            Some(dest_path) => dest_path,
+            None => {
+                return Err(RunnerErrorType::EmptyDestinationPath(
+                    self.code.source_path.to_path_buf(),
+                    self.code.language.clone(),
+                    self.code.compilation_type.clone(),
+                ));
+            }
+        };
 
         // Checking if the file is already compiled/doesn't need recompilation
         if self.is_compiled
             || (!self.do_force_compile
-                && !remake(&self.code.source_path, &PathBuf::from(program_name_stem))
-                    .unwrap_or(true))
+                && !remake(&self.code.source_path, &PathBuf::from(dest_file)).unwrap_or(true))
         {
             self.is_compiled = true; // Helps a lot in saving time, checking for need for compilations
-            return Ok(program_name_stem.to_string());
+            return Ok(());
         }
 
         let file_path_str = self.code.source_path.to_str().unwrap();
@@ -133,7 +119,7 @@ impl Language {
                     "gcc",
                     vec![
                         "-o",
-                        program_name_stem,
+                        dest_file.to_str().unwrap(),
                         &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
@@ -141,7 +127,7 @@ impl Language {
                     "clang",
                     vec![
                         "-o",
-                        program_name_stem,
+                        dest_file.to_str().unwrap(),
                         &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
@@ -150,7 +136,7 @@ impl Language {
                     vec![
                         "cc",
                         "-o",
-                        program_name_stem,
+                        dest_file.to_str().unwrap(),
                         &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
@@ -160,7 +146,7 @@ impl Language {
                     "g++",
                     vec![
                         "-o",
-                        program_name_stem,
+                        dest_file.to_str().unwrap(),
                         &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
@@ -168,7 +154,7 @@ impl Language {
                     "clang++",
                     vec![
                         "-o",
-                        program_name_stem,
+                        dest_file.to_str().unwrap(),
                         &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
@@ -177,7 +163,7 @@ impl Language {
                     vec![
                         "c++",
                         "-o",
-                        program_name_stem,
+                        dest_file.to_str().unwrap(),
                         &self.code.source_path.to_str().unwrap(),
                     ],
                 ),
@@ -186,11 +172,18 @@ impl Language {
                 "rustc",
                 vec![
                     "-o",
-                    program_name_stem,
+                    dest_file.to_str().unwrap(),
                     &self.code.source_path.to_str().unwrap(),
                 ],
             )],
-            LanguageName::Java => vec![("javac", vec![file_path_str])],
+            LanguageName::Java => vec![(
+                "javac",
+                vec![
+                    "-d",
+                    self.code.temp_dir.as_ref().unwrap().to_str().unwrap(),
+                    file_path_str,
+                ],
+            )],
             _ => {
                 return Err(RunnerErrorType::InvalidCompilationMapping(
                     self.code.language.clone(),
@@ -203,12 +196,12 @@ impl Language {
             match std_out {
                 Ok(_) => {
                     self.is_compiled = true;
-                    return Ok(program_name_stem.to_string());
+                    return Ok(());
                 }
                 Err(err) => {
                     eprintln!(
-                        "[RUNNER WARNING] Failed to compile {} code with {} with reason {}",
-                        program_name_stem, compiler, err
+                        "[RUNNER WARNING] Failed to compile {:?} code with {} with reason {}",
+                        dest_file, compiler, err
                     );
                 }
             }
