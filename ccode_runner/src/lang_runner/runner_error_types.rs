@@ -98,6 +98,11 @@ pub enum RunnerErrorType {
     ///
     /// The associated `PathBuf` contains the path to the source file.
     SourceFileStemExtractionError(PathBuf),
+
+    /// Indicates that a Java file does not contain a public class.
+    ///
+    /// The associated `String` contains the content of the Java file.
+    JavaNoPublicClassFound(String),
 }
 
 impl fmt::Display for RunnerErrorType {
@@ -154,6 +159,9 @@ impl fmt::Display for RunnerErrorType {
                 "Error extracting source file stem for file: {}",
                 path_buf.display()
             ),
+            RunnerErrorType::JavaNoPublicClassFound(content) => {
+                format!("No public class found in Java file: {}", content)
+            }
         };
 
         write!(

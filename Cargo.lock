@@ -632,6 +632,8 @@ dependencies = [
 name = "ccode_runner"
 version = "0.3.2"
 dependencies = [
+ "rand 0.8.5",
+ "regex",
  "serde",
  "tempfile",
  "tokio",

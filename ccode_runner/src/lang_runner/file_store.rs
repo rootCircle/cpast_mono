@@ -3,6 +3,8 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use tempfile::Builder;
 
+use crate::utils::java_classname::get_java_public_classname_from_text;
+
 use super::language_name::get_file_extension;
 use super::{
     language_name::{
@@ -108,6 +110,7 @@ impl SourceCodeInfo {
                 temp_dir: None,
             });
         }
+
         Ok(SourceCodeInfo {
             source_path: source_file.to_path_buf(),
             dest_path: dest_file.map(|dest| dest.to_path_buf()),
@@ -129,21 +132,39 @@ impl SourceCodeInfo {
             .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
 
         let file_extension = get_file_extension(&lang);
+        let source_file_stem = if lang == LanguageName::Java {
+            // Java has some strict requirements around filenaming
+            get_java_public_classname_from_text(source_text).ok_or(Box::new(
+                RunnerErrorType::JavaNoPublicClassFound(source_text.to_owned()),
+            ))?
+        } else {
+            format!("source_{}", rand::random::<u16>())
+        };
 
-        let source_file = Builder::new()
-            .prefix("source_")
-            .suffix(&format!(".{}", file_extension))
-            .tempfile_in(&temp_dir)
-            .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
-        let source_path = source_file.path().to_path_buf();
+        let source_file_path = temp_dir
+            .path()
+            .join(format!("{}.{}", source_file_stem, file_extension));
 
-        let mut file = File::create(&source_path)
-            .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
-        file.write_all(source_text.as_bytes())
+        let mut source_file_handle = File::create(&source_file_path)
             .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
 
+        source_file_handle
+            .write_all(source_text.as_bytes())
+            .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
+        source_file_handle
+            .flush()
+            .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
+
+        let source_path = source_file_path.to_path_buf();
         let dest_path = if compilation_type == CompilationType::Compiled {
             Some(temp_dir.path().join("executable"))
+        } else if compilation_type == CompilationType::BytecodeCompiled {
+            let program_name_stem = source_file_path
+                .file_stem()
+                .and_then(|stem| stem.to_str())
+                .unwrap_or(DEFAULT_PROGRAM_NAME);
+            let dest_path = temp_dir.path().join(program_name_stem);
+            Some(dest_path)
         } else {
             None
         };
