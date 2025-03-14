@@ -68,6 +68,19 @@ impl TestApp {
             .await
             .expect("Failed to execute request.")
     }
+
+    pub async fn post_evaluate_with_shared_id<Body>(&self, body: &Body) -> reqwest::Response
+    where
+        Body: serde::Serialize,
+    {
+        self.api_client
+            .post(format!("{}/api/v1/evaluate/with_shared_id", &self.address))
+            .header("Content-Type", "application/json")
+            .json(body)
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
 }
 
 pub async fn spawn_app() -> TestApp {
