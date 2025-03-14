@@ -1139,6 +1139,7 @@ dependencies = [
 name = "cscrapper"
 version = "0.1.0"
 dependencies = [
+ "regex",
  "reqwest 0.12.12",
  "scraper",
  "serde",

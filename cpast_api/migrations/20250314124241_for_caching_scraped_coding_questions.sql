@@ -2,9 +2,9 @@
 CREATE TABLE scrape_cache (
     id SERIAL PRIMARY KEY,
     question_url TEXT NOT NULL UNIQUE,
-    input_format TEXT,
-    constraints TEXT,
-    statement TEXT,
+    input_format TEXT NOT NULL,
+    constraints TEXT NOT NULL,
+    statement TEXT NOT NULL,
     scraped_at TIMESTAMPTZ DEFAULT NOW(),
     ttl INTERVAL DEFAULT INTERVAL '7 days'
 );

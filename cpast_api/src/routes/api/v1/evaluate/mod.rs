@@ -57,6 +57,9 @@ pub enum EvaluateAPIError {
     #[error(transparent)]
     APIClexErrorType(#[from] clex_language::clex_error_type::ClexErrorType),
 
+    #[error(transparent)]
+    ScrapperError(#[from] cscrapper::qscrapper::ScraperError),
+
     #[error("{0}")]
     DirtyLanguageInDatabase(String),
 
@@ -77,6 +80,9 @@ pub enum EvaluateAPIError {
 
     #[error("Invalid input format or constraints provided")]
     InvalidInputFormatOrConstraints,
+
+    #[error("Invalid problem URL")]
+    InvalidProblemURL,
 
     #[error("{0}")]
     ClexGenerationError(String),
@@ -100,6 +106,8 @@ impl ResponseError for EvaluateAPIError {
             EvaluateAPIError::ClexLLMError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::ClexGenerationError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::InvalidInputFormatOrConstraints => StatusCode::BAD_REQUEST,
+            EvaluateAPIError::InvalidProblemURL => StatusCode::BAD_REQUEST,
+            EvaluateAPIError::ScrapperError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 }

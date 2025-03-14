@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO scrape_cache (question_url, input_format, constraints, statement)\n        VALUES ($1, $2, $3, $4)\n        ON CONFLICT (question_url) DO UPDATE \n        SET input_format = $2, constraints = $3, statement = $4, scraped_at = NOW();\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "454dc4b50939313b9a27bb1248214a34741274d072981c164d37b7efabb7851a"
+}
