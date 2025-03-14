@@ -40,7 +40,7 @@ cd cpast_mono/clex_llm
 To use `clex_llm`, you need to set up your Google Generative AI API key and run the tests:
 
 ```bash
-GEMINI_API_KEY="<api-key>" cargo test
+GOOGLE_API_KEY="<api-key>" cargo test
 ```
 
 ###

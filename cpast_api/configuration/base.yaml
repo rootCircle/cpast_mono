@@ -1,19 +1,19 @@
 application:
-  port: 8000
+  hmac_secret: super-long-and-secret-random-key-needed-to-verify-message-integrity
   host: 0.0.0.0
-  hmac_secret: "super-long-and-secret-random-key-needed-to-verify-message-integrity"
+  port: 8000
 database:
-  host: "127.0.0.1"
+  database_name: newsletter
+  host: 127.0.0.1
+  password: password
   port: 5432
-  username: "postgres"
-  password: "password"
-  database_name: "newsletter"
   require_ssl: false
+  username: postgres
 email_client:
-  base_url: "localhost"
-  sender_email: "test@gmail.com"
-  authorization_token: "my-secret-token"
+  authorization_token: my-secret-token
+  base_url: localhost
+  sender_email: test@gmail.com
   timeout_milliseconds: 10000
 llm:
-  api_key: "my-secret-key"
-redis_uri: "redis://127.0.0.1:6379"
+  api_key: my-secret-key
+redis_uri: redis://127.0.0.1:6379

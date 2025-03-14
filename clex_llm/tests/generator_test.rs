@@ -3,10 +3,10 @@ use std::env;
 
 #[tokio::test]
 async fn test_generate_clex_expression() {
-    let api_key = env::var("GEMINI_API_KEY").ok();
+    let api_key = env::var("GOOGLE_API_KEY").ok();
 
     if api_key.is_none() {
-        eprintln!("Skipping test_generate_clex_expression: GEMINI_API_KEY not set");
+        eprintln!("Skipping test_generate_clex_expression: GOOGLE_API_KEY not set");
         return;
     }
 
@@ -33,10 +33,10 @@ async fn test_generate_clex_expression() {
 
 #[tokio::test]
 async fn test_array_sum_generation() {
-    let api_key = env::var("GEMINI_API_KEY").ok();
+    let api_key = env::var("GOOGLE_API_KEY").ok();
 
     if api_key.is_none() {
-        eprintln!("Skipping test_array_sum_generation: GEMINI_API_KEY not set");
+        eprintln!("Skipping test_array_sum_generation: GOOGLE_API_KEY not set");
         return;
     }
 
@@ -63,10 +63,10 @@ async fn test_array_sum_generation() {
 
 #[tokio::test]
 async fn test_string_pattern_generation() {
-    let api_key = env::var("GEMINI_API_KEY").ok();
+    let api_key = env::var("GOOGLE_API_KEY").ok();
 
     if api_key.is_none() {
-        eprintln!("Skipping test_string_pattern_generation: GEMINI_API_KEY not set");
+        eprintln!("Skipping test_string_pattern_generation: GOOGLE_API_KEY not set");
         return;
     }
 
@@ -93,10 +93,10 @@ async fn test_string_pattern_generation() {
 
 #[tokio::test]
 async fn test_matrix_generation() {
-    let api_key = env::var("GEMINI_API_KEY").ok();
+    let api_key = env::var("GOOGLE_API_KEY").ok();
 
     if api_key.is_none() {
-        eprintln!("Skipping test_matrix_generation: GEMINI_API_KEY not set");
+        eprintln!("Skipping test_matrix_generation: GOOGLE_API_KEY not set");
         return;
     }
 

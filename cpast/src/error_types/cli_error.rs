@@ -15,8 +15,8 @@ impl fmt::Display for CliErrorType {
         let error_description = match self {
             CliErrorType::GeminiAPIKeyMissing => {
                 "Gemini API key is missing. \
-                Please set the environment variable 'GEMINI_API_KEY' with the API key.\n\n\
-                export GEMINI_API_KEY='<api key here>';\n\n\
+                Please set the environment variable 'GOOGLE_API_KEY' with the API key.\n\n\
+                export GOOGLE_API_KEY='<api key here>';\n\n\
                 Get API key from https://makersuite.google.com/app/apikey".to_string()
             },
             CliErrorType::ClexLLMInitilizationError(err) =>

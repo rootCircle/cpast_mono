@@ -11,7 +11,7 @@ use crate::{cli::cli_parser::AiArgs, error_types::cli_error::CliErrorType};
 pub(crate) async fn generate_clex_from_input_format_and_constraints(
     args: AiArgs,
 ) -> Result<(), Box<CliErrorType>> {
-    let api_key = std::env::var("GEMINI_API_KEY").ok();
+    let api_key = std::env::var("GOOGLE_API_KEY").ok();
 
     match api_key {
         Some(api_key) => {

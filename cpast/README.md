@@ -91,7 +91,7 @@ cpast generate "S[10,10,@CH_UPPER@]"
 ### ai
 
 ```bash
-GEMINI_API_KEY="<gemini-api-key>" cpast ai --input-format="The first line contains an integer T (number of test cases). Each of the next T lines contains two integers N and M." --constraints="1 ≤ T ≤ 10\n1 ≤ N, M ≤ 10^5"
+GOOGLE_API_KEY="<gemini-api-key>" cpast ai --input-format="The first line contains an integer T (number of test cases). Each of the next T lines contains two integers N and M." --constraints="1 ≤ T ≤ 10\n1 ≤ N, M ≤ 10^5"
 ```
 
 * Generates clex using LLM from input format and constraints.
@@ -99,7 +99,7 @@ GEMINI_API_KEY="<gemini-api-key>" cpast ai --input-format="The first line contai
 * Alternatively, expose the API key from the shell configuration file like bashrc, zshrc etc using:
 
   ```bash
-  export GEMINI_API_KEY='<api key here>';
+  export GOOGLE_API_KEY='<api key here>';
   ```
 
 ### Shell Completions
