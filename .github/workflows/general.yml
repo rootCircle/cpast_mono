@@ -68,6 +68,10 @@ jobs:
           GRANT_QUERY="ALTER USER ${APP_USER} CREATEDB;"
           PGPASSWORD="password" psql -U "postgres" -h "localhost" -c "${GRANT_QUERY}"
 
+      - name: Install compilers
+        run: |
+          sudo apt-get install build-essential default-jdk nodejs python3 python3-pip ruby 
+
       - name: Migrate database
         run: |
           SKIP_DOCKER=true ./cpast_api/scripts/init_db.sh
