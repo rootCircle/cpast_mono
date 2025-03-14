@@ -14,6 +14,7 @@ struct EvaluateCodeInputDiff {
 struct EvaluateCodeResponse {
     has_output_matched: bool,
     input_diffs: Vec<EvaluateCodeInputDiff>,
+    clex: String,
 }
 
 #[derive(Deserialize)]
@@ -49,6 +50,7 @@ async fn evaluate_with_shared_id_works() {
     let evaluation = response.json::<EvaluateCodeResponse>().await.unwrap();
     assert!(evaluation.has_output_matched);
     assert_eq!(evaluation.input_diffs.len(), 0);
+    assert_eq!(evaluation.clex, "N[1,10]");
 }
 
 #[tokio::test]
@@ -95,6 +97,7 @@ async fn evaluate_with_different_outputs() {
     assert!(!evaluation.input_diffs.is_empty());
     assert_eq!(evaluation.input_diffs[0].expected_output, "Hello\n");
     assert_eq!(evaluation.input_diffs[0].actual_output, "World\n");
+    assert_eq!(evaluation.clex, "N[1,10]");
 }
 
 #[tokio::test]

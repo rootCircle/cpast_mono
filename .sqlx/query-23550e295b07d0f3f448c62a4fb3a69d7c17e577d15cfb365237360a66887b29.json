@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO llm_cache (input_hash, input_format, constraints, clex)\n        VALUES ($1, $2, $3, $4)\n        ON CONFLICT (input_hash) DO UPDATE SET clex = $2;\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "23550e295b07d0f3f448c62a4fb3a69d7c17e577d15cfb365237360a66887b29"
+}

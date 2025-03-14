@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT clex\n        FROM llm_cache\n        WHERE input_hash = $1 \n        AND created_at + ttl > NOW()\n        LIMIT 1;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "clex",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "b433f4077acfe5763fe6dc4ebb3c62c89fb8f986cf37c7fa7f06bdb95b52cde3"
+}

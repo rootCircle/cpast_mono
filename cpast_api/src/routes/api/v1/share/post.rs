@@ -40,20 +40,21 @@ pub async fn post_share_code(
     pool: web::Data<PgPool>,
     code_request: Json<SharePostRequest>,
 ) -> Result<HttpResponse, ShareError> {
-    let transaction = pool.begin().await.context("Failed to start transaction")?;
     verify_clex(&code_request.clex)?;
-
-    let share_id = push_code(transaction, code_request.0)
+    let share_id = push_code(&pool, code_request.0)
         .await
         .context("Failed to generate share code")?;
     Ok(HttpResponse::Ok().json(SharePostResponse { share_id }))
 }
 
-#[tracing::instrument(name = "Push code", skip(transaction, code_request))]
+#[tracing::instrument(name = "Push code", skip(pool, code_request))]
 pub(crate) async fn push_code(
-    mut transaction: Transaction<'_, Postgres>,
+    pool: &PgPool,
     code_request: SharePostRequest,
 ) -> Result<String, anyhow::Error> {
+    let mut transaction: Transaction<'_, Postgres> =
+        pool.begin().await.context("Failed to start transaction")?;
+
     let context = ContextV7::new();
     let share_id = Uuid::new_v7(Timestamp::now(&context)).to_string();
     let query = sqlx::query!(

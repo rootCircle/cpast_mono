@@ -42,7 +42,10 @@ pub async fn get_share_code(
     }
     let code_details_build = get_code_from_share_id(&pool, &share_id)
         .await
-        .map_err(|err| ShareError::ShareIdNotFound(err.to_string()))?;
+        .map_err(|err| ShareError::ShareIdNotFound(err.to_string()))?
+        .ok_or(ShareError::ShareIdNotFound(
+            "Share ID not found".to_string(),
+        ))?;
     Ok(HttpResponse::Ok().json(code_details_build))
 }
 
@@ -50,27 +53,31 @@ pub async fn get_share_code(
 pub(crate) async fn get_code_from_share_id(
     pool: &PgPool,
     share_id: &str,
-) -> Result<ShareGetResponse, anyhow::Error> {
+) -> Result<Option<ShareGetResponse>, anyhow::Error> {
     let query = sqlx::query!(
         r#"
         SELECT code, code_language AS "language", clex
         FROM shared_code
         WHERE share_id = $1
+        LIMIT 1;
         "#,
         share_id,
     );
 
     let code_details = query
-        .fetch_one(pool)
+        .fetch_optional(pool)
         .await
         .context("Failed to fetch code details")?;
 
-    Ok(ShareGetResponse {
-        code: code_details.code,
-        language: code_details
-            .language
-            .try_into()
-            .map_err(ShareError::DirtyLanguageInDatabase)?,
-        clex: code_details.clex,
+    Ok(match code_details {
+        Some(details) => Some(ShareGetResponse {
+            code: details.code,
+            language: details
+                .language
+                .try_into()
+                .map_err(ShareError::DirtyLanguageInDatabase)?,
+            clex: details.clex,
+        }),
+        None => None,
     })
 }

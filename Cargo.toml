@@ -44,6 +44,7 @@ config = { version = "0.15.8", default-features = false, features = ["yaml"] }
 fake = "3.1.0"
 futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
+hex = "0.4.3"
 log = "0.4.25"
 linkify = "0.10"
 quickcheck = "1.0.3"
@@ -62,6 +63,7 @@ serde_json = "1.0.139"
 serde_urlencoded = "0.7.1"
 secrecy = { version = "0.10.3", features = ["serde"] }
 serenity = { version = "0.12.4", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+sha2 = "0.10.8"
 shuttle-runtime = "0.52.0"
 shuttle-serenity = "0.52.0"
 sqlx = { version = "0.8.3", default-features = false, features = [

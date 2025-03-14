@@ -57,7 +57,10 @@ pub async fn post_with_shared_id(
     }
     let correct_code_in_shared_db = get_code_from_share_id(&pool, &code_request.share_id)
         .await
-        .map_err(|err| EvaluateAPIError::ShareIdNotFound(err.to_string()))?;
+        .map_err(|err| EvaluateAPIError::ShareIdNotFound(err.to_string()))?
+        .ok_or(EvaluateAPIError::ShareIdNotFound(
+            "Share ID not found".to_string(),
+        ))?;
 
     let response = run_and_compare(
         &correct_code_in_shared_db.code,
@@ -74,27 +77,31 @@ pub async fn post_with_shared_id(
 pub(crate) async fn get_code_from_share_id(
     pool: &PgPool,
     share_id: &str,
-) -> Result<ShareGetResponse, anyhow::Error> {
+) -> Result<Option<ShareGetResponse>, anyhow::Error> {
     let query = sqlx::query!(
         r#"
         SELECT code, code_language AS "language", clex
         FROM shared_code
         WHERE share_id = $1
+        LIMIT 1;
         "#,
         share_id,
     );
 
     let code_details = query
-        .fetch_one(pool)
+        .fetch_optional(pool)
         .await
         .context("Failed to fetch code details")?;
 
-    Ok(ShareGetResponse {
-        code: code_details.code,
-        language: code_details
-            .language
-            .try_into()
-            .map_err(EvaluateAPIError::DirtyLanguageInDatabase)?,
-        clex: code_details.clex,
+    Ok(match code_details {
+        Some(details) => Some(ShareGetResponse {
+            code: details.code,
+            language: details
+                .language
+                .try_into()
+                .map_err(EvaluateAPIError::DirtyLanguageInDatabase)?,
+            clex: details.clex,
+        }),
+        None => None,
     })
 }

@@ -140,4 +140,3 @@ architecture-beta
     code_runner:R -- L:family_of_compilers
     code_runner:T -- B:redis
 ```
-

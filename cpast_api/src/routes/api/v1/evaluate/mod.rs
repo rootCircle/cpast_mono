@@ -5,6 +5,7 @@ use ccode_runner::lang_runner::{
 };
 use clex_gen::clex_language::{self, code_generator::Generator, lexer};
 use serde::Serialize;
+use sha2::{Digest, Sha256};
 use utoipa::{OpenApi, ToSchema};
 
 pub(crate) mod with_code_and_clex;
@@ -46,6 +47,9 @@ struct EvaluateCodeResponse {
         actual_output: "Hello, worldd!".to_string(),
     }])))]
     input_diffs: Vec<EvaluateCodeInputDiff>,
+
+    #[schema(example = "N[1,1000]")]
+    clex: String,
 }
 
 #[derive(thiserror::Error)]
@@ -67,6 +71,15 @@ pub enum EvaluateAPIError {
 
     #[error(transparent)]
     UnexpectedError(#[from] anyhow::Error),
+
+    #[error("{0}")]
+    ClexLLMError(String),
+
+    #[error("Invalid input format or constraints provided")]
+    InvalidInputFormatOrConstraints,
+
+    #[error("{0}")]
+    ClexGenerationError(String),
 }
 
 impl std::fmt::Debug for EvaluateAPIError {
@@ -84,6 +97,9 @@ impl ResponseError for EvaluateAPIError {
             EvaluateAPIError::ShareIdNotFound(_) => StatusCode::NOT_FOUND,
             EvaluateAPIError::UnexpectedError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::APIRunnerErrorType(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            EvaluateAPIError::ClexLLMError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            EvaluateAPIError::ClexGenerationError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            EvaluateAPIError::InvalidInputFormatOrConstraints => StatusCode::BAD_REQUEST,
         }
     }
 }
@@ -135,6 +151,7 @@ fn run_and_compare(
     let mut response = EvaluateCodeResponse {
         has_output_matched: true,
         input_diffs: Vec::new(),
+        clex: clex_language.to_string(),
     };
 
     for _ in 0..10 {
@@ -155,4 +172,20 @@ fn run_and_compare(
     }
 
     Ok(response)
+}
+
+fn hash_input_format_and_constraints(input_format: &str, constraints: &str) -> String {
+    // To avoid duplicates we trim and lowercase all of them
+    // This may be a problem for future me, but I am yet not that future me!
+    // Can cause collisions, but profits are good!
+    let mut input_constraint = input_format.trim().to_ascii_lowercase();
+    input_constraint.push_str(&constraints.trim().to_ascii_lowercase());
+
+    let mut hasher = Sha256::new();
+
+    hasher.update(input_constraint);
+
+    let result = hasher.finalize();
+
+    hex::encode(result)
 }
