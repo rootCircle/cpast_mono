@@ -31,7 +31,7 @@ strip = true  # Automatically strip symbols from the binary.
 actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
 actix-web = "4.9.0"
 actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
-anyhow = "1.0.96"
+anyhow = "1.0.97"
 argon2 = { version = "0.5.3", features = ["std"] }
 base64 = "0.22.1"
 chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
