@@ -1145,6 +1145,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.11",
+ "tokio",
 ]
 
 [[package]]
@@ -3374,7 +3375,6 @@ dependencies = [
  "bytes",
  "cookie 0.18.1",
  "cookie_store",
- "futures-channel",
  "futures-core",
  "futures-util",
  "http 1.2.0",

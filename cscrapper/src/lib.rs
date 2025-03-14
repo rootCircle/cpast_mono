@@ -17,15 +17,18 @@ pub enum CodePlatform<'a> {
     CodeForces(&'a str, &'a str),
 }
 
-pub fn get_problem_statement(platform: CodePlatform) -> Result<ScrapeAPIResponse, ScraperError> {
+#[allow(clippy::needless_lifetimes)]
+pub async fn get_problem_statement<'a>(
+    platform: CodePlatform<'a>,
+) -> Result<ScrapeAPIResponse, ScraperError> {
     match platform {
         CodePlatform::CodeChef(_) => {
             let scraper = CodeChef::new();
-            scraper.get_problems_by_code(&platform)
+            scraper.get_problems_by_code(&platform).await
         }
         CodePlatform::CodeForces(_, _) => {
             let scraper = CodeForces::new();
-            scraper.get_problems_by_code(&platform)
+            scraper.get_problems_by_code(&platform).await
         }
     }
 }

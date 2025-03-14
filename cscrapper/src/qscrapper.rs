@@ -24,5 +24,8 @@ pub enum ScraperError {
 }
 
 pub trait ProblemScraper {
-    fn get_problems_by_code(&self, code: &CodePlatform) -> Result<ScrapeAPIResponse, ScraperError>;
+    fn get_problems_by_code(
+        &self,
+        platform: &CodePlatform,
+    ) -> impl std::future::Future<Output = Result<ScrapeAPIResponse, ScraperError>> + Send;
 }

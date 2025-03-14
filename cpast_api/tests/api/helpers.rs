@@ -24,7 +24,7 @@ static TRACING: LazyLock<()> = LazyLock::new(|| {
 
 pub struct TestApp {
     pub address: String,
-    #[allow(dead_code)]
+    #[allow(unused)]
     pub port: u16,
     pub db_pool: PgPool,
     pub test_user: TestUser,
@@ -92,6 +92,22 @@ impl TestApp {
         self.api_client
             .post(format!(
                 "{}/api/v1/evaluate/with_code_and_constraint",
+                &self.address
+            ))
+            .header("Content-Type", "application/json")
+            .json(body)
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn post_evaluate_with_code_and_platform<Body>(&self, body: &Body) -> reqwest::Response
+    where
+        Body: serde::Serialize,
+    {
+        self.api_client
+            .post(format!(
+                "{}/api/v1/evaluate/with_code_and_platform",
                 &self.address
             ))
             .header("Content-Type", "application/json")
@@ -214,10 +230,4 @@ impl TestUser {
         .await
         .expect("Failed to store test user.");
     }
-}
-
-#[allow(dead_code)]
-pub fn assert_is_redirect_to(response: &reqwest::Response, location: &str) {
-    assert_eq!(response.status().as_u16(), 303);
-    assert_eq!(response.headers().get("Location").unwrap(), location);
 }

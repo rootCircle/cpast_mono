@@ -30,9 +30,10 @@ Here’s a complete example demonstrating how to use the `cscrapper` module:
 ```rust
 use cscrapper::{get_problem_statement, CodePlatform};
 
-fn main() {
+#[tokio::main]
+async fn main() {
     // Fetch a problem statement from CodeChef
-    let result = get_problem_statement(CodePlatform::CodeChef("NONNEGPROD"));
+    let result = get_problem_statement(CodePlatform::CodeChef("NONNEGPROD")).await;
     match result {
         Ok(response) => {
             println!("Statement: {}", response.statement);

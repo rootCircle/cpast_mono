@@ -2,9 +2,9 @@ use crate::helpers::spawn_app;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
-#[allow(dead_code)]
 #[derive(Deserialize)]
 struct EvaluateCodeInputDiff {
+    #[allow(unused)]
     input: String,
     expected_output: String,
     actual_output: String,

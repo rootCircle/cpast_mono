@@ -18,7 +18,7 @@ struct EvaluateCodeResponse {
 }
 
 #[tokio::test]
-async fn evaluate_with_code_and_clex_works() {
+async fn evaluate_with_code_and_platform_works() {
     let app = spawn_app().await;
 
     let req_body = serde_json::json!({
@@ -26,21 +26,21 @@ async fn evaluate_with_code_and_clex_works() {
         "correct_code_language": "Python",
         "test_code": "print('Hello')",
         "test_code_language": "Python",
-        "clex": "N[1,10]"
+        "problem_url": "https://www.codechef.com/problems/WAPEN"
     });
 
-    let response = app.post_evaluate_with_code_and_clex(&req_body).await;
+    let response = app.post_evaluate_with_code_and_platform(&req_body).await;
 
     assert_eq!(StatusCode::OK, response.status());
 
     let evaluation = response.json::<EvaluateCodeResponse>().await.unwrap();
     assert!(evaluation.has_output_matched);
     assert_eq!(evaluation.input_diffs.len(), 0);
-    assert_eq!(evaluation.clex, "N[1,10]");
+    assert!(!evaluation.clex.is_empty());
 }
 
 #[tokio::test]
-async fn evaluate_with_invalid_clex_returns_400() {
+async fn evaluate_with_invalid_url_returns_400() {
     let app = spawn_app().await;
 
     let req_body = serde_json::json!({
@@ -48,10 +48,10 @@ async fn evaluate_with_invalid_clex_returns_400() {
         "correct_code_language": "Python",
         "test_code": "print('Hello')",
         "test_code_language": "Python",
-        "clex": "invalid clex syntax"
+        "problem_url": ""
     });
 
-    let response = app.post_evaluate_with_code_and_clex(&req_body).await;
+    let response = app.post_evaluate_with_code_and_platform(&req_body).await;
 
     assert_eq!(StatusCode::BAD_REQUEST, response.status());
 }
@@ -65,19 +65,19 @@ async fn evaluate_with_different_outputs() {
         "correct_code_language": "Python",
         "test_code": "print('World')",
         "test_code_language": "Python",
-        "clex": "N[1,10]"
+        "problem_url": "https://www.codechef.com/problems/WAPEN"
     });
 
-    let response = app.post_evaluate_with_code_and_clex(&req_body).await;
+    let response = app.post_evaluate_with_code_and_platform(&req_body).await;
 
     assert_eq!(StatusCode::OK, response.status());
 
-    let evaluation: EvaluateCodeResponse = response.json::<EvaluateCodeResponse>().await.unwrap();
+    let evaluation = response.json::<EvaluateCodeResponse>().await.unwrap();
     assert!(!evaluation.has_output_matched);
     assert!(!evaluation.input_diffs.is_empty());
     assert_eq!(evaluation.input_diffs[0].expected_output, "Hello\n");
     assert_eq!(evaluation.input_diffs[0].actual_output, "World\n");
-    assert_eq!(evaluation.clex, "N[1,10]");
+    assert!(!evaluation.clex.is_empty());
 }
 
 #[tokio::test]
@@ -89,10 +89,10 @@ async fn evaluate_code_invalid_syntax() {
         "correct_code_language": "Python",
         "test_code": "print('Hello')",
         "test_code_language": "Python",
-        "clex": "N[1,10]"
+        "problem_url": "https://www.codechef.com/problems/WAPEN"
     });
 
-    let response = app.post_evaluate_with_code_and_clex(&req_body).await;
+    let response = app.post_evaluate_with_code_and_platform(&req_body).await;
 
     assert_eq!(StatusCode::INTERNAL_SERVER_ERROR, response.status());
 }

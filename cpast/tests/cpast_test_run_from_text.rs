@@ -1,7 +1,7 @@
 use ccode_runner::lang_runner::{language_name::LanguageName, program_store::ProgramStore};
 use clex_gen::clex_language::{self, code_generator::Generator, lexer};
 
-#[allow(dead_code)]
+#[allow(unused)]
 struct EvaluateCodeInputDiff {
     input: String,
     expected_output: String,

@@ -1,9 +1,9 @@
 use cscrapper::{CodePlatform, get_problem_statement};
 
-#[test]
+#[tokio::test]
 #[ignore]
-fn test_codeforces_1992_b() {
-    let result = get_problem_statement(CodePlatform::CodeForces("1331", "B"));
+async fn test_codeforces_1992_b() {
+    let result = get_problem_statement(CodePlatform::CodeForces("1331", "B")).await;
     eprintln!("{:?}", result);
     assert!(result.is_ok());
     let response = result.unwrap();
@@ -17,10 +17,10 @@ fn test_codeforces_1992_b() {
     assert!(response.constraints.is_empty());
 }
 
-#[test]
+#[tokio::test]
 #[ignore]
-fn test_codeforces_nonexistent_problem() {
-    let result = get_problem_statement(CodePlatform::CodeForces("9999", "Z"));
+async fn test_codeforces_nonexistent_problem() {
+    let result = get_problem_statement(CodePlatform::CodeForces("9999", "Z")).await;
 
     assert!(result.is_err());
 }

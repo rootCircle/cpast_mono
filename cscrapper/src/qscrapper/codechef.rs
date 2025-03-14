@@ -1,4 +1,4 @@
-use reqwest::blocking::Client;
+use reqwest::Client;
 use std::{thread, time::Duration};
 
 use crate::{
@@ -19,23 +19,23 @@ impl CodeChef {
         CodeChef { client }
     }
 }
-
 impl ProblemScraper for CodeChef {
-    fn get_problems_by_code(
+    #[allow(clippy::needless_lifetimes)]
+    async fn get_problems_by_code<'a>(
         &self,
-        platform: &CodePlatform,
+        platform: &CodePlatform<'a>,
     ) -> Result<ScrapeAPIResponse, ScraperError> {
         let code = match platform {
             CodePlatform::CodeChef(code) => code,
             _ => unreachable!(),
         };
         let url = CODECHEF_PREFIX.replace("{problem_code}", code);
-        let response = self.client.get(&url).send()?;
+        let response = self.client.get(&url).send().await?;
 
         thread::sleep(Duration::from_millis(500));
 
         if response.status().is_success() {
-            let json: serde_json::Value = response.json()?;
+            let json: serde_json::Value = response.json().await?;
             let problem_components = json
                 .get("problemComponents")
                 .ok_or(ScraperError::ProblemNotFound)?;

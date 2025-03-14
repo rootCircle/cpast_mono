@@ -1,4 +1,4 @@
-use reqwest::blocking::Client;
+use reqwest::Client;
 use scraper::{Html, Selector};
 use std::time::Duration;
 
@@ -24,9 +24,10 @@ impl CodeForces {
 }
 
 impl ProblemScraper for CodeForces {
-    fn get_problems_by_code(
+    #[allow(clippy::needless_lifetimes)]
+    async fn get_problems_by_code<'a>(
         &self,
-        platform: &CodePlatform,
+        platform: &CodePlatform<'a>,
     ) -> Result<ScrapeAPIResponse, ScraperError> {
         let (contest_id, code) = match platform {
             CodePlatform::CodeForces(contest_id, code) => (contest_id, code),
@@ -35,10 +36,10 @@ impl ProblemScraper for CodeForces {
         let url = CODEFORCES_PREFIX
             .replace("{contest_id}", contest_id)
             .replace("{problem_code}", code);
-        let response = self.client.get(&url).send()?;
+        let response = self.client.get(&url).send().await?;
 
         if response.status().is_success() {
-            let html = response.text()?;
+            let html = response.text().await?;
             eprintln!("{}", html);
             let document = Html::parse_document(&html);
 

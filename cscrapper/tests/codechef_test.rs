@@ -1,8 +1,8 @@
 use cscrapper::{CodePlatform, get_problem_statement};
 
-#[test]
-fn test_codechef_nonnegprod() {
-    let result = get_problem_statement(CodePlatform::CodeChef("NONNEGPROD"));
+#[tokio::test]
+async fn test_codechef_nonnegprod() {
+    let result = get_problem_statement(CodePlatform::CodeChef("NONNEGPROD")).await;
     eprintln!("{:?}", result);
     assert!(result.is_ok());
     let response = result.unwrap();
@@ -15,9 +15,9 @@ fn test_codechef_nonnegprod() {
     ));
 }
 
-#[test]
-fn test_codechef_nonexistent_problem() {
-    let result = get_problem_statement(CodePlatform::CodeChef("NONEXISTENTPROBLEM"));
+#[tokio::test]
+async fn test_codechef_nonexistent_problem() {
+    let result = get_problem_statement(CodePlatform::CodeChef("NONEXISTENTPROBLEM")).await;
 
     assert!(result.is_err());
 }

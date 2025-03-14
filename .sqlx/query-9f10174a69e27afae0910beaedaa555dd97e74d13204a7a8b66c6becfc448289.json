@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT clex\n        FROM scrape_cache\n        WHERE question_url = $1 \n        AND scraped_at + ttl > NOW()\n        LIMIT 1;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "clex",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9f10174a69e27afae0910beaedaa555dd97e74d13204a7a8b66c6becfc448289"
+}
