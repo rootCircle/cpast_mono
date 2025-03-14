@@ -1,15 +1,15 @@
 use actix_web::post;
 use actix_web::web::Json;
 use actix_web::{HttpResponse, web};
-use anyhow::Context;
 use ccode_runner::lang_runner::language_name::LanguageName;
 use secrecy::{ExposeSecret, SecretString};
 use serde::{Deserialize, Serialize};
-use sqlx::{Executor, PgPool, Postgres, Transaction};
+use sqlx::PgPool;
 use utoipa::ToSchema;
 
 use crate::routes::api::v1::evaluate::{
-    hash_input_format_and_constraints, run_and_compare, verify_clex,
+    cache_clex_into_db, cache_scrape_into_db, get_cached_scrape_from_db, run_and_compare,
+    verify_clex,
 };
 
 use super::{EvaluateAPIError, EvaluateCodeResponse};
@@ -120,87 +120,4 @@ pub async fn post_with_code_and_platform(
     )?;
 
     Ok(HttpResponse::Ok().json(response))
-}
-
-#[tracing::instrument(name = "Try getting cached scrape from DB", skip(pool))]
-pub(crate) async fn get_cached_scrape_from_db(
-    pool: &PgPool,
-    question_url: &str,
-) -> Result<Option<String>, anyhow::Error> {
-    let query = sqlx::query!(
-        r#"
-        SELECT clex
-        FROM scrape_cache
-        WHERE question_url = $1 
-        AND scraped_at + ttl > NOW()
-        LIMIT 1;
-        "#,
-        question_url
-    );
-
-    let result = query
-        .fetch_optional(pool)
-        .await
-        .context("Failed to fetch scrape details")?;
-
-    Ok(result.map(|row| row.clex))
-}
-
-pub(crate) async fn cache_scrape_into_db(
-    pool: &PgPool,
-    question_url: &str,
-    input_format: &str,
-    constraints: &str,
-    statement: &str,
-    clex: &str,
-) -> Result<(), anyhow::Error> {
-    let mut transaction: Transaction<'_, Postgres> =
-        pool.begin().await.context("Failed to start transaction")?;
-
-    let query = sqlx::query!(
-        r#"
-        INSERT INTO scrape_cache (question_url, input_format, constraints, statement, clex)
-        VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (question_url) DO UPDATE 
-        SET input_format = $2, constraints = $3, statement = $4, scraped_at = NOW(), clex = $5;
-        "#,
-        question_url,
-        input_format,
-        constraints,
-        statement,
-        clex
-    );
-
-    transaction.execute(query).await?;
-    transaction.commit().await?;
-
-    Ok(())
-}
-
-pub(crate) async fn cache_clex_into_db(
-    pool: &PgPool,
-    input_format: &str,
-    constraints: &str,
-    clex: &str,
-) -> Result<(), anyhow::Error> {
-    let mut transaction: Transaction<'_, Postgres> =
-        pool.begin().await.context("Failed to start transaction")?;
-
-    let query = sqlx::query!(
-        r#"
-        INSERT INTO llm_cache (input_hash, input_format, constraints, clex)
-        VALUES ($1, $2, $3, $4)
-        ON CONFLICT (input_hash) DO UPDATE SET clex = $2;
-        "#,
-        hash_input_format_and_constraints(input_format, constraints),
-        input_format,
-        constraints,
-        clex
-    );
-
-    transaction.execute(query).await?;
-
-    transaction.commit().await?;
-
-    Ok(())
 }
