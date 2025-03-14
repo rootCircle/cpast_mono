@@ -72,8 +72,9 @@ pub async fn post_with_code_and_platform(
                 }
             };
 
-            let clex_llm_generator = clex_llm::create_generator(gemini_api_key.expose_secret())
-                .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
+            let clex_llm_generator =
+                clex_llm::create_clex_generator(gemini_api_key.expose_secret())
+                    .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
 
             let generated_clex = clex_llm::generate_clex_expression(
                 &clex_llm_generator,

@@ -772,6 +772,7 @@ dependencies = [
 name = "clex_llm"
 version = "0.2.2"
 dependencies = [
+ "ccode_runner",
  "google-generative-ai-rs",
  "serde",
  "tokio",

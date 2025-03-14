@@ -7,7 +7,7 @@ use google_generative_ai_rs::v1::{
     },
 };
 
-use crate::examples::{self, Example};
+use super::examples::{self, Example};
 
 /// A generator for creating Clex language expressions using Google's Generative AI.
 ///

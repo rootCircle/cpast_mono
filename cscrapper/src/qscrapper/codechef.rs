@@ -46,10 +46,64 @@ impl ProblemScraper for CodeChef {
                 .as_str()
                 .unwrap_or("")
                 .to_string();
-            let statement = problem_components["statement"]
+            let mut statement = problem_components["statement"]
                 .as_str()
                 .unwrap_or("")
                 .to_string();
+
+            let output_format = problem_components["outputFormat"]
+                .as_str()
+                .unwrap_or("")
+                .to_string();
+            statement.push_str("\n\nOutput:\n");
+            statement.push_str(&output_format);
+
+            let empty_vec = vec![];
+            let sample_test_cases = problem_components["sampleTestcases"]
+                .as_array()
+                .unwrap_or(&empty_vec);
+
+            if !sample_test_cases.is_empty() {
+                statement.push_str("\n\nSample Test Cases:\n\n");
+            }
+
+            for test_case in sample_test_cases {
+                let input = test_case["input"].as_str().unwrap_or("");
+                let output = test_case["output"].as_str().unwrap_or("");
+                let explanation = test_case["explanation"].as_str().unwrap_or("");
+                let is_deleted = test_case["isDeleted"].as_bool().unwrap_or(false);
+
+                if is_deleted {
+                    continue;
+                }
+
+                statement.push_str("Example Input:\n");
+                statement.push_str(input);
+                statement.push_str("\nExample Output:\n");
+                statement.push_str(output);
+                statement.push_str("\nExplanation:\n\n");
+                statement.push_str(explanation);
+            }
+
+            let user_tags = json.get("user_tags").unwrap_or(&serde_json::Value::Null);
+            if !user_tags.is_null() {
+                statement.push_str("\n\nUser Tags:\n");
+                for tag in user_tags.as_array().unwrap_or(&vec![]) {
+                    statement.push_str(tag.as_str().unwrap_or(""));
+                    statement.push_str(", ");
+                }
+            }
+
+            let computed_tags = json
+                .get("computed_tags")
+                .unwrap_or(&serde_json::Value::Null);
+            if !computed_tags.is_null() {
+                statement.push_str("\n\nComputed Tags:\n");
+                for tag in computed_tags.as_array().unwrap_or(&vec![]) {
+                    statement.push_str(tag.as_str().unwrap_or(""));
+                    statement.push_str(", ");
+                }
+            }
 
             Ok(ScrapeAPIResponse {
                 input_format,

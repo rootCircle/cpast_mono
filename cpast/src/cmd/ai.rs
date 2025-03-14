@@ -15,7 +15,7 @@ pub(crate) async fn generate_clex_from_input_format_and_constraints(
 
     match api_key {
         Some(api_key) => {
-            let generator = clex_llm::create_generator(&api_key)
+            let generator = clex_llm::create_clex_generator(&api_key)
                 .map_err(|err| Box::new(CliErrorType::ClexLLMInitilizationError(err)))?;
 
             let input_format = match args.input_format {
