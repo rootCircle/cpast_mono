@@ -1,5 +1,9 @@
 #![allow(dead_code, unused_variables)]
 use actix_web::{ResponseError, http::StatusCode};
+use ccode_runner::lang_runner::{
+    language_name::LanguageName, program_store::ProgramStore, runner_error_types::RunnerErrorType,
+};
+use clex_gen::clex_language::{self, code_generator::Generator, lexer};
 use serde::Serialize;
 use utoipa::{OpenApi, ToSchema};
 
@@ -46,8 +50,8 @@ struct EvaluateCodeResponse {
 
 #[derive(thiserror::Error)]
 pub enum EvaluateAPIError {
-    #[error("{0}")]
-    InvalidClex(String),
+    #[error(transparent)]
+    APIClexErrorType(#[from] clex_language::clex_error_type::ClexErrorType),
 
     #[error("{0}")]
     DirtyLanguageInDatabase(String),
@@ -57,6 +61,9 @@ pub enum EvaluateAPIError {
 
     #[error("{0}")]
     InvalidShareId(String),
+
+    #[error(transparent)]
+    APIRunnerErrorType(#[from] Box<RunnerErrorType>),
 
     #[error(transparent)]
     UnexpectedError(#[from] anyhow::Error),
@@ -71,11 +78,12 @@ impl std::fmt::Debug for EvaluateAPIError {
 impl ResponseError for EvaluateAPIError {
     fn status_code(&self) -> StatusCode {
         match self {
-            EvaluateAPIError::InvalidClex(_) => StatusCode::BAD_REQUEST,
+            EvaluateAPIError::APIClexErrorType(_) => StatusCode::BAD_REQUEST,
             EvaluateAPIError::InvalidShareId(_) => StatusCode::BAD_REQUEST,
             EvaluateAPIError::DirtyLanguageInDatabase(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::ShareIdNotFound(_) => StatusCode::NOT_FOUND,
             EvaluateAPIError::UnexpectedError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            EvaluateAPIError::APIRunnerErrorType(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 }
@@ -91,4 +99,60 @@ pub fn error_chain_fmt(
         current = cause.source();
     }
     Ok(())
+}
+
+fn verify_clex(clex: &str) -> Result<(), EvaluateAPIError> {
+    clex_gen::generator(clex.to_string()).map_err(EvaluateAPIError::APIClexErrorType)?;
+    Ok(())
+}
+
+fn run_and_compare(
+    correct_code: &str,
+    test_code: &str,
+    correct_code_language: LanguageName,
+    test_code_language: LanguageName,
+    clex_language: &str,
+) -> Result<EvaluateCodeResponse, EvaluateAPIError> {
+    let runner = ProgramStore::new_from_text(
+        correct_code,
+        test_code,
+        correct_code_language.clone(),
+        test_code_language.clone(),
+        false,
+    )
+    .map_err(EvaluateAPIError::APIRunnerErrorType)?;
+
+    let mut token = lexer::Tokens::new(clex_language.to_string());
+    token
+        .scan_tokens()
+        .map_err(EvaluateAPIError::APIClexErrorType)?;
+    let mut parser = clex_language::parser::Parser::new_from_tokens(token);
+    parser
+        .parser()
+        .map_err(EvaluateAPIError::APIClexErrorType)?;
+    let generator = Generator::new(&parser);
+
+    let mut response = EvaluateCodeResponse {
+        has_output_matched: true,
+        input_diffs: Vec::new(),
+    };
+
+    for _ in 0..10 {
+        let testcase = generator
+            .generate_testcases()
+            .map_err(EvaluateAPIError::APIClexErrorType)?;
+        let (matched, expected, actual) = runner
+            .run_codes_and_compare_output(&testcase)
+            .map_err(EvaluateAPIError::APIRunnerErrorType)?;
+        if !matched {
+            response.has_output_matched = false;
+            response.input_diffs.push(EvaluateCodeInputDiff {
+                input: testcase,
+                expected_output: expected,
+                actual_output: actual,
+            });
+        }
+    }
+
+    Ok(response)
 }

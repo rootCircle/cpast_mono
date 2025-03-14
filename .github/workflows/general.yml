@@ -68,9 +68,10 @@ jobs:
           GRANT_QUERY="ALTER USER ${APP_USER} CREATEDB;"
           PGPASSWORD="password" psql -U "postgres" -h "localhost" -c "${GRANT_QUERY}"
 
+      # Install compilers for C, C++, Java, Node, Ruby (Python/Rust are already installed)
       - name: Install compilers
         run: |
-          sudo apt-get install build-essential default-jdk nodejs python3 python3-pip ruby 
+          sudo apt-get install build-essential default-jdk nodejs ruby 
 
       - name: Migrate database
         run: |

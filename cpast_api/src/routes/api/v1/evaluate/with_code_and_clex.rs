@@ -1,10 +1,12 @@
+use actix_web::HttpResponse;
 use actix_web::post;
 use actix_web::web::Json;
-use actix_web::{HttpResponse, web};
 use ccode_runner::lang_runner::language_name::LanguageName;
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
 use utoipa::ToSchema;
+
+use crate::routes::api::v1::evaluate::run_and_compare;
+use crate::routes::api::v1::evaluate::verify_clex;
 
 use super::{EvaluateAPIError, EvaluateCodeResponse};
 
@@ -35,8 +37,17 @@ struct EvaluateCodeWithClexRequest {
 )]
 #[post("/with_code_and_clex")]
 pub async fn post_with_code_and_clex(
-    pool: web::Data<PgPool>,
     code_request: Json<EvaluateCodeWithClexRequest>,
 ) -> Result<HttpResponse, EvaluateAPIError> {
-    todo!("Implement post_with_code_and_clex");
+    verify_clex(&code_request.clex)?;
+
+    let response = run_and_compare(
+        &code_request.correct_code,
+        &code_request.test_code,
+        code_request.correct_code_language.clone(),
+        code_request.test_code_language.clone(),
+        &code_request.clex,
+    )?;
+
+    Ok(HttpResponse::Ok().json(response))
 }
