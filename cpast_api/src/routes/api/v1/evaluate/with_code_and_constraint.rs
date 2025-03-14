@@ -2,6 +2,7 @@ use actix_web::post;
 use actix_web::web::Json;
 use actix_web::{HttpResponse, web};
 use ccode_runner::lang_runner::language_name::LanguageName;
+use secrecy::SecretString;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use utoipa::ToSchema;
@@ -42,6 +43,7 @@ struct EvaluateCodeWithConstraintRequest {
 #[post("/with_code_and_constraint")]
 pub async fn post_with_code_and_constraint(
     pool: web::Data<PgPool>,
+    gemini_api_key: web::Data<SecretString>,
     code_request: Json<EvaluateCodeWithConstraintRequest>,
 ) -> Result<HttpResponse, EvaluateAPIError> {
     todo!("Implement post_with_code_and_clex");

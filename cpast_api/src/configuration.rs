@@ -11,6 +11,7 @@ pub struct Settings {
     pub application: ApplicationSettings,
     pub email_client: EmailClientSettings,
     pub redis_uri: SecretString,
+    pub llm: LlmSettings,
 }
 
 #[derive(serde::Deserialize, Clone)]
@@ -31,6 +32,11 @@ pub struct DatabaseSettings {
     pub host: String,
     pub database_name: String,
     pub require_ssl: bool,
+}
+
+#[derive(serde::Deserialize, Clone)]
+pub struct LlmSettings {
+    pub api_key: SecretString,
 }
 
 impl DatabaseSettings {

@@ -52,6 +52,7 @@ impl Application {
             configuration.application.base_url,
             configuration.application.hmac_secret,
             configuration.redis_uri,
+            configuration.llm.api_key,
         )
         .await?;
 
@@ -86,6 +87,7 @@ async fn run(
     base_url: String,
     hmac_secret: SecretString,
     redis_uri: SecretString,
+    gemini_api_key: SecretString,
 ) -> Result<Server, anyhow::Error> {
     #[derive(OpenApi)]
     #[openapi(
@@ -98,6 +100,7 @@ async fn run(
     let email_client = Data::new(email_client);
     let base_url = Data::new(ApplicationBaseUrl(base_url));
     let secret_key = Key::from(hmac_secret.expose_secret().as_bytes());
+    let gemini_api_key = Data::new(gemini_api_key);
     let message_store = CookieMessageStore::builder(secret_key.clone()).build();
     let message_framework = FlashMessagesFramework::builder(message_store).build();
     let redis_store = RedisSessionStore::new(redis_uri.expose_secret()).await?;
@@ -118,11 +121,12 @@ async fn run(
                     .service(post_share_code)
                     .service(
                         web::scope("/evaluate")
-                            .service(post_with_code_and_platform)
+                            .service(post_with_shared_id)
                             .service(post_with_code_and_clex)
+                            .app_data(gemini_api_key.clone())
+                            .service(post_with_code_and_platform)
                             .service(post_with_code_and_constraint)
-                            .service(post_with_platform)
-                            .service(post_with_shared_id),
+                            .service(post_with_platform),
                     ),
             )
             .service(web::scope("/admin").wrap(from_fn(reject_anonymous_users)));

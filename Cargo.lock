@@ -968,6 +968,7 @@ dependencies = [
  "chrono",
  "claims",
  "clex_gen",
+ "clex_llm",
  "config",
  "cscrapper",
  "fake",

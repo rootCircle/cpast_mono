@@ -35,7 +35,7 @@ use generator::ClexPromptGenerator;
 use google_generative_ai_rs::v1::errors::GoogleAPIError;
 
 mod examples;
-mod generator;
+pub mod generator;
 
 /// Creates a new instance of the Clex prompt generator.
 ///

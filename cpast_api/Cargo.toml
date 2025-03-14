@@ -18,51 +18,52 @@ path = "src/main.rs"
 name = "cpast_api"
 
 [dependencies]
+actix-session = { workspace = true, features = ["redis-session-rustls"] }
 actix-web = { workspace = true }
-tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
-serde = { workspace = true }
-config = { workspace = true, default-features = false, features = ["yaml"] }
-sqlx = { workspace = true, default-features = false, features = [
-    "runtime-tokio-rustls",
-    "macros",
-    "postgres",
-    "uuid",
-    "chrono",
-    "migrate",
-] }
-uuid = { workspace = true, features = ["v4", "serde", "v7"] }
+actix-web-flash-messages = { workspace = true, features = ["cookies"] }
+anyhow = { workspace = true }
+argon2 = { workspace = true, features = ["std"] }
+base64 = { workspace = true }
 chrono = { workspace = true, default-features = false, features = ["clock"] }
+clex_gen = { path = "../clex_gen" }
+clex_llm = { path = "../clex_llm" }
+ccode_runner = { path = "../ccode_runner" }
+cscrapper = { path = "../cscrapper" }
+config = { workspace = true, default-features = false, features = ["yaml"] }
+log = { workspace = true }
+rand = { workspace = true, features = ["std_rng"] }
 reqwest = { workspace = true, default-features = false, features = [
+    "cookies",
     "json",
     "rustls-tls",
-    "cookies",
 ] }
-log = { workspace = true }
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true, features = ["registry", "env-filter"] }
-tracing-bunyan-formatter = { workspace = true }
-thiserror = { workspace = true }
-serde-aux = { workspace = true }
-unicode-segmentation = { workspace = true }
-rand = { workspace = true, features = ["std_rng"] }
-anyhow = { workspace = true }
-base64 = { workspace = true }
-argon2 = { workspace = true, features = ["std"] }
-validator = { workspace = true }
-tracing-log = { workspace = true }
-tracing-actix-web = { workspace = true }
 secrecy = { workspace = true, features = ["serde"] }
-actix-web-flash-messages = { workspace = true, features = ["cookies"] }
-actix-session = { workspace = true, features = ["redis-session-rustls"] }
+serde = { workspace = true }
+serde-aux = { workspace = true }
 serde_json = { workspace = true }
-utoipa = { workspace = true, features = [ "actix_extras" ] }
-utoipa-swagger-ui = { workspace = true, features = ["actix-web", "vendored"] }
-utoipa-redoc = { workspace = true, features = ["actix-web"] }
+sqlx = { workspace = true, default-features = false, features = [
+    "chrono",
+    "macros",
+    "migrate",
+    "postgres",
+    "runtime-tokio-rustls",
+    "uuid",
+] }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tracing = { workspace = true }
+tracing-actix-web = { workspace = true }
+tracing-bunyan-formatter = { workspace = true }
+tracing-log = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter", "registry"] }
+unicode-segmentation = { workspace = true }
+utoipa = { workspace = true, features = ["actix_extras"] }
 utoipa-rapidoc = { workspace = true, features = ["actix-web"] }
+utoipa-redoc = { workspace = true, features = ["actix-web"] }
 utoipa-scalar = { workspace = true, features = ["actix-web"] }
-ccode_runner = { path = "../ccode_runner" }
-clex_gen = { path = "../clex_gen" }
-cscrapper = { path = "../cscrapper" }
+utoipa-swagger-ui = { workspace = true, features = ["actix-web", "vendored"] }
+validator = { workspace = true }
+uuid = { workspace = true, features = ["serde", "v4", "v7"] }
 
 [dev-dependencies]
 quickcheck = { workspace = true }
