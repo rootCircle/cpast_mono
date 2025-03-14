@@ -94,15 +94,21 @@ pub enum RunnerErrorType {
     /// The associated `PathBuf`, `LanguageName`, and `CompilationType` provide details about the empty temporary directory.
     EmptyTempDir(PathBuf, LanguageName, CompilationType),
 
-    /// Indicates that the source file stem could not be extracted.
+    /// Indicates that the file stem could not be extracted.
     ///
     /// The associated `PathBuf` contains the path to the source file.
-    SourceFileStemExtractionError(PathBuf),
+    FileStemExtractionError(PathBuf),
 
     /// Indicates that a Java file does not contain a public class.
     ///
     /// The associated `String` contains the content of the Java file.
     JavaNoPublicClassFound(String),
+
+    /// Indicates that the destination and source file stem differ in Java.
+    /// Java has strict rules for file naming and the destination file must match the source file.
+    ///
+    /// The associated `Option<PathBuf>` contains the path to the destination file
+    JavaMismatchDestinationFile(Option<PathBuf>),
 }
 
 impl fmt::Display for RunnerErrorType {
@@ -155,12 +161,18 @@ impl fmt::Display for RunnerErrorType {
                 lang,
                 compilation_type
             ),
-            RunnerErrorType::SourceFileStemExtractionError(path_buf) => format!(
-                "Error extracting source file stem for file: {}",
+            RunnerErrorType::FileStemExtractionError(path_buf) => format!(
+                "Error extracting file stem for file: {}",
                 path_buf.display()
             ),
             RunnerErrorType::JavaNoPublicClassFound(content) => {
                 format!("No public class found in Java file: {}", content)
+            }
+            RunnerErrorType::JavaMismatchDestinationFile(path_buf) => {
+                format!(
+                    "Destination file stem does not match source file stem for Java file: {:?}",
+                    path_buf
+                )
             }
         };
 

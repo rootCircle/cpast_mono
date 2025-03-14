@@ -43,9 +43,7 @@ impl SourceCodeInfo {
         };
 
         let compilation_type = get_language_compilation_type(&lang);
-        if compilation_type == CompilationType::Compiled
-            || compilation_type == CompilationType::BytecodeCompiled
-        {
+        if compilation_type != CompilationType::Interpreted {
             let program_name_stem = source_file
                 .file_stem()
                 .and_then(|stem| stem.to_str())
@@ -80,6 +78,30 @@ impl SourceCodeInfo {
         self.dest_path.as_ref().and_then(|dest| dest.to_str())
     }
 
+    /// Creates a new `SourceCodeInfo` instance with an optional custom destination path.
+    ///
+    /// This method initializes source code information for both interpreted and compiled languages,
+    /// with special handling for Java source files. If the dest_file is None, then it automatically creates a temp file for output.
+    ///
+    /// # Arguments
+    ///
+    /// * `source_file` - Path to the source code file
+    /// * `dest_file` - Optional custom destination path for the compiled output
+    ///
+    /// # Returns
+    ///
+    /// * `Result<SourceCodeInfo, Box<RunnerErrorType>>` - A Result containing either:
+    ///   * `SourceCodeInfo` - Successfully created source code information
+    ///   * `Box<RunnerErrorType>` - Error encountered during creation
+    ///
+    /// # Errors
+    ///
+    /// Returns an error in the following cases:
+    /// * Source file does not exist
+    /// * Language is not supported
+    /// * For Java files, when destination filename doesn't match source filename
+    /// * File stem extraction fails
+    /// * Temporary directory creation fails
     pub(crate) fn new_from_custom_dest(
         source_file: &Path,
         dest_file: Option<&Path>,
@@ -99,22 +121,62 @@ impl SourceCodeInfo {
             }
         };
 
-        let lang_type = get_language_compilation_type(&lang);
+        let compilation_type = get_language_compilation_type(&lang);
 
-        if lang_type == CompilationType::Interpreted {
+        if compilation_type == CompilationType::Interpreted {
             return Ok(SourceCodeInfo {
                 source_path: source_file.to_path_buf(),
                 dest_path: None,
-                compilation_type: lang_type,
+                compilation_type,
                 language: lang,
                 temp_dir: None,
             });
         }
 
+        let dest_file = match dest_file {
+            Some(dest) => {
+                if lang == LanguageName::Java {
+                    let source_filename_stem = source_file
+                        .file_stem()
+                        .and_then(|stem| stem.to_str())
+                        .unwrap_or(DEFAULT_PROGRAM_NAME);
+
+                    let dest_filename_stem = dest_file
+                        .and_then(|dest| dest.file_stem())
+                        .and_then(|stem| stem.to_str())
+                        .ok_or(Box::new(RunnerErrorType::FileStemExtractionError(
+                            source_file.to_path_buf(),
+                        )))?;
+
+                    if dest_filename_stem != source_filename_stem {
+                        return Err(Box::new(RunnerErrorType::JavaMismatchDestinationFile(
+                            dest_file.map(|dest| dest.to_path_buf()),
+                        )));
+                    }
+                }
+                dest.to_path_buf()
+            }
+            None => {
+                let program_name_stem = source_file
+                    .file_stem()
+                    .and_then(|stem| stem.to_str())
+                    .unwrap_or(DEFAULT_PROGRAM_NAME);
+
+                let temp_dir = Builder::new()
+                    .prefix("cpast_runner_")
+                    .tempdir()
+                    .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
+
+                let dest_path = temp_dir.path().join(program_name_stem);
+
+                dest_path
+            }
+        };
+
         Ok(SourceCodeInfo {
             source_path: source_file.to_path_buf(),
-            dest_path: dest_file.map(|dest| dest.to_path_buf()),
-            compilation_type: lang_type,
+            dest_path: Some(dest_file),
+            compilation_type,
             language: lang,
             temp_dir: None,
         })

@@ -125,7 +125,7 @@ impl Language {
                             self.code
                                 .source_path
                                 .file_stem()
-                                .ok_or(RunnerErrorType::SourceFileStemExtractionError(
+                                .ok_or(RunnerErrorType::FileStemExtractionError(
                                     self.code.source_path.to_path_buf(),
                                 ))?
                                 .to_str()
