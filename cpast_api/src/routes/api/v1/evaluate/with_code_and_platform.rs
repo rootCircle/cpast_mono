@@ -8,7 +8,7 @@ use sqlx::PgPool;
 use utoipa::ToSchema;
 
 use crate::routes::api::v1::evaluate::{
-    cache_clex_into_db, cache_scrape_into_db, get_cached_scrape_from_db, run_and_compare,
+    cache_clex_into_db, cache_scrape_into_db, get_cached_clex_scraped_from_db, run_and_compare,
     verify_clex,
 };
 
@@ -50,7 +50,7 @@ pub async fn post_with_code_and_platform(
     }
 
     let cached_scrape_clex: Option<String> =
-        get_cached_scrape_from_db(&pool, &code_request.problem_url).await?;
+        get_cached_clex_scraped_from_db(&pool, &code_request.problem_url).await?;
 
     let scrape_clex = match cached_scrape_clex {
         Some(scrape) => scrape,

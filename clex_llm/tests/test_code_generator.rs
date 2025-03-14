@@ -1,5 +1,5 @@
 use ccode_runner::lang_runner::{language_name::LanguageName, program_store::ProgramStore};
-use clex_llm::{generate_code_solution, new_code_generator};
+use clex_llm::{create_code_generator, generate_code_solution};
 use std::env;
 #[tokio::test]
 async fn test_generate_code_solution() {
@@ -11,7 +11,7 @@ async fn test_generate_code_solution() {
     }
 
     let generator =
-        new_code_generator(api_key.as_deref().unwrap()).expect("Failed to create generator");
+        create_code_generator(api_key.as_deref().unwrap()).expect("Failed to create generator");
 
     let statement = "Given an array of integers, find the sum of all elements.";
     let input_format = "First line contains N denoting the size of array. Second line contains N space-separated integers.";

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO code_gen_llm_cache (question_url, code)\n        VALUES ($1, $2)\n        ON CONFLICT (question_url) DO UPDATE \n        SET code = $2, generated_at = NOW();\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "379c67534427b83f2db00aa7a3b7d0d0ddd349a3d426d3c471e7be8bd26d8a21"
+}

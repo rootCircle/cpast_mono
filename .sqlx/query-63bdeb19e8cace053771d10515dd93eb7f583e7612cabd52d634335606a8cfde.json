@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT code\n        FROM code_gen_llm_cache\n        WHERE question_url = $1 \n        AND generated_at + ttl > NOW()\n        LIMIT 1;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "63bdeb19e8cace053771d10515dd93eb7f583e7612cabd52d634335606a8cfde"
+}

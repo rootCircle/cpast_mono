@@ -200,8 +200,8 @@ fn hash_input_format_and_constraints(input_format: &str, constraints: &str) -> S
     hex::encode(result)
 }
 
-#[tracing::instrument(name = "Try getting cached scrape from DB", skip(pool))]
-pub(crate) async fn get_cached_scrape_from_db(
+#[tracing::instrument(name = "Try getting cached clex scrapped from DB", skip(pool))]
+pub(crate) async fn get_cached_clex_scraped_from_db(
     pool: &PgPool,
     question_url: &str,
 ) -> Result<Option<String>, anyhow::Error> {

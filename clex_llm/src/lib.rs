@@ -78,7 +78,7 @@ pub async fn generate_clex_expression(
 /// # Returns
 /// * `Result<CodeSolutionGenerator, Box<dyn std::error::Error>>` - A Result containing either the generator instance or an error
 ///
-pub fn new_code_generator(
+pub fn create_code_generator(
     api_key: &str,
 ) -> Result<CodeSolutionGenerator, Box<dyn std::error::Error>> {
     CodeSolutionGenerator::new(api_key)
