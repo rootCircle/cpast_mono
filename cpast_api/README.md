@@ -72,6 +72,16 @@ There is a default `admin` account with password
 `everythinghastostartsomewhere`. The available entrypoints are listed in
 [src/startup.rs](https://github.com/LukeMathWalker/zero-to-production/blob/6bd30650cb8670a146819a342ccefd3d73ed5085/src/startup.rs#L92)
 
+## Development
+
+Change the LLM API key to Google Gemini API key in `./cpast_api/configuration/base.yaml`.
+
+To ensure you accidently don't push the API key, ignore the changes locally!
+
+```bash
+git update-index --assume-unchanged ./cpast_api/configuration/base.yaml
+```
+
 ## How to test
 
 Launch a (migrated) Postgres database via Docker:
