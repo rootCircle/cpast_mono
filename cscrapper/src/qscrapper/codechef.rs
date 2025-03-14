@@ -1,5 +1,5 @@
 use reqwest::Client;
-use std::{thread, time::Duration};
+use std::time::Duration;
 
 use crate::{
     CODECHEF_PREFIX, CodePlatform,
@@ -31,8 +31,6 @@ impl ProblemScraper for CodeChef {
         };
         let url = CODECHEF_PREFIX.replace("{problem_code}", code);
         let response = self.client.get(&url).send().await?;
-
-        thread::sleep(Duration::from_millis(500));
 
         if response.status().is_success() {
             let json: serde_json::Value = response.json().await?;
