@@ -27,8 +27,8 @@ print(sum(arr))"#;
             let runner = ProgramStore::new_from_text(
                 correct_code,
                 &solution,
-                language_name,
                 LanguageName::Python,
+                language_name,
                 false,
             )
             .unwrap();
