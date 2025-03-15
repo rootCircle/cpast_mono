@@ -1,6 +1,9 @@
 [package]
 name = "cscrapper"
 version = "0.1.0"
+description = "Scrapper for competitive programming websites"
+categories = ["development-tools::testing", "development-tools"]
+keywords = ["competitive-programming", "scrapper", "website", "codechef", "codeforces"]
 repository.workspace = true
 authors.workspace = true
 homepage.workspace = true
