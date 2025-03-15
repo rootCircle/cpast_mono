@@ -27,7 +27,7 @@ base64 = { workspace = true }
 chrono = { workspace = true, default-features = false, features = ["clock"] }
 clex_gen = { path = "../clex_gen" }
 clex_llm = { path = "../clex_llm" }
-ccode_runner = { path = "../ccode_runner" }
+ccode_runner = { path = "../ccode_runner", features = ["api"] }
 cscrapper = { path = "../cscrapper" }
 config = { workspace = true, default-features = false, features = ["yaml"] }
 hex = { workspace = true }

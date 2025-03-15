@@ -34,12 +34,15 @@
 use std::{fmt, path::Path};
 
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "api")]
 use utoipa::ToSchema;
 
 use super::runner_error_types::RunnerErrorType;
 
 /// Enumeration of supported programming languages.
-#[derive(Debug, Serialize, Deserialize, Clone, ToSchema, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[cfg_attr(feature = "api", derive(ToSchema))]
 pub enum LanguageName {
     Python,
     Cpp,
