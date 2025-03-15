@@ -1,6 +1,6 @@
 [package]
 name = "cpast"
-version = "0.10.1"
+version = "0.10.2"
 description = "Run custom testcase with powerful clex language powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
 categories = [
     "development-tools::testing",
