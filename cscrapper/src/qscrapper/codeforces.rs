@@ -16,7 +16,7 @@ pub(crate) struct CodeForces {
 impl CodeForces {
     pub(crate) fn new() -> Self {
         let client = Client::builder()
-            .timeout(Duration::from_secs(3))
+            .timeout(Duration::from_secs(10))
             .build()
             .expect("Failed to create HTTP client");
         CodeForces { client }

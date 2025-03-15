@@ -13,7 +13,7 @@ pub(crate) struct CodeChef {
 impl CodeChef {
     pub(crate) fn new() -> Self {
         let client = Client::builder()
-            .timeout(Duration::from_secs(3))
+            .timeout(Duration::from_secs(10))
             .build()
             .expect("Failed to create HTTP client");
         CodeChef { client }
