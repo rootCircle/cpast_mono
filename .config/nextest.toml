@@ -1,0 +1,6 @@
+[profile.default]
+retries = { backoff = "exponential", count = 10, delay = "3s", jitter = true, max-delay = "30s" }
+fail-fast = false
+
+[profile.ci]
+fail-fast = false

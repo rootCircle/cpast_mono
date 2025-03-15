@@ -24,7 +24,17 @@ Output a single integer: the total time penalty for the problem.
             "#.to_string(),
             input_format: "The first and only line of input will contain two space-separated integers X and Y — the number of minutes after which you solved the problem, and the number of wrong submissions you made.".to_string(),
             constraints: "1 ≤ X ≤ 150\n0 ≤ Y ≤ 10".to_string(),
-            generated_code: "X, Y = map(int, input().split())\nprint(X + Y * 10)".to_string(),
+            generated_code: r#" 
+#include <iostream>
+using namespace std;
+
+int main() {
+    int X, Y;
+    cin >> X >> Y;
+    cout << (X + Y * 10) << endl;
+    return 0;
+}
+"#.to_string(),
         },
         // Example 2: Factorial Calculation
         SolutionTurn {
@@ -39,13 +49,20 @@ Print the factorial of the number N.
             "#.to_string(),
             input_format: "The input consists of a single integer N.".to_string(),
             constraints: "0 ≤ N ≤ 20".to_string(),
-            generated_code: r#"def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n-1)
+            generated_code: r#" 
+#include <iostream>
+using namespace std;
 
-n = int(input())
-print(factorial(n))
+long long factorial(int n) {
+    return (n == 0) ? 1 : n * factorial(n - 1);
+}
+
+int main() {
+    int N;
+    cin >> N;
+    cout << factorial(N) << endl;
+    return 0;
+}
 "#.to_string(),
         },
         // Example 3: Prime Number Checker
@@ -59,18 +76,25 @@ Output "Prime" if N is a prime number, or "Not prime" otherwise.
             "#.to_string(),
             input_format: "A single integer N.".to_string(),
             constraints: "2 ≤ N ≤ 10^5".to_string(),
-            generated_code: r#"import math
+            generated_code: r#" 
+#include <iostream>
+#include <cmath>
+using namespace std;
 
-def is_prime(n):
-    if n < 2:
-        return False
-    for i in range(2, int(math.sqrt(n)) + 1):
-        if n % i == 0:
-            return False
-    return True
+bool is_prime(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i <= sqrt(n); i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
 
-n = int(input())
-print("Prime" if is_prime(n) else "Not prime")
+int main() {
+    int N;
+    cin >> N;
+    cout << (is_prime(N) ? "Prime" : "Not prime") << endl;
+    return 0;
+}
 "#.to_string(),
         },
         // Example 4: Matrix Multiplication
@@ -83,14 +107,35 @@ Print the resultant N x N matrix, with each row in a new line, and elements sepa
             "#.to_string(),
             input_format: "The first line contains an integer N. The next N lines contain N space-separated integers representing the first matrix. The next N lines contain N space-separated integers representing the second matrix.".to_string(),
             constraints: "1 ≤ N ≤ 100, Matrix elements are integers between -1000 and 1000".to_string(),
-            generated_code: r#"N = int(input())
-A = [list(map(int, input().split())) for _ in range(N)]
-B = [list(map(int, input().split())) for _ in range(N)]
+            generated_code: r#" 
+#include <iostream>
+using namespace std;
 
-result = [[sum(A[i][k] * B[k][j] for k in range(N)) for j in range(N)] for i in range(N)]
+int main() {
+    int N;
+    cin >> N;
+    int A[N][N], B[N][N], result[N][N] = {0};
 
-for row in result:
-    print(*row)
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            cin >> A[i][j];
+
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            cin >> B[i][j];
+
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            for (int k = 0; k < N; k++)
+                result[i][j] += A[i][k] * B[k][j];
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++)
+            cout << result[i][j] << " ";
+        cout << endl;
+    }
+    return 0;
+}
 "#.to_string(),
         },
         // Example 5: Dijkstra's Algorithm (Shortest Path)
@@ -103,63 +148,56 @@ For each node, print the shortest distance from the source node.
             "#.to_string(),
             input_format: "The first line contains two integers N (nodes) and M (edges). The next M lines contain three integers U, V, W (representing an edge from U to V with weight W). The last line contains the source node.".to_string(),
             constraints: "1 ≤ N ≤ 10^5, 1 ≤ M ≤ 2×10^5, 1 ≤ U, V ≤ N, 1 ≤ W ≤ 10^9".to_string(),
-            generated_code: r#"import heapq
-import sys
+            generated_code: r#" 
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
 
-input = sys.stdin.read
-data = input().splitlines()
-N, M = map(int, data[0].split())
-graph = {i: [] for i in range(1, N+1)}
+using namespace std;
+typedef pair<int, int> pii;
 
-for i in range(1, M+1):
-    U, V, W = map(int, data[i].split())
-    graph[U].append((W, V))
+int main() {
+    int N, M;
+    cin >> N >> M;
 
-source = int(data[M+1])
-dist = {i: float('inf') for i in range(1, N+1)}
-dist[source] = 0
-pq = [(0, source)]
+    vector<vector<pii>> graph(N + 1);
+    for (int i = 0; i < M; i++) {
+        int U, V, W;
+        cin >> U >> V >> W;
+        graph[U].push_back({W, V});
+    }
 
-while pq:
-    d, node = heapq.heappop(pq)
-    if d > dist[node]:
-        continue
-    for weight, neighbor in graph[node]:
-        new_dist = d + weight
-        if new_dist < dist[neighbor]:
-            dist[neighbor] = new_dist
-            heapq.heappush(pq, (new_dist, neighbor))
-
-for i in range(1, N+1):
-    print(dist[i] if dist[i] != float('inf') else -1)
-"#.to_string(),
-        },
-        // Example 6: Balanced Parentheses Checker
-        SolutionTurn {
-            statement: r#"
-Write a program to check if a given string of parentheses is balanced.
-
-Output Format:
-Print "Balanced" if the string is balanced, otherwise print "Not Balanced".
-            "#.to_string(),
-            input_format: "A single string containing only characters '(', ')', '{', '}', '[' and ']'.".to_string(),
-            constraints: "1 ≤ Length of string ≤ 10^5".to_string(),
-            generated_code: r#"def is_balanced(s):
-    stack = []
-    mapping = {')': '(', '}': '{', ']': '['}
+    int source;
+    cin >> source;
     
-    for char in s:
-        if char in mapping:
-            top_element = stack.pop() if stack else '#'
-            if mapping[char] != top_element:
-                return "Not Balanced"
-        else:
-            stack.append(char)
-    
-    return "Balanced" if not stack else "Not Balanced"
+    vector<long long> dist(N + 1, LLONG_MAX);
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
 
-s = input().strip()
-print(is_balanced(s))
+    dist[source] = 0;
+    pq.push({0, source});
+
+    while (!pq.empty()) {
+        auto [d, node] = pq.top();
+        pq.pop();
+
+        if (d > dist[node]) continue;
+
+        for (auto [weight, neighbor] : graph[node]) {
+            long long new_dist = d + weight;
+            if (new_dist < dist[neighbor]) {
+                dist[neighbor] = new_dist;
+                pq.push({new_dist, neighbor});
+            }
+        }
+    }
+
+    for (int i = 1; i <= N; i++) {
+        cout << (dist[i] == LLONG_MAX ? -1 : dist[i]) << endl;
+    }
+
+    return 0;
+}
 "#.to_string(),
         },
     ]

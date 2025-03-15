@@ -225,7 +225,7 @@ pub async fn post_with_platform(
     let response = run_and_compare(
         &correct_code_llm,
         &code_request.test_code,
-        LanguageName::Python,
+        LanguageName::Cpp,
         code_request.test_code_language.clone(),
         &clex,
     )?;
