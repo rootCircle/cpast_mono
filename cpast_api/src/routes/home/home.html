@@ -1,18 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <title>Home</title>
-    </head>
-    <body>
-        <p>Welcome to our cpast_api!</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 40px;
+            text-align: center;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            margin: auto;
+        }
+        h1 {
+            color: #ffffff;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 12px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #00aaff;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        a:hover {
+            color: #66d9ff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to cpast_api!</h1>
+        <p>Explore the API documentation below:</p>
         <div>
-            <p>Documentation:</p>
+            <h2>Documentation</h2>
             <ul>
-                <li><a href="/scalar">/scalar</a></li>
-                <li><a href="/swagger-ui">/swagger-ui</a></li>
-                <li><a href="/redoc">/redoc</a></li>
+                <li><a href="/api/v1/docs/scalar">Scalar API</a></li>
+                <li><a href="/api/v1/docs/swagger-ui">Swagger UI</a></li>
+                <li><a href="/api/v1/docs/redoc">ReDoc</a></li>
             </ul>
         </div>
-    </body>
+    </div>
+</body>
 </html>
+

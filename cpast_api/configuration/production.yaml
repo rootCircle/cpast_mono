@@ -3,5 +3,4 @@ application:
   base_url: "http://127.0.0.1"
 database:
   require_ssl: true
-email_client:
-  base_url: "https://api.postmarkapp.com"
+

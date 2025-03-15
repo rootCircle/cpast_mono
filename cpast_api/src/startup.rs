@@ -1,6 +1,4 @@
-use crate::authentication::reject_anonymous_users;
 use crate::configuration::{DatabaseSettings, Settings};
-use crate::email_client::EmailClient;
 use crate::routes::api::v1::evaluate::with_code_and_clex::post_with_code_and_clex;
 use crate::routes::api::v1::evaluate::with_code_and_constraint::post_with_code_and_constraint;
 use crate::routes::api::v1::evaluate::with_code_and_platform::post_with_code_and_platform;
@@ -13,7 +11,6 @@ use actix_session::SessionMiddleware;
 use actix_session::storage::RedisSessionStore;
 use actix_web::cookie::Key;
 use actix_web::dev::Server;
-use actix_web::middleware::from_fn;
 use actix_web::web::Data;
 use actix_web::{App, HttpResponse, HttpServer, Responder, web};
 use actix_web_flash_messages::FlashMessagesFramework;
@@ -37,7 +34,6 @@ pub struct Application {
 impl Application {
     pub async fn build(configuration: Settings) -> Result<Self, anyhow::Error> {
         let connection_pool = get_connection_pool(&configuration.database);
-        let email_client = configuration.email_client.client();
 
         let address = format!(
             "{}:{}",
@@ -48,7 +44,6 @@ impl Application {
         let server = run(
             listener,
             connection_pool,
-            email_client,
             configuration.application.base_url,
             configuration.application.hmac_secret,
             configuration.redis_uri,
@@ -83,7 +78,6 @@ async fn redirect_swagger_ui() -> impl Responder {
 async fn run(
     listener: TcpListener,
     db_pool: PgPool,
-    email_client: EmailClient,
     base_url: String,
     hmac_secret: SecretString,
     redis_uri: SecretString,
@@ -97,7 +91,6 @@ async fn run(
     struct ApiDoc;
 
     let db_pool = Data::new(db_pool);
-    let email_client = Data::new(email_client);
     let base_url = Data::new(ApplicationBaseUrl(base_url));
     let secret_key = Key::from(hmac_secret.expose_secret().as_bytes());
     let gemini_api_key = Data::new(gemini_api_key);
@@ -106,8 +99,41 @@ async fn run(
     let redis_store = RedisSessionStore::new(redis_uri.expose_secret()).await?;
 
     let openapi = ApiDoc::openapi();
+
     let server = HttpServer::new(move || {
-        let mut app = App::new()
+        let mut api_v1 = web::scope("/api/v1")
+            .service(get_share_code)
+            .service(post_share_code)
+            .service(
+                web::scope("/evaluate")
+                    .service(post_with_shared_id)
+                    .service(post_with_code_and_clex)
+                    .app_data(gemini_api_key.clone())
+                    .service(post_with_code_and_platform)
+                    .service(post_with_code_and_constraint)
+                    .service(post_with_platform),
+            );
+
+        if std::env::var("APP_ENVIRONMENT").unwrap_or_default() != "production" {
+            api_v1 = api_v1.service(
+                web::scope("/docs")
+                    .service(Redoc::with_url("/redoc", openapi.clone()))
+                    .service(
+                        SwaggerUi::new("/swagger-ui/{_:.*}")
+                            .url("/api-docs/openapi.json", openapi.clone()),
+                    )
+                    .route("/swagger-ui", web::get().to(redirect_swagger_ui))
+                    // There is no need to create RapiDoc::with_openapi because the OpenApi is served
+                    // via SwaggerUi. Instead we only make rapidoc to point to the existing doc.
+                    //
+                    // If we wanted to serve the schema, the following would work:
+                    // .service(RapiDoc::with_openapi("/api-docs/openapi2.json", openapi.clone()).path("/rapidoc"))
+                    .service(RapiDoc::new("/api-docs/openapi.json").path("/rapidoc"))
+                    .service(Scalar::with_url("/scalar", openapi.clone())),
+            );
+        }
+
+        let app = App::new()
             .wrap(message_framework.clone())
             .wrap(SessionMiddleware::new(
                 redis_store.clone(),
@@ -115,40 +141,9 @@ async fn run(
             ))
             .wrap(TracingLogger::default())
             .route("/", web::get().to(home))
-            .service(
-                web::scope("/api/v1")
-                    .service(get_share_code)
-                    .service(post_share_code)
-                    .service(
-                        web::scope("/evaluate")
-                            .service(post_with_shared_id)
-                            .service(post_with_code_and_clex)
-                            .app_data(gemini_api_key.clone())
-                            .service(post_with_code_and_platform)
-                            .service(post_with_code_and_constraint)
-                            .service(post_with_platform),
-                    ),
-            )
-            .service(web::scope("/admin").wrap(from_fn(reject_anonymous_users)));
-        if std::env::var("APP_ENVIRONMENT").unwrap_or_default() != "production" {
-            app = app
-                .service(Redoc::with_url("/redoc", openapi.clone()))
-                .service(
-                    SwaggerUi::new("/swagger-ui/{_:.*}")
-                        .url("/api-docs/openapi.json", openapi.clone()),
-                )
-                .route("/swagger-ui", web::get().to(redirect_swagger_ui))
-                // There is no need to create RapiDoc::with_openapi because the OpenApi is served
-                // via SwaggerUi. Instead we only make rapidoc to point to the existing doc.
-                //
-                // If we wanted to serve the schema, the following would work:
-                // .service(RapiDoc::with_openapi("/api-docs/openapi2.json", openapi.clone()).path("/rapidoc"))
-                .service(RapiDoc::new("/api-docs/openapi.json").path("/rapidoc"))
-                .service(Scalar::with_url("/scalar", openapi.clone()))
-        }
+            .service(api_v1);
         app.route("/health_check", web::get().to(health_check))
             .app_data(db_pool.clone())
-            .app_data(email_client.clone())
             .app_data(base_url.clone())
             .app_data(Data::new(HmacSecret(hmac_secret.clone())))
     })

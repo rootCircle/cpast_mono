@@ -16,7 +16,7 @@ env:
   SQLX_FEATURES: "rustls,postgres"
   APP_USER: app
   APP_USER_PWD: secret
-  APP_DB_NAME: newsletter
+  APP_DB_NAME: cpast_store_db
 
 jobs:
   test:
