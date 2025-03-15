@@ -1,6 +1,6 @@
 [package]
 name = "ccode_runner"
-version = "0.3.2"
+version = "0.3.3"
 description = "Run/compiles files and executes them efficiently"
 categories = [
     "development-tools::testing",

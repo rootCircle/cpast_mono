@@ -1,6 +1,6 @@
 [package]
 name = "cpast"
-version = "0.9.2"
+version = "0.10.0"
 description = "Run custom testcase with powerful clex language powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
 categories = ["development-tools::testing", "command-line-utilities", "compilers", "development-tools"]
 keywords = ["automata", "competitive-program", "generator", "language", "testcase"]
@@ -21,8 +21,8 @@ futures = { workspace = true }
 colored = { workspace = true }
 clap_complete = { workspace = true }
 clex_gen = { version = "^0.3.2", path = "../clex_gen" }
-ccode_runner = { version = "^0.3.2", path = "../ccode_runner" }
-clex_llm = { version = "^0.2.2", path = "../clex_llm" }
+ccode_runner = { version = "^0.3.3", path = "../ccode_runner" }
+clex_llm = { version = "^0.3.0", path = "../clex_llm" }
 cscrapper = { path = "../cscrapper" }
 thiserror = { workspace = true }
 

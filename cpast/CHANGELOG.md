@@ -1,6 +1,55 @@
 # Changelog
 
+## 0.10.0 (2025-03-15)
+
+### New Features
+
+ - <csr-id-d1f3bcfce5187879268726170447a032c3e95a40/> expose default codegen language type
+   feat(cpast): --problem_url args in ai and test routes
+   
+   feat(cscrapper): new ProgramStore api new_from_language
+   
+   chore(cpast_api): updated schema to store language name in cache and use language from clex_llm instead of c++ as default
+ - <csr-id-06c5c95dd7941ca0eb2dd7ac96b503feba4a0a53/> introduce new code and clex generators with updated API integration
+ - <csr-id-3488984dfc9a81df4538fac6d824a9bda3001209/> code compilation to temp dir
+
+### Performance
+
+ - <csr-id-ae5e16e12d295d554c364463944c48090aec8138/> add bench code
+
+### New Features (BREAKING)
+
+ - <csr-id-e2cdab56fcb473fe24e5e8acbea83c1703e97cb7/> update API key references from GEMINI_API_KEY to GOOGLE_API_KEY and add secrets setup script for CI
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 7 commits contributed to the release over the course of 10 calendar days.
+ - 13 days passed between releases.
+ - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
+    - Introduce new code and clex generators with updated API integration ([`06c5c95`](https://github.com/rootCircle/cpast_mono/commit/06c5c95dd7941ca0eb2dd7ac96b503feba4a0a53))
+    - Feat(cscrapper): refactor problem scraper to support async operations and add new migration for clex column (fixes #9) feat(cpast_api): evaluate route with_code_and_platform and tests ([`d460a2c`](https://github.com/rootCircle/cpast_mono/commit/d460a2c07607dec1803f1da9ae55cb5bbfa8a547))
+    - Update API key references from GEMINI_API_KEY to GOOGLE_API_KEY and add secrets setup script for CI ([`e2cdab5`](https://github.com/rootCircle/cpast_mono/commit/e2cdab56fcb473fe24e5e8acbea83c1703e97cb7))
+    - Feat(java_classname): add utility to extract public class name from Java source text feat(ccode_runner): enhance source file naming for Java and random languages feat(cpast): add tests for Java public class extraction and code evaluation ([`35c6c11`](https://github.com/rootCircle/cpast_mono/commit/35c6c116e8087c1d7331bbfde3d4dc0bc1da5b90))
+    - Code compilation to temp dir ([`3488984`](https://github.com/rootCircle/cpast_mono/commit/3488984dfc9a81df4538fac6d824a9bda3001209))
+    - Add bench code ([`ae5e16e`](https://github.com/rootCircle/cpast_mono/commit/ae5e16e12d295d554c364463944c48090aec8138))
+</details>
+
 ## 0.9.2 (2025-03-01)
+
+<csr-id-f93b38cd00306356503de16b84202333ea3baee4/>
+<csr-id-98decaeb5f61596e592b4c73236deec4c9979fcc/>
 
 ### Chore
 
@@ -11,7 +60,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 5 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -23,6 +72,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.2, clex_gen v0.3.2, clex_llm v0.2.2, cpast v0.9.2 ([`325d8c1`](https://github.com/rootCircle/cpast_mono/commit/325d8c11588daaad4678e72aac665b58f32f119e))
     - Update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation ([`f93b38c`](https://github.com/rootCircle/cpast_mono/commit/f93b38cd00306356503de16b84202333ea3baee4))
     - Update resolver to 3 ([`98decae`](https://github.com/rootCircle/cpast_mono/commit/98decaeb5f61596e592b4c73236deec4c9979fcc))
 </details>

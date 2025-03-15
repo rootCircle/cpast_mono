@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.3 (2025-03-15)
+
+### New Features
+
+ - <csr-id-d1f3bcfce5187879268726170447a032c3e95a40/> expose default codegen language type
+   feat(cpast): --problem_url args in ai and test routes
+   
+   feat(cscrapper): new ProgramStore api new_from_language
+   
+   chore(cpast_api): updated schema to store language name in cache and use language from clex_llm instead of c++ as default
+ - <csr-id-1f866fcf819af5df4c51b9f1aacf9607b6ff47e8/> add sample programs and tests for multiple languages including Java, C, C++, Python, Ruby, JavaScript, and Rust
+ - <csr-id-976089bf07b7556823c32621ca9c8da98850932d/> enhance new_from_custom_dest to support Java file naming rules and improve error handling
+ - <csr-id-626c3ce60e1cbc3dcd25d92c5298413650d70553/> add new error types for invalid file names and empty temporary directories
+ - <csr-id-6a2a02cd18c11bb72b4acdf5ed816a0bc70c333a/> expose from_text from_custom_dest api to public
+ - <csr-id-3488984dfc9a81df4538fac6d824a9bda3001209/> code compilation to temp dir
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 7 commits contributed to the release over the course of 1 calendar day.
+ - 13 days passed between releases.
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
+    - Add sample programs and tests for multiple languages including Java, C, C++, Python, Ruby, JavaScript, and Rust ([`1f866fc`](https://github.com/rootCircle/cpast_mono/commit/1f866fcf819af5df4c51b9f1aacf9607b6ff47e8))
+    - Enhance new_from_custom_dest to support Java file naming rules and improve error handling ([`976089b`](https://github.com/rootCircle/cpast_mono/commit/976089bf07b7556823c32621ca9c8da98850932d))
+    - Feat(java_classname): add utility to extract public class name from Java source text feat(ccode_runner): enhance source file naming for Java and random languages feat(cpast): add tests for Java public class extraction and code evaluation ([`35c6c11`](https://github.com/rootCircle/cpast_mono/commit/35c6c116e8087c1d7331bbfde3d4dc0bc1da5b90))
+    - Add new error types for invalid file names and empty temporary directories ([`626c3ce`](https://github.com/rootCircle/cpast_mono/commit/626c3ce60e1cbc3dcd25d92c5298413650d70553))
+    - Expose from_text from_custom_dest api to public ([`6a2a02c`](https://github.com/rootCircle/cpast_mono/commit/6a2a02cd18c11bb72b4acdf5ed816a0bc70c333a))
+    - Code compilation to temp dir ([`3488984`](https://github.com/rootCircle/cpast_mono/commit/3488984dfc9a81df4538fac6d824a9bda3001209))
+</details>
+
 ## v0.3.2 (2025-03-01)
 
 ### Documentation
@@ -15,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 5 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.2, clex_gen v0.3.2, clex_llm v0.2.2, cpast v0.9.2 ([`325d8c1`](https://github.com/rootCircle/cpast_mono/commit/325d8c11588daaad4678e72aac665b58f32f119e))
     - Rust docs ([`ea9fa36`](https://github.com/rootCircle/cpast_mono/commit/ea9fa36e4852bd8af718fe6abe6190be725ed292))
 </details>
 

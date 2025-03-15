@@ -5,7 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.0 (2025-03-15)
+
+### New Features
+
+ - <csr-id-d1f3bcfce5187879268726170447a032c3e95a40/> expose default codegen language type
+   feat(cpast): --problem_url args in ai and test routes
+   
+   feat(cscrapper): new ProgramStore api new_from_language
+   
+   chore(cpast_api): updated schema to store language name in cache and use language from clex_llm instead of c++ as default
+ - <csr-id-a7be429d63454f278237173dab38f8dd1b522af2/> update code generation to support C++ solutions and enhance input handling
+ - <csr-id-ab31151dec6626ea67cc24ddab8ff390b9989282/> add caching for code evaluation and new evaluate route with_platform
+ - <csr-id-06c5c95dd7941ca0eb2dd7ac96b503feba4a0a53/> introduce new code and clex generators with updated API integration
+ - <csr-id-7ea37a311ecc70db654e9b4facc76cfca4a6290a/> add LLM API key configuration and integrate into evaluation routes
+
+### New Features (BREAKING)
+
+ - <csr-id-e2cdab56fcb473fe24e5e8acbea83c1703e97cb7/> update API key references from GEMINI_API_KEY to GOOGLE_API_KEY and add secrets setup script for CI
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 6 commits contributed to the release over the course of 1 calendar day.
+ - 13 days passed between releases.
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
+    - Update code generation to support C++ solutions and enhance input handling ([`a7be429`](https://github.com/rootCircle/cpast_mono/commit/a7be429d63454f278237173dab38f8dd1b522af2))
+    - Add caching for code evaluation and new evaluate route with_platform ([`ab31151`](https://github.com/rootCircle/cpast_mono/commit/ab31151dec6626ea67cc24ddab8ff390b9989282))
+    - Introduce new code and clex generators with updated API integration ([`06c5c95`](https://github.com/rootCircle/cpast_mono/commit/06c5c95dd7941ca0eb2dd7ac96b503feba4a0a53))
+    - Update API key references from GEMINI_API_KEY to GOOGLE_API_KEY and add secrets setup script for CI ([`e2cdab5`](https://github.com/rootCircle/cpast_mono/commit/e2cdab56fcb473fe24e5e8acbea83c1703e97cb7))
+    - Add LLM API key configuration and integrate into evaluation routes ([`7ea37a3`](https://github.com/rootCircle/cpast_mono/commit/7ea37a311ecc70db654e9b4facc76cfca4a6290a))
+</details>
+
 ## v0.2.2 (2025-03-01)
+
+<csr-id-f93b38cd00306356503de16b84202333ea3baee4/>
 
 ### Chore
 
@@ -19,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 6 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -31,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.2, clex_gen v0.3.2, clex_llm v0.2.2, cpast v0.9.2 ([`325d8c1`](https://github.com/rootCircle/cpast_mono/commit/325d8c11588daaad4678e72aac665b58f32f119e))
     - Update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation ([`f93b38c`](https://github.com/rootCircle/cpast_mono/commit/f93b38cd00306356503de16b84202333ea3baee4))
     - Rust docs ([`ea9fa36`](https://github.com/rootCircle/cpast_mono/commit/ea9fa36e4852bd8af718fe6abe6190be725ed292))
 </details>
