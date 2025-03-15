@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - <csr-id-a29a4c1da0732dbf2e9cf3f86873a635b7896592/> new file store interface and mig to rust 2024
  - <csr-id-d1f5932c0b045fb5d01acf32c9310c44216ad58f/> scrapper port to rust
  - <csr-id-02cb1cef4ccd3f20dff7ce5e45ef22df675e4c05/> make 'utoipa' optional and add 'api' feature to ccode_runner; update LanguageName enum to conditionally derive ToSchema
+ - <csr-id-0d908d6195630af425df9b083de6dcaebf101bfa/> add description, categories, and keywords to Cargo.toml
 
 ### Other
 
@@ -38,8 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 12 commits contributed to the release over the course of 137 calendar days.
- - 11 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 14 commits contributed to the release over the course of 137 calendar days.
+ - 12 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -49,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Add description, categories, and keywords to Cargo.toml ([`0d908d6`](https://github.com/rootCircle/cpast_mono/commit/0d908d6195630af425df9b083de6dcaebf101bfa))
+    - Release ccode_runner v0.3.4, cscrapper v0.1.0, cpast v0.10.0 ([`51e0827`](https://github.com/rootCircle/cpast_mono/commit/51e08276e821034082e49dc77b9ddd031b84ca0e))
     - Make 'utoipa' optional and add 'api' feature to ccode_runner; update LanguageName enum to conditionally derive ToSchema ([`02cb1ce`](https://github.com/rootCircle/cpast_mono/commit/02cb1cef4ccd3f20dff7ce5e45ef22df675e4c05))
     - Introduce new code and clex generators with updated API integration ([`06c5c95`](https://github.com/rootCircle/cpast_mono/commit/06c5c95dd7941ca0eb2dd7ac96b503feba4a0a53))
     - Remove thread sleep in codechef (fixes #10) ([`6717bb0`](https://github.com/rootCircle/cpast_mono/commit/6717bb04b76eca27606ccfc893eee781853a45e7))
