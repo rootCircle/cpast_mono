@@ -26,6 +26,7 @@ struct EvaluateCodeWithOnlyPlatformRequest {
     problem_url: String,
 }
 
+#[derive(Debug)]
 struct ScrapeCacheStoreResponse {
     statement: String,
     input_format: String,

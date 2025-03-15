@@ -1,4 +1,3 @@
-#![allow(dead_code, unused_variables)]
 use actix_web::{ResponseError, http::StatusCode};
 use anyhow::Context;
 use ccode_runner::lang_runner::{
@@ -88,9 +87,6 @@ pub enum EvaluateAPIError {
 
     #[error("Invalid Language Name in database")]
     InvalidLanguageNameInDB,
-
-    #[error("{0}")]
-    ClexGenerationError(String),
 }
 
 impl std::fmt::Debug for EvaluateAPIError {
@@ -109,7 +105,6 @@ impl ResponseError for EvaluateAPIError {
             EvaluateAPIError::UnexpectedError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::APIRunnerErrorType(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::ClexLLMError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            EvaluateAPIError::ClexGenerationError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             EvaluateAPIError::InvalidInputFormatOrConstraints => StatusCode::BAD_REQUEST,
             EvaluateAPIError::InvalidProblemURL => StatusCode::BAD_REQUEST,
             EvaluateAPIError::ScrapperError(_) => StatusCode::INTERNAL_SERVER_ERROR,

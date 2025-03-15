@@ -2,7 +2,7 @@ use crate::helpers::spawn_app;
 use reqwest::StatusCode;
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 #[allow(unused)]
 struct EvaluateCodeInputDiff {
     input: String,
@@ -10,7 +10,7 @@ struct EvaluateCodeInputDiff {
     actual_output: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 #[allow(unused)]
 struct EvaluateCodeResponse {
     has_output_matched: bool,
