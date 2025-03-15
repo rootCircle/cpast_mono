@@ -25,7 +25,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 9 commits contributed to the release over the course of 10 calendar days.
+ - 10 commits contributed to the release over the course of 10 calendar days.
  - 13 days passed between releases.
  - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -37,6 +37,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release cscrapper v0.1.0, cpast v0.10.0 ([`b88b38e`](https://github.com/rootCircle/cpast_mono/commit/b88b38e61da71e3318cc8e72fe8812b70977802c))
     - Release ccode_runner v0.3.4, cscrapper v0.1.0, cpast v0.10.0 ([`51e0827`](https://github.com/rootCircle/cpast_mono/commit/51e08276e821034082e49dc77b9ddd031b84ca0e))
     - Release ccode_runner v0.3.3, clex_llm v0.3.0, cscrapper v0.1.0, cpast v0.10.0, safety bump cpast v0.10.0 ([`3c24521`](https://github.com/rootCircle/cpast_mono/commit/3c245215b88f1f7e15764bb7e5756929825ec538))
     - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
