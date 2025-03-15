@@ -38,9 +38,10 @@ struct ShareGetResponse {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Share_id", body = EvaluateCodeResponse),
-        (status = 400, description = "Invalid clex", body = String),
-        (status = 500, description = "Internal server error", body = String),
+        (status = 200, description = "Successful evaluation", body = EvaluateCodeResponse),
+        (status = 400, description = "Invalid share ID or format", body = String),
+        (status = 404, description = "Share ID not found", body = String), 
+        (status = 500, description = "Server error - includes database errors or language parsing errors", body = String)
     )
 )]
 #[post("/with_shared_id")]

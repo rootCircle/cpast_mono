@@ -84,9 +84,6 @@ pub enum EvaluateAPIError {
 
     #[error("Invalid problem URL")]
     InvalidProblemURL,
-
-    #[error("Invalid Language Name in database")]
-    InvalidLanguageNameInDB,
 }
 
 impl std::fmt::Debug for EvaluateAPIError {
@@ -108,7 +105,6 @@ impl ResponseError for EvaluateAPIError {
             EvaluateAPIError::InvalidInputFormatOrConstraints => StatusCode::BAD_REQUEST,
             EvaluateAPIError::InvalidProblemURL => StatusCode::BAD_REQUEST,
             EvaluateAPIError::ScrapperError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            EvaluateAPIError::InvalidLanguageNameInDB => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 }

@@ -34,9 +34,10 @@ struct EvaluateCodeWithPlatformRequest {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Share_id", body = EvaluateCodeResponse),
-        (status = 400, description = "Invalid clex", body = String),
-        (status = 500, description = "Internal server error", body = String),
+        (status = 200, description = "Successful evaluation", body = EvaluateCodeResponse),
+        (status = 400, description = "Bad Request - Possible causes: Invalid clex expression, Invalid problem URL", body = String),
+        (status = 404, description = "Not Found - Possible cause: Share ID not found", body = String),
+        (status = 500, description = "Internal Server Error - Possible causes: Invalid Language Name in database, Runner errors, LLM generation errors, Scraper errors, Unexpected errors", body = String)
     )
 )]
 #[post("/with_code_and_platform")]

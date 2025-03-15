@@ -36,8 +36,9 @@ struct ScrapeCacheStoreResponse {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Share_id", body = EvaluateCodeResponse),
-        (status = 400, description = "Invalid clex", body = String),
+        (status = 200, description = "Successful evaluation", body = EvaluateCodeResponse),
+        (status = 400, description = "Bad Request. Possibly invalid CLEX expression", body = String),
+        (status = 404, description = "Problem URL not found or invalid", body = String),
         (status = 500, description = "Internal server error", body = String),
     )
 )]
@@ -293,7 +294,7 @@ pub(crate) async fn get_cached_code_gen_llm(
     let result = match result {
         Some(row) => {
             let language = LanguageName::try_from(row.language)
-                .map_err(|_| EvaluateAPIError::InvalidLanguageNameInDB)?;
+                .map_err(EvaluateAPIError::DirtyLanguageInDatabase)?;
             Some((row.code, language))
         }
         None => None,

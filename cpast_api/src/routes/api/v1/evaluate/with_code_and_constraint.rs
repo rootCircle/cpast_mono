@@ -36,9 +36,10 @@ struct EvaluateCodeWithConstraintRequest {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Share_id", body = EvaluateCodeResponse),
-        (status = 400, description = "Invalid clex", body = String),
-        (status = 500, description = "Internal server error", body = String),
+        (status = 200, description = "Successfully evaluated code", body = EvaluateCodeResponse),
+        (status = 400, description = "Bad request - Possible causes: Invalid clex expression format, Invalid input format/constraints", body = String),
+        (status = 404, description = "Not found", body = String),
+        (status = 500, description = "Internal server error - Possible causes: Database errors, LLM errors, Code runner errors", body = String),
     )
 )]
 #[post("/with_code_and_constraint")]

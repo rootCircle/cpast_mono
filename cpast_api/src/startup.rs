@@ -71,7 +71,7 @@ pub struct ApplicationBaseUrl(pub String);
 
 async fn redirect_swagger_ui() -> impl Responder {
     HttpResponse::Found()
-        .append_header(("Location", "/swagger-ui/"))
+        .append_header(("Location", "/api/v1/docs/swagger-ui/"))
         .finish()
 }
 
@@ -118,17 +118,13 @@ async fn run(
             api_v1 = api_v1.service(
                 web::scope("/docs")
                     .service(Redoc::with_url("/redoc", openapi.clone()))
+                    .service(RapiDoc::with_openapi("/openapi.json", openapi.clone()))
                     .service(
                         SwaggerUi::new("/swagger-ui/{_:.*}")
-                            .url("/api-docs/openapi.json", openapi.clone()),
+                            .url("/api/v1/docs/openapi.json", openapi.clone()),
                     )
                     .route("/swagger-ui", web::get().to(redirect_swagger_ui))
-                    // There is no need to create RapiDoc::with_openapi because the OpenApi is served
-                    // via SwaggerUi. Instead we only make rapidoc to point to the existing doc.
-                    //
-                    // If we wanted to serve the schema, the following would work:
-                    // .service(RapiDoc::with_openapi("/api-docs/openapi2.json", openapi.clone()).path("/rapidoc"))
-                    .service(RapiDoc::new("/api-docs/openapi.json").path("/rapidoc"))
+                    .service(RapiDoc::new("/api/v1/docs/openapi.json").path("/rapidoc"))
                     .service(Scalar::with_url("/scalar", openapi.clone())),
             );
         }

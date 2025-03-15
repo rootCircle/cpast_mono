@@ -30,9 +30,9 @@ struct EvaluateCodeWithClexRequest {
 
 #[utoipa::path(
     responses(
-        (status = 200, description = "Share_id", body = EvaluateCodeResponse),
+        (status = 200, description = "Successful evaluation", body = EvaluateCodeResponse),
         (status = 400, description = "Invalid clex", body = String),
-        (status = 500, description = "Internal server error", body = String),
+        (status = 500, description = "Program Exceution Error/Unexpected server error", body = String)
     )
 )]
 #[post("/with_code_and_clex")]
