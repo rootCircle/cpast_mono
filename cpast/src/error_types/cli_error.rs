@@ -1,6 +1,8 @@
 use core::fmt;
 use std::error::Error;
 
+use cscrapper::qscrapper::ScraperError;
+
 #[derive(Debug)]
 pub enum CliErrorType {
     GeminiAPIKeyMissing,
@@ -8,6 +10,8 @@ pub enum CliErrorType {
     ClexLLMGenerationError(Box<dyn Error>),
     InputFormatMissing,
     ConstraintsMissing,
+    AiRequiredArgsMissing,
+    CScrapperError(ScraperError),
 }
 
 impl fmt::Display for CliErrorType {
@@ -27,6 +31,10 @@ impl fmt::Display for CliErrorType {
                 "Input format is missing. Please provide the input format using the appropriate flag".to_string(),
             CliErrorType::ConstraintsMissing =>
                 "Constraints are missing. Please provide the constraints using the appropriate flag".to_string(),
+            CliErrorType::AiRequiredArgsMissing =>
+                "Problem URL OR input format and constraints are required. Please provide them using the appropriate flags".to_string(),
+            CliErrorType::CScrapperError(err) =>
+                format!("Error in cscrapper: {}", err),
         };
 
         write!(

@@ -30,6 +30,8 @@
 //! For more details on usage and advanced features, refer to the README.
 //!
 
+use ccode_runner::lang_runner::language_name::LanguageName;
+use ccode_runner::lang_runner::runner::Language;
 use colored::Colorize;
 use error_types::cli_error::CliErrorType;
 use futures::future::join_all;
@@ -59,6 +61,13 @@ pub enum GenericCpastError {
     CliError(#[from] CliErrorType),
 }
 
+pub enum CodeOrPath {
+    /// Source Code, Clex
+    Code(String, LanguageName),
+    /// File Path
+    Path(String),
+}
+
 /// Compile and test code against custom language generator.
 ///
 /// # Arguments
@@ -80,18 +89,34 @@ pub enum GenericCpastError {
 /// ```
 pub async fn compile_and_test(
     correct_binding: String,
-    test_binding: String,
+    test_binding: CodeOrPath,
     language: String,
     iterations: usize,
     no_stop: bool,
     do_force_compile: bool,
     debug: bool,
 ) -> Result<(), GenericCpastError> {
-    let store = ProgramStore::new(
-        Path::new(&correct_binding),
-        Path::new(&test_binding),
-        do_force_compile,
-    )?;
+    let store = match test_binding {
+        CodeOrPath::Code(test_code, test_lang) => {
+            // CURRENTLY UNSTABLE
+            eprintln!(
+                "{}",
+                "Using --problem_url is unstable at this moment. It may or may not work!"
+                    .bold()
+                    .red()
+            );
+            let correct_lang_instance =
+                Language::new(Path::new(&correct_binding), do_force_compile)?;
+            let test_lang_instance =
+                Language::new_from_text(&test_code, test_lang, do_force_compile)?;
+            ProgramStore::new_from_language(correct_lang_instance, test_lang_instance)?
+        }
+        CodeOrPath::Path(test_path) => ProgramStore::new(
+            Path::new(&correct_binding),
+            Path::new(&test_path),
+            do_force_compile,
+        )?,
+    };
     let store = Arc::new(store);
 
     let mut token = lexer::Tokens::new(language);

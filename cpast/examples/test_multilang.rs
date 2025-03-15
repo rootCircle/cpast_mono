@@ -1,6 +1,6 @@
 use std::env;
 
-use cpast::compile_and_test;
+use cpast::{CodeOrPath, compile_and_test};
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 64)]
 async fn main() {
@@ -8,7 +8,7 @@ async fn main() {
 
     compile_and_test(
         format!("{manifest_dir}/examples/res/hello.py"),
-        format!("{manifest_dir}/examples/res/hello.java"),
+        CodeOrPath::Path(format!("{manifest_dir}/examples/res/hello.java")),
         "N".to_owned(),
         100,
         true,

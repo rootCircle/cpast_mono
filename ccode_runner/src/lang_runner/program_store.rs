@@ -68,6 +68,16 @@ impl ProgramStore {
         })
     }
 
+    pub fn new_from_language(
+        correct_lang: Language,
+        test_lang: Language,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        Ok(ProgramStore {
+            correct_file: correct_lang,
+            test_file: test_lang,
+        })
+    }
+
     /// Run both correct and test files with the given input and compare their outputs
     ///
     /// # Arguments

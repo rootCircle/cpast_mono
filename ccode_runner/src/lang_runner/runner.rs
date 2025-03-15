@@ -7,17 +7,14 @@ use super::language_name::{CompilationType, LanguageName};
 use super::runner_error_types::RunnerErrorType;
 
 #[derive(Debug)]
-pub(crate) struct Language {
+pub struct Language {
     pub(crate) code: SourceCodeInfo,
     is_compiled: bool, // For program optimization
     do_force_compile: bool,
 }
 
 impl Language {
-    pub(crate) fn new(
-        file_path: &Path,
-        do_force_compile: bool,
-    ) -> Result<Self, Box<RunnerErrorType>> {
+    pub fn new(file_path: &Path, do_force_compile: bool) -> Result<Self, Box<RunnerErrorType>> {
         let code = SourceCodeInfo::new(file_path)?;
 
         let mut lang = Self {
@@ -34,7 +31,7 @@ impl Language {
         Ok(lang)
     }
 
-    pub(crate) fn new_from_custom_dest(
+    pub fn new_from_custom_dest(
         file_path: &Path,
         dest_path: Option<&Path>,
         do_force_compile: bool,
@@ -55,7 +52,7 @@ impl Language {
         Ok(lang)
     }
 
-    pub(crate) fn new_from_text(
+    pub fn new_from_text(
         source_text: &str,
         lang: LanguageName,
         do_force_compile: bool,

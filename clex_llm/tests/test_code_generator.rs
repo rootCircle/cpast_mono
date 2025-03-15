@@ -20,14 +20,14 @@ async fn test_generate_code_solution() {
     let result = generate_code_solution(&generator, statement, input_format, constraints).await;
 
     match result {
-        Ok(solution) => {
+        Ok((solution, language_name)) => {
             let correct_code = r#"n = int(input())
 arr = list(map(int, input().split()))
 print(sum(arr))"#;
             let runner = ProgramStore::new_from_text(
                 correct_code,
                 &solution,
-                LanguageName::Python,
+                language_name,
                 LanguageName::Python,
                 false,
             )

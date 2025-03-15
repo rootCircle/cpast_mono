@@ -47,12 +47,16 @@ pub(crate) struct TestArgs {
     pub(crate) correct_file: Option<String>,
 
     /// The test file
-    #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
+    #[arg(short, long,  value_hint = ValueHint::FilePath)]
     pub(crate) test_file: Option<String>,
 
     /// Clex for generating Tests
-    #[arg(short, long, required = true, value_hint = ValueHint::Other)]
+    #[arg(short, long,  value_hint = ValueHint::Other)]
     pub(crate) generator: Option<String>,
+
+    /// Coding Problem URL
+    #[arg(short='u', long, value_hint = ValueHint::Url)]
+    pub(crate) problem_url: Option<String>,
 
     /// Max number of times of iterations
     #[arg(short, long, default_value_t = DEFAULT_ITERATIONS_COUNT, value_hint = ValueHint::Other)]
@@ -84,12 +88,16 @@ pub(crate) struct GenerateArgs {
 #[derive(clap::Args)]
 pub(crate) struct AiArgs {
     /// Input format
-    #[arg(short, long, required = true, value_hint = ValueHint::Other)]
+    #[arg(short, long, value_hint = ValueHint::Other)]
     pub(crate) input_format: Option<String>,
 
     /// Constraints
-    #[arg(short, long, required = true, value_hint = ValueHint::Other)]
+    #[arg(short, long, value_hint = ValueHint::Other)]
     pub(crate) constraints: Option<String>,
+
+    /// Problem URL
+    #[arg(short='u', long, value_hint = ValueHint::Url)]
+    pub(crate) problem_url: Option<String>,
 
     /// Copy clex to clipboard
     #[arg(long)]

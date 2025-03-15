@@ -15,6 +15,4 @@ rust-version.workspace = true
 serde = { workspace = true, features = ["derive"] }
 google-generative-ai-rs = { workspace = true, features = ["beta"] }
 tokio = { workspace = true, features = ["full"] }
-
-[dev-dependencies]
 ccode_runner = { path = "../ccode_runner", version = "0.3.2"}

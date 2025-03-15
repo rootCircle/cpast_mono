@@ -31,6 +31,7 @@
 //!
 //! # Prerequisites
 //! - A valid Google Generative AI API key (get the API key from <https://makersuite.google.com/app/apikey>)
+use ccode_runner::lang_runner::language_name::LanguageName;
 use clex_generator::runner::ClexPromptGenerator;
 use code_generator::runner::CodeSolutionGenerator;
 use google_generative_ai_rs::v1::errors::GoogleAPIError;
@@ -100,8 +101,11 @@ pub async fn generate_code_solution(
     statement: &str,
     input_format: &str,
     constraints: &str,
-) -> Result<String, GoogleAPIError> {
-    generator
-        .generate_response(statement, input_format, constraints)
-        .await
+) -> Result<(String, LanguageName), GoogleAPIError> {
+    Ok((
+        generator
+            .generate_response(statement, input_format, constraints)
+            .await?,
+        generator.get_language().clone(),
+    ))
 }

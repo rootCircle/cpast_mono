@@ -1,3 +1,4 @@
+use ccode_runner::lang_runner::language_name::LanguageName;
 use google_generative_ai_rs::v1::{
     api::{Client, PostResult},
     errors::GoogleAPIError,
@@ -12,6 +13,7 @@ use super::examples::{self, SolutionTurn};
 pub struct CodeSolutionGenerator {
     examples: Vec<SolutionTurn>,
     client: Client,
+    language: LanguageName,
 }
 
 impl CodeSolutionGenerator {
@@ -20,7 +22,15 @@ impl CodeSolutionGenerator {
 
         let client = Client::new_from_model(Model::Gemini2_0Flash, api_key.to_string());
 
-        Ok(CodeSolutionGenerator { examples, client })
+        Ok(CodeSolutionGenerator {
+            examples,
+            client,
+            language: LanguageName::Cpp,
+        })
+    }
+
+    pub(crate) fn get_language(&self) -> &LanguageName {
+        &self.language
     }
 
     fn get_system_prompt(&self) -> &str {

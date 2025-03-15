@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT code, language\n        FROM code_gen_llm_cache\n        WHERE question_url = $1 \n        AND generated_at + ttl > NOW()\n        LIMIT 1;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "language",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "cf3e1d7044a8765a858edb41da4208a269d7a3cfa606783c5eed6579e3ebe589"
+}

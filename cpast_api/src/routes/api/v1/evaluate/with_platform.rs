@@ -58,15 +58,15 @@ pub async fn post_with_platform(
     let cached_generated_code = cached_generated_code?;
     let cached_scrape_store = cached_scrape_store?;
 
-    let (correct_code_llm, clex) = match cached_scrape_store {
+    let (correct_code_llm, lang_name, clex) = match cached_scrape_store {
         Some(scrape_store) => match cached_generated_code {
-            Some(cached_code) => (cached_code, scrape_store.clex),
+            Some((cached_code, code_language)) => (cached_code, code_language, scrape_store.clex),
             None => {
                 let clex_llm_generator =
                     clex_llm::create_code_generator(gemini_api_key.expose_secret())
                         .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
 
-                let generated_code = clex_llm::generate_code_solution(
+                let (generated_code, generated_lang) = clex_llm::generate_code_solution(
                     &clex_llm_generator,
                     &scrape_store.statement,
                     &scrape_store.input_format,
@@ -75,16 +75,21 @@ pub async fn post_with_platform(
                 .await
                 .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
 
-                cache_code_gen_llm_into_db(&pool, &code_request.problem_url, &generated_code)
-                    .await
-                    .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
+                cache_code_gen_llm_into_db(
+                    &pool,
+                    &code_request.problem_url,
+                    &generated_code,
+                    generated_lang.clone(),
+                )
+                .await
+                .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
 
-                (generated_code, scrape_store.clex)
+                (generated_code, generated_lang, scrape_store.clex)
             }
         },
         None => {
             match cached_generated_code {
-                Some(cached_code) => {
+                Some((cached_code, code_language)) => {
                     let code_platform = cscrapper::parse_problem_url(&code_request.problem_url);
 
                     let scrape_clex = match code_platform {
@@ -138,7 +143,7 @@ pub async fn post_with_platform(
                     clex_result?;
                     scrape_result?;
 
-                    (cached_code, generated_clex)
+                    (cached_code, code_language, generated_clex)
                 }
                 None => {
                     let code_platform = cscrapper::parse_problem_url(&code_request.problem_url);
@@ -180,7 +185,7 @@ pub async fn post_with_platform(
                         )
                     );
 
-                    let generated_code = generated_code
+                    let (generated_code, generated_language) = generated_code
                         .map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
 
                     let generated_clex = generated_clex
@@ -207,7 +212,8 @@ pub async fn post_with_platform(
                         cache_code_gen_llm_into_db(
                             &pool,
                             &code_request.problem_url,
-                            &generated_code
+                            &generated_code,
+                            generated_language.clone()
                         )
                     );
 
@@ -216,7 +222,7 @@ pub async fn post_with_platform(
                     scrape_result?;
                     code_gen_result.map_err(|e| EvaluateAPIError::ClexLLMError(e.to_string()))?;
 
-                    (generated_code, generated_clex)
+                    (generated_code, generated_language, generated_clex)
                 }
             }
         }
@@ -225,7 +231,7 @@ pub async fn post_with_platform(
     let response = run_and_compare(
         &correct_code_llm,
         &code_request.test_code,
-        LanguageName::Cpp,
+        lang_name,
         code_request.test_code_language.clone(),
         &clex,
     )?;
@@ -266,10 +272,10 @@ async fn get_cached_all_data_scrape_from_db(
 pub(crate) async fn get_cached_code_gen_llm(
     pool: &PgPool,
     question_url: &str,
-) -> Result<Option<String>, anyhow::Error> {
+) -> Result<Option<(String, LanguageName)>, anyhow::Error> {
     let query = sqlx::query!(
         r#"
-        SELECT code
+        SELECT code, language
         FROM code_gen_llm_cache
         WHERE question_url = $1 
         AND generated_at + ttl > NOW()
@@ -283,7 +289,16 @@ pub(crate) async fn get_cached_code_gen_llm(
         .await
         .context("Failed to fetch scrape details")?;
 
-    Ok(result.map(|row| row.code))
+    let result = match result {
+        Some(row) => {
+            let language = LanguageName::try_from(row.language)
+                .map_err(|_| EvaluateAPIError::InvalidLanguageNameInDB)?;
+            Some((row.code, language))
+        }
+        None => None,
+    };
+
+    Ok(result)
 }
 
 #[tracing::instrument(name = "Cache code generated by LLM into DB", skip(pool))]
@@ -291,19 +306,21 @@ pub(crate) async fn cache_code_gen_llm_into_db(
     pool: &PgPool,
     question_url: &str,
     code: &str,
+    language: LanguageName,
 ) -> Result<(), anyhow::Error> {
     let mut transaction: Transaction<'_, Postgres> =
         pool.begin().await.context("Failed to start transaction")?;
 
     let query = sqlx::query!(
         r#"
-        INSERT INTO code_gen_llm_cache (question_url, code)
-        VALUES ($1, $2)
+        INSERT INTO code_gen_llm_cache (question_url, code, language)
+        VALUES ($1, $2, $3)
         ON CONFLICT (question_url) DO UPDATE 
-        SET code = $2, generated_at = NOW();
+        SET code = $2, language = $3, generated_at = NOW();
         "#,
         question_url,
-        code
+        code,
+        language.to_string()
     );
 
     transaction.execute(query).await?;
