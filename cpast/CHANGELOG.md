@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.10.1 (2025-03-15)
+
+### Bug Fixes
+
+ - <csr-id-371d1ecb9b421cad11e37a7cc23eda538be3e2a0/> test args were mistaken for --correct
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Test args were mistaken for --correct ([`371d1ec`](https://github.com/rootCircle/cpast_mono/commit/371d1ecb9b421cad11e37a7cc23eda538be3e2a0))
+</details>
+
 ## 0.10.0 (2025-03-15)
 
 ### Bug Fixes
@@ -29,7 +53,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 13 commits contributed to the release over the course of 10 calendar days.
+ - 14 commits contributed to the release over the course of 10 calendar days.
  - 13 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -41,6 +65,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release cpast v0.10.0 ([`c8b2ef1`](https://github.com/rootCircle/cpast_mono/commit/c8b2ef130c1009c31c47cf194d8187ba465025dd))
     - Update cscrapper dependency version in Cargo.toml ([`6d8101e`](https://github.com/rootCircle/cpast_mono/commit/6d8101ebea7d5ba69ffe5ca81ddb6ed75485aaa4))
     - Release cpast v0.10.0 ([`5682510`](https://github.com/rootCircle/cpast_mono/commit/56825106572a80e635fb2d5d47f1a8daf67564ba))
     - Release cscrapper v0.1.0, cpast v0.10.0 ([`b7f3958`](https://github.com/rootCircle/cpast_mono/commit/b7f3958d3e6b43f80a40aaea5da3e5e718a6d3b0))
