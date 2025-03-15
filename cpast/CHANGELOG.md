@@ -25,7 +25,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release over the course of 10 calendar days.
+ - 8 commits contributed to the release over the course of 10 calendar days.
  - 13 days passed between releases.
  - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -37,6 +37,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.3, clex_llm v0.3.0, cscrapper v0.1.0, cpast v0.10.0, safety bump cpast v0.10.0 ([`3c24521`](https://github.com/rootCircle/cpast_mono/commit/3c245215b88f1f7e15764bb7e5756929825ec538))
     - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
     - Introduce new code and clex generators with updated API integration ([`06c5c95`](https://github.com/rootCircle/cpast_mono/commit/06c5c95dd7941ca0eb2dd7ac96b503feba4a0a53))
     - Feat(cscrapper): refactor problem scraper to support async operations and add new migration for clex column (fixes #9) feat(cpast_api): evaluate route with_code_and_platform and tests ([`d460a2c`](https://github.com/rootCircle/cpast_mono/commit/d460a2c07607dec1803f1da9ae55cb5bbfa8a547))

@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.4 (2025-03-15)
+
+### New Features
+
+ - <csr-id-02cb1cef4ccd3f20dff7ce5e45ef22df675e4c05/> make 'utoipa' optional and add 'api' feature to ccode_runner; update LanguageName enum to conditionally derive ToSchema
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Make 'utoipa' optional and add 'api' feature to ccode_runner; update LanguageName enum to conditionally derive ToSchema ([`02cb1ce`](https://github.com/rootCircle/cpast_mono/commit/02cb1cef4ccd3f20dff7ce5e45ef22df675e4c05))
+</details>
+
 ## v0.3.3 (2025-03-15)
 
 ### New Features
@@ -25,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release over the course of 1 calendar day.
+ - 8 commits contributed to the release over the course of 1 calendar day.
  - 13 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -37,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.3, clex_llm v0.3.0, cscrapper v0.1.0, cpast v0.10.0, safety bump cpast v0.10.0 ([`3c24521`](https://github.com/rootCircle/cpast_mono/commit/3c245215b88f1f7e15764bb7e5756929825ec538))
     - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
     - Add sample programs and tests for multiple languages including Java, C, C++, Python, Ruby, JavaScript, and Rust ([`1f866fc`](https://github.com/rootCircle/cpast_mono/commit/1f866fcf819af5df4c51b9f1aacf9607b6ff47e8))
     - Enhance new_from_custom_dest to support Java file naming rules and improve error handling ([`976089b`](https://github.com/rootCircle/cpast_mono/commit/976089bf07b7556823c32621ca9c8da98850932d))

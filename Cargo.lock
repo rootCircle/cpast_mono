@@ -630,7 +630,7 @@ dependencies = [
 
 [[package]]
 name = "ccode_runner"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "rand 0.8.5",
  "regex",
