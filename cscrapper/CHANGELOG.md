@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.1.1 (2025-03-15)
+
+### Bug Fixes
+
+ - <csr-id-07b16ae8573d8376d4b2b3053d594699602ab8e5/> increase timeout
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Increase timeout ([`07b16ae`](https://github.com/rootCircle/cpast_mono/commit/07b16ae8573d8376d4b2b3053d594699602ab8e5))
+</details>
+
 ## v0.1.0 (2025-03-15)
 
 <csr-id-6717bb04b76eca27606ccfc893eee781853a45e7/>
@@ -43,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 16 commits contributed to the release over the course of 137 calendar days.
+ - 17 commits contributed to the release over the course of 137 calendar days.
  - 13 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -54,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release cscrapper v0.1.0, cpast v0.10.0 ([`b7f3958`](https://github.com/rootCircle/cpast_mono/commit/b7f3958d3e6b43f80a40aaea5da3e5e718a6d3b0))
     - Update keywords in Cargo.toml for accuracy ([`e211a8d`](https://github.com/rootCircle/cpast_mono/commit/e211a8d39e517cb46597f2c2b2f3e72ccfef8ff5))
     - Release cscrapper v0.1.0, cpast v0.10.0 ([`b88b38e`](https://github.com/rootCircle/cpast_mono/commit/b88b38e61da71e3318cc8e72fe8812b70977802c))
     - Add description, categories, and keywords to Cargo.toml ([`0d908d6`](https://github.com/rootCircle/cpast_mono/commit/0d908d6195630af425df9b083de6dcaebf101bfa))
