@@ -7,14 +7,14 @@ use cpast::{CodeOrPath, DEFAULT_FAIL_EXIT_CODE, compile_and_test};
 use cscrapper::qscrapper::ScraperError;
 
 pub(crate) async fn test_call(args: TestArgs) {
-    let correct_binding = args.correct_file.unwrap_or_default();
+    let test_binding = args.test_file.unwrap_or_default();
     let iterations = args.iterations;
     let no_stop = args.no_stop;
     let do_force_compile = args.force_recompile;
     let debug = args.debug;
 
-    if !((args.problem_url.is_some() && args.test_file.is_none() && args.generator.is_none())
-        || (args.problem_url.is_none() && args.test_file.is_some() && args.generator.is_some()))
+    if !((args.problem_url.is_some() && args.correct_file.is_none() && args.generator.is_none())
+        || (args.problem_url.is_none() && args.correct_file.is_some() && args.generator.is_some()))
     {
         eprintln!(
             "{}",
@@ -23,7 +23,7 @@ pub(crate) async fn test_call(args: TestArgs) {
         exit(DEFAULT_FAIL_EXIT_CODE);
     }
 
-    let (test_binding, clex) = match args.problem_url {
+    let (correct_binding, clex) = match args.problem_url {
         Some(problem_url) => {
             let (generated_clex, generated_code, generated_language) =
                 match get_clex_code_input_format_constraints_from_problem_url(&problem_url).await {
@@ -51,10 +51,10 @@ pub(crate) async fn test_call(args: TestArgs) {
             )
         }
         None => {
-            let test_binding = args.test_file.unwrap_or_default();
             let language = args.generator.unwrap_or_default();
 
-            (CodeOrPath::Path(test_binding), language)
+            let correct_binding = args.correct_file.unwrap_or_default();
+            (CodeOrPath::Path(correct_binding), language)
         }
     };
 

@@ -43,15 +43,15 @@ fn print_completions<G: Generator>(generator: G, cmd: &mut Command) {
 #[derive(clap::Args)]
 pub(crate) struct TestArgs {
     /// The correct file
-    #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
+    #[arg(short, long, value_hint = ValueHint::FilePath)]
     pub(crate) correct_file: Option<String>,
 
     /// The test file
-    #[arg(short, long,  value_hint = ValueHint::FilePath)]
+    #[arg(short, long, required = true, value_hint = ValueHint::FilePath)]
     pub(crate) test_file: Option<String>,
 
     /// Clex for generating Tests
-    #[arg(short, long,  value_hint = ValueHint::Other)]
+    #[arg(short, long, value_hint = ValueHint::Other)]
     pub(crate) generator: Option<String>,
 
     /// Coding Problem URL

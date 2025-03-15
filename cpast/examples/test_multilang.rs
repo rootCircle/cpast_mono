@@ -7,8 +7,8 @@ async fn main() {
     let manifest_dir = env!("CARGO_MANIFEST_DIR");
 
     compile_and_test(
-        format!("{manifest_dir}/examples/res/hello.py"),
-        CodeOrPath::Path(format!("{manifest_dir}/examples/res/hello.java")),
+        CodeOrPath::Path(format!("{manifest_dir}/examples/res/hello.py")),
+        format!("{manifest_dir}/examples/res/hello.java"),
         "N".to_owned(),
         100,
         true,

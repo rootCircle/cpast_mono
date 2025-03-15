@@ -88,16 +88,16 @@ pub enum CodeOrPath {
 /// }
 /// ```
 pub async fn compile_and_test(
-    correct_binding: String,
-    test_binding: CodeOrPath,
+    correct_binding: CodeOrPath,
+    test_binding: String,
     language: String,
     iterations: usize,
     no_stop: bool,
     do_force_compile: bool,
     debug: bool,
 ) -> Result<(), GenericCpastError> {
-    let store = match test_binding {
-        CodeOrPath::Code(test_code, test_lang) => {
+    let store = match correct_binding {
+        CodeOrPath::Code(correct_code, correct_lang) => {
             // CURRENTLY UNSTABLE
             eprintln!(
                 "{}",
@@ -106,14 +106,13 @@ pub async fn compile_and_test(
                     .red()
             );
             let correct_lang_instance =
-                Language::new(Path::new(&correct_binding), do_force_compile)?;
-            let test_lang_instance =
-                Language::new_from_text(&test_code, test_lang, do_force_compile)?;
+                Language::new_from_text(&correct_code, correct_lang, do_force_compile)?;
+            let test_lang_instance = Language::new(Path::new(&test_binding), do_force_compile)?;
             ProgramStore::new_from_language(correct_lang_instance, test_lang_instance)?
         }
-        CodeOrPath::Path(test_path) => ProgramStore::new(
-            Path::new(&correct_binding),
-            Path::new(&test_path),
+        CodeOrPath::Path(correct_path) => ProgramStore::new(
+            Path::new(&correct_path),
+            Path::new(&test_binding),
             do_force_compile,
         )?,
     };
