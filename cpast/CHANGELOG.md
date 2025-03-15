@@ -2,12 +2,16 @@
 
 ## 0.10.2 (2025-03-15)
 
+### Other
+
+ - <csr-id-41feaa188b4a013e208f762cf721e44ad36d29d5/> update cscraper to v0.1.1
+
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
- - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -17,8 +21,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
-    - Adjusting changelogs prior to release of cpast v0.10.2 ([`2f2be7c`](https://github.com/rootCircle/cpast_mono/commit/2f2be7ce6a766d10fcf1048cd04345b8ba14ca4f))
-    - Adjusting changelogs prior to release of cpast v0.10.2 ([`aba0aaf`](https://github.com/rootCircle/cpast_mono/commit/aba0aafb78c0e223eca34dc766189de47f2f376f))
+    - Update cscraper to v0.1.1 ([`41feaa1`](https://github.com/rootCircle/cpast_mono/commit/41feaa188b4a013e208f762cf721e44ad36d29d5))
     - Release cscrapper v0.1.1 ([`f90f9a3`](https://github.com/rootCircle/cpast_mono/commit/f90f9a3506aad49e6a0f1d0cb0f666b117a1cfd8))
 </details>
 
