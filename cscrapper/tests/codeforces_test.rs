@@ -1,7 +1,6 @@
 use cscrapper::{CodePlatform, get_problem_statement};
 
 #[tokio::test]
-#[ignore]
 async fn test_codeforces_1992_b() {
     let result = get_problem_statement(CodePlatform::CodeForces("1331", "B")).await;
     eprintln!("{:?}", result);
@@ -18,7 +17,6 @@ async fn test_codeforces_1992_b() {
 }
 
 #[tokio::test]
-#[ignore]
 async fn test_codeforces_nonexistent_problem() {
     let result = get_problem_statement(CodePlatform::CodeForces("9999", "Z")).await;
 
