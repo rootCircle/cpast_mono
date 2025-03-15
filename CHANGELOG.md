@@ -11,6 +11,32 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.10.0 (2025-03-15)
+
+- BREAKING: Move compilation to temp dir, instead of Path("./")
+- BREAKING: Update gemini env key from GEMINI_API_KEY to GOOGLE_API_KEY
+
+### ccode_runner
+
+- Move all compilations to temp dir, instead of Path("./")
+- New abstractions `from_text`, `from_custom_dest` and `from_language` for ProgramStore, run the code event from source code text. (Unblocks many cpast_api requests)
+
+### cpast_api
+
+- Implemented all evaluate routes (with_code_and_constraint, with_platform, with_code_and_clex, with_code_and_platform, with_shared_id) (Unblocks cpastcord).
+- Caching LLM and scraped responses.
+- Inject LLM API key into `Settings` (check cpast_api/configuration/base.yaml)
+- Update gemini env key from GEMINI_API_KEY to GOOGLE_API_KEY
+
+### clex_llm
+
+- Update gemini env key from GEMINI_API_KEY to GOOGLE_API_KEY
+- Introduce code generation in C++(Unstable)
+
+### cscrapper
+
+- Problem URL parsing support.
+
 ## 0.9.2 (2025-03-01)
 
 ### clex_gen
