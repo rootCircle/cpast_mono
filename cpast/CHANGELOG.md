@@ -2,6 +2,10 @@
 
 ## 0.10.0 (2025-03-15)
 
+### Bug Fixes
+
+ - <csr-id-6d8101ebea7d5ba69ffe5ca81ddb6ed75485aaa4/> update cscrapper dependency version in Cargo.toml
+
 ### New Features
 
  - <csr-id-d1f3bcfce5187879268726170447a032c3e95a40/> expose default codegen language type
@@ -25,9 +29,9 @@
 
 <csr-read-only-do-not-edit/>
 
- - 11 commits contributed to the release over the course of 10 calendar days.
+ - 13 commits contributed to the release over the course of 10 calendar days.
  - 13 days passed between releases.
- - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -37,6 +41,8 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Update cscrapper dependency version in Cargo.toml ([`6d8101e`](https://github.com/rootCircle/cpast_mono/commit/6d8101ebea7d5ba69ffe5ca81ddb6ed75485aaa4))
+    - Release cpast v0.10.0 ([`5682510`](https://github.com/rootCircle/cpast_mono/commit/56825106572a80e635fb2d5d47f1a8daf67564ba))
     - Release cscrapper v0.1.0, cpast v0.10.0 ([`b7f3958`](https://github.com/rootCircle/cpast_mono/commit/b7f3958d3e6b43f80a40aaea5da3e5e718a6d3b0))
     - Release cscrapper v0.1.0, cpast v0.10.0 ([`b88b38e`](https://github.com/rootCircle/cpast_mono/commit/b88b38e61da71e3318cc8e72fe8812b70977802c))
     - Release ccode_runner v0.3.4, cscrapper v0.1.0, cpast v0.10.0 ([`51e0827`](https://github.com/rootCircle/cpast_mono/commit/51e08276e821034082e49dc77b9ddd031b84ca0e))
