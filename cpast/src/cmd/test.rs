@@ -25,6 +25,11 @@ pub(crate) async fn test_call(args: TestArgs) {
 
     let (correct_binding, clex) = match args.problem_url {
         Some(problem_url) => {
+            eprintln!(
+                "{}",
+                "Using --problem_url is unstable at this moment. It may or may not work!".magenta()
+            );
+
             let (generated_clex, generated_code, generated_language) =
                 match get_clex_code_input_format_constraints_from_problem_url(&problem_url).await {
                     Ok(response) => response,

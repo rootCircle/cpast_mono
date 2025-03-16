@@ -99,12 +99,6 @@ pub async fn compile_and_test(
     let store = match correct_binding {
         CodeOrPath::Code(correct_code, correct_lang) => {
             // CURRENTLY UNSTABLE
-            eprintln!(
-                "{}",
-                "Using --problem_url is unstable at this moment. It may or may not work!"
-                    .bold()
-                    .red()
-            );
             let correct_lang_instance =
                 Language::new_from_text(&correct_code, correct_lang, do_force_compile)?;
             let test_lang_instance = Language::new(Path::new(&test_binding), do_force_compile)?;
