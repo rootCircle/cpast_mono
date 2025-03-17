@@ -37,12 +37,20 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 	stop \
 	rm \
 	release \
-	coverage
+	coverage \
+	precommit \
+	example_test \
+	example_generate \
+	example_test_multilang \
+
 
 init-repo:
+	@echo "Ensure you have GOOGLE_API_KEY in the env before you run this!"
 	cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
 	./cpast_api/scripts/init_db.sh
 	./cpast_api/scripts/init_redis.sh
+	python scripts/secrets_for_ci.py
+	git update-index --assume-unchanged ./cpast_api/configuration/base.yaml
 
 # Compile application for running on local machine
 #
@@ -119,5 +127,14 @@ release-cli:
 coverage:
 	cargo llvm-cov clean --workspace --html --output-dir=coverage
 	cargo llvm-cov --all-features --workspace --no-clean --html --output-dir=coverage --open
-	
-precommit : fmt clippy prepare-check bench nextest
+
+example_test:
+	cargo run --example=test
+
+example_generate:
+	cargo run --example=generate 
+
+example_test_multilang:
+	cargo run --example=test_multilang
+
+precommit : fmt clippy prepare-check bench example_test example_generate example_test_multilang nextest
