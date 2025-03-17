@@ -632,7 +632,7 @@ dependencies = [
 name = "ccode_runner"
 version = "0.3.4"
 dependencies = [
- "rand 0.8.5",
+ "rand 0.9.0",
  "regex",
  "serde",
  "tempfile",
@@ -764,7 +764,7 @@ checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 name = "clex_gen"
 version = "0.3.2"
 dependencies = [
- "rand 0.8.5",
+ "rand 0.9.0",
  "unicode-segmentation",
 ]
 
@@ -973,7 +973,7 @@ dependencies = [
  "log",
  "quickcheck",
  "quickcheck_macros",
- "rand 0.8.5",
+ "rand 0.9.0",
  "reqwest 0.12.14",
  "secrecy 0.10.3",
  "serde",
