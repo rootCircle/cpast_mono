@@ -1,6 +1,38 @@
 # Changelog
 
+## 0.10.3 (2025-03-17)
+
+### Chore
+
+ - <csr-id-ba0d255c687a637ecfaa1732051e561b90099bf1/> fix --problem_url maturity message
+
+### Other
+
+ - <csr-id-2000467be52a20ed2d3f142923f3a6ec094e635a/> some Makefile and ci improvements
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 day passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Some Makefile and ci improvements ([`2000467`](https://github.com/rootCircle/cpast_mono/commit/2000467be52a20ed2d3f142923f3a6ec094e635a))
+    - Fix --problem_url maturity message ([`ba0d255`](https://github.com/rootCircle/cpast_mono/commit/ba0d255c687a637ecfaa1732051e561b90099bf1))
+</details>
+
 ## 0.10.2 (2025-03-15)
+
+<csr-id-41feaa188b4a013e208f762cf721e44ad36d29d5/>
 
 ### Other
 
@@ -10,7 +42,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -21,6 +53,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release cpast v0.10.2 ([`1df653f`](https://github.com/rootCircle/cpast_mono/commit/1df653fb63826d5eead100ab19289da163614a89))
     - Update cscraper to v0.1.1 ([`41feaa1`](https://github.com/rootCircle/cpast_mono/commit/41feaa188b4a013e208f762cf721e44ad36d29d5))
     - Release cscrapper v0.1.1 ([`f90f9a3`](https://github.com/rootCircle/cpast_mono/commit/f90f9a3506aad49e6a0f1d0cb0f666b117a1cfd8))
 </details>

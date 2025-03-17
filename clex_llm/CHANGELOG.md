@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.1 (2025-03-17)
+
+### Bug Fixes
+
+ - <csr-id-cc1fddcf1ccf015837f91721e19d28a303c16597/> correct language name assignment in test_code_generator
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release over the course of 1 calendar day.
+ - 1 day passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Correct language name assignment in test_code_generator ([`cc1fddc`](https://github.com/rootCircle/cpast_mono/commit/cc1fddcf1ccf015837f91721e19d28a303c16597))
+</details>
+
 ## v0.3.0 (2025-03-15)
 
 ### New Features
@@ -28,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release over the course of 1 calendar day.
+ - 7 commits contributed to the release over the course of 1 calendar day.
  - 13 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -40,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.3, clex_llm v0.3.0, cscrapper v0.1.0, cpast v0.10.0, safety bump cpast v0.10.0 ([`3c24521`](https://github.com/rootCircle/cpast_mono/commit/3c245215b88f1f7e15764bb7e5756929825ec538))
     - Expose default codegen language type ([`d1f3bcf`](https://github.com/rootCircle/cpast_mono/commit/d1f3bcfce5187879268726170447a032c3e95a40))
     - Update code generation to support C++ solutions and enhance input handling ([`a7be429`](https://github.com/rootCircle/cpast_mono/commit/a7be429d63454f278237173dab38f8dd1b522af2))
     - Add caching for code evaluation and new evaluate route with_platform ([`ab31151`](https://github.com/rootCircle/cpast_mono/commit/ab31151dec6626ea67cc24ddab8ff390b9989282))

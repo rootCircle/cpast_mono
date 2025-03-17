@@ -1,6 +1,6 @@
 [package]
 name = "clex_llm"
-version = "0.3.0"
+version = "0.3.1"
 description = "Generates clex from input format and constraints in natural language using LLM."
 categories = ["development-tools::testing", "development-tools"]
 keywords = ["automata", "generator", "testcase", "llm", "dsl"]

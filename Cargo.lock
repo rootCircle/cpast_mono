@@ -762,7 +762,7 @@ checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
 
 [[package]]
 name = "clex_gen"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "rand 0.9.0",
  "unicode-segmentation",
@@ -770,7 +770,7 @@ dependencies = [
 
 [[package]]
 name = "clex_llm"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "ccode_runner",
  "google-generative-ai-rs",
@@ -934,7 +934,7 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
 name = "cpast"
-version = "0.10.2"
+version = "0.10.3"
 dependencies = [
  "ccode_runner",
  "clap",
@@ -1133,7 +1133,7 @@ dependencies = [
 
 [[package]]
 name = "cscrapper"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "regex",
  "reqwest 0.12.14",

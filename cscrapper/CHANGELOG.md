@@ -5,17 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.1.1 (2025-03-15)
+## v0.1.2 (2025-03-17)
 
-### Bug Fixes
+### Chore
 
- - <csr-id-07b16ae8573d8376d4b2b3053d594699602ab8e5/> increase timeout
+ - <csr-id-4f809172dcf7cf104859a5a3567547e99900930d/> update non-cloudflare blocked codeforces mirror(slow)
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 1 commit contributed to the release over the course of 1 calendar day.
+ - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -26,6 +27,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Update non-cloudflare blocked codeforces mirror(slow) ([`4f80917`](https://github.com/rootCircle/cpast_mono/commit/4f809172dcf7cf104859a5a3567547e99900930d))
+</details>
+
+## v0.1.1 (2025-03-15)
+
+### Bug Fixes
+
+ - <csr-id-07b16ae8573d8376d4b2b3053d594699602ab8e5/> increase timeout
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release cscrapper v0.1.1 ([`f90f9a3`](https://github.com/rootCircle/cpast_mono/commit/f90f9a3506aad49e6a0f1d0cb0f666b117a1cfd8))
     - Increase timeout ([`07b16ae`](https://github.com/rootCircle/cpast_mono/commit/07b16ae8573d8376d4b2b3053d594699602ab8e5))
 </details>
 
