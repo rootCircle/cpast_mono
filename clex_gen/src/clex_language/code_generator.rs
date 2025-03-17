@@ -144,7 +144,7 @@ impl Generator {
                 max,
             ));
         }
-        Ok(rand::thread_rng().gen_range(min..=max))
+        Ok(rand::random_range(min..=max))
     }
 
     // Helper method for generating random positive integers
@@ -156,7 +156,7 @@ impl Generator {
                 max as i64,
             ));
         }
-        Ok(rand::thread_rng().gen_range(min..=max))
+        Ok(rand::random_range(min..=max))
     }
 
     fn generate_random_string(
@@ -175,10 +175,10 @@ impl Generator {
 
     fn generate_random_string_from_charset(charset: &str, length: u64) -> String {
         let charset = charset.as_bytes();
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         (0..length)
             .map(|_| {
-                let idx = rng.gen_range(0..charset.len());
+                let idx = rng.random_range(0..charset.len());
                 charset[idx] as char
             })
             .collect()
@@ -225,7 +225,7 @@ impl Generator {
             ));
         }
 
-        Ok(rand::thread_rng().gen_range(min..=max))
+        Ok(rand::random_range(min..=max))
     }
 
     fn get_value_from_reference(

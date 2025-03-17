@@ -42,7 +42,7 @@ clap_complete = "4.5.46"
 colored = "3.0.0"
 config = { version = "0.15.11", default-features = false, features = ["yaml"] }
 criterion = "0.5.1" 
-fake = "3.1.0"
+fake = "4.0.0"
 futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 hex = "0.4.3"
@@ -50,7 +50,7 @@ log = "0.4.26"
 linkify = "0.10.0"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
-rand = "0.8.5"
+rand = "0.9.0"
 regex = "1.11.1"
 reqwest = { version = "0.12.14", default-features = false, features = [
     "json",
