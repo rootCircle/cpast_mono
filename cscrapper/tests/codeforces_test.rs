@@ -1,9 +1,8 @@
 use cscrapper::{CodePlatform, get_problem_statement};
 
 #[tokio::test]
-async fn test_codeforces_1992_b() {
+async fn test_codeforces_valid() {
     let result = get_problem_statement(CodePlatform::CodeForces("1331", "B")).await;
-    eprintln!("{:?}", result);
     assert!(result.is_ok());
     let response = result.unwrap();
 

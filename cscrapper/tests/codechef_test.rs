@@ -3,7 +3,6 @@ use cscrapper::{CodePlatform, get_problem_statement};
 #[tokio::test]
 async fn test_codechef_nonnegprod() {
     let result = get_problem_statement(CodePlatform::CodeChef("NONNEGPROD")).await;
-    eprintln!("{:?}", result);
     assert!(result.is_ok());
     let response = result.unwrap();
 

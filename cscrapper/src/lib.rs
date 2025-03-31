@@ -6,7 +6,7 @@ pub mod qscrapper;
 const CODECHEF_PREFIX: &str =
     "https://www.codechef.com/api/contests/PRACTICE/problems/{problem_code}";
 const CODEFORCES_PREFIX: &str =
-    "https://mirror.codeforces.com/contest/{contest_id}/problem/{problem_code}";
+    "https://codeforces.com/contest/{contest_id}/problem/{problem_code}";
 
 #[derive(Debug, PartialEq)]
 pub enum CodePlatform<'a> {
