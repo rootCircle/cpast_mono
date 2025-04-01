@@ -76,12 +76,12 @@ We welcome you to the cpast mono-repo, where you can find all the tools and comp
 
 | Component    | Description                                                                                           | Status                |
 |--------------|-------------------------------------------------------------------------------------------------------|-----------------------|
-| [cpast_api](./cpast_api/README.md)    | Backend for cpast, handles server-side operations and API requests.                                   | 🚧 Blocked on ccode_runner plus rework on internal architecture   |
+| [cpast_api](./cpast_api/README.md)    | Backend for cpast, handles server-side operations and API requests.                                   | 🚧 Rework on internal architecture   |
 | [cpast](./cpast/README.md) (aka cpast_cli)      | CLI interface for cpast, used locally to run tests and generate inputs.                               | ✅ Active             |
-| [ccode_runner](./ccode_runner/README.md) | Runs arbitrary program code on local devices/server side, compiles/interprets code, and sends output. | 🔄 Needs Change       |
+| [ccode_runner](./ccode_runner/README.md) | Runs arbitrary program code on local devices/server side, compiles/interprets code, and sends output. | ✅ Active       |
 | [cpastord](./cpastord/README.md)     | Integration of cpast for Discord, allowing users to run cpast commands within Discord.                | ❌ Blocked on cpast_api          |
 | [clex](./clex_gen/README.md)         | Parser and generator for the clex language, generates random input for programs based on clex syntax. | ✅ Active             |
-| [cscrapper](./cscrapper/README.md)    | Scrapes question descriptions from competitive programming sites like Codeforces and CodeChef.        | 🔄 Needs Improvement  |
+| [cscrapper](./cscrapper/README.md)    | Scrapes question descriptions from competitive programming sites like Codeforces and CodeChef.        | ✅ Active  |
 | [clex_llm](./clex_llm/README.md)     | Generates clex language from input format, constraints, and problem descriptions using LLM.           | 🔄 Needs Improvement |
 
 ## Meta
