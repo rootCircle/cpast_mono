@@ -42,7 +42,7 @@ clap_complete = "4.5.46"
 colored = "3.0.0"
 config = { version = "0.15.11", default-features = false, features = ["yaml"] }
 criterion = "0.5.1" 
-fake = "4.0.0"
+fake = "4.3.0"
 futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 hex = "0.4.3"
