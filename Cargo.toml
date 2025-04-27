@@ -47,7 +47,7 @@ futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 hex = "0.4.3"
 headless_chrome = "1.0.17"
-log = "0.4.26"
+log = "0.4.27"
 linkify = "0.10.0"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
