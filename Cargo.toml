@@ -38,7 +38,7 @@ chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
 claims = "0.8.0"
 cli-clipboard = { version = "0.4.0" }
 clap = { version = "4.5.32", features = ["derive"] }
-clap_complete = "4.5.46"
+clap_complete = "4.5.48"
 colored = "3.0.0"
 config = { version = "0.15.11", default-features = false, features = ["yaml"] }
 criterion = "0.5.1" 
