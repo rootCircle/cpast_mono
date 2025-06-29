@@ -116,10 +116,7 @@ impl ProgramStore {
         language
             .run_program_code(stdin_content)
             .map_err(move |err| {
-                eprintln!(
-                    "[PROGRAM STORE ERROR] Failed to run {:?}!\n{}",
-                    file_type, err
-                );
+                eprintln!("[PROGRAM STORE ERROR] Failed to run {file_type:?}!\n{err}");
                 err
             })
     }

@@ -159,7 +159,7 @@ pub async fn spawn_app() -> TestApp {
         .unwrap();
 
     TestApp {
-        address: format!("http://localhost:{}", application_port),
+        address: format!("http://localhost:{application_port}"),
         port: application_port,
         db_pool: get_connection_pool(&configuration.database),
         api_client: client,

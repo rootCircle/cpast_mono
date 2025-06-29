@@ -17,6 +17,6 @@ async fn main() {
     )
     .await
     .unwrap_or_else(|err| {
-        eprintln!("{}", err);
+        eprintln!("{err}");
     });
 }

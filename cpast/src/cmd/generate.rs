@@ -24,7 +24,7 @@ pub(crate) fn generate_call(args: GenerateArgs) {
                     }
                 }
                 Err(err) => {
-                    eprintln!("{}", err);
+                    eprintln!("{err}");
                     exit(DEFAULT_FAIL_EXIT_CODE);
                 }
             };

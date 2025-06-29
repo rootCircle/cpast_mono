@@ -7,7 +7,7 @@ fn send_to_clipboard_works() {
     use cli_clipboard::{ClipboardContext, ClipboardProvider};
     let ctx = ClipboardContext::new();
     if let Err(e) = ctx {
-        eprintln!("Error: {:?}", e);
+        eprintln!("Error: {e:?}");
         return; // Skip the test as in no display env as in CI runners
     }
 

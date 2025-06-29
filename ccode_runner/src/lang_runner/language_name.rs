@@ -80,8 +80,7 @@ impl TryFrom<String> for LanguageName {
             "javascript" => Ok(LanguageName::Javascript),
             "java" => Ok(LanguageName::Java),
             other => Err(format!(
-                "{} is not a supported language. Use either `python`, `cpp`, `c`, `rust`, `ruby`, `javascript` or `java`.",
-                other
+                "{other} is not a supported language. Use either `python`, `cpp`, `c`, `rust`, `ruby`, `javascript` or `java`."
             )),
         }
     }

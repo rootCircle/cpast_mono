@@ -24,9 +24,9 @@ impl fmt::Display for CliErrorType {
                 Get API key from https://makersuite.google.com/app/apikey".to_string()
             },
             CliErrorType::ClexLLMInitilizationError(err) =>
-                format!("Error initializing ClexLLM: {}", err),
+                format!("Error initializing ClexLLM: {err}"),
             CliErrorType::ClexLLMGenerationError(err) =>
-                format!("Error generating Clex expression: {}", err),
+                format!("Error generating Clex expression: {err}"),
             CliErrorType::InputFormatMissing =>
                 "Input format is missing. Please provide the input format using the appropriate flag".to_string(),
             CliErrorType::ConstraintsMissing =>
@@ -34,14 +34,10 @@ impl fmt::Display for CliErrorType {
             CliErrorType::AiRequiredArgsMissing =>
                 "Problem URL OR input format and constraints are required. Please provide them using the appropriate flags".to_string(),
             CliErrorType::CScrapperError(err) =>
-                format!("Error in cscrapper: {}", err),
+                format!("Error in cscrapper: {err}"),
         };
 
-        write!(
-            f,
-            "[CLI ERROR] CliErrorType::{:?} {}",
-            self, error_description
-        )
+        write!(f, "[CLI ERROR] CliErrorType::{self:?} {error_description}")
     }
 }
 

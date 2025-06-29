@@ -93,11 +93,11 @@ impl ClexErrorType {
             ClexErrorType::MissingColonAfterQuestionMark(_) => "Expected colon (:) after question mark (?)".to_string(),
             ClexErrorType::MissingNumberAfterNegativeSign(_) => "Expected a number after negative sign (-)".to_string(),
             ClexErrorType::NumericParsingError(_) => "Error parsing the number".to_string(),
-            ClexErrorType::UnknownCharacter(_, c) => format!("Unexpected character: '{}'", c),
+            ClexErrorType::UnknownCharacter(_, c) => format!("Unexpected character: '{c}'"),
             ClexErrorType::UnclosedAtSymbol(_) => "Couldn't find closing @ after opening one!".to_string(),
             ClexErrorType::MissingClosingParensNonCapturingGroup(_) => "Expected closing parenthesis ')' after opening parenthesis '(' in Non-Capturing group".to_string(),
             ClexErrorType::UnclosedParens(_) => "Expected N) or ?:<UnitExpression> after opening parenthesis '('".to_string(),
-            ClexErrorType::InvalidTokenFound(_, token_type) => format!("Invalid token found: {:#?}", token_type),
+            ClexErrorType::InvalidTokenFound(_, token_type) => format!("Invalid token found: {token_type:#?}"),
             ClexErrorType::InvalidCharacterSet(_) => "Invalid character set! Expected CH_UPPER, CH_LOWER, CH_ALL, CH_NUM, CH_ALPHA, CH_ALNUM, CH_NEWLINE".to_string(),
 
             ClexErrorType::MissingCommaRangeExpression(_) => "Expected comma (,) after opening square bracket ('[') in Range Bound Expression".to_string(),
@@ -107,11 +107,11 @@ impl ClexErrorType {
             ClexErrorType::MissingGroupNumber(_) => "Expected <Group Number> after '{\\' in Quantifiers".to_string(),
             ClexErrorType::NegativeValueInPositiveReference(_) => "Literal can't be negative!".to_string(),
 
-            ClexErrorType::UnexpectedToken(_, token_type) => format!("Expected {:?}, but not found", token_type),
+            ClexErrorType::UnexpectedToken(_, token_type) => format!("Expected {token_type:?}, but not found"),
             ClexErrorType::UnreachableCodeReached(_) => "Unreachable code reached!".to_string(),
 
-            ClexErrorType::InvalidRangeValues(_, min, max) => format!("Upper bound should be greater than lower bound in [{}, {}]", min, max),
-            ClexErrorType::UnknownGroupNumber(_, group_number) => format!("Can't find specified Group no. {} in the language", group_number),
+            ClexErrorType::InvalidRangeValues(_, min, max) => format!("Upper bound should be greater than lower bound in [{min}, {max}]"),
+            ClexErrorType::UnknownGroupNumber(_, group_number) => format!("Can't find specified Group no. {group_number} in the language"),
         }
     }
 

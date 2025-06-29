@@ -66,14 +66,12 @@ pub(crate) async fn generate_clex_from_input_format_and_constraints(
             println!("You can test using the following commands:\n");
 
             println!("1. {}:", "Generate test cases".bright_cyan());
-            let cpast_generate = format!("cpast generate \"{}\"", response);
+            let cpast_generate = format!("cpast generate \"{response}\"");
             println!("   {}", cpast_generate.bright_yellow());
 
             println!("\n2. {}:", "Test two codes based on this".bright_cyan());
-            let cpast_test = format!(
-                "cpast test -g \"{}\" -c \"<correct code>\" -t \"<test code>\"",
-                response
-            );
+            let cpast_test =
+                format!("cpast test -g \"{response}\" -c \"<correct code>\" -t \"<test code>\"");
             println!("   {}", cpast_test.bright_yellow());
 
             if args.clipboard {

@@ -347,8 +347,7 @@ impl Language {
                 }
                 Err(err) => {
                     eprintln!(
-                        "[RUNNER WARNING] Failed to compile {:?} code with {} with reason {}",
-                        dest_file, compiler, err
+                        "[RUNNER WARNING] Failed to compile {dest_file:?} code with {compiler} with reason {err}"
                     );
                 }
             }

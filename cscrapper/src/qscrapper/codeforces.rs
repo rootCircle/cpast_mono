@@ -73,21 +73,21 @@ impl CodeForces {
                 ..Default::default()
             };
 
-            let browser = Browser::new(options).map_err(|e| format!("Failed to launch browser: {}", e))?;
+            let browser = Browser::new(options).map_err(|e| format!("Failed to launch browser: {e}"))?;
 
-            let tab = browser.new_tab().map_err(|e| format!("Failed to create new tab: {}", e))?;
+            let tab = browser.new_tab().map_err(|e| format!("Failed to create new tab: {e}"))?;
 
             tab.navigate_to(&url)
-                .map_err(|e| format!("Failed to navigate to problem page: {}", e))?;
+                .map_err(|e| format!("Failed to navigate to problem page: {e}"))?;
 
             tab.wait_until_navigated()
-                .map_err(|e| format!("Failed to wait for navigation: {}", e))?;
+                .map_err(|e| format!("Failed to wait for navigation: {e}"))?;
 
             // Prevent detection by modifying navigator properties
             tab.evaluate(
                 r#"Object.defineProperty(navigator, 'webdriver', { get: () => false });"#,
                 true,
-            ).map_err(|e| format!("Failed to spoof webdriver API: {}", e))?;
+            ).map_err(|e| format!("Failed to spoof webdriver API: {e}"))?;
 
             tab.evaluate(r#"
                 const originalFetch = window.fetch;
@@ -111,7 +111,7 @@ impl CodeForces {
                     init.headers = { ...headers, ...init.headers };
                     return originalFetch(input, init);
                 };
-            "#, true).map_err(|e| format!("Failed to spoof fetch API: {}", e))?;
+            "#, true).map_err(|e| format!("Failed to spoof fetch API: {e}"))?;
 
             tab.evaluate(r#"
                 // Fake WebGL vendor & renderer
@@ -138,14 +138,14 @@ impl CodeForces {
                     }
                     return getImageData.apply(this, arguments);
                 };
-            "#, true).map_err(|e| format!("Failed to spoof canvas and webgl: {}", e))?;
+            "#, true).map_err(|e| format!("Failed to spoof canvas and webgl: {e}"))?;
 
 
             // Get the HTML content
             let html = tab.get_content()
-                .map_err(|e| format!("Failed to get page content: {}", e))?;
+                .map_err(|e| format!("Failed to get page content: {e}"))?;
             Ok(html)
-        }).await.map_err(|e| ScraperError::ParsingError(format!("Task error: {}", e)))?
+        }).await.map_err(|e| ScraperError::ParsingError(format!("Task error: {e}")))?
         .map_err(ScraperError::ParsingError)?;
 
         // Parse the HTML

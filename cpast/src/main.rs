@@ -21,7 +21,7 @@ async fn main() {
                     cmd::ai::generate_clex_from_input_format_and_constraints(args)
                         .await
                         .unwrap_or_else(|err| {
-                            eprintln!("{}", err);
+                            eprintln!("{err}");
                         });
                 }
             }

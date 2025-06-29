@@ -203,7 +203,7 @@ impl SourceCodeInfo {
 
         let source_file_path = temp_dir
             .path()
-            .join(format!("{}.{}", source_file_stem, file_extension));
+            .join(format!("{source_file_stem}.{file_extension}"));
 
         let mut source_file_handle = File::create(&source_file_path)
             .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;

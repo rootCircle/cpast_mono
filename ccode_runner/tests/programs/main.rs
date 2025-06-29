@@ -7,5 +7,5 @@ fn main() {
         .expect("Failed to read line");
     let number: f64 = input.trim().parse().expect("Please enter a valid number");
     let square = number * number;
-    println!("{}", square);
+    println!("{square}");
 }

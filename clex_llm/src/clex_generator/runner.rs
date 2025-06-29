@@ -191,8 +191,7 @@ Respond only with the generated Clex expression in single line. Do not include a
         }
 
         let question_prompt = format!(
-            "Generate the Clex expression for the following input format and constraints:\n\nInput Format:\n{}\n\nConstraints:\n{}",
-            input_format, constraints
+            "Generate the Clex expression for the following input format and constraints:\n\nInput Format:\n{input_format}\n\nConstraints:\n{constraints}"
         );
 
         content.push(Content {

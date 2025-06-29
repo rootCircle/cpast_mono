@@ -127,14 +127,12 @@ impl fmt::Display for RunnerErrorType {
                 "Cannot process file with unsupported language extension: {}",
                 filepath.display()
             ),
-            RunnerErrorType::InvalidLanguageMapping(lang, compilation_type) => format!(
-                "Cannot map language '{:?}' to compilation type '{:?}'",
-                lang, compilation_type
-            ),
-            RunnerErrorType::InvalidCompilationMapping(lang) => format!(
-                "No valid compilation configuration found for language '{:?}'",
-                lang
-            ),
+            RunnerErrorType::InvalidLanguageMapping(lang, compilation_type) => {
+                format!("Cannot map language '{lang:?}' to compilation type '{compilation_type:?}'")
+            }
+            RunnerErrorType::InvalidCompilationMapping(lang) => {
+                format!("No valid compilation configuration found for language '{lang:?}'")
+            }
             RunnerErrorType::CodeRunFailed(filepath) => {
                 format!(
                     "Failed to execute code at '{}'. All available compilers and runners encountered errors. Please verify the code and ensure it's compatible with the target environment.",
@@ -147,8 +145,8 @@ impl fmt::Display for RunnerErrorType {
             RunnerErrorType::WarmupCompileFatal => String::from(
                 "Fatal Error: Compilation environment not initialized. Call compile_language() first",
             ),
-            RunnerErrorType::ProgramRunError(err) => format!("Runtime error occurred: {}", err),
-            RunnerErrorType::FileCreationError(err) => format!("Error creating tempfile: {}", err),
+            RunnerErrorType::ProgramRunError(err) => format!("Runtime error occurred: {err}"),
+            RunnerErrorType::FileCreationError(err) => format!("Error creating tempfile: {err}"),
             RunnerErrorType::EmptyDestinationPath(path_buf, lang, compilation_type) => format!(
                 "Destination path is None for file: {}. Expected Some(PathBuf) for language '{:?}' and compilation type '{:?}'",
                 path_buf.display(),
@@ -166,20 +164,18 @@ impl fmt::Display for RunnerErrorType {
                 path_buf.display()
             ),
             RunnerErrorType::JavaNoPublicClassFound(content) => {
-                format!("No public class found in Java file: {}", content)
+                format!("No public class found in Java file: {content}")
             }
             RunnerErrorType::JavaMismatchDestinationFile(path_buf) => {
                 format!(
-                    "Destination file stem does not match source file stem for Java file: {:?}",
-                    path_buf
+                    "Destination file stem does not match source file stem for Java file: {path_buf:?}"
                 )
             }
         };
 
         write!(
             f,
-            "[RUNNER ERROR] RunnerErrorType::{:?} {}",
-            self, error_description
+            "[RUNNER ERROR] RunnerErrorType::{self:?} {error_description}"
         )
     }
 }

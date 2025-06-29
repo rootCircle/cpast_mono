@@ -39,7 +39,7 @@ print(sum(arr))"#;
             assert!(has_matched);
         }
         Err(e) => {
-            panic!("Failed to generate code solution: {:?}", e);
+            panic!("Failed to generate code solution: {e:?}");
         }
     }
 }

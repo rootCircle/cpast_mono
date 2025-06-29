@@ -26,7 +26,7 @@ async fn test_generate_clex_expression() {
             );
         }
         Err(e) => {
-            panic!("Failed to generate Clex expression: {:?}", e);
+            panic!("Failed to generate Clex expression: {e:?}");
         }
     }
 }
@@ -56,7 +56,7 @@ async fn test_array_sum_generation() {
             );
         }
         Err(e) => {
-            panic!("Failed to generate Clex expression: {:?}", e);
+            panic!("Failed to generate Clex expression: {e:?}");
         }
     }
 }
@@ -86,7 +86,7 @@ async fn test_string_pattern_generation() {
             );
         }
         Err(e) => {
-            panic!("Failed to generate Clex expression: {:?}", e);
+            panic!("Failed to generate Clex expression: {e:?}");
         }
     }
 }
@@ -116,7 +116,7 @@ async fn test_matrix_generation() {
             );
         }
         Err(e) => {
-            panic!("Failed to generate Clex expression: {:?}", e);
+            panic!("Failed to generate Clex expression: {e:?}");
         }
     }
 }

@@ -184,19 +184,19 @@ async fn process_test_case(
 
     match generator_clone.generate_testcases() {
         Err(err) => {
-            eprintln!("{}", err);
+            eprintln!("{err}");
             has_failed_clone.store(true, Ordering::Relaxed);
         }
         Ok(output_text) => match store_clone.run_codes_and_compare_output(&output_text) {
             Ok((true, _, _)) => {
                 if !no_stop && debug {
-                    eprintln!("{}", format!("Testcase {} ran successfully!", iter).green());
+                    eprintln!("{}", format!("Testcase {iter} ran successfully!").green());
                 }
             }
             Ok((false, expected, actual)) => {
                 println!(
                     "{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
-                    format!("Testcase {} failed!", iter).red(),
+                    format!("Testcase {iter} failed!").red(),
                     "INPUT".underline(),
                     &output_text.cyan(),
                     "EXPECTED OUTPUT".underline(),
@@ -207,7 +207,7 @@ async fn process_test_case(
                 has_failed_clone.store(true, Ordering::Relaxed);
             }
             Err(err) => {
-                eprintln!("{}", format!("Error matching the file! {}", err).red());
+                eprintln!("{}", format!("Error matching the file! {err}").red());
                 if let RunnerErrorType::ProgramRunError(run_err) = *err {
                     if let Some(io_err) = run_err.downcast_ref::<io::Error>() {
                         if io_err.kind() == io::ErrorKind::BrokenPipe {

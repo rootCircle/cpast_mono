@@ -34,7 +34,7 @@ pub(crate) async fn test_call(args: TestArgs) {
                 match get_clex_code_input_format_constraints_from_problem_url(&problem_url).await {
                     Ok(response) => response,
                     Err(err) => {
-                        eprintln!("{}", err);
+                        eprintln!("{err}");
                         exit(DEFAULT_FAIL_EXIT_CODE);
                     }
                 };
@@ -43,11 +43,8 @@ pub(crate) async fn test_call(args: TestArgs) {
 
             if debug {
                 // Print code and clex in formatted fashion
-                println!(
-                    "\nCorrect code is generated using Gemini in {}",
-                    generated_language
-                );
-                println!("{}", generated_code);
+                println!("\nCorrect code is generated using Gemini in {generated_language}");
+                println!("{generated_code}");
             }
 
             (
@@ -74,7 +71,7 @@ pub(crate) async fn test_call(args: TestArgs) {
     )
     .await
     .unwrap_or_else(|err| {
-        eprintln!("{}", err);
+        eprintln!("{err}");
         exit(DEFAULT_FAIL_EXIT_CODE);
     });
 }
