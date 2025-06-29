@@ -29,46 +29,46 @@ strip = true  # Automatically strip symbols from the binary.
 
 [workspace.dependencies]
 actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
-actix-web = "4.10.2"
+actix-web = "4.11.0"
 actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
-anyhow = "1.0.97"
+anyhow = "1.0.98"
 argon2 = { version = "0.5.3", features = ["std"] }
 base64 = "0.22.1"
-chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
 claims = "0.8.0"
 cli-clipboard = { version = "0.4.0" }
-clap = { version = "4.5.32", features = ["derive"] }
-clap_complete = "4.5.46"
+clap = { version = "4.5.40", features = ["derive"] }
+clap_complete = "4.5.54"
 colored = "3.0.0"
 config = { version = "0.15.11", default-features = false, features = ["yaml"] }
-criterion = "0.5.1" 
-fake = "4.0.0"
+criterion = "0.6.0" 
+fake = "4.3.0"
 futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 hex = "0.4.3"
 headless_chrome = "1.0.17"
-log = "0.4.26"
+log = "0.4.27"
 linkify = "0.10.0"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.0.0"
-rand = "0.9.0"
+rand = "0.9.1"
 regex = "1.11.1"
-reqwest = { version = "0.12.14", default-features = false, features = [
+reqwest = { version = "0.12.20", default-features = false, features = [
     "json",
     "rustls-tls",
     "cookies",
 ] }
 scraper = "0.23.1"
 serde = { version = "1.0.219", features = ["derive"] }
-serde-aux = "4.6.0"
+serde-aux = "4.7.0"
 serde_json = "1.0.140"
 serde_urlencoded = "0.7.1"
 secrecy = { version = "0.10.3", features = ["serde"] }
 serenity = { version = "0.12.4", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
-sha2 = "0.10.8"
-shuttle-runtime = "0.53.0"
-shuttle-serenity = "0.53.0"
-sqlx = { version = "0.8.3", default-features = false, features = [
+sha2 = "0.10.9"
+shuttle-runtime = "0.55.0"
+shuttle-serenity = "0.55.0"
+sqlx = { version = "0.8.6", default-features = false, features = [
     "runtime-tokio-rustls",
     "macros",
     "postgres",
@@ -76,21 +76,21 @@ sqlx = { version = "0.8.3", default-features = false, features = [
     "chrono",
     "migrate",
 ] }
-tempfile = "3.19.0"
+tempfile = "3.20.0"
 thiserror = "2.0.12"
-tokio = { version = "1.44.1", features = ["full"] }
+tokio = { version = "1.45.1", features = ["full"] }
 tracing = "0.1.41"
-tracing-actix-web = "0.7.16"
+tracing-actix-web = "0.7.18"
 tracing-bunyan-formatter = { version = "0.3.10" }
 tracing-log = "0.2.0"
 tracing-subscriber = { version = "0.3.19", features = ["registry", "env-filter"] }
 unicode-segmentation = "1.12.0"
 validator = "0.20.0"
-wiremock = "0.6.3"
-which = "7.0.2"
-utoipa = { version = "5.3.1", features = [ "actix_extras" ] }
-utoipa-swagger-ui = { version = "9.0.0", features = ["actix-web", "vendored"] }
+wiremock = "0.6.4"
+which = "8.0.0"
+utoipa = { version = "5.4.0", features = [ "actix_extras" ] }
+utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web", "vendored"] }
 utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-rapidoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-scalar = { version = "0.3.0", features = ["actix-web"] }
-uuid = { version = "1.16.0", features = ["v4", "serde", "v7"] }
+uuid = { version = "1.17.0", features = ["v4", "serde", "v7"] }

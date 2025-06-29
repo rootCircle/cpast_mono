@@ -25,7 +25,7 @@ struct EvaluateCodeWithOnlySharedIDRequest {
 }
 
 #[derive(Serialize, ToSchema)]
-struct ShareGetResponse {
+pub(crate) struct ShareGetResponse {
     #[schema(example = "print('Hello, world!')")]
     code: String,
 

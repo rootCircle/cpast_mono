@@ -10,17 +10,14 @@ fn program_exists(program: &str) -> Result<std::path::PathBuf, which::Error> {
 
 fn run_program_common(output: Output, program: &str, args: &[&str]) -> io::Result<String> {
     if output.status.code() != Some(0) {
-        return Err(io::Error::new(
-            io::ErrorKind::Other,
-            format!(
-                "Process `{} {}` failed to run successfully!\nStatus Code: {}\nOutput: {}\nError: {}",
-                program,
-                args.join(" "),
-                output.status,
-                String::from_utf8_lossy(&output.stdout),
-                String::from_utf8_lossy(&output.stderr)
-            ),
-        ));
+        return Err(io::Error::other(format!(
+            "Process `{} {}` failed to run successfully!\nStatus Code: {}\nOutput: {}\nError: {}",
+            program,
+            args.join(" "),
+            output.status,
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        )));
     }
 
     let stdout_content = String::from_utf8(output.stdout)
@@ -36,7 +33,7 @@ pub(crate) fn run_program_with_input(
     stdin_content: &str,
 ) -> io::Result<String> {
     if let Err(err) = program_exists(program) {
-        return Err(io::Error::new(io::ErrorKind::Other, err));
+        return Err(io::Error::other(err));
     }
 
     let mut child = Command::new(program)
@@ -75,7 +72,7 @@ pub(crate) fn remake(
 
 pub(crate) fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String> {
     if let Err(err) = program_exists(program) {
-        return Err(io::Error::new(io::ErrorKind::Other, err));
+        return Err(io::Error::other(err));
     }
 
     let child = Command::new(program)
@@ -93,7 +90,7 @@ pub(crate) fn run_program(program: &str, args: &Vec<&str>) -> io::Result<String>
                 program,
                 args.join(" ")
             );
-            return Err(io::Error::new(io::ErrorKind::Other, err));
+            return Err(io::Error::other(err));
         }
     };
 

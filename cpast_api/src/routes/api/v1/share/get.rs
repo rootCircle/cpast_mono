@@ -8,7 +8,7 @@ use utoipa::ToSchema;
 use uuid::{Uuid, Version};
 
 #[derive(Serialize, ToSchema)]
-struct ShareGetResponse {
+pub(crate) struct ShareGetResponse {
     #[schema(example = "print('Hello, world!')")]
     code: String,
 
@@ -29,7 +29,7 @@ struct ShareGetResponse {
 )]
 #[tracing::instrument(name = "get_code", skip(pool))]
 #[get("/share/{share_id}")]
-pub async fn get_share_code(
+pub(crate) async fn get_share_code(
     pool: web::Data<PgPool>,
     share_id: web::Path<String>,
 ) -> Result<HttpResponse, ShareError> {

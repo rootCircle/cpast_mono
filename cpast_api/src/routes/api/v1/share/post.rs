@@ -11,7 +11,7 @@ use uuid::{ContextV7, Timestamp, Uuid};
 use super::ShareError;
 
 #[derive(Serialize, Deserialize, ToSchema, Clone, Debug)]
-struct SharePostRequest {
+pub(crate) struct SharePostRequest {
     #[schema(example = "print('Hello, world!')")]
     code: String,
 

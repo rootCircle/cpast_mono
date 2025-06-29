@@ -61,7 +61,7 @@ impl SourceCodeInfo {
                 dest_path: Some(dest_path),
                 compilation_type,
                 language: lang,
-                temp_dir: Some(temp_dir.into_path()),
+                temp_dir: Some(temp_dir.keep()),
             });
         }
 
@@ -167,9 +167,7 @@ impl SourceCodeInfo {
                     .tempdir()
                     .map_err(|e| Box::new(RunnerErrorType::FileCreationError(Box::new(e))))?;
 
-                let dest_path = temp_dir.path().join(program_name_stem);
-
-                dest_path
+                temp_dir.path().join(program_name_stem)
             }
         };
 
@@ -236,7 +234,7 @@ impl SourceCodeInfo {
             dest_path,
             compilation_type,
             language: lang,
-            temp_dir: Some(temp_dir.into_path()),
+            temp_dir: Some(temp_dir.keep()),
         })
     }
 
