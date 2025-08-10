@@ -1,12 +1,12 @@
 use std::process::exit;
 
 use crate::cli::cli_parser::GenerateArgs;
-use clex_gen::generator;
 #[cfg(any(
     all(unix, not(any(target_os = "android", target_os = "emscripten"))),
     windows,
 ))]
-use cli_clipboard::{ClipboardContext, ClipboardProvider};
+use arboard::Clipboard;
+use clex_gen::generator;
 use colored::Colorize;
 use cpast::DEFAULT_FAIL_EXIT_CODE;
 
@@ -42,12 +42,10 @@ fn copy_content_to_clipboard(generated_testcases: String) {
         windows,
     ))]
     {
-        let mut ctx = ClipboardContext::new().unwrap();
-        ctx.set_contents(generated_testcases).unwrap();
+        let mut ctx = Clipboard::new().unwrap();
+        ctx.set_text(generated_testcases).unwrap();
 
-        // get_contents is required for set_contents to work
-        // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
-        let _ = ctx.get_contents();
+        let _ = ctx.get_text();
         eprintln!("{}", "Copied to clipboard successfully!".green());
     }
 

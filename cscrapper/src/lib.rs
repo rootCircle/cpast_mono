@@ -33,7 +33,7 @@ pub async fn get_problem_statement<'a>(
     }
 }
 
-pub fn parse_problem_url(url: &str) -> Option<CodePlatform> {
+pub fn parse_problem_url(url: &str) -> Option<CodePlatform<'_>> {
     let codechef_re = Regex::new(r"(?:https?://)?(?:www\.)?codechef\.com/(?:[A-Z0-9]+/problems|problems|practice/course/[^/]+/[^/]+/problems)/([a-zA-Z0-9_]+)").ok()?;
     let codeforces_re = Regex::new(
         r"(?:https?://)?(?:www\.)?codeforces\.com/(?:contest|gym)/([0-9]+)/problem/([A-Z][0-9]?)",

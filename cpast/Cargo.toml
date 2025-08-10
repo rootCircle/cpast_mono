@@ -25,8 +25,8 @@ rust-version.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+arboard = { workspace = true, features = ["wayland-data-control", "image-data"]}
 clap = { workspace = true, features = ["derive"] }
-cli-clipboard = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 futures = { workspace = true }
 colored = { workspace = true }

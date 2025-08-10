@@ -32,11 +32,11 @@ actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
 actix-web = "4.11.0"
 actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
 anyhow = "1.0.98"
+arboard = "3.6.0"
 argon2 = { version = "0.5.3", features = ["std"] }
 base64 = "0.22.1"
 chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
 claims = "0.8.0"
-cli-clipboard = { version = "0.4.0" }
 clap = { version = "4.5.40", features = ["derive"] }
 clap_complete = "4.5.54"
 colored = "3.0.0"

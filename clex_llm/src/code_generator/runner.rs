@@ -9,6 +9,7 @@ use google_generative_ai_rs::v1::{
 };
 
 use super::examples::{self, SolutionTurn};
+use crate::utils::post_with_retry;
 
 pub struct CodeSolutionGenerator {
     examples: Vec<SolutionTurn>,
@@ -151,7 +152,7 @@ impl CodeSolutionGenerator {
             }),
         };
 
-        let result = self.client.post(30, &request).await?;
+        let result = post_with_retry(&self.client, 30, &request).await?;
 
         match result {
             PostResult::Rest(response) => response

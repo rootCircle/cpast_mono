@@ -38,6 +38,7 @@ use google_generative_ai_rs::v1::errors::GoogleAPIError;
 
 mod clex_generator;
 mod code_generator;
+mod utils;
 
 /// Creates a new instance of the Clex prompt generator.
 ///

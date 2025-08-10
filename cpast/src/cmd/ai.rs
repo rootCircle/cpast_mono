@@ -2,7 +2,7 @@
     all(unix, not(any(target_os = "android", target_os = "emscripten"))),
     windows,
 ))]
-use cli_clipboard::{ClipboardContext, ClipboardProvider};
+use arboard::Clipboard;
 
 use colored::Colorize;
 use cscrapper::qscrapper::ScraperError;
@@ -93,12 +93,10 @@ fn copy_content_to_clipboard(generated_testcases: String) {
         windows,
     ))]
     {
-        let mut ctx = ClipboardContext::new().unwrap();
-        ctx.set_contents(generated_testcases).unwrap();
+        let mut ctx = Clipboard::new().unwrap();
+        ctx.set_text(generated_testcases).unwrap();
 
-        // get_contents is required for set_contents to work
-        // Refer https://github.com/aweinstock314/rust-clipboard/issues/86
-        let _ = ctx.get_contents();
+        let _ = ctx.get_text();
         eprintln!("{}", "Copied to clipboard successfully!".green());
     }
 

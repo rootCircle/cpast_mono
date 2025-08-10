@@ -1,3 +1,4 @@
+use crate::utils::post_with_retry;
 use google_generative_ai_rs::v1::{
     api::{Client, PostResult},
     errors::GoogleAPIError,
@@ -216,7 +217,9 @@ Respond only with the generated Clex expression in single line. Do not include a
             }),
         };
 
-        let result = self.client.post(30, &request).await?;
+        let request_timeout_secs = 30;
+        let result: PostResult =
+            post_with_retry(&self.client, request_timeout_secs, &request).await?;
 
         match result {
             PostResult::Rest(response) => response
