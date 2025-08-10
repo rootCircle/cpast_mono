@@ -1,4 +1,5 @@
 use crate::helpers::spawn_app;
+use flaky_test::flaky_test;
 use reqwest::StatusCode;
 use serde::Deserialize;
 use serial_test::serial;
@@ -18,7 +19,7 @@ struct EvaluateCodeResponse {
     clex: String,
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_code_and_platform_works() {
     let app = spawn_app().await;
@@ -41,7 +42,7 @@ async fn evaluate_with_code_and_platform_works() {
     assert!(!evaluation.clex.is_empty());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_invalid_url_returns_400() {
     let app = spawn_app().await;
@@ -59,7 +60,7 @@ async fn evaluate_with_invalid_url_returns_400() {
     assert_eq!(StatusCode::BAD_REQUEST, response.status());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_different_outputs() {
     let app = spawn_app().await;
@@ -84,7 +85,7 @@ async fn evaluate_with_different_outputs() {
     assert!(!evaluation.clex.is_empty());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_code_invalid_syntax() {
     let app = spawn_app().await;

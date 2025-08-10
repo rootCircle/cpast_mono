@@ -34,6 +34,7 @@ colored = "3.0.0"
 config = { version = "0.15.13", default-features = false, features = ["yaml"] }
 criterion = "0.7.0" 
 fake = "4.4.0"
+flaky_test = "0.2.2"
 futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 headless_chrome = "1.0.17"

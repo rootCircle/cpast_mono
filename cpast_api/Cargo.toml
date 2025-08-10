@@ -70,6 +70,7 @@ validator = { workspace = true }
 [dev-dependencies]
 claims = { workspace = true }
 fake = { workspace = true }
+flaky_test = { workspace = true }
 linkify = { workspace = true }
 quickcheck = { workspace = true }
 quickcheck_macros = { workspace = true }

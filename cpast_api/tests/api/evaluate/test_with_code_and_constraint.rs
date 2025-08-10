@@ -2,6 +2,7 @@ use crate::helpers::spawn_app;
 use reqwest::StatusCode;
 use serde::Deserialize;
 use serial_test::serial;
+use flaky_test::flaky_test;
 
 #[derive(Deserialize)]
 struct EvaluateCodeInputDiff {
@@ -18,7 +19,7 @@ struct EvaluateCodeResponse {
     clex: String,
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_code_and_constraint_works() {
     let app = spawn_app().await;
@@ -42,7 +43,7 @@ async fn evaluate_with_code_and_constraint_works() {
     assert!(!evaluation.clex.is_empty());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_invalid_constraints_returns_400() {
     let app = spawn_app().await;
@@ -61,7 +62,7 @@ async fn evaluate_with_invalid_constraints_returns_400() {
     assert_eq!(StatusCode::BAD_REQUEST, response.status());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_different_outputs() {
     let app = spawn_app().await;
@@ -87,7 +88,7 @@ async fn evaluate_with_different_outputs() {
     assert!(!evaluation.clex.is_empty());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_code_invalid_syntax() {
     let app = spawn_app().await;

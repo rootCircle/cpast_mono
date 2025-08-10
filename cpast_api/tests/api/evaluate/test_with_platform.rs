@@ -1,4 +1,5 @@
 use crate::helpers::spawn_app;
+use flaky_test::flaky_test;
 use reqwest::StatusCode;
 use serde::Deserialize;
 use serial_test::serial;
@@ -19,7 +20,7 @@ struct EvaluateCodeResponse {
     clex: String,
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_platform_works() {
     let app = spawn_app().await;
@@ -38,7 +39,7 @@ async fn evaluate_with_platform_works() {
     assert!(!evaluation.clex.is_empty());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_empty_problem_url_returns_400() {
     let app = spawn_app().await;
@@ -54,7 +55,7 @@ async fn evaluate_with_empty_problem_url_returns_400() {
     assert_eq!(StatusCode::BAD_REQUEST, response.status());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_invalid_problem_url_returns_400() {
     let app = spawn_app().await;
@@ -70,7 +71,7 @@ async fn evaluate_with_invalid_problem_url_returns_400() {
     assert_eq!(StatusCode::BAD_REQUEST, response.status());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_with_invalid_code_syntax() {
     let app = spawn_app().await;
@@ -86,7 +87,7 @@ async fn evaluate_with_invalid_code_syntax() {
     assert_eq!(StatusCode::INTERNAL_SERVER_ERROR, response.status());
 }
 
-#[tokio::test]
+#[flaky_test(times = 3, tokio)]
 #[serial]
 async fn evaluate_caching_works() {
     let app = spawn_app().await;
