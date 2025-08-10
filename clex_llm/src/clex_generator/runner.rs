@@ -1,11 +1,8 @@
-use crate::utils::post_with_retry;
-use google_generative_ai_rs::v1::{
-    api::{Client, PostResult},
-    errors::GoogleAPIError,
-    gemini::{
-        Content, Model, Part, Role,
-        request::{Request, SystemInstructionContent, SystemInstructionPart},
-    },
+use rig::{
+    OneOrMany,
+    completion::{Completion, CompletionError},
+    message::{AssistantContent, Message, Text, UserContent},
+    providers::gemini::{self, Client},
 };
 
 use super::examples::{self, Example};
@@ -28,7 +25,7 @@ impl ClexPromptGenerator {
     pub(crate) fn new(api_key: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let examples = examples::get_examples();
 
-        let client = Client::new_from_model(Model::Gemini2_0Flash, api_key.to_string());
+        let client = gemini::Client::new(api_key);
 
         Ok(ClexPromptGenerator { examples, client })
     }
@@ -160,34 +157,23 @@ Respond only with the generated Clex expression in single line. Do not include a
         &self,
         input_format: &str,
         constraints: &str,
-    ) -> Result<String, GoogleAPIError> {
+    ) -> Result<String, CompletionError> {
         let mut content = vec![];
 
-        // System prompt
         let system_prompt = self.get_system_prompt();
-
+        // Few-shot examples
         for example in &self.examples {
-            content.push(Content {
-                role: Role::User,
-                parts: vec![Part {
-                    text: Some(format!(
-                        "Input Format:\n{}\n\nConstraints:\n{}",
-                        example.input_format, example.constraints
-                    )),
-                    inline_data: None,
-                    file_data: None,
-                    video_metadata: None,
-                }],
+            content.push(Message::User {
+                content: OneOrMany::one(UserContent::Text(Text::from(format!(
+                    "Input Format:\n{}\n\nConstraints:\n{}",
+                    example.input_format, example.constraints
+                )))),
             });
-
-            content.push(Content {
-                role: Role::Model,
-                parts: vec![Part {
-                    text: Some(example.generated_language.to_string()),
-                    inline_data: None,
-                    file_data: None,
-                    video_metadata: None,
-                }],
+            content.push(Message::Assistant {
+                id: None,
+                content: OneOrMany::one(AssistantContent::Text(Text::from(
+                    example.generated_language.to_string(),
+                ))),
             });
         }
 
@@ -195,48 +181,25 @@ Respond only with the generated Clex expression in single line. Do not include a
             "Generate the Clex expression for the following input format and constraints:\n\nInput Format:\n{input_format}\n\nConstraints:\n{constraints}"
         );
 
-        content.push(Content {
-            role: Role::User,
-            parts: vec![Part {
-                text: Some(question_prompt),
-                inline_data: None,
-                file_data: None,
-                video_metadata: None,
-            }],
-        });
+        let agent = self
+            .client
+            .agent("gemini-2.5-flash")
+            .preamble(system_prompt)
+            .build();
 
-        let request = Request {
-            contents: content,
-            tools: vec![],
-            safety_settings: vec![],
-            generation_config: None,
-            system_instruction: Some(SystemInstructionContent {
-                parts: vec![SystemInstructionPart {
-                    text: Some(system_prompt.to_string()),
-                }],
-            }),
-        };
+        let send_result = agent
+            .completion(question_prompt, content)
+            .await?
+            .send()
+            .await?;
 
-        let request_timeout_secs = 30;
-        let result: PostResult =
-            post_with_retry(&self.client, request_timeout_secs, &request).await?;
-
-        match result {
-            PostResult::Rest(response) => response
-                .candidates
-                .first()
-                .map(|candidate| candidate.content.clone())
-                .and_then(|content| content.parts.first().cloned())
-                .and_then(|part| part.text.clone())
-                .map(|text| text.trim().to_string())
-                .ok_or_else(|| GoogleAPIError {
-                    message: "No generated text found in response".to_string(),
-                    code: None,
-                }),
-            _ => Err(GoogleAPIError {
-                message: "Unexpected response type".to_string(),
-                code: None,
-            }),
+        let mut merged = String::new();
+        for part in send_result.choice.into_iter() {
+            if let AssistantContent::Text(t) = part {
+                merged.push_str(&t.text);
+            }
         }
+
+        Ok(merged.trim().to_string())
     }
 }

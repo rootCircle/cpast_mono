@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use google_generative_ai_rs::v1::{
     api::{Client, PostResult},
     errors::GoogleAPIError,

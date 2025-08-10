@@ -1,15 +1,11 @@
-use ccode_runner::lang_runner::language_name::LanguageName;
-use google_generative_ai_rs::v1::{
-    api::{Client, PostResult},
-    errors::GoogleAPIError,
-    gemini::{
-        Content, Model, Part, Role,
-        request::{Request, SystemInstructionContent, SystemInstructionPart},
-    },
-};
-
 use super::examples::{self, SolutionTurn};
-use crate::utils::post_with_retry;
+use ccode_runner::lang_runner::language_name::LanguageName;
+use rig::{
+    OneOrMany,
+    completion::{Completion, CompletionError},
+    message::{AssistantContent, Message, Text, UserContent},
+    providers::gemini::{self, Client},
+};
 
 pub struct CodeSolutionGenerator {
     examples: Vec<SolutionTurn>,
@@ -21,7 +17,7 @@ impl CodeSolutionGenerator {
     pub(crate) fn new(api_key: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let examples = examples::get_examples();
 
-        let client = Client::new_from_model(Model::Gemini2_0Flash, api_key.to_string());
+        let client = gemini::Client::new(api_key);
 
         Ok(CodeSolutionGenerator {
             examples,
@@ -96,33 +92,23 @@ impl CodeSolutionGenerator {
         statement: &str,
         input_format: &str,
         constraints: &str,
-    ) -> Result<String, GoogleAPIError> {
+    ) -> Result<String, CompletionError> {
         let mut content = vec![];
 
         let system_prompt = self.get_system_prompt();
 
         for example in &self.examples {
-            content.push(Content {
-                role: Role::User,
-                parts: vec![Part {
-                    text: Some(format!(
-                        "Statement:\n{}\n\nInput Format:\n{}\n\nConstraints:\n{}",
-                        example.statement, example.input_format, example.constraints
-                    )),
-                    inline_data: None,
-                    file_data: None,
-                    video_metadata: None,
-                }],
+            content.push(Message::User {
+                content: OneOrMany::one(UserContent::Text(Text::from(format!(
+                    "Statement:\n{}\n\nInput Format:\n{}\n\nConstraints:\n{}",
+                    example.statement, example.input_format, example.constraints
+                )))),
             });
-
-            content.push(Content {
-                role: Role::Model,
-                parts: vec![Part {
-                    text: Some(example.generated_code.to_string()),
-                    inline_data: None,
-                    file_data: None,
-                    video_metadata: None,
-                }],
+            content.push(Message::Assistant {
+                id: None,
+                content: OneOrMany::one(AssistantContent::Text(Text::from(
+                    example.generated_code.to_string(),
+                ))),
             });
         }
 
@@ -130,47 +116,27 @@ impl CodeSolutionGenerator {
             "Statement:\n{statement}\n\nInput Format:\n{input_format}\n\nConstraints:\n{constraints}",
         );
 
-        content.push(Content {
-            role: Role::User,
-            parts: vec![Part {
-                text: Some(question_prompt),
-                inline_data: None,
-                file_data: None,
-                video_metadata: None,
-            }],
-        });
+        let gemini_2_5_client = self
+            .client
+            .agent("gemini-2.5-flash")
+            .preamble(system_prompt)
+            .build();
 
-        let request = Request {
-            contents: content,
-            tools: vec![],
-            safety_settings: vec![],
-            generation_config: None,
-            system_instruction: Some(SystemInstructionContent {
-                parts: vec![SystemInstructionPart {
-                    text: Some(system_prompt.to_string()),
-                }],
-            }),
-        };
+        let result = gemini_2_5_client
+            .completion(question_prompt, content)
+            .await?
+            .send()
+            .await?;
 
-        let result = post_with_retry(&self.client, 30, &request).await?;
-
-        match result {
-            PostResult::Rest(response) => response
-                .candidates
-                .first()
-                .map(|candidate| candidate.content.clone())
-                .and_then(|content| content.parts.first().cloned())
-                .and_then(|part| part.text.clone())
-                .map(|text| remove_cpp_markdown_formatting(text.trim()).to_string())
-                .ok_or_else(|| GoogleAPIError {
-                    message: "No generated text found in response".to_string(),
-                    code: None,
-                }),
-            _ => Err(GoogleAPIError {
-                message: "Unexpected response type".to_string(),
-                code: None,
-            }),
+        let mut merged = String::new();
+        for part in result.choice.into_iter() {
+            if let AssistantContent::Text(t) = part {
+                merged.push_str(&t.text);
+            }
         }
+        let merged = remove_cpp_markdown_formatting(merged.trim()).to_string();
+
+        Ok(merged)
     }
 }
 
