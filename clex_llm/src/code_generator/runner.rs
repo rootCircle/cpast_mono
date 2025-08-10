@@ -2,7 +2,7 @@ use super::examples::{self, SolutionTurn};
 use ccode_runner::lang_runner::language_name::LanguageName;
 use rig::{
     OneOrMany,
-    completion::{Completion, CompletionError},
+    completion::{Prompt, PromptError},
     message::{AssistantContent, Message, Text, UserContent},
     providers::gemini::{self, Client},
 };
@@ -92,7 +92,7 @@ impl CodeSolutionGenerator {
         statement: &str,
         input_format: &str,
         constraints: &str,
-    ) -> Result<String, CompletionError> {
+    ) -> Result<String, PromptError> {
         let mut content = vec![];
 
         let system_prompt = self.get_system_prompt();
@@ -122,19 +122,12 @@ impl CodeSolutionGenerator {
             .preamble(system_prompt)
             .build();
 
-        let result = gemini_2_5_client
-            .completion(question_prompt, content)
-            .await?
-            .send()
+        let response = gemini_2_5_client
+            .prompt(question_prompt)
+            .with_history(&mut content)
             .await?;
 
-        let mut merged = String::new();
-        for part in result.choice.into_iter() {
-            if let AssistantContent::Text(t) = part {
-                merged.push_str(&t.text);
-            }
-        }
-        let merged = remove_cpp_markdown_formatting(merged.trim()).to_string();
+        let merged = remove_cpp_markdown_formatting(response.trim()).to_string();
 
         Ok(merged)
     }

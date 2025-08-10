@@ -39,6 +39,7 @@ tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
 criterion = { workspace = true }
+flaky_test = { workspace = true }
 
 [[bench]]
 name = "generate"

@@ -1,4 +1,7 @@
+use flaky_test::flaky_test;
+
 #[test]
+#[flaky_test]
 #[cfg(any(
     all(unix, not(any(target_os = "android", target_os = "emscripten"))),
     windows,

@@ -1,11 +1,12 @@
 use rig::{
     OneOrMany,
-    completion::{Completion, CompletionError},
+    completion::{Prompt, PromptError},
     message::{AssistantContent, Message, Text, UserContent},
     providers::gemini::{self, Client},
 };
 
 use super::examples::{self, Example};
+use super::tools::ValidateClex;
 
 /// A generator for creating Clex language expressions using Google's Generative AI.
 ///
@@ -130,6 +131,11 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
    - Check that the generated Clex expression is syntactically correct
    - Confirm that it covers all aspects of the input format and constraints
 
+## Tooling
+- You have access to a tool named `validate_clex` which checks whether a Clex expression is valid and returns an error if not.
+- Use this tool to validate your candidate expression before finalizing your answer.
+- You may use tools at most 3 times per task; prefer a single validation if confident.
+
 ## Rules to Remember
 - If no range is specified for N or F, default to [INT32_MIN, INT32_MAX] for N and [INT32_MIN, INT32_MAX] for F
 - If no length is specified for S, default to MAX_STRING_SIZE (12)
@@ -149,7 +155,7 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
 - **Explanation**: Captures an integer K between 1 and 50, then generates K float values between 0 and 1000.
 
 ## Response
-Respond only with the generated Clex expression in single line. Do not include any explanations or additional text.
+Respond only with the final, validated Clex expression in a single line. Do not include any explanations, tool logs, or additional text.
         "#) as _
     }
 
@@ -157,7 +163,7 @@ Respond only with the generated Clex expression in single line. Do not include a
         &self,
         input_format: &str,
         constraints: &str,
-    ) -> Result<String, CompletionError> {
+    ) -> Result<String, PromptError> {
         let mut content = vec![];
 
         let system_prompt = self.get_system_prompt();
@@ -185,21 +191,15 @@ Respond only with the generated Clex expression in single line. Do not include a
             .client
             .agent("gemini-2.5-flash")
             .preamble(system_prompt)
+            .tool(ValidateClex)
             .build();
 
-        let send_result = agent
-            .completion(question_prompt, content)
-            .await?
-            .send()
+        let response = agent
+            .prompt(question_prompt)
+            .multi_turn(self.examples.len() + 5)
+            .with_history(&mut content)
             .await?;
 
-        let mut merged = String::new();
-        for part in send_result.choice.into_iter() {
-            if let AssistantContent::Text(t) = part {
-                merged.push_str(&t.text);
-            }
-        }
-
-        Ok(merged.trim().to_string())
+        Ok(response.trim().to_string())
     }
 }

@@ -34,11 +34,10 @@
 use ccode_runner::lang_runner::language_name::LanguageName;
 use clex_generator::runner::ClexPromptGenerator;
 use code_generator::runner::CodeSolutionGenerator;
-use rig::completion::CompletionError;
+use rig::completion::PromptError;
 
 mod clex_generator;
 mod code_generator;
-mod utils;
 
 /// Creates a new instance of the Clex prompt generator.
 ///
@@ -62,13 +61,13 @@ pub fn create_clex_generator(
 /// * `constraints` - A string specifying the constraints on input values
 ///
 /// # Returns
-/// * `Result<String, CompletionError>` - A Result containing either the generated Clex expression or a Google API error
+/// * `Result<String, PromptError>` - A Result containing either the generated Clex expression or a Google API error
 ///
 pub async fn generate_clex_expression(
     generator: &ClexPromptGenerator,
     input_format: &str,
     constraints: &str,
-) -> Result<String, CompletionError> {
+) -> Result<String, PromptError> {
     generator.generate_response(input_format, constraints).await
 }
 
@@ -95,14 +94,14 @@ pub fn create_code_generator(
 /// * `constraints` - A string specifying the constraints on input values
 ///
 /// # Returns
-/// * `Result<String, CompletionError>` - A Result containing either the generated code solution or a Google API error
+/// * `Result<String, PromptError>` - A Result containing either the generated code solution or a Google API error
 ///
 pub async fn generate_code_solution(
     generator: &CodeSolutionGenerator,
     statement: &str,
     input_format: &str,
     constraints: &str,
-) -> Result<(String, LanguageName), CompletionError> {
+) -> Result<(String, LanguageName), PromptError> {
     Ok((
         generator
             .generate_response(statement, input_format, constraints)

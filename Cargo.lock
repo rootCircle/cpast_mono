@@ -830,9 +830,11 @@ name = "clex_llm"
 version = "0.3.1"
 dependencies = [
  "ccode_runner",
+ "clex_gen",
  "reqwest 0.12.22",
  "rig-core",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
@@ -983,6 +985,7 @@ dependencies = [
  "colored",
  "criterion",
  "cscrapper",
+ "flaky_test",
  "futures",
  "thiserror 2.0.12",
  "tokio",
