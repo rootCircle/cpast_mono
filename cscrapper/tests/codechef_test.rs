@@ -1,6 +1,8 @@
 use cscrapper::{CodePlatform, get_problem_statement};
+use serial_test::serial;
 
 #[tokio::test]
+#[serial]
 async fn test_codechef_nonnegprod() {
     let result = get_problem_statement(CodePlatform::CodeChef("NONNEGPROD")).await;
     assert!(result.is_ok());
@@ -15,6 +17,7 @@ async fn test_codechef_nonnegprod() {
 }
 
 #[tokio::test]
+#[serial]
 async fn test_codechef_nonexistent_problem() {
     let result = get_problem_statement(CodePlatform::CodeChef("NONEXISTENTPROBLEM")).await;
 

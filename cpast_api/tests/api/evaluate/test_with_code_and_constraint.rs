@@ -1,6 +1,7 @@
 use crate::helpers::spawn_app;
 use reqwest::StatusCode;
 use serde::Deserialize;
+use serial_test::serial;
 
 #[derive(Deserialize)]
 struct EvaluateCodeInputDiff {
@@ -18,6 +19,7 @@ struct EvaluateCodeResponse {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_code_and_constraint_works() {
     let app = spawn_app().await;
 
@@ -41,6 +43,7 @@ async fn evaluate_with_code_and_constraint_works() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_invalid_constraints_returns_400() {
     let app = spawn_app().await;
 
@@ -59,6 +62,7 @@ async fn evaluate_with_invalid_constraints_returns_400() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_different_outputs() {
     let app = spawn_app().await;
 
@@ -84,6 +88,7 @@ async fn evaluate_with_different_outputs() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_code_invalid_syntax() {
     let app = spawn_app().await;
 

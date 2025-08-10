@@ -23,7 +23,7 @@
 //! use cpast::compile_and_test;
 //!
 //! async fn compile() {
-//!     compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false, false).await.unwrap();
+//!     compile_and_test(cpast::CodeOrPath::Path("correct.cpp".to_string()), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false, false).await.unwrap();
 //! }
 //! ```
 //!
@@ -84,7 +84,7 @@ pub enum CodeOrPath {
 ///
 /// ```rust,no_run
 /// async fn compile() {
-///     cpast::compile_and_test("correct.cpp".to_string(), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false, false).await.unwrap();
+///     cpast::compile_and_test(cpast::CodeOrPath::Path("correct.cpp".to_string()), "incorrect.rs".to_string(), "(N[1,10]) (?:N){\\1}".to_string(), 100, false, false, false).await.unwrap();
 /// }
 /// ```
 pub async fn compile_and_test(

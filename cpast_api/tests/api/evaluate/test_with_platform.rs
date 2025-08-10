@@ -1,6 +1,7 @@
 use crate::helpers::spawn_app;
 use reqwest::StatusCode;
 use serde::Deserialize;
+use serial_test::serial;
 
 #[derive(Deserialize, Debug)]
 #[allow(unused)]
@@ -19,6 +20,7 @@ struct EvaluateCodeResponse {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_platform_works() {
     let app = spawn_app().await;
 
@@ -37,6 +39,7 @@ async fn evaluate_with_platform_works() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_empty_problem_url_returns_400() {
     let app = spawn_app().await;
 
@@ -52,6 +55,7 @@ async fn evaluate_with_empty_problem_url_returns_400() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_invalid_problem_url_returns_400() {
     let app = spawn_app().await;
 
@@ -67,6 +71,7 @@ async fn evaluate_with_invalid_problem_url_returns_400() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_with_invalid_code_syntax() {
     let app = spawn_app().await;
 
@@ -82,6 +87,7 @@ async fn evaluate_with_invalid_code_syntax() {
 }
 
 #[tokio::test]
+#[serial]
 async fn evaluate_caching_works() {
     let app = spawn_app().await;
 

@@ -1,6 +1,8 @@
 use cscrapper::{CodePlatform, get_problem_statement};
+use serial_test::serial;
 
 #[tokio::test]
+#[serial]
 async fn test_codeforces_valid() {
     let result = get_problem_statement(CodePlatform::CodeForces("1331", "B")).await;
     assert!(result.is_ok());
@@ -16,6 +18,7 @@ async fn test_codeforces_valid() {
 }
 
 #[tokio::test]
+#[serial]
 async fn test_codeforces_nonexistent_problem() {
     let result = get_problem_statement(CodePlatform::CodeForces("9999", "Z")).await;
 
