@@ -17,3 +17,4 @@ google-generative-ai-rs = { workspace = true, features = ["beta"] }
 tokio = { workspace = true, features = ["full"] }
 ccode_runner = { path = "../ccode_runner", version = "^0.3.3" }
 reqwest = { workspace = true }
+rig-core = { workspace = true }
