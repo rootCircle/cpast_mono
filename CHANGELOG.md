@@ -11,6 +11,14 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.10.4 (2025-08-10)
+
+- headless_chrome for scraping (experimental)
+- Move away from cli-clipboard-rs to arboard crate maintained by team at 1Password for Rust 2024 compatibility and QoL updates.
+- Improve upon flaky tests handling in cpast_api
+- move away from google-generative-ai-rs to more versatile rig-core crate
+- add tool to validate_clex
+
 ## 0.10.0 (2025-03-15)
 
 - BREAKING: Move compilation to temp dir, instead of Path("./")
