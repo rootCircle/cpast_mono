@@ -36,7 +36,6 @@ criterion = "0.7.0"
 fake = "4.4.0"
 flaky_test = "0.2.2"
 futures = "0.3.31"
-google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
 headless_chrome = "1.0.17"
 hex = "0.4.3"
 linkify = "0.10.0"

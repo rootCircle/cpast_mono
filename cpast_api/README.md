@@ -83,13 +83,20 @@ git update-index --assume-unchanged ./cpast_api/configuration/base.yaml
 Launch a (migrated) Postgres database via Docker:
 
 ```bash
-./scripts/init_db.sh
+./cpast_api/scripts/init_db.sh
 ```
 
 Launch a Redis instance via Docker:
 
 ```bash
-./scripts/init_redis.sh
+./cpast_api/scripts/init_redis.sh
+```
+
+Setup secrets
+
+```bash
+export GOOGLE_API_KEY='<gemini api key>'
+python3 ./scripts/secrets_for_ci.py
 ```
 
 Launch `cargo`:

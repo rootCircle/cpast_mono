@@ -1,8 +1,8 @@
 use crate::helpers::spawn_app;
+use flaky_test::flaky_test;
 use reqwest::StatusCode;
 use serde::Deserialize;
 use serial_test::serial;
-use flaky_test::flaky_test;
 
 #[derive(Deserialize)]
 struct EvaluateCodeInputDiff {

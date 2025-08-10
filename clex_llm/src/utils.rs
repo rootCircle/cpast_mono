@@ -1,11 +1,8 @@
 #![allow(unused)]
 
-use google_generative_ai_rs::v1::{
-    api::{Client, PostResult},
-    errors::GoogleAPIError,
-    gemini::request::Request,
-};
 use reqwest::StatusCode;
+use rig::completion::CompletionError;
+use std::future::Future;
 use std::time::Duration;
 
 /// Configuration for retry behavior when posting to the Gemini API.
@@ -41,61 +38,59 @@ impl Default for RetryConfig {
     }
 }
 
-/// Post a Gemini request with retry logic using the provided configuration.
-pub(crate) async fn post_with_retry_config(
-    client: &Client,
-    request_timeout_secs: u64,
-    request: &Request,
-    cfg: &RetryConfig,
-) -> Result<PostResult, GoogleAPIError> {
-    let mut backoff = cfg.initial_backoff;
-
-    let result = {
-        let mut attempt = 0;
-        loop {
-            match client.post(request_timeout_secs, request).await {
-                Ok(res) => break res,
-                Err(err) => {
-                    let retryable = match err.code {
-                        Some(code) => cfg.retryable_statuses.contains(&code),
-                        None => false,
-                    };
-
-                    if !retryable || attempt >= cfg.max_retries {
-                        return Err(err);
-                    }
-
-                    // Exponential backoff with jitter.
-                    let jitter_ms = if cfg.jitter_max_ms == 0 {
-                        0
-                    } else {
-                        (std::time::SystemTime::now()
-                            .duration_since(std::time::UNIX_EPOCH)
-                            .unwrap_or_default()
-                            .subsec_nanos() as u64)
-                            % cfg.jitter_max_ms
-                    };
-
-                    tokio::time::sleep(backoff + Duration::from_millis(jitter_ms)).await;
-                    backoff = std::cmp::min(backoff + backoff, cfg.max_backoff);
-                    attempt += 1;
-                }
-            }
+/// Determine if a reqwest HTTP error should be retried based on status or type.
+fn is_retryable_http_error(err: &reqwest::Error, cfg: &RetryConfig) -> bool {
+    if let Some(status) = err.status() {
+        if cfg.retryable_statuses.contains(&status) {
+            return true;
         }
-    };
-
-    Ok(result)
+    }
+    // Network hiccups/timeouts without a status
+    err.is_timeout() || err.is_connect()
 }
 
-/// Post a Gemini request with default retry behavior.
-///
-/// - Retries on 429/5xx and request timeout errors up to 3 times.
-/// - Initial backoff 2s, doubles each retry up to 30s, with 0-250ms jitter.
-pub(crate) async fn post_with_retry(
-    client: &Client,
-    request_timeout_secs: u64,
-    request: &Request,
-) -> Result<PostResult, GoogleAPIError> {
-    let cfg = RetryConfig::default();
-    post_with_retry_config(client, request_timeout_secs, request, &cfg).await
+/// Check if a rig completion error is retryable using HTTP context.
+fn is_retryable_completion_error(err: &CompletionError, cfg: &RetryConfig) -> bool {
+    match err {
+        CompletionError::HttpError(http) => is_retryable_http_error(http, cfg),
+        _ => false,
+    }
+}
+
+/// Generic retry helper for async operations that return `Result<T, CompletionError>`.
+/// Retries on HTTP-retryable errors based on the provided RetryConfig.
+pub(crate) async fn retry_completion<F, Fut, T>(
+    mut op: F,
+    cfg: &RetryConfig,
+) -> Result<T, CompletionError>
+where
+    F: FnMut() -> Fut,
+    Fut: Future<Output = Result<T, CompletionError>>,
+{
+    let mut backoff = cfg.initial_backoff;
+    let mut attempt = 0usize;
+
+    loop {
+        match op().await {
+            Ok(val) => return Ok(val),
+            Err(err) => {
+                if !is_retryable_completion_error(&err, cfg) || attempt >= cfg.max_retries {
+                    return Err(err);
+                }
+
+                let jitter_ms = if cfg.jitter_max_ms == 0 {
+                    0
+                } else {
+                    (std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .subsec_nanos() as u64)
+                        % cfg.jitter_max_ms
+                };
+                tokio::time::sleep(backoff + Duration::from_millis(jitter_ms)).await;
+                backoff = std::cmp::min(backoff.saturating_mul(2), cfg.max_backoff);
+                attempt += 1;
+            }
+        }
+    }
 }

@@ -13,7 +13,6 @@ rust-version.workspace = true
 
 [dependencies]
 ccode_runner = { path = "../ccode_runner", version = "^0.3.3" }
-google-generative-ai-rs = { workspace = true, features = ["beta"] }
 reqwest = { workspace = true }
 rig-core = { workspace = true }
 serde = { workspace = true, features = ["derive"] }

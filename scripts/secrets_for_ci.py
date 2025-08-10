@@ -10,6 +10,7 @@ python3 scripts/secrets_for_ci.py
 
 import os
 import yaml
+import subprocess
 
 
 def update_api_key(file_path):
@@ -33,6 +34,16 @@ def update_api_key(file_path):
     # Write the updated config back to the file
     with open(file_path, "w") as file:
         yaml.dump(config, file, default_flow_style=False)
+
+    try:
+        subprocess.run(
+            ["git", "update-index", "--assume-unchanged", "cpast_api/configuration/base.yaml"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    except Exception:
+        pass
 
     print("Updated api_key successfully")
 
