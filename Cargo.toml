@@ -1,12 +1,12 @@
 [workspace]
 members = [
-  "cpast",
-  "clex_gen",
-  "cpastord", 
-  "cscrapper", 
-  "clex_llm", 
-  "ccode_runner",
-  "cpast_api"
+    "ccode_runner",
+    "clex_gen",
+    "clex_llm",
+    "cpast",
+    "cpast_api",
+    "cpastord",
+    "cscrapper",
 ]
 resolver = "3"
 
@@ -17,15 +17,6 @@ license = "GPL-3.0-or-later"
 repository = "https://github.com/rootCircle/cpast_mono"
 homepage = "https://rootcircle.github.io/blog/project/cpast.html"
 rust-version = "1.85"
-
-[profile.dev]
-opt-level = 0
-
-[profile.release]
-opt-level = "z"
-lto = true
-codegen-units = 1
-strip = true  # Automatically strip symbols from the binary.
 
 [workspace.dependencies]
 actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
@@ -45,10 +36,10 @@ criterion = "0.7.0"
 fake = "4.4.0"
 futures = "0.3.31"
 google-generative-ai-rs = { version = "0.3.4", features = ["beta"] }
-hex = "0.4.3"
 headless_chrome = "1.0.17"
-log = "0.4.27"
+hex = "0.4.3"
 linkify = "0.10.0"
+log = "0.4.27"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.1.0"
 rand = "0.9.2"
@@ -60,12 +51,13 @@ reqwest = { version = "0.12.20", default-features = false, features = [
 ] }
 rig-core = "0.17.1"
 scraper = "0.23.1"
+secrecy = { version = "0.10.3", features = ["serde"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde-aux = "4.7.0"
 serde_json = "1.0.142"
 serde_urlencoded = "0.7.1"
-secrecy = { version = "0.10.3", features = ["serde"] }
 serenity = { version = "0.12.4", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+serial_test = "3.2.0"
 sha2 = "0.10.9"
 shuttle-runtime = "0.56.0"
 shuttle-serenity = "0.56.0"
@@ -86,12 +78,21 @@ tracing-bunyan-formatter = { version = "0.3.10" }
 tracing-log = "0.2.0"
 tracing-subscriber = { version = "0.3.19", features = ["registry", "env-filter"] }
 unicode-segmentation = "1.12.0"
-validator = "0.20.0"
-wiremock = "0.6.4"
-which = "8.0.0"
 utoipa = { version = "5.4.0", features = [ "actix_extras" ] }
-utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web", "vendored"] }
-utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-rapidoc = { version = "6.0.0", features = ["actix-web"] }
+utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-scalar = { version = "0.3.0", features = ["actix-web"] }
+utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web", "vendored"] }
 uuid = { version = "1.17.0", features = ["v4", "serde", "v7"] }
+validator = "0.20.0"
+which = "8.0.0"
+wiremock = "0.6.4"
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true  # Automatically strip symbols from the binary.

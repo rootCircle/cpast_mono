@@ -12,15 +12,15 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-reqwest = { workspace = true, features = ["json"] }
+headless_chrome = { workspace = true }
+rand = { workspace = true }
 regex = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
+scraper = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
-scraper = { workspace = true }
 tokio = { workspace = true }
-rand = { workspace = true }
-headless_chrome = { workspace = true }
 
 [dev-dependencies]
-tokio.workspace = true
+serial_test = { workspace = true }

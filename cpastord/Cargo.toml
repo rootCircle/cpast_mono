@@ -11,8 +11,8 @@ publish = false
 
 [dependencies]
 anyhow = { workspace = true }
-shuttle-serenity = { workspace = true }
-shuttle-runtime = { workspace = true }
 serenity = { workspace = true, default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+shuttle-runtime = { workspace = true }
+shuttle-serenity = { workspace = true }
 tracing = { workspace = true }
 

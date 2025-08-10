@@ -24,12 +24,12 @@ actix-web-flash-messages = { workspace = true, features = ["cookies"] }
 anyhow = { workspace = true }
 argon2 = { workspace = true, features = ["std"] }
 base64 = { workspace = true }
+ccode_runner = { path = "../ccode_runner", features = ["api"] }
 chrono = { workspace = true, default-features = false, features = ["clock"] }
 clex_gen = { path = "../clex_gen" }
 clex_llm = { path = "../clex_llm" }
-ccode_runner = { path = "../ccode_runner", features = ["api"] }
-cscrapper = { path = "../cscrapper" }
 config = { workspace = true, default-features = false, features = ["yaml"] }
+cscrapper = { path = "../cscrapper" }
 hex = { workspace = true }
 log = { workspace = true }
 rand = { workspace = true, features = ["std_rng"] }
@@ -38,11 +38,11 @@ reqwest = { workspace = true, default-features = false, features = [
     "json",
     "rustls-tls",
 ] }
-sha2 = { workspace = true }
 secrecy = { workspace = true, features = ["serde"] }
 serde = { workspace = true }
 serde-aux = { workspace = true }
 serde_json = { workspace = true }
+sha2 = { workspace = true }
 sqlx = { workspace = true, default-features = false, features = [
     "chrono",
     "macros",
@@ -64,15 +64,16 @@ utoipa-rapidoc = { workspace = true, features = ["actix-web"] }
 utoipa-redoc = { workspace = true, features = ["actix-web"] }
 utoipa-scalar = { workspace = true, features = ["actix-web"] }
 utoipa-swagger-ui = { workspace = true, features = ["actix-web", "vendored"] }
-validator = { workspace = true }
 uuid = { workspace = true, features = ["serde", "v4", "v7"] }
+validator = { workspace = true }
 
 [dev-dependencies]
+claims = { workspace = true }
+fake = { workspace = true }
+linkify = { workspace = true }
 quickcheck = { workspace = true }
 quickcheck_macros = { workspace = true }
-fake = { workspace = true }
-wiremock = { workspace = true }
 serde_json = { workspace = true }
 serde_urlencoded = { workspace = true }
-linkify = { workspace = true }
-claims = { workspace = true }
+serial_test = { workspace = true }
+wiremock = { workspace = true }

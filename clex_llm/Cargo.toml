@@ -12,9 +12,9 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-serde = { workspace = true, features = ["derive"] }
-google-generative-ai-rs = { workspace = true, features = ["beta"] }
-tokio = { workspace = true, features = ["full"] }
 ccode_runner = { path = "../ccode_runner", version = "^0.3.3" }
+google-generative-ai-rs = { workspace = true, features = ["beta"] }
 reqwest = { workspace = true }
 rig-core = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+tokio = { workspace = true, features = ["full"] }
