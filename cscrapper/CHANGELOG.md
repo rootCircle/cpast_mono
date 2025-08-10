@@ -5,7 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.1.3 (2025-08-11)
+
+### New Features
+
+ - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
+   - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
+   - Introduced a utility module with retry logic for posting requests to the Gemini API.
+ - <csr-id-2374f692ae0f695bfe5fd6955de6a35c56f91b37/> add headless_chrome dependency and update database configuration
+
+### Other
+
+ - <csr-id-950ed853366f835e1d552f3c7434523a9977dbba/> cargo sort -w
+ - <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/> format! lint fix
+
+### Test
+
+ - <csr-id-12140a0a7cae88d072b28bc803c0e0cee19bdb74/> serial test for LLM call
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 5 commits contributed to the release over the course of 131 calendar days.
+ - 146 days passed between releases.
+ - 5 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Serial test for LLM call ([`12140a0`](https://github.com/rootCircle/cpast_mono/commit/12140a0a7cae88d072b28bc803c0e0cee19bdb74))
+    - Cargo sort -w ([`950ed85`](https://github.com/rootCircle/cpast_mono/commit/950ed853366f835e1d552f3c7434523a9977dbba))
+    - LLM 429 retry logic and refactor clipboard handling ([`17e42ac`](https://github.com/rootCircle/cpast_mono/commit/17e42ac965d7d19fd8e44edf21903dbfc0df257c))
+    - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
+    - Add headless_chrome dependency and update database configuration ([`2374f69`](https://github.com/rootCircle/cpast_mono/commit/2374f692ae0f695bfe5fd6955de6a35c56f91b37))
+</details>
+
 ## v0.1.2 (2025-03-17)
+
+<csr-id-4f809172dcf7cf104859a5a3567547e99900930d/>
 
 ### Chore
 
@@ -15,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release over the course of 1 calendar day.
+ - 2 commits contributed to the release over the course of 1 calendar day.
  - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_gen v0.3.3, clex_llm v0.3.1, cscrapper v0.1.2, cpast v0.10.3 ([`0d90d92`](https://github.com/rootCircle/cpast_mono/commit/0d90d92652a9c58b73960b5dbc282f332f66a2b4))
     - Update non-cloudflare blocked codeforces mirror(slow) ([`4f80917`](https://github.com/rootCircle/cpast_mono/commit/4f809172dcf7cf104859a5a3567547e99900930d))
 </details>
 

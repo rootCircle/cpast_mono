@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.2 (2025-08-11)
+
+### Chore
+
+ - <csr-id-d5942b63e45b8a164d86deeaa838d83034041e77/> bump msrv
+ - <csr-id-a82f0cb4b09543c6bfe60004ec0d56febab42755/> cleanup database script and remove google-generative-ai-rs
+
+### New Features
+
+ - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
+ - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
+   - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
+   - Introduced a utility module with retry logic for posting requests to the Gemini API.
+
+### Other
+
+ - <csr-id-950ed853366f835e1d552f3c7434523a9977dbba/> cargo sort -w
+ - <csr-id-b987b95a74ed95804be13f9ca38516eacf44954e/> update deps and add rig-core
+ - <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/> format! lint fix
+
+### Refactor
+
+ - <csr-id-3207ab24d8d3961528c416a56cbd23dd8a1324ee/> use rig instead of google-generative-ai-rs
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 8 commits contributed to the release over the course of 42 calendar days.
+ - 146 days passed between releases.
+ - 8 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Add validation tool call for Clex expressions and integrate into clex_llm generator ([`061adbc`](https://github.com/rootCircle/cpast_mono/commit/061adbce540301608dd1dd05b09bf8885fc29ff8))
+    - Bump msrv ([`d5942b6`](https://github.com/rootCircle/cpast_mono/commit/d5942b63e45b8a164d86deeaa838d83034041e77))
+    - Cleanup database script and remove google-generative-ai-rs ([`a82f0cb`](https://github.com/rootCircle/cpast_mono/commit/a82f0cb4b09543c6bfe60004ec0d56febab42755))
+    - Cargo sort -w ([`950ed85`](https://github.com/rootCircle/cpast_mono/commit/950ed853366f835e1d552f3c7434523a9977dbba))
+    - Use rig instead of google-generative-ai-rs ([`3207ab2`](https://github.com/rootCircle/cpast_mono/commit/3207ab24d8d3961528c416a56cbd23dd8a1324ee))
+    - Update deps and add rig-core ([`b987b95`](https://github.com/rootCircle/cpast_mono/commit/b987b95a74ed95804be13f9ca38516eacf44954e))
+    - LLM 429 retry logic and refactor clipboard handling ([`17e42ac`](https://github.com/rootCircle/cpast_mono/commit/17e42ac965d7d19fd8e44edf21903dbfc0df257c))
+    - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
+</details>
+
 ## v0.3.1 (2025-03-17)
 
 ### Bug Fixes
@@ -15,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release over the course of 1 calendar day.
+ - 2 commits contributed to the release over the course of 1 calendar day.
  - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_gen v0.3.3, clex_llm v0.3.1, cscrapper v0.1.2, cpast v0.10.3 ([`0d90d92`](https://github.com/rootCircle/cpast_mono/commit/0d90d92652a9c58b73960b5dbc282f332f66a2b4))
     - Correct language name assignment in test_code_generator ([`cc1fddc`](https://github.com/rootCircle/cpast_mono/commit/cc1fddcf1ccf015837f91721e19d28a303c16597))
 </details>
 

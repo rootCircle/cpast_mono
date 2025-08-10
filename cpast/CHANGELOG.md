@@ -1,6 +1,55 @@
 # Changelog
 
+## 0.10.4 (2025-08-11)
+
+### Chore
+
+ - <csr-id-d5942b63e45b8a164d86deeaa838d83034041e77/> bump msrv
+
+### New Features
+
+ - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
+ - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
+   - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
+   - Introduced a utility module with retry logic for posting requests to the Gemini API.
+
+### Other
+
+ - <csr-id-950ed853366f835e1d552f3c7434523a9977dbba/> cargo sort -w
+ - <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/> format! lint fix
+
+### Test
+
+ - <csr-id-12140a0a7cae88d072b28bc803c0e0cee19bdb74/> serial test for LLM call
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 6 commits contributed to the release over the course of 42 calendar days.
+ - 146 days passed between releases.
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Add validation tool call for Clex expressions and integrate into clex_llm generator ([`061adbc`](https://github.com/rootCircle/cpast_mono/commit/061adbce540301608dd1dd05b09bf8885fc29ff8))
+    - Bump msrv ([`d5942b6`](https://github.com/rootCircle/cpast_mono/commit/d5942b63e45b8a164d86deeaa838d83034041e77))
+    - Serial test for LLM call ([`12140a0`](https://github.com/rootCircle/cpast_mono/commit/12140a0a7cae88d072b28bc803c0e0cee19bdb74))
+    - Cargo sort -w ([`950ed85`](https://github.com/rootCircle/cpast_mono/commit/950ed853366f835e1d552f3c7434523a9977dbba))
+    - LLM 429 retry logic and refactor clipboard handling ([`17e42ac`](https://github.com/rootCircle/cpast_mono/commit/17e42ac965d7d19fd8e44edf21903dbfc0df257c))
+    - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
+</details>
+
 ## 0.10.3 (2025-03-17)
+
+<csr-id-ba0d255c687a637ecfaa1732051e561b90099bf1/>
+<csr-id-2000467be52a20ed2d3f142923f3a6ec094e635a/>
 
 ### Chore
 
@@ -14,7 +63,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 1 day passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -26,6 +75,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_gen v0.3.3, clex_llm v0.3.1, cscrapper v0.1.2, cpast v0.10.3 ([`0d90d92`](https://github.com/rootCircle/cpast_mono/commit/0d90d92652a9c58b73960b5dbc282f332f66a2b4))
     - Some Makefile and ci improvements ([`2000467`](https://github.com/rootCircle/cpast_mono/commit/2000467be52a20ed2d3f142923f3a6ec094e635a))
     - Fix --problem_url maturity message ([`ba0d255`](https://github.com/rootCircle/cpast_mono/commit/ba0d255c687a637ecfaa1732051e561b90099bf1))
 </details>

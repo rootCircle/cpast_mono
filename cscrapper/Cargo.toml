@@ -1,6 +1,6 @@
 [package]
 name = "cscrapper"
-version = "0.1.2"
+version = "0.1.3"
 description = "Scrapper for competitive programming websites"
 categories = ["development-tools::testing", "development-tools"]
 keywords = ["competitive-coding", "scrapper", "website", "codechef", "codeforces"]

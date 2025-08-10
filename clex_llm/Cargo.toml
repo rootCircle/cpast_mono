@@ -1,6 +1,6 @@
 [package]
 name = "clex_llm"
-version = "0.3.1"
+version = "0.3.2"
 description = "Generates clex from input format and constraints in natural language using LLM."
 categories = ["development-tools::testing", "development-tools"]
 keywords = ["automata", "generator", "testcase", "llm", "dsl"]
@@ -12,8 +12,8 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-ccode_runner = { path = "../ccode_runner", version = "^0.3.3" }
-clex_gen = { path = "../clex_gen", version = "^0.3.3" }
+ccode_runner = { path = "../ccode_runner", version = "^0.3.5" }
+clex_gen = { path = "../clex_gen", version = "^0.3.4" }
 reqwest = { workspace = true }
 rig-core = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
