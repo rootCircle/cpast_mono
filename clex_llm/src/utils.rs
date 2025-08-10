@@ -40,10 +40,10 @@ impl Default for RetryConfig {
 
 /// Determine if a reqwest HTTP error should be retried based on status or type.
 fn is_retryable_http_error(err: &reqwest::Error, cfg: &RetryConfig) -> bool {
-    if let Some(status) = err.status() {
-        if cfg.retryable_statuses.contains(&status) {
-            return true;
-        }
+    if let Some(status) = err.status()
+        && cfg.retryable_statuses.contains(&status)
+    {
+        return true;
     }
     // Network hiccups/timeouts without a status
     err.is_timeout() || err.is_connect()

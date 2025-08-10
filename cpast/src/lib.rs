@@ -208,16 +208,15 @@ async fn process_test_case(
             }
             Err(err) => {
                 eprintln!("{}", format!("Error matching the file! {err}").red());
-                if let RunnerErrorType::ProgramRunError(run_err) = *err {
-                    if let Some(io_err) = run_err.downcast_ref::<io::Error>() {
-                        if io_err.kind() == io::ErrorKind::BrokenPipe {
-                            eprintln!("Broken pipe detected!");
-                            eprintln!(
-                                "This usually happens when your clex is incorrect and it doesn't generate what your codes are expecting!"
-                            );
-                            eprintln!("Please check your clex and try again!");
-                        }
-                    }
+                if let RunnerErrorType::ProgramRunError(run_err) = *err
+                    && let Some(io_err) = run_err.downcast_ref::<io::Error>()
+                    && io_err.kind() == io::ErrorKind::BrokenPipe
+                {
+                    eprintln!("Broken pipe detected!");
+                    eprintln!(
+                        "This usually happens when your clex is incorrect and it doesn't generate what your codes are expecting!"
+                    );
+                    eprintln!("Please check your clex and try again!");
                 }
 
                 has_failed_clone.store(true, Ordering::Relaxed);

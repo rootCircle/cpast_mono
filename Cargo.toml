@@ -16,7 +16,7 @@ edition = "2024"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/rootCircle/cpast_mono"
 homepage = "https://rootcircle.github.io/blog/project/cpast.html"
-rust-version = "1.85"
+rust-version = "1.88"
 
 [workspace.dependencies]
 actix-session = { version = "0.10.1", features = ["redis-session-rustls"] }
