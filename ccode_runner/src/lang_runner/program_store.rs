@@ -101,7 +101,7 @@ impl ProgramStore {
             self.run_program_code_interface(&self.test_file, stdin_content, FileType::Test)?;
 
         Ok((
-            file_utils::string_diff(&correct_output, &test_output),
+            !file_utils::string_diff(&correct_output, &test_output),
             correct_output,
             test_output,
         ))
