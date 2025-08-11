@@ -1,6 +1,11 @@
 use ccode_runner::lang_runner::{language_name::LanguageName, program_store::ProgramStore};
 use clex_llm::{create_code_generator, generate_code_solution};
 use std::env;
+
+use crate::utils::is_gemini_quota_error;
+
+mod utils;
+
 #[tokio::test]
 async fn test_generate_code_solution() {
     let api_key = env::var("GOOGLE_API_KEY").ok();
@@ -39,6 +44,11 @@ print(sum(arr))"#;
             assert!(has_matched);
         }
         Err(e) => {
+            let msg = format!("{e:?}");
+            if is_gemini_quota_error(&msg) {
+                eprintln!("Skipping test_generate_code_solution due to Gemini rate limit: {msg}");
+                return;
+            }
             panic!("Failed to generate code solution: {e:?}");
         }
     }

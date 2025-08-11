@@ -1,4 +1,4 @@
-use crate::helpers::spawn_app;
+use crate::helpers::{is_gemini_quota_error, spawn_app};
 use flaky_test::flaky_test;
 use reqwest::StatusCode;
 use serde::Deserialize;
@@ -34,7 +34,16 @@ async fn evaluate_with_code_and_constraint_works() {
     });
 
     let response = app.post_evaluate_with_code_and_constraint(&req_body).await;
-
+    if response.status() == StatusCode::INTERNAL_SERVER_ERROR {
+        let body = response.text().await.unwrap_or_default();
+        if is_gemini_quota_error(&body) {
+            eprintln!(
+                "Skipping evaluate_with_code_and_constraint_works due to Gemini rate limit: {body}"
+            );
+            return;
+        }
+        panic!("Unexpected 500: {body}");
+    }
     assert_eq!(StatusCode::OK, response.status());
 
     let evaluation = response.json::<EvaluateCodeResponse>().await.unwrap();
@@ -77,7 +86,14 @@ async fn evaluate_with_different_outputs() {
     });
 
     let response = app.post_evaluate_with_code_and_constraint(&req_body).await;
-
+    if response.status() == StatusCode::INTERNAL_SERVER_ERROR {
+        let body = response.text().await.unwrap_or_default();
+        if is_gemini_quota_error(&body) {
+            eprintln!("Skipping evaluate_with_different_outputs due to Gemini rate limit: {body}");
+            return;
+        }
+        panic!("Unexpected 500: {body}");
+    }
     assert_eq!(StatusCode::OK, response.status());
 
     let evaluation = response.json::<EvaluateCodeResponse>().await.unwrap();

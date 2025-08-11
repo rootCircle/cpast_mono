@@ -1,4 +1,4 @@
-use crate::helpers::spawn_app;
+use crate::helpers::{is_gemini_quota_error, spawn_app};
 use flaky_test::flaky_test;
 use reqwest::StatusCode;
 use serde::Deserialize;
@@ -32,6 +32,16 @@ async fn evaluate_with_platform_works() {
     });
 
     let response = app.post_evaluate_with_platform(&req_body).await;
+
+    // Skip when LLM returns 429/quota errors and the API maps it to 500
+    if response.status() == StatusCode::INTERNAL_SERVER_ERROR {
+        let body = response.text().await.unwrap_or_default();
+        if is_gemini_quota_error(&body) {
+            eprintln!("Skipping evaluate_with_platform_works due to Gemini rate limit: {body}");
+            return;
+        }
+        panic!("Unexpected 500: {body}");
+    }
 
     assert_eq!(StatusCode::OK, response.status());
 
@@ -100,10 +110,30 @@ async fn evaluate_caching_works() {
 
     // First request should cache the results
     let first_response = app.post_evaluate_with_platform(&req_body).await;
+    if first_response.status() == StatusCode::INTERNAL_SERVER_ERROR {
+        let body = first_response.text().await.unwrap_or_default();
+        if is_gemini_quota_error(&body) {
+            eprintln!(
+                "Skipping evaluate_caching_works (first call) due to Gemini rate limit: {body}"
+            );
+            return;
+        }
+        panic!("Unexpected 500: {body}");
+    }
     assert_eq!(StatusCode::OK, first_response.status());
 
     // Second request should use cached results
     let second_response = app.post_evaluate_with_platform(&req_body).await;
+    if second_response.status() == StatusCode::INTERNAL_SERVER_ERROR {
+        let body = second_response.text().await.unwrap_or_default();
+        if is_gemini_quota_error(&body) {
+            eprintln!(
+                "Skipping evaluate_caching_works (second call) due to Gemini rate limit: {body}"
+            );
+            return;
+        }
+        panic!("Unexpected 500: {body}");
+    }
     assert_eq!(StatusCode::OK, second_response.status());
 
     let first_evaluation = first_response.json::<EvaluateCodeResponse>().await.unwrap();

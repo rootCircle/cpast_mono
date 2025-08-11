@@ -28,6 +28,15 @@ pub struct TestApp {
     pub api_client: reqwest::Client,
 }
 
+/// Returns true if the provided error body indicates Gemini rate limiting/quota exhaustion.
+pub fn is_gemini_quota_error(body: &str) -> bool {
+    let lower = body.to_lowercase();
+    body.contains("\"code\": 429")
+        || body.contains("RESOURCE_EXHAUSTED")
+        || lower.contains("rate limit")
+        || lower.contains("quota")
+}
+
 impl TestApp {
     pub async fn post_shared_code<Body>(&self, body: &Body) -> reqwest::Response
     where

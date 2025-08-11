@@ -1,6 +1,10 @@
 use clex_llm::{create_clex_generator, generate_clex_expression};
 use std::env;
 
+use crate::utils::is_gemini_quota_error;
+
+mod utils;
+
 #[tokio::test]
 async fn test_generate_clex_expression() {
     let api_key = env::var("GOOGLE_API_KEY").ok();
@@ -26,6 +30,11 @@ async fn test_generate_clex_expression() {
             );
         }
         Err(e) => {
+            let msg = format!("{e:?}");
+            if is_gemini_quota_error(&msg) {
+                eprintln!("Skipping test_generate_clex_expression due to Gemini rate limit: {msg}");
+                return;
+            }
             panic!("Failed to generate Clex expression: {e:?}");
         }
     }
@@ -56,6 +65,11 @@ async fn test_array_sum_generation() {
             );
         }
         Err(e) => {
+            let msg = format!("{e:?}");
+            if is_gemini_quota_error(&msg) {
+                eprintln!("Skipping test_array_sum_generation due to Gemini rate limit: {msg}");
+                return;
+            }
             panic!("Failed to generate Clex expression: {e:?}");
         }
     }
@@ -86,6 +100,13 @@ async fn test_string_pattern_generation() {
             );
         }
         Err(e) => {
+            let msg = format!("{e:?}");
+            if is_gemini_quota_error(&msg) {
+                eprintln!(
+                    "Skipping test_string_pattern_generation due to Gemini rate limit: {msg}"
+                );
+                return;
+            }
             panic!("Failed to generate Clex expression: {e:?}");
         }
     }
@@ -116,6 +137,11 @@ async fn test_matrix_generation() {
             );
         }
         Err(e) => {
+            let msg = format!("{e:?}");
+            if is_gemini_quota_error(&msg) {
+                eprintln!("Skipping test_matrix_generation due to Gemini rate limit: {msg}");
+                return;
+            }
             panic!("Failed to generate Clex expression: {e:?}");
         }
     }
