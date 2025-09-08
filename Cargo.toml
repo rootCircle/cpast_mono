@@ -83,7 +83,7 @@ utoipa-rapidoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-scalar = { version = "0.3.0", features = ["actix-web"] }
 utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web", "vendored"] }
-uuid = { version = "1.17.0", features = ["v4", "serde", "v7"] }
+uuid = { version = "1.18.1", features = ["v4", "serde", "v7"] }
 validator = "0.20.0"
 which = "8.0.0"
 wiremock = "0.6.4"
