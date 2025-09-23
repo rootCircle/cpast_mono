@@ -12,7 +12,7 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-ccode_runner = { path = "../ccode_runner", version = "^0.3.5" }
+ccode_runner = { path = "../ccode_runner", version = "^0.3.6" }
 clex_gen = { path = "../clex_gen", version = "^0.3.4" }
 reqwest = { workspace = true }
 rig-core = { workspace = true }

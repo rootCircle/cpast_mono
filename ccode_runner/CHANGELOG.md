@@ -5,7 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.6 (2025-09-24)
+
+### Chore
+
+ - <csr-id-d3c932771728a95ebd89991f221f0000a442eaf1/> enhance string normalization and comparison functions with comprehensive tests
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release over the course of 43 calendar days.
+ - 43 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Enhance string normalization and comparison functions with comprehensive tests ([`d3c9327`](https://github.com/rootCircle/cpast_mono/commit/d3c932771728a95ebd89991f221f0000a442eaf1))
+</details>
+
 ## v0.3.5 (2025-08-11)
+
+<csr-id-950ed853366f835e1d552f3c7434523a9977dbba/>
+<csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/>
 
 ### Other
 
@@ -16,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release over the course of 42 calendar days.
+ - 4 commits contributed to the release over the course of 42 calendar days.
  - 148 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -28,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.5, clex_gen v0.3.4, clex_llm v0.3.2, cscrapper v0.1.3, cpast v0.10.4 ([`291b2fb`](https://github.com/rootCircle/cpast_mono/commit/291b2fbce9bcfaeda1e608f6e8195e3fc4ef999f))
     - Cargo sort -w ([`950ed85`](https://github.com/rootCircle/cpast_mono/commit/950ed853366f835e1d552f3c7434523a9977dbba))
     - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
     - Fix faling builds ([`aa689ca`](https://github.com/rootCircle/cpast_mono/commit/aa689ca47e1c97026a81f54503160ee68ebf7829))
