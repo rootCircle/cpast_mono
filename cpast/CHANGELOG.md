@@ -10,7 +10,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release.
+ - 4 commits contributed to the release.
  - 43 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -22,6 +22,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`58d6037`](https://github.com/rootCircle/cpast_mono/commit/58d6037ffb345853258798d8b6803e22cdaf9223))
     - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`aeb527f`](https://github.com/rootCircle/cpast_mono/commit/aeb527f0ee3afdea41161703f716b7fbf2935672))
     - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`48a00d9`](https://github.com/rootCircle/cpast_mono/commit/48a00d920c572965915d63a059b8ef23b41c5307))
     - Release ccode_runner v0.3.6 ([`59fd3ff`](https://github.com/rootCircle/cpast_mono/commit/59fd3ff8509a43a336bc006ec41b5c1bdcc4f3ec))
