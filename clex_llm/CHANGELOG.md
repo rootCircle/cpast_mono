@@ -5,7 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.3 (2025-09-24)
+
+### Chore
+
+ - <csr-id-f633af53a922f685f3e11978869b1913e85d499b/> rig-core upgrade
+
+### New Features
+
+ - <csr-id-4342bc031ccc1713a10194c7a7c0996c81e94313/> handle Gemini rate limit handling for flaky tests
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release over the course of 43 calendar days.
+ - 43 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`48a00d9`](https://github.com/rootCircle/cpast_mono/commit/48a00d920c572965915d63a059b8ef23b41c5307))
+    - Release ccode_runner v0.3.6 ([`59fd3ff`](https://github.com/rootCircle/cpast_mono/commit/59fd3ff8509a43a336bc006ec41b5c1bdcc4f3ec))
+    - Rig-core upgrade ([`f633af5`](https://github.com/rootCircle/cpast_mono/commit/f633af53a922f685f3e11978869b1913e85d499b))
+    - Handle Gemini rate limit handling for flaky tests ([`4342bc0`](https://github.com/rootCircle/cpast_mono/commit/4342bc031ccc1713a10194c7a7c0996c81e94313))
+</details>
+
 ## v0.3.2 (2025-08-11)
+
+<csr-id-d5942b63e45b8a164d86deeaa838d83034041e77/>
+<csr-id-a82f0cb4b09543c6bfe60004ec0d56febab42755/>
+<csr-id-950ed853366f835e1d552f3c7434523a9977dbba/>
+<csr-id-b987b95a74ed95804be13f9ca38516eacf44954e/>
+<csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/>
+<csr-id-3207ab24d8d3961528c416a56cbd23dd8a1324ee/>
 
 ### Chore
 
@@ -17,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
  - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
    - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
-   - Introduced a utility module with retry logic for posting requests to the Gemini API.
+- Introduced a utility module with retry logic for posting requests to the Gemini API.
 
 ### Other
 
@@ -33,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release over the course of 42 calendar days.
+ - 9 commits contributed to the release over the course of 42 calendar days.
  - 146 days passed between releases.
  - 8 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -45,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.5, clex_gen v0.3.4, clex_llm v0.3.2, cscrapper v0.1.3, cpast v0.10.4 ([`291b2fb`](https://github.com/rootCircle/cpast_mono/commit/291b2fbce9bcfaeda1e608f6e8195e3fc4ef999f))
     - Add validation tool call for Clex expressions and integrate into clex_llm generator ([`061adbc`](https://github.com/rootCircle/cpast_mono/commit/061adbce540301608dd1dd05b09bf8885fc29ff8))
     - Bump msrv ([`d5942b6`](https://github.com/rootCircle/cpast_mono/commit/d5942b63e45b8a164d86deeaa838d83034041e77))
     - Cleanup database script and remove google-generative-ai-rs ([`a82f0cb`](https://github.com/rootCircle/cpast_mono/commit/a82f0cb4b09543c6bfe60004ec0d56febab42755))
