@@ -1,6 +1,32 @@
 # Changelog
 
+## 0.10.5 (2025-09-24)
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 43 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Release ccode_runner v0.3.6 ([`59fd3ff`](https://github.com/rootCircle/cpast_mono/commit/59fd3ff8509a43a336bc006ec41b5c1bdcc4f3ec))
+</details>
+
 ## 0.10.4 (2025-08-11)
+
+<csr-id-d5942b63e45b8a164d86deeaa838d83034041e77/>
+<csr-id-950ed853366f835e1d552f3c7434523a9977dbba/>
+<csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/>
+<csr-id-12140a0a7cae88d072b28bc803c0e0cee19bdb74/>
 
 ### Chore
 
@@ -11,7 +37,7 @@
  - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
  - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
    - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
-   - Introduced a utility module with retry logic for posting requests to the Gemini API.
+- Introduced a utility module with retry logic for posting requests to the Gemini API.
 
 ### Other
 
@@ -26,7 +52,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release over the course of 42 calendar days.
+ - 7 commits contributed to the release over the course of 42 calendar days.
  - 146 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -38,6 +64,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.5, clex_gen v0.3.4, clex_llm v0.3.2, cscrapper v0.1.3, cpast v0.10.4 ([`291b2fb`](https://github.com/rootCircle/cpast_mono/commit/291b2fbce9bcfaeda1e608f6e8195e3fc4ef999f))
     - Add validation tool call for Clex expressions and integrate into clex_llm generator ([`061adbc`](https://github.com/rootCircle/cpast_mono/commit/061adbce540301608dd1dd05b09bf8885fc29ff8))
     - Bump msrv ([`d5942b6`](https://github.com/rootCircle/cpast_mono/commit/d5942b63e45b8a164d86deeaa838d83034041e77))
     - Serial test for LLM call ([`12140a0`](https://github.com/rootCircle/cpast_mono/commit/12140a0a7cae88d072b28bc803c0e0cee19bdb74))
