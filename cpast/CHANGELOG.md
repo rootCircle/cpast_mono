@@ -6,7 +6,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 43 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -18,6 +18,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`48a00d9`](https://github.com/rootCircle/cpast_mono/commit/48a00d920c572965915d63a059b8ef23b41c5307))
     - Release ccode_runner v0.3.6 ([`59fd3ff`](https://github.com/rootCircle/cpast_mono/commit/59fd3ff8509a43a336bc006ec41b5c1bdcc4f3ec))
 </details>
 
@@ -37,7 +38,6 @@
  - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
  - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
    - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
-- Introduced a utility module with retry logic for posting requests to the Gemini API.
 
 ### Other
 
@@ -72,6 +72,9 @@
     - LLM 429 retry logic and refactor clipboard handling ([`17e42ac`](https://github.com/rootCircle/cpast_mono/commit/17e42ac965d7d19fd8e44edf21903dbfc0df257c))
     - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
 </details>
+
+<csr-unknown>
+Introduced a utility module with retry logic for posting requests to the Gemini API.<csr-unknown/>
 
 ## 0.10.3 (2025-03-17)
 
