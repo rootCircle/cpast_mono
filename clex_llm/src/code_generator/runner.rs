@@ -2,9 +2,13 @@ use super::examples::{self, SolutionTurn};
 use ccode_runner::lang_runner::language_name::LanguageName;
 use rig::{
     OneOrMany,
+    client::CompletionClient,
     completion::{Prompt, PromptError},
     message::{AssistantContent, Message, Text, UserContent},
-    providers::gemini::{self, Client},
+    providers::gemini::{
+        self, Client,
+        completion::gemini_api_types::{AdditionalParameters, GenerationConfig},
+    },
 };
 
 pub struct CodeSolutionGenerator {
@@ -116,10 +120,14 @@ impl CodeSolutionGenerator {
             "Statement:\n{statement}\n\nInput Format:\n{input_format}\n\nConstraints:\n{constraints}",
         );
 
+        let gen_cfg = GenerationConfig::default();
+        let cfg = AdditionalParameters::default().with_config(gen_cfg);
+
         let gemini_2_5_client = self
             .client
             .agent("gemini-2.5-flash")
             .preamble(system_prompt)
+            .additional_params(serde_json::to_value(cfg).unwrap())
             .build();
 
         let response = gemini_2_5_client

@@ -1,8 +1,12 @@
 use rig::{
     OneOrMany,
+    client::CompletionClient,
     completion::{Prompt, PromptError},
     message::{AssistantContent, Message, Text, UserContent},
-    providers::gemini::{self, Client},
+    providers::gemini::{
+        self, Client,
+        completion::gemini_api_types::{AdditionalParameters, GenerationConfig},
+    },
 };
 
 use super::examples::{self, Example};
@@ -187,10 +191,14 @@ Respond only with the final, validated Clex expression in a single line. Do not 
             "Generate the Clex expression for the following input format and constraints:\n\nInput Format:\n{input_format}\n\nConstraints:\n{constraints}"
         );
 
+        let gen_cfg = GenerationConfig::default();
+        let cfg = AdditionalParameters::default().with_config(gen_cfg);
+
         let agent = self
             .client
             .agent("gemini-2.5-flash")
             .preamble(system_prompt)
+            .additional_params(serde_json::to_value(cfg).unwrap())
             .tool(ValidateClex)
             .build();
 
