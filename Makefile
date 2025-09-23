@@ -39,6 +39,7 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 	release \
 	coverage \
 	precommit \
+	precommit-fix \
 	example_test \
 	example_generate \
 	example_test_multilang \
@@ -138,3 +139,7 @@ example_test_multilang:
 	cargo run --example=test_multilang
 
 precommit : fmt clippy prepare-check bench example_test example_generate example_test_multilang nextest
+
+precommit-fix:
+	cargo clippy --all-features --all-targets --fix --allow-dirty
+	cargo fmt --all

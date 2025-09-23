@@ -1,0 +1,2 @@
+[workflow.default.is_sole_contributor]
+overrideCheckForAuthors = ["dev.frolics@gmail.com"]

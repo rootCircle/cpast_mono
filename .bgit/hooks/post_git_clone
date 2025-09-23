@@ -1,0 +1,53 @@
+#! /bin/bash
+
+# Function to install rustup
+install_rustup() {
+    echo "Installing rustup..."
+
+    # Download and install rustup
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+    # Add Rust to the system's PATH
+    source $HOME/.cargo/env
+
+    # Optionally, verify rustup installation
+    echo "Rustup installed successfully."
+}
+
+# Function to check the OS and install accordingly
+install_rust() {
+    # Detect OS
+    OS=$(uname)
+
+    if [[ "$OS" == "Linux" ]]; then
+        echo "Linux detected."
+    elif [[ "$OS" == "Darwin" ]]; then
+        echo "macOS detected."
+    elif [[ "$OS" == "MINGW"* || "$OS" == "MSYS"* ]]; then
+        echo "Windows (Git Bash) detected."
+        # Ensure Git Bash is using bash as a shell, not cmd or PowerShell
+        if ! command -v bash &> /dev/null; then
+            echo "Git Bash is not properly set up. Exiting..."
+            exit 1
+        fi
+    else
+        echo "Unsupported OS: $OS"
+        exit 1
+    fi
+
+    # Check if rustup is already installed
+    if ! command -v rustup &> /dev/null; then
+        install_rustup
+    else
+        echo "Rustup is already installed."
+    fi
+
+    # Install the latest stable version of Rust
+    rustup update stable
+
+    # Optionally, verify Rust installation
+    echo "Rust installation complete. Verify with: rustc --version"
+}
+
+# Run the installation
+install_rust

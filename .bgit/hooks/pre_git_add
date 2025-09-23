@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+echo "Running pre-git-add hook..."
+
+make precommit-fix
