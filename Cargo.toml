@@ -43,7 +43,7 @@ log = "0.4.28"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.1.0"
 rand = "0.9.2"
-regex = "1.11.2"
+regex = "1.11.3"
 reqwest = { version = "0.12.23", default-features = false, features = [
     "json",
     "rustls-tls",
