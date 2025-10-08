@@ -7,6 +7,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/rootCircle/cpast_mono?label=Coverage&style=for-the-badge&logo=codecov&logoColor=D9E0EE&labelColor=292324)](https://codecov.io/gh/rootCircle/cpast_mono)
 ![GitHub License](https://img.shields.io/github/license/rootCircle/cpast_mono?label=License&style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
 ![GitHub Release](https://img.shields.io/github/v/release/rootCircle/cpast_mono?label=Release&style=for-the-badge&logo=github&logoColor=D9E0EE&labelColor=292324)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/rootCircle/cpast_mono)
 
 ## Introduction
 
