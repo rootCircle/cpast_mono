@@ -84,7 +84,7 @@ fn main() {
 
     // Example 4: Error handling
     println!("=== Example 4: Error Handling ===");
-    let invalid_clex = "(?:(N)){\\1}"; // This references a group that doesn't exist yet
+    let invalid_clex = "(?:(N)){\\1}"; // This references a nested group incorrectly
     
     println!("Attempting to generate with invalid clex:");
     match generator_iter(invalid_clex.to_string()) {
@@ -132,7 +132,7 @@ fn main() {
     
     println!();
     println!("Note: The iterator approach is particularly beneficial for:");
-    println!("  - Very large test cases (GiB-sized)");
+    println!("  - Very large test cases (GiB in size)");
     println!("  - Piping output to another process");
     println!("  - Writing directly to files without memory accumulation");
     println!("  - Streaming test cases to a code runner");
