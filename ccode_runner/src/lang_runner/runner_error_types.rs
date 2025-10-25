@@ -109,6 +109,16 @@ pub enum RunnerErrorType {
     ///
     /// The associated `Option<PathBuf>` contains the path to the destination file
     JavaMismatchDestinationFile(Option<PathBuf>),
+
+    /// Indicates that the program execution exceeded the specified time limit.
+    ///
+    /// The associated `u64` contains the time limit in milliseconds.
+    TimeLimitExceeded(u64),
+
+    /// Indicates that the program execution exceeded the specified memory limit.
+    ///
+    /// The associated `u64` contains the memory limit in bytes.
+    MemoryLimitExceeded(u64),
 }
 
 impl fmt::Display for RunnerErrorType {
@@ -170,6 +180,12 @@ impl fmt::Display for RunnerErrorType {
                 format!(
                     "Destination file stem does not match source file stem for Java file: {path_buf:?}"
                 )
+            }
+            RunnerErrorType::TimeLimitExceeded(time_limit_ms) => {
+                format!("Program execution exceeded the time limit of {time_limit_ms} milliseconds")
+            }
+            RunnerErrorType::MemoryLimitExceeded(memory_limit_bytes) => {
+                format!("Program execution exceeded the memory limit of {memory_limit_bytes} bytes")
             }
         };
 
