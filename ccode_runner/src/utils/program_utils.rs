@@ -7,21 +7,12 @@ use wait_timeout::ChildExt;
 use which::which;
 
 /// Execution limits for running programs
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct ExecutionLimits {
     /// Time limit in milliseconds (None means no limit)
     pub time_limit_ms: Option<u64>,
     /// Memory limit in bytes (None means no limit)
     pub memory_limit_bytes: Option<u64>,
-}
-
-impl Default for ExecutionLimits {
-    fn default() -> Self {
-        Self {
-            time_limit_ms: None,
-            memory_limit_bytes: None,
-        }
-    }
 }
 
 impl ExecutionLimits {
@@ -102,17 +93,25 @@ pub(crate) fn run_program_with_input(
         match child.wait_timeout(timeout)? {
             Some(status) => {
                 // Process exited before timeout
-                let stdout = child.stdout.take().map(|mut s| {
-                    let mut buf = Vec::new();
-                    let _ = std::io::Read::read_to_end(&mut s, &mut buf);
-                    buf
-                }).unwrap_or_default();
-                
-                let stderr = child.stderr.take().map(|mut s| {
-                    let mut buf = Vec::new();
-                    let _ = std::io::Read::read_to_end(&mut s, &mut buf);
-                    buf
-                }).unwrap_or_default();
+                let stdout = child
+                    .stdout
+                    .take()
+                    .map(|mut s| {
+                        let mut buf = Vec::new();
+                        let _ = std::io::Read::read_to_end(&mut s, &mut buf);
+                        buf
+                    })
+                    .unwrap_or_default();
+
+                let stderr = child
+                    .stderr
+                    .take()
+                    .map(|mut s| {
+                        let mut buf = Vec::new();
+                        let _ = std::io::Read::read_to_end(&mut s, &mut buf);
+                        buf
+                    })
+                    .unwrap_or_default();
 
                 Output {
                     status,
@@ -141,7 +140,7 @@ pub(crate) fn run_program_with_input(
 #[cfg(unix)]
 fn apply_memory_limit(command: &mut Command, memory_limit_bytes: u64) {
     use std::os::unix::process::CommandExt;
-    
+
     unsafe {
         command.pre_exec(move || {
             // RLIMIT_AS limits the virtual memory
@@ -149,11 +148,11 @@ fn apply_memory_limit(command: &mut Command, memory_limit_bytes: u64) {
                 rlim_cur: memory_limit_bytes,
                 rlim_max: memory_limit_bytes,
             };
-            
+
             if libc::setrlimit(libc::RLIMIT_AS, &limit) != 0 {
                 eprintln!("Warning: Failed to set memory limit");
             }
-            
+
             Ok(())
         });
     }
@@ -176,7 +175,11 @@ pub(crate) fn remake(
     Ok(true)
 }
 
-pub(crate) fn run_program(program: &str, args: &Vec<&str>, limits: &ExecutionLimits) -> io::Result<String> {
+pub(crate) fn run_program(
+    program: &str,
+    args: &Vec<&str>,
+    limits: &ExecutionLimits,
+) -> io::Result<String> {
     if let Err(err) = program_exists(program) {
         return Err(io::Error::other(err));
     }
@@ -202,17 +205,25 @@ pub(crate) fn run_program(program: &str, args: &Vec<&str>, limits: &ExecutionLim
         match child.wait_timeout(timeout)? {
             Some(status) => {
                 // Process exited before timeout
-                let stdout = child.stdout.take().map(|mut s| {
-                    let mut buf = Vec::new();
-                    let _ = std::io::Read::read_to_end(&mut s, &mut buf);
-                    buf
-                }).unwrap_or_default();
-                
-                let stderr = child.stderr.take().map(|mut s| {
-                    let mut buf = Vec::new();
-                    let _ = std::io::Read::read_to_end(&mut s, &mut buf);
-                    buf
-                }).unwrap_or_default();
+                let stdout = child
+                    .stdout
+                    .take()
+                    .map(|mut s| {
+                        let mut buf = Vec::new();
+                        let _ = std::io::Read::read_to_end(&mut s, &mut buf);
+                        buf
+                    })
+                    .unwrap_or_default();
+
+                let stderr = child
+                    .stderr
+                    .take()
+                    .map(|mut s| {
+                        let mut buf = Vec::new();
+                        let _ = std::io::Read::read_to_end(&mut s, &mut buf);
+                        buf
+                    })
+                    .unwrap_or_default();
 
                 Output {
                     status,
