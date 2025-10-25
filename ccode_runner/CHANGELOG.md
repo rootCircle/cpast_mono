@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Time limit support for program execution to prevent infinite loops
+- Memory limit support for program execution (Unix systems only)
+- New `ExecutionLimits` struct with builder pattern for configuring limits
+- New error types `TimeLimitExceeded` and `MemoryLimitExceeded`
+- Extended API methods: `new_with_limits`, `new_from_text_with_limits`, `new_from_custom_dest_with_limits`
+- Comprehensive test suite for execution limits (8 new tests)
+- Example program demonstrating execution limits usage
+- Documentation updates for time and memory limit features
+
+### Dependencies
+
+- Added `wait-timeout` v0.2 for cross-platform timeout support
+- Added `libc` v0.2 for Unix-specific memory limiting
+
 ## v0.3.6 (2025-09-24)
 
 ### Chore
