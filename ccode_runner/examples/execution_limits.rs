@@ -3,9 +3,9 @@
 //! This example shows how to use ExecutionLimits to prevent infinite loops
 //! and excessive memory usage when running user code.
 
+use ccode_runner::ExecutionLimits;
 use ccode_runner::lang_runner::language_name::LanguageName;
 use ccode_runner::lang_runner::program_store::ProgramStore;
-use ccode_runner::ExecutionLimits;
 
 fn main() {
     println!("=== ccode_runner Execution Limits Demo ===\n");

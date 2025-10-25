@@ -46,7 +46,11 @@ impl ProgramStore {
         execution_limits: ExecutionLimits,
     ) -> Result<Self, Box<RunnerErrorType>> {
         Ok(ProgramStore {
-            correct_file: Language::new_with_limits(correct_file, do_force_compile, execution_limits)?,
+            correct_file: Language::new_with_limits(
+                correct_file,
+                do_force_compile,
+                execution_limits,
+            )?,
             test_file: Language::new_with_limits(test_file, do_force_compile, execution_limits)?,
         })
     }
@@ -83,7 +87,12 @@ impl ProgramStore {
                 do_force_compile,
                 execution_limits,
             )?,
-            test_file: Language::new_from_custom_dest_with_limits(test_file, test_dest, do_force_compile, execution_limits)?,
+            test_file: Language::new_from_custom_dest_with_limits(
+                test_file,
+                test_dest,
+                do_force_compile,
+                execution_limits,
+            )?,
         })
     }
 
@@ -109,8 +118,18 @@ impl ProgramStore {
         execution_limits: ExecutionLimits,
     ) -> Result<Self, Box<RunnerErrorType>> {
         Ok(ProgramStore {
-            correct_file: Language::new_from_text_with_limits(correct_text, correct_lang, do_force_compile, execution_limits)?,
-            test_file: Language::new_from_text_with_limits(test_text, test_lang, do_force_compile, execution_limits)?,
+            correct_file: Language::new_from_text_with_limits(
+                correct_text,
+                correct_lang,
+                do_force_compile,
+                execution_limits,
+            )?,
+            test_file: Language::new_from_text_with_limits(
+                test_text,
+                test_lang,
+                do_force_compile,
+                execution_limits,
+            )?,
         })
     }
 

@@ -1,5 +1,5 @@
 use crate::utils::program_utils;
-use crate::utils::program_utils::{remake, ExecutionLimits};
+use crate::utils::program_utils::{ExecutionLimits, remake};
 use std::path::{Path, PathBuf};
 
 use super::file_store::SourceCodeInfo;
@@ -458,7 +458,12 @@ impl Language {
             };
 
         for (interpreter, args) in interpreters {
-            let std_out = program_utils::run_program_with_input(interpreter, &args, stdin_content, &self.execution_limits);
+            let std_out = program_utils::run_program_with_input(
+                interpreter,
+                &args,
+                stdin_content,
+                &self.execution_limits,
+            );
             match std_out {
                 Ok(output) => {
                     return Ok(output);
