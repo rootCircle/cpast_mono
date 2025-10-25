@@ -14,6 +14,7 @@
 - **Multi-language Support**: Supports various programming languages including Rust, Python, C, C++, Java, Ruby, and JavaScript.
 - **Compilation and Interpretation**: Handles both ahead-of-time compilation and just-in-time interpretation.
 - **Optimized Execution**: Uses precompilation and caching to optimize execution times.
+- **Execution Limits**: Configure time and memory limits to prevent runaway processes and excessive resource consumption.
 
 ## Getting Started
 
@@ -53,6 +54,48 @@ fn main() {
     println!("Outputs are different: {}", is_different);
     println!("Correct Output: {}", correct_output);
     println!("Test Output: {}", test_output);
+}
+```
+
+### Using Execution Limits
+
+You can configure time and memory limits to prevent infinite loops and excessive resource consumption:
+
+```rust
+use ccode_runner::lang_runner::program_store::ProgramStore;
+use ccode_runner::ExecutionLimits;
+use std::path::Path;
+
+fn main() {
+    let correct_file = Path::new("path/to/correct_file.rs");
+    let test_file = Path::new("path/to/test_file.rs");
+    let do_force_compile = true;
+    
+    // Configure limits: 5 second timeout and 512MB memory limit
+    let limits = ExecutionLimits::new()
+        .with_time_limit(5000)  // 5000 milliseconds
+        .with_memory_limit(512 * 1024 * 1024);  // 512 MB
+    
+    let program_store = ProgramStore::new_with_limits(
+        correct_file, 
+        test_file, 
+        do_force_compile,
+        limits
+    ).unwrap();
+
+    let stdin_content = "input data";
+    let result = program_store.run_codes_and_compare_output(stdin_content);
+    
+    match result {
+        Ok((is_different, correct_output, test_output)) => {
+            println!("Outputs are different: {}", is_different);
+            println!("Correct Output: {}", correct_output);
+            println!("Test Output: {}", test_output);
+        }
+        Err(e) => {
+            eprintln!("Execution failed: {}", e);
+        }
+    }
 }
 ```
 
