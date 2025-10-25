@@ -2,6 +2,7 @@
 //! It includes utilities for running program files.
 use crate::lang_runner::runner::Language;
 use crate::utils::file_utils;
+use crate::utils::program_utils::ExecutionLimits;
 use std::path::Path;
 
 use super::language_name::LanguageName;
@@ -38,6 +39,18 @@ impl ProgramStore {
         })
     }
 
+    pub fn new_with_limits(
+        correct_file: &Path,
+        test_file: &Path,
+        do_force_compile: bool,
+        execution_limits: ExecutionLimits,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        Ok(ProgramStore {
+            correct_file: Language::new_with_limits(correct_file, do_force_compile, execution_limits)?,
+            test_file: Language::new_with_limits(test_file, do_force_compile, execution_limits)?,
+        })
+    }
+
     pub fn new_from_custom_dest(
         correct_file: &Path,
         test_file: &Path,
@@ -55,6 +68,25 @@ impl ProgramStore {
         })
     }
 
+    pub fn new_from_custom_dest_with_limits(
+        correct_file: &Path,
+        test_file: &Path,
+        correct_dest: Option<&Path>,
+        test_dest: Option<&Path>,
+        do_force_compile: bool,
+        execution_limits: ExecutionLimits,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        Ok(ProgramStore {
+            correct_file: Language::new_from_custom_dest_with_limits(
+                correct_file,
+                correct_dest,
+                do_force_compile,
+                execution_limits,
+            )?,
+            test_file: Language::new_from_custom_dest_with_limits(test_file, test_dest, do_force_compile, execution_limits)?,
+        })
+    }
+
     pub fn new_from_text(
         correct_text: &str,
         test_text: &str,
@@ -65,6 +97,20 @@ impl ProgramStore {
         Ok(ProgramStore {
             correct_file: Language::new_from_text(correct_text, correct_lang, do_force_compile)?,
             test_file: Language::new_from_text(test_text, test_lang, do_force_compile)?,
+        })
+    }
+
+    pub fn new_from_text_with_limits(
+        correct_text: &str,
+        test_text: &str,
+        correct_lang: LanguageName,
+        test_lang: LanguageName,
+        do_force_compile: bool,
+        execution_limits: ExecutionLimits,
+    ) -> Result<Self, Box<RunnerErrorType>> {
+        Ok(ProgramStore {
+            correct_file: Language::new_from_text_with_limits(correct_text, correct_lang, do_force_compile, execution_limits)?,
+            test_file: Language::new_from_text_with_limits(test_text, test_lang, do_force_compile, execution_limits)?,
         })
     }
 
