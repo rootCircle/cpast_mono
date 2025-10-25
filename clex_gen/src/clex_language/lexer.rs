@@ -14,7 +14,7 @@
 //! # Example
 //!
 //! ```rust
-//! use clex_gen::clex_language::lexer::{TokenType, Token};
+//! use clex_gen::clex_language::lexer::{TokenType, Token, Span};
 //! use clex_gen::get_tokens;
 //!
 //! // Example input pattern
@@ -27,10 +27,12 @@
 //!         Token {
 //!             token_type: TokenType::Integer,
 //!             lexeme: "N".to_string(),
+//!             span: Span { start: 0, end: 1 },
 //!         },
 //!         Token {
 //!             token_type: TokenType::Eof,
 //!             lexeme: "".to_string(),
+//!             span: Span { start: 1, end: 1 },
 //!         },
 //!     ]
 //! );
@@ -40,6 +42,15 @@
 
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use unicode_segmentation::UnicodeSegmentation;
+
+/// Represents a span (position range) in the source code
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub struct Span {
+    /// Starting position (byte offset) in the source
+    pub start: usize,
+    /// Ending position (byte offset) in the source
+    pub end: usize,
+}
 
 /// Represents the different types of tokens in the lexer.
 #[derive(Debug, PartialEq, Eq, Clone)]
@@ -88,6 +99,8 @@ pub struct Token {
     pub token_type: TokenType,
     /// The actual characters that form the token in the source code.
     pub lexeme: String,
+    /// The span (position range) of this token in the source code
+    pub span: Span,
 }
 
 /// Represents a collection of tokens produced by the lexer.
@@ -124,6 +137,10 @@ impl Tokens {
         self.tokens.push(Token {
             token_type: TokenType::Eof,
             lexeme: String::new(),
+            span: Span {
+                start: self.current,
+                end: self.current,
+            },
         });
 
         Ok(())
@@ -136,8 +153,8 @@ impl Tokens {
 
     /// Scans a single token from the source language.
     fn scan_token(&mut self) -> Result<(), ClexErrorType> {
-        let c = self.advance();
-        match c {
+        let c = self.advance().to_string(); // Convert to owned String to avoid borrow issues
+        match c.as_str() {
             "(" => self.add_token(TokenType::LeftParens),
             ")" => self.add_token(TokenType::RightParens),
             "[" => self.add_token(TokenType::LeftSquareBracket),
@@ -150,6 +167,7 @@ impl Tokens {
             "F" => self.add_token(TokenType::Float),
             "S" => self.add_token(TokenType::String),
             "@" => {
+                let start_pos = self.start; // Store the starting position
                 self.start += 1; // Skip first character in lexeme
 
                 let mut literal = String::new();
@@ -159,7 +177,13 @@ impl Tokens {
 
                 // Unterminated string.
                 if self.at_end() {
-                    return Err(ClexErrorType::UnclosedAtSymbol(ParentErrorType::LexerError));
+                    return Err(ClexErrorType::UnclosedAtSymbol(
+                        ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
+                    ));
                 }
 
                 let token_type = match literal.trim().to_uppercase().as_str() {
@@ -173,19 +197,30 @@ impl Tokens {
                     _ => {
                         return Err(ClexErrorType::InvalidCharacterSet(
                             ParentErrorType::LexerError,
+                            Span {
+                                start: start_pos,
+                                end: self.current,
+                            },
                         ));
                     }
                 };
 
                 self.add_token(token_type);
                 if !self.match_str("@") {
-                    return Err(ClexErrorType::UnclosedAtSymbol(ParentErrorType::LexerError));
+                    return Err(ClexErrorType::UnclosedAtSymbol(
+                        ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
+                    ));
                 }
             }
             " " | "\r" | "\t" | "\n" => {
                 // Do nothing, just ignore these spaces
             }
             "'" => {
+                let start_pos = self.start; // Store the starting position
                 self.start += 1; // Skip first character in lexeme
 
                 let mut literal = String::new();
@@ -216,6 +251,10 @@ impl Tokens {
                 if self.at_end() {
                     return Err(ClexErrorType::UnclosedSingleQuotes(
                         ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
                     ));
                 }
 
@@ -223,23 +262,37 @@ impl Tokens {
                 if !self.match_str("'") {
                     return Err(ClexErrorType::UnclosedSingleQuotes(
                         ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
                     ));
                 }
             }
             "?" => {
+                let start_pos = self.start;
                 if self.match_str(":") {
                     self.add_token(TokenType::QuestionColon);
                 } else {
                     return Err(ClexErrorType::MissingColonAfterQuestionMark(
                         ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
                     ));
                 }
             }
             _ => {
-                if c == "-" || Self::is_digit(c) {
-                    if c == "-" && !Self::is_digit(self.peek()) {
+                if c.as_str() == "-" || Self::is_digit(c.as_str()) {
+                    let start_pos = self.start;
+                    if c.as_str() == "-" && !Self::is_digit(self.peek()) {
                         return Err(ClexErrorType::MissingNumberAfterNegativeSign(
                             ParentErrorType::LexerError,
+                            Span {
+                                start: start_pos,
+                                end: self.current,
+                            },
                         ));
                     }
 
@@ -253,6 +306,10 @@ impl Tokens {
                         Err(_err) => {
                             return Err(ClexErrorType::NumericParsingError(
                                 ParentErrorType::LexerError,
+                                Span {
+                                    start: start_pos,
+                                    end: self.current,
+                                },
                             ));
                         }
                     };
@@ -262,6 +319,10 @@ impl Tokens {
                     let character: &'static str = Box::leak(c.into());
                     return Err(ClexErrorType::UnknownCharacter(
                         ParentErrorType::LexerError,
+                        Span {
+                            start: self.start,
+                            end: self.current,
+                        },
                         character,
                     ));
                 }
@@ -275,6 +336,10 @@ impl Tokens {
         self.tokens.push(Token {
             token_type,
             lexeme: self.source_language[self.start..self.current].to_string(),
+            span: Span {
+                start: self.start,
+                end: self.current,
+            },
         });
     }
 
@@ -330,19 +395,23 @@ mod tests {
             vec![
                 Token {
                     token_type: TokenType::LiteralNumber(12),
-                    lexeme: "12".to_string()
+                    lexeme: "12".to_string(),
+                    span: Span { start: 0, end: 2 },
                 },
                 Token {
                     token_type: TokenType::Integer,
-                    lexeme: "N".to_string()
+                    lexeme: "N".to_string(),
+                    span: Span { start: 2, end: 3 },
                 },
                 Token {
                     token_type: TokenType::LiteralNumber(3),
-                    lexeme: "3".to_string()
+                    lexeme: "3".to_string(),
+                    span: Span { start: 3, end: 4 },
                 },
                 Token {
                     token_type: TokenType::Eof,
-                    lexeme: String::new()
+                    lexeme: String::new(),
+                    span: Span { start: 4, end: 4 },
                 }
             ]
         );
