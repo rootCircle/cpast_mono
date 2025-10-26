@@ -7,11 +7,20 @@ use wait_timeout::ChildExt;
 use which::which;
 
 /// Execution limits for running programs
+///
+/// # Platform Support
+///
+/// - **Time limits**: Supported on all platforms (Unix, Windows, macOS)
+/// - **Memory limits**: Only supported on Unix-like systems (Linux, macOS, BSD, etc.)
+///   using `setrlimit(RLIMIT_AS)`. On Windows and other platforms, memory limit
+///   settings are silently ignored.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ExecutionLimits {
     /// Time limit in milliseconds (None means no limit)
     pub time_limit_ms: Option<u64>,
     /// Memory limit in bytes (None means no limit)
+    ///
+    /// **Note**: Only enforced on Unix-like systems. Ignored on Windows.
     pub memory_limit_bytes: Option<u64>,
 }
 
@@ -28,6 +37,10 @@ impl ExecutionLimits {
     }
 
     /// Set memory limit in bytes
+    ///
+    /// **Note**: Memory limits are only enforced on Unix-like systems (Linux, macOS, etc.).
+    /// On Windows and other platforms, this setting will be ignored and memory limits
+    /// will not be enforced.
     pub fn with_memory_limit(mut self, memory_limit_bytes: u64) -> Self {
         self.memory_limit_bytes = Some(memory_limit_bytes);
         self
@@ -157,6 +170,11 @@ fn apply_memory_limit(command: &mut Command, memory_limit_bytes: u64) {
         });
     }
 }
+
+// On non-Unix platforms (e.g., Windows), memory limits are not supported.
+// The function calls are already guarded with #[cfg(unix)] at the call sites,
+// so this is just a documentation note. On Windows, Job Objects could be used
+// as an alternative, but that would require platform-specific implementation.
 
 /// Adapted with modifications from GNU Make Project
 /// * `source_code_path` : Path of source code
