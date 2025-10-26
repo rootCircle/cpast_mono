@@ -11,16 +11,14 @@ use which::which;
 /// # Platform Support
 ///
 /// - **Time limits**: Supported on all platforms (Unix, Windows, macOS)
-/// - **Memory limits**: Only supported on Unix-like systems (Linux, macOS, BSD, etc.)
-///   using `setrlimit(RLIMIT_AS)`. On Windows and other platforms, memory limit
-///   settings are silently ignored.
+/// - **Memory limits**: Supported on all platforms
+///   - Unix/Linux/macOS: Uses `setrlimit(RLIMIT_AS)` for native OS enforcement
+///   - Windows: Uses active monitoring via `sysinfo` to track and enforce limits
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ExecutionLimits {
     /// Time limit in milliseconds (None means no limit)
     pub time_limit_ms: Option<u64>,
     /// Memory limit in bytes (None means no limit)
-    ///
-    /// **Note**: Only enforced on Unix-like systems. Ignored on Windows.
     pub memory_limit_bytes: Option<u64>,
 }
 
@@ -38,9 +36,9 @@ impl ExecutionLimits {
 
     /// Set memory limit in bytes
     ///
-    /// **Note**: Memory limits are only enforced on Unix-like systems (Linux, macOS, etc.).
-    /// On Windows and other platforms, this setting will be ignored and memory limits
-    /// will not be enforced.
+    /// Memory limits are enforced on all platforms:
+    /// - Unix/Linux/macOS: Native OS enforcement via `setrlimit`
+    /// - Windows: Active monitoring and enforcement via process memory tracking
     pub fn with_memory_limit(mut self, memory_limit_bytes: u64) -> Self {
         self.memory_limit_bytes = Some(memory_limit_bytes);
         self
@@ -95,6 +93,14 @@ pub(crate) fn run_program_with_input(
 
     let mut child = command.spawn()?;
 
+    // Monitor memory on Windows (Unix has native enforcement via setrlimit)
+    #[cfg(not(unix))]
+    let memory_monitor = if let Some(memory_limit) = limits.memory_limit_bytes {
+        Some(start_memory_monitor(child.id(), memory_limit))
+    } else {
+        None
+    };
+
     if let Some(mut stdin) = child.stdin.take() {
         // Close stdin to finish and avoid indefinite blocking
         stdin.write_all(stdin_content.as_ref())?; // drop would happen here
@@ -106,6 +112,11 @@ pub(crate) fn run_program_with_input(
         match child.wait_timeout(timeout)? {
             Some(status) => {
                 // Process exited before timeout
+                #[cfg(not(unix))]
+                if let Some(monitor) = memory_monitor {
+                    stop_memory_monitor(monitor);
+                }
+
                 let stdout = child
                     .stdout
                     .take()
@@ -134,6 +145,11 @@ pub(crate) fn run_program_with_input(
             }
             None => {
                 // Timeout occurred, kill the process
+                #[cfg(not(unix))]
+                if let Some(monitor) = memory_monitor {
+                    stop_memory_monitor(monitor);
+                }
+
                 let _ = child.kill();
                 return Err(io::Error::other(format!(
                     "Process `{} {}` exceeded time limit of {} ms",
@@ -144,7 +160,14 @@ pub(crate) fn run_program_with_input(
             }
         }
     } else {
-        child.wait_with_output()?
+        let output = child.wait_with_output()?;
+
+        #[cfg(not(unix))]
+        if let Some(monitor) = memory_monitor {
+            stop_memory_monitor(monitor);
+        }
+
+        output
     };
 
     run_program_common(output, program, args)
@@ -171,10 +194,67 @@ fn apply_memory_limit(command: &mut Command, memory_limit_bytes: u64) {
     }
 }
 
-// On non-Unix platforms (e.g., Windows), memory limits are not supported.
-// The function calls are already guarded with #[cfg(unix)] at the call sites,
-// so this is just a documentation note. On Windows, Job Objects could be used
-// as an alternative, but that would require platform-specific implementation.
+// Windows memory monitoring using sysinfo
+// Similar to the approach used in codemark-cli
+#[cfg(not(unix))]
+struct MemoryMonitor {
+    should_stop: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    handle: Option<std::thread::JoinHandle<()>>,
+}
+
+#[cfg(not(unix))]
+fn start_memory_monitor(pid: u32, memory_limit_bytes: u64) -> MemoryMonitor {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use std::thread;
+    use sysinfo::{Pid, System};
+
+    let should_stop = Arc::new(AtomicBool::new(false));
+    let should_stop_clone = should_stop.clone();
+
+    let handle = thread::spawn(move || {
+        let mut sys = System::new();
+        let pid = Pid::from_u32(pid);
+
+        while !should_stop_clone.load(Ordering::Relaxed) {
+            sys.refresh_process(pid);
+
+            if let Some(process) = sys.process(pid) {
+                let memory_usage = process.memory();
+
+                if memory_usage > memory_limit_bytes {
+                    // Try to kill the process
+                    if process.kill() {
+                        eprintln!("Process terminated due to exceeding memory limit.");
+                    }
+                    break;
+                }
+            } else {
+                // Process has exited
+                break;
+            }
+
+            // Check memory every 100ms
+            thread::sleep(Duration::from_millis(100));
+        }
+    });
+
+    MemoryMonitor {
+        should_stop,
+        handle: Some(handle),
+    }
+}
+
+#[cfg(not(unix))]
+fn stop_memory_monitor(mut monitor: MemoryMonitor) {
+    use std::sync::atomic::Ordering;
+
+    monitor.should_stop.store(true, Ordering::Relaxed);
+
+    if let Some(handle) = monitor.handle.take() {
+        let _ = handle.join();
+    }
+}
 
 /// Adapted with modifications from GNU Make Project
 /// * `source_code_path` : Path of source code
@@ -217,12 +297,25 @@ pub(crate) fn run_program(
 
     let mut child = command.spawn()?;
 
+    // Monitor memory on Windows (Unix has native enforcement via setrlimit)
+    #[cfg(not(unix))]
+    let memory_monitor = if let Some(memory_limit) = limits.memory_limit_bytes {
+        Some(start_memory_monitor(child.id(), memory_limit))
+    } else {
+        None
+    };
+
     // Handle timeout if specified
     let output = if let Some(time_limit_ms) = limits.time_limit_ms {
         let timeout = Duration::from_millis(time_limit_ms);
         match child.wait_timeout(timeout)? {
             Some(status) => {
                 // Process exited before timeout
+                #[cfg(not(unix))]
+                if let Some(monitor) = memory_monitor {
+                    stop_memory_monitor(monitor);
+                }
+
                 let stdout = child
                     .stdout
                     .take()
@@ -251,6 +344,11 @@ pub(crate) fn run_program(
             }
             None => {
                 // Timeout occurred, kill the process
+                #[cfg(not(unix))]
+                if let Some(monitor) = memory_monitor {
+                    stop_memory_monitor(monitor);
+                }
+
                 let _ = child.kill();
                 return Err(io::Error::other(format!(
                     "Process `{} {}` exceeded time limit of {} ms",
@@ -261,7 +359,14 @@ pub(crate) fn run_program(
             }
         }
     } else {
-        child.wait_with_output()?
+        let output = child.wait_with_output()?;
+
+        #[cfg(not(unix))]
+        if let Some(monitor) = memory_monitor {
+            stop_memory_monitor(monitor);
+        }
+
+        output
     };
 
     run_program_common(output, program, args)

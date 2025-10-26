@@ -63,7 +63,9 @@ You can configure time and memory limits to prevent infinite loops and excessive
 
 **Platform Support:**
 - **Time limits**: Supported on all platforms (Unix, Windows, macOS)
-- **Memory limits**: Only supported on Unix-like systems (Linux, macOS, BSD). On Windows, memory limits are silently ignored.
+- **Memory limits**: Supported on all platforms
+  - Unix/Linux/macOS: Native OS enforcement via `setrlimit(RLIMIT_AS)`
+  - Windows: Active monitoring and enforcement via process memory tracking
 
 ```rust
 use ccode_runner::lang_runner::program_store::ProgramStore;
