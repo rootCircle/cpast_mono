@@ -8,11 +8,11 @@ fn test_lexer_error_includes_span() {
     let result = generator(input.to_string());
     assert!(result.is_err());
     let error_message = result.unwrap_err().to_string();
-    
+
     // Should include position information
     assert!(error_message.contains("at position"));
     assert!(error_message.contains("0.."));
-    
+
     // Should still include the error description
     assert!(error_message.contains("Expected closing single quote"));
 }
@@ -23,10 +23,10 @@ fn test_parser_error_includes_span() {
     let result = generator(input.to_string());
     assert!(result.is_err());
     let error_message = result.unwrap_err().to_string();
-    
+
     // Should include position information
     assert!(error_message.contains("at position"));
-    
+
     // Should still include the error description
     assert!(error_message.contains("Expected closing square bracket"));
 }
@@ -37,28 +37,28 @@ fn test_invalid_charset_error_includes_span() {
     let result = generator(input.to_string());
     assert!(result.is_err());
     let error_message = result.unwrap_err().to_string();
-    
+
     // Should include position information
     assert!(error_message.contains("at position"));
     assert!(error_message.contains("0.."));
-    
+
     // Should still include the error description
     assert!(error_message.contains("Invalid character set"));
 }
 
 #[test]
 fn test_multiple_errors_have_different_positions() {
-    let test_cases = vec![
-        "'hello",     // Position starts at 0
-        "N '  ",      // Position starts at 2
-        "N N '    ",  // Position starts at 4
+    let test_cases = [
+        "'hello",    // Position starts at 0
+        "N '  ",     // Position starts at 2
+        "N N '    ", // Position starts at 4
     ];
-    
+
     for (i, input) in test_cases.iter().enumerate() {
         let result = generator(input.to_string());
         assert!(result.is_err(), "Test case {} should error", i);
         let error_message = result.unwrap_err().to_string();
-        
+
         // Each should have different position information
         assert!(error_message.contains("at position"));
     }
@@ -70,10 +70,10 @@ fn test_unclosed_non_capturing_group_error() {
     let result = generator(input.to_string());
     assert!(result.is_err());
     let error_message = result.unwrap_err().to_string();
-    
+
     // Should include position information
     assert!(error_message.contains("at position"));
-    
+
     // Should include the error description
     assert!(error_message.contains("Non-Capturing group"));
 }
@@ -84,10 +84,10 @@ fn test_missing_colon_after_question_mark() {
     let result = generator(input.to_string());
     assert!(result.is_err());
     let error_message = result.unwrap_err().to_string();
-    
+
     // Should include position information
     assert!(error_message.contains("at position"));
-    
+
     // Should include the error description
     assert!(error_message.contains("Expected colon (:) after question mark"));
 }
@@ -98,10 +98,10 @@ fn test_negative_group_number_error() {
     let result = generator(input.to_string());
     assert!(result.is_err());
     let error_message = result.unwrap_err().to_string();
-    
+
     // Should include position information
     assert!(error_message.contains("at position"));
-    
+
     // Should include the error description
     assert!(error_message.contains("can't be 0 or negative"));
 }

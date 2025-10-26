@@ -1,4 +1,4 @@
-use clex_gen::clex_language::lexer::{Token, TokenType, Span};
+use clex_gen::clex_language::lexer::{Span, Token, TokenType};
 use clex_gen::get_tokens;
 
 #[test]
