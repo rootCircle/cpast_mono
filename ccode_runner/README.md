@@ -61,6 +61,10 @@ fn main() {
 
 You can configure time and memory limits to prevent infinite loops and excessive resource consumption:
 
+**Platform Support:**
+- **Time limits**: Supported on all platforms (Unix, Windows, macOS)
+- **Memory limits**: Only supported on Unix-like systems (Linux, macOS, BSD). On Windows, memory limits are silently ignored.
+
 ```rust
 use ccode_runner::lang_runner::program_store::ProgramStore;
 use ccode_runner::ExecutionLimits;
