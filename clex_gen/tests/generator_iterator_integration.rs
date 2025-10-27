@@ -121,19 +121,21 @@ fn test_iterator_error_handling() {
     let language = "(?:(N)){\\1}"; // This should cause an error (group not found)
 
     let iter_result = generator_iter(language.to_string());
-    assert!(iter_result.is_err() || {
-        // If the iterator is created, it should produce an error on iteration
-        let mut error_found = false;
-        if let Ok(iter) = iter_result {
-            for chunk in iter {
-                if chunk.is_err() {
-                    error_found = true;
-                    break;
+    assert!(
+        iter_result.is_err() || {
+            // If the iterator is created, it should produce an error on iteration
+            let mut error_found = false;
+            if let Ok(iter) = iter_result {
+                for chunk in iter {
+                    if chunk.is_err() {
+                        error_found = true;
+                        break;
+                    }
                 }
             }
+            error_found
         }
-        error_found
-    });
+    );
 }
 
 #[test]
@@ -155,23 +157,23 @@ fn test_iterator_streaming_behavior() {
     let language = "N[1,1] N[2,2] N[3,3] N[4,4]";
 
     let mut iter = generator_iter(language.to_string()).unwrap();
-    
+
     // First chunk
     let chunk1 = iter.next().unwrap().unwrap();
     assert_eq!(chunk1, "1 ");
-    
+
     // Second chunk
     let chunk2 = iter.next().unwrap().unwrap();
     assert_eq!(chunk2, "2 ");
-    
+
     // Third chunk
     let chunk3 = iter.next().unwrap().unwrap();
     assert_eq!(chunk3, "3 ");
-    
+
     // Fourth chunk
     let chunk4 = iter.next().unwrap().unwrap();
     assert_eq!(chunk4, "4 ");
-    
+
     // No more chunks
     assert!(iter.next().is_none());
 }
@@ -199,9 +201,9 @@ fn test_iterator_with_capturing_groups() {
     let first = parts[0];
     assert_eq!(first, "5");
     // All subsequent should be individual numbers (N generates random numbers)
-    for i in 1..=5 {
-        assert!(!parts[i].is_empty());
+    for part in parts.iter().skip(1) {
+        assert!(!part.is_empty());
         // Verify each part can be parsed as a number
-        parts[i].parse::<i64>().expect("Should be a valid integer");
+        part.parse::<i64>().expect("Should be a valid integer");
     }
 }

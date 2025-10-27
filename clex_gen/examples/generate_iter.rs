@@ -12,10 +12,10 @@ fn main() {
     // Example 1: Simple usage with small test case
     println!("=== Example 1: Basic Iterator Usage ===");
     let clex = "N[1,10] N[1,10] N[1,10]";
-    
+
     print!("Generated test case: ");
     io::stdout().flush().unwrap();
-    
+
     let mut output = String::new();
     for chunk_result in generator_iter(clex.to_string()).unwrap() {
         match chunk_result {
@@ -30,7 +30,7 @@ fn main() {
             }
         }
     }
-    
+
     // Clean up trailing space
     if output.ends_with(' ') {
         output.pop();
@@ -42,7 +42,7 @@ fn main() {
     // Example 2: Streaming to a file (simulated with stdout)
     println!("=== Example 2: Streaming Output ===");
     let clex = "(N[5,5]) (?:N){\\1}";
-    
+
     println!("Generating test case with capturing groups:");
     for (i, chunk_result) in generator_iter(clex.to_string()).unwrap().enumerate() {
         match chunk_result {
@@ -62,7 +62,7 @@ fn main() {
     // In a real scenario with GiB-sized test cases, the iterator approach
     // allows processing chunks without loading the entire test case into memory
     let clex = "N N N N N N N N N N"; // Simulate multiple large expressions
-    
+
     println!("Processing large test case incrementally:");
     let mut total_size = 0;
     for (i, chunk_result) in generator_iter(clex.to_string()).unwrap().enumerate() {
@@ -85,7 +85,7 @@ fn main() {
     // Example 4: Error handling
     println!("=== Example 4: Error Handling ===");
     let invalid_clex = "(?:(N)){\\1}"; // This references a nested group incorrectly
-    
+
     println!("Attempting to generate with invalid clex:");
     match generator_iter(invalid_clex.to_string()) {
         Ok(iter) => {
@@ -108,18 +108,16 @@ fn main() {
     // Example 5: Comparing with traditional approach
     println!("=== Example 5: Memory Efficiency Comparison ===");
     let clex = "S S S"; // Three string expressions with default length
-    
+
     println!("Iterator approach (processes incrementally):");
     let start = std::time::Instant::now();
     let mut iter_size = 0;
-    for chunk_result in generator_iter(clex.to_string()).unwrap() {
-        if let Ok(chunk) = chunk_result {
-            iter_size += chunk.len();
-        }
+    for chunk in generator_iter(clex.to_string()).unwrap().flatten() {
+        iter_size += chunk.len();
     }
     let iter_duration = start.elapsed();
     println!("  Time: {:?}, Size: {} bytes", iter_duration, iter_size);
-    
+
     println!("Traditional approach (generates all at once):");
     let start = std::time::Instant::now();
     match clex_gen::generator(clex.to_string()) {
@@ -129,7 +127,7 @@ fn main() {
         }
         Err(e) => eprintln!("  Error: {}", e),
     }
-    
+
     println!();
     println!("Note: The iterator approach is particularly beneficial for:");
     println!("  - Very large test cases (GiB in size)");

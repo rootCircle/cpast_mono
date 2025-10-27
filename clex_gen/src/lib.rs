@@ -207,9 +207,7 @@ pub fn generator(language: String) -> Result<String, ClexError> {
 /// }
 /// println!("{}", output);
 /// ```
-pub fn generator_iter(
-    language: String,
-) -> Result<code_generator::TestCaseIterator, ClexErrorType> {
+pub fn generator_iter(language: String) -> Result<code_generator::TestCaseIterator, ClexErrorType> {
     let mut parser = parser::Parser::new(language)?;
     parser.parser()?;
     let generator = code_generator::Generator::new(&parser);
