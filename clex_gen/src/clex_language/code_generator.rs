@@ -144,14 +144,20 @@ impl TestCaseIterator {
                 data_type,
                 repetition,
             } => {
-                let repetition_count =
-                    self.generator.get_positive_value_from_reference(repetition, &self.groups)?;
+                let repetition_count = self
+                    .generator
+                    .get_positive_value_from_reference(repetition, &self.groups)?;
 
                 for _ in 1..=repetition_count {
                     let generated_text = match data_type {
-                        DataType::String(min_length, max_length, charset) => self
-                            .generator
-                            .generate_random_string(min_length, max_length, charset, &self.groups)?,
+                        DataType::String(min_length, max_length, charset) => {
+                            self.generator.generate_random_string(
+                                min_length,
+                                max_length,
+                                charset,
+                                &self.groups,
+                            )?
+                        }
                         DataType::Float(min_reference, max_reference) => self
                             .generator
                             .generate_random_float(min_reference, max_reference, &self.groups)?
@@ -183,8 +189,9 @@ impl TestCaseIterator {
                 nest_exp,
                 repetition,
             } => {
-                let repetition_count =
-                    self.generator.get_positive_value_from_reference(repetition, &self.groups)?;
+                let repetition_count = self
+                    .generator
+                    .get_positive_value_from_reference(repetition, &self.groups)?;
 
                 for _ in 1..=repetition_count {
                     let nest_gen = Generator::new_from_program(ClexLanguageAST {
@@ -225,7 +232,7 @@ impl Generator {
     /// Generate test cases as an iterator that yields chunks of data.
     ///
     /// This method returns an iterator that generates test case data incrementally,
-    /// processing one unit expression at a time. This is more memory-efficient for 
+    /// processing one unit expression at a time. This is more memory-efficient for
     /// large test cases compared to generating the entire test case at once.
     ///
     /// Each iteration yields the output from one unit expression in the AST.
