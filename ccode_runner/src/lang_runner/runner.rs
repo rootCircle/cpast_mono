@@ -1,5 +1,5 @@
 use crate::utils::program_utils;
-use crate::utils::program_utils::remake;
+use crate::utils::program_utils::{ExecutionLimits, remake};
 use std::path::{Path, PathBuf};
 
 use super::file_store::SourceCodeInfo;
@@ -11,16 +11,26 @@ pub struct Language {
     pub(crate) code: SourceCodeInfo,
     is_compiled: bool, // For program optimization
     do_force_compile: bool,
+    execution_limits: ExecutionLimits,
 }
 
 impl Language {
     pub fn new(file_path: &Path, do_force_compile: bool) -> Result<Self, Box<RunnerErrorType>> {
+        Self::new_with_limits(file_path, do_force_compile, ExecutionLimits::default())
+    }
+
+    pub fn new_with_limits(
+        file_path: &Path,
+        do_force_compile: bool,
+        execution_limits: ExecutionLimits,
+    ) -> Result<Self, Box<RunnerErrorType>> {
         let code = SourceCodeInfo::new(file_path)?;
 
         let mut lang = Self {
             code,
             is_compiled: false,
             do_force_compile,
+            execution_limits,
         };
 
         // One time compilation/intermediate generation before code is actually run for the first time
@@ -36,12 +46,27 @@ impl Language {
         dest_path: Option<&Path>,
         do_force_compile: bool,
     ) -> Result<Self, Box<RunnerErrorType>> {
+        Self::new_from_custom_dest_with_limits(
+            file_path,
+            dest_path,
+            do_force_compile,
+            ExecutionLimits::default(),
+        )
+    }
+
+    pub fn new_from_custom_dest_with_limits(
+        file_path: &Path,
+        dest_path: Option<&Path>,
+        do_force_compile: bool,
+        execution_limits: ExecutionLimits,
+    ) -> Result<Self, Box<RunnerErrorType>> {
         let code = SourceCodeInfo::new_from_custom_dest(file_path, dest_path)?;
 
         let mut lang = Self {
             code,
             is_compiled: false,
             do_force_compile,
+            execution_limits,
         };
 
         // One time compilation/intermediate generation before code is actually run for the first time
@@ -57,12 +82,27 @@ impl Language {
         lang: LanguageName,
         do_force_compile: bool,
     ) -> Result<Self, Box<RunnerErrorType>> {
+        Self::new_from_text_with_limits(
+            source_text,
+            lang,
+            do_force_compile,
+            ExecutionLimits::default(),
+        )
+    }
+
+    pub fn new_from_text_with_limits(
+        source_text: &str,
+        lang: LanguageName,
+        do_force_compile: bool,
+        execution_limits: ExecutionLimits,
+    ) -> Result<Self, Box<RunnerErrorType>> {
         let code = SourceCodeInfo::new_from_text(source_text, lang)?;
 
         let mut lang = Self {
             code,
             is_compiled: false,
             do_force_compile,
+            execution_limits,
         };
 
         // One time compilation/intermediate generation before code is actually run for the first time
@@ -92,6 +132,7 @@ impl Language {
                         ))?,
                     &vec![],
                     stdin_content,
+                    &self.execution_limits,
                 )
                 .map_err(|err| Box::new(RunnerErrorType::ProgramRunError(Box::new(err))))?)
             }
@@ -131,6 +172,7 @@ impl Language {
                                 ))?,
                         ],
                         stdin_content,
+                        &self.execution_limits,
                     )
                     .map_err(|err| Box::new(RunnerErrorType::ProgramRunError(Box::new(err))))?),
                     _ => Err(Box::new(RunnerErrorType::InvalidLanguageMapping(
@@ -339,7 +381,8 @@ impl Language {
             };
 
         for (compiler, args) in compilers {
-            let std_out = program_utils::run_program(compiler, &args);
+            // Use default limits for compilation (no limits during compilation)
+            let std_out = program_utils::run_program(compiler, &args, &ExecutionLimits::default());
             match std_out {
                 Ok(_) => {
                     self.is_compiled = true;
@@ -415,7 +458,12 @@ impl Language {
             };
 
         for (interpreter, args) in interpreters {
-            let std_out = program_utils::run_program_with_input(interpreter, &args, stdin_content);
+            let std_out = program_utils::run_program_with_input(
+                interpreter,
+                &args,
+                stdin_content,
+                &self.execution_limits,
+            );
             match std_out {
                 Ok(output) => {
                     return Ok(output);

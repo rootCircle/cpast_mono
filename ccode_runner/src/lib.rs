@@ -9,6 +9,7 @@
 //! - **Compilation and Interpretation**: Automatically handles compilation for languages like C, C++, Rust, and Java, and interpretation for languages like Python, Ruby, and JavaScript.
 //! - **Optimized Execution**: Implements caching and precompilation to reduce execution times, especially useful in scenarios with repeated executions.
 //! - **Program Store**: Manages and stores compiled programs for efficient reuse.
+//! - **Execution Limits**: Support for time and memory limits to prevent runaway processes.
 //!
 //! ## Modules
 //!
@@ -17,3 +18,6 @@
 //!
 pub mod lang_runner;
 mod utils;
+
+// Re-export ExecutionLimits for public API
+pub use utils::program_utils::ExecutionLimits;

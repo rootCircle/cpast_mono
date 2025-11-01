@@ -26,4 +26,11 @@ serde = { features = ["derive"], workspace = true }
 tempfile = { workspace = true }
 tokio = { workspace = true }
 utoipa = { workspace = true, optional = true }
+wait-timeout = "0.2"
 which = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(not(unix))'.dependencies]
+sysinfo = "0.31"
