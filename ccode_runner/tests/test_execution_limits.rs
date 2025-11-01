@@ -362,3 +362,86 @@ int main() {
     assert!(matched);
     assert_eq!(expected.trim(), "C++ with limits");
 }
+
+#[test]
+#[cfg(unix)] // Memory limits are enforced differently on Unix vs Windows
+fn test_memory_limit_exceeded_c() {
+    // C program that tries to allocate 10MB of memory
+    // We'll set the limit to 2MB, which should cause it to fail
+    let program_text = r#"
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    // Try to allocate 10MB
+    void* mem = malloc(10 * 1024 * 1024);
+    if (mem == NULL) {
+        return 1;
+    }
+    // Touch the memory to ensure it's actually allocated
+    memset(mem, 0, 10 * 1024 * 1024);
+    free(mem);
+    return 0;
+}
+"#;
+
+    let limits = ExecutionLimits::new()
+        .with_time_limit(5000) // 5 second timeout to prevent hanging
+        .with_memory_limit(2 * 1024 * 1024); // 2MB limit (less than the 10MB allocation)
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::C,
+        LanguageName::C,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    // The program should fail due to memory limit
+    // Either the malloc fails or the process is terminated
+    assert!(
+        run_result.is_err(),
+        "Should fail due to memory limit exceeded"
+    );
+}
+
+#[test]
+fn test_memory_limit_exceeded_python() {
+    // Python program that tries to allocate memory
+    // Set a very low limit that Python runtime itself might exceed
+    let program_text = r#"
+# Try to allocate a large list
+data = [0] * (10 * 1024 * 1024)  # 10 million integers
+print("Allocated memory")
+"#;
+
+    let limits = ExecutionLimits::new()
+        .with_time_limit(5000) // 5 second timeout to prevent hanging
+        .with_memory_limit(3 * 1024 * 1024); // 3MB limit (Python needs more than this)
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::Python,
+        LanguageName::Python,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    // The program should fail due to memory limit
+    // On Unix: rlimit will cause it to fail
+    // On Windows: the monitor will kill it
+    assert!(
+        run_result.is_err(),
+        "Should fail due to memory limit exceeded"
+    );
+}
