@@ -103,8 +103,8 @@ fn test_negative_group_number_error() {
     // Should include position information
     assert!(error_message.contains("input:"));
 
-    // Should include the error description
-    assert!(error_message.contains("can't be 0 or negative"));
+    // Should include the error description with helpful message
+    assert!(error_message.contains("group number must be positive"));
 }
 
 #[test]

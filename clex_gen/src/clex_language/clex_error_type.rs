@@ -145,29 +145,29 @@ impl ClexErrorType {
 
     fn get_error_message(&self) -> String {
         match self {
-            ClexErrorType::UnclosedSingleQuotes(_, _) => "expected closing single quote (')".to_string(),
-            ClexErrorType::MissingColonAfterQuestionMark(_, _) => "expected colon (:) after question mark (?)".to_string(),
-            ClexErrorType::MissingNumberAfterNegativeSign(_, _) => "expected a number after negative sign (-)".to_string(),
-            ClexErrorType::NumericParsingError(_, _) => "error parsing the number".to_string(),
-            ClexErrorType::UnknownCharacter(_, _, c) => format!("unexpected character: '{c}'"),
-            ClexErrorType::UnclosedAtSymbol(_, _) => "unclosed @ symbol".to_string(),
-            ClexErrorType::MissingClosingParensNonCapturingGroup(_, _) => "expected closing parenthesis ')' in non-capturing group".to_string(),
-            ClexErrorType::UnclosedParens(_, _) => "expected N) or ?:<UnitExpression> after opening parenthesis '('".to_string(),
-            ClexErrorType::InvalidTokenFound(_, _, token_type) => format!("invalid token found: {token_type:#?}"),
-            ClexErrorType::InvalidCharacterSet(_, _) => "invalid character set (expected: CH_UPPER, CH_LOWER, CH_ALL, CH_NUM, CH_ALPHA, CH_ALNUM, CH_NEWLINE)".to_string(),
+            ClexErrorType::UnclosedSingleQuotes(_, _) => "expected closing single quote (')\n  = help: strings must be enclosed in single quotes like 'text'".to_string(),
+            ClexErrorType::MissingColonAfterQuestionMark(_, _) => "expected colon (:) after question mark\n  = help: non-capturing groups use the syntax (?:...)".to_string(),
+            ClexErrorType::MissingNumberAfterNegativeSign(_, _) => "expected a number after negative sign (-)\n  = help: negative signs must be followed by digits, e.g., -5".to_string(),
+            ClexErrorType::NumericParsingError(_, _) => "failed to parse number\n  = help: numbers must be valid integers within the valid range".to_string(),
+            ClexErrorType::UnknownCharacter(_, _, c) => format!("unexpected character '{}'\n  = help: this character is not valid in clex syntax", c),
+            ClexErrorType::UnclosedAtSymbol(_, _) => "unclosed @ symbol\n  = help: character sets must be enclosed in @ symbols like @CH_UPPER@".to_string(),
+            ClexErrorType::MissingClosingParensNonCapturingGroup(_, _) => "expected closing parenthesis ')' in non-capturing group\n  = help: non-capturing groups must be closed like (?:N)".to_string(),
+            ClexErrorType::UnclosedParens(_, _) => "expected valid content after opening parenthesis\n  = help: use (N[min,max]) for capturing groups or (?:...) for non-capturing groups".to_string(),
+            ClexErrorType::InvalidTokenFound(_, _, token_type) => format!("unexpected token: {:?}\n  = help: this token is not valid at this position", token_type),
+            ClexErrorType::InvalidCharacterSet(_, _) => "invalid character set name\n  = help: valid character sets are: CH_UPPER, CH_LOWER, CH_ALL, CH_NUM, CH_ALPHA, CH_ALNUM, CH_NEWLINE\n  = example: @CH_UPPER@ for uppercase letters".to_string(),
 
-            ClexErrorType::MissingCommaRangeExpression(_, _) => "expected comma (,) in range expression".to_string(),
-            ClexErrorType::MissingSquareBracketsRangeExpression(_, _) => "expected closing square bracket (']') in range expression".to_string(),
+            ClexErrorType::MissingCommaRangeExpression(_, _) => "expected comma in range expression\n  = help: ranges use the format [min,max], e.g., N[1,10]".to_string(),
+            ClexErrorType::MissingSquareBracketsRangeExpression(_, _) => "expected closing square bracket (']') in range expression\n  = help: ranges must be closed like [1,10]".to_string(),
 
-            ClexErrorType::NegativeGroupNumber(_, _) => "group number in back-reference can't be 0 or negative".to_string(),
-            ClexErrorType::MissingGroupNumber(_, _) => "expected group number after '{\\' in quantifiers".to_string(),
-            ClexErrorType::NegativeValueInPositiveReference(_, _) => "literal can't be negative".to_string(),
+            ClexErrorType::NegativeGroupNumber(_, _) => "group number must be positive\n  = help: back-references like {\\1} must refer to a valid group number (1 or higher)".to_string(),
+            ClexErrorType::MissingGroupNumber(_, _) => "expected group number after '{\\'\n  = help: quantifiers use the format {\\N} where N is a group number, e.g., {\\1}".to_string(),
+            ClexErrorType::NegativeValueInPositiveReference(_, _) => "value cannot be negative in this context\n  = help: only positive numbers are allowed in ranges and repetitions".to_string(),
 
-            ClexErrorType::UnexpectedToken(_, _, token_type) => format!("expected {token_type:?}, but not found"),
-            ClexErrorType::UnreachableCodeReached(_, _) => "unreachable code reached".to_string(),
+            ClexErrorType::UnexpectedToken(_, _, token_type) => format!("expected {:?} but found something else\n  = help: check your syntax at this position", token_type),
+            ClexErrorType::UnreachableCodeReached(_, _) => "internal error: reached unreachable code\n  = note: this is a bug in the parser, please report it".to_string(),
 
-            ClexErrorType::InvalidRangeValues(_, _, min, max) => format!("upper bound should be greater than lower bound in [{min}, {max}]"),
-            ClexErrorType::UnknownGroupNumber(_, _, group_number) => format!("can't find specified group no. {group_number} in the language"),
+            ClexErrorType::InvalidRangeValues(_, _, min, max) => format!("invalid range: minimum ({}) is greater than maximum ({})\n  = help: the first number in a range must be less than or equal to the second\n  = example: use [1,10] not [10,1]", min, max),
+            ClexErrorType::UnknownGroupNumber(_, _, group_number) => format!("reference to undefined group {}\n  = help: you can only reference groups that have been defined earlier\n  = note: groups are defined with (N[...]) syntax", group_number),
         }
     }
 
