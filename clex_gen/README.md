@@ -54,6 +54,33 @@ let generated_code = generator("(N[1,10]) (?:N){\\1}".to_string()).unwrap();
 println!("Generated Code: {}", generated_code);
 ```
 
+#### Iterator-Based Generation for Large Test Cases
+
+For very large test cases (in the order of GiBs), you can use the iterator-based API which generates test data incrementally, reducing memory usage:
+
+```rust
+use clex_gen::generator_iter;
+
+// Generate test case using iterator (memory-efficient for large outputs)
+for chunk_result in generator_iter("N N N N N".to_string()).unwrap() {
+    match chunk_result {
+        Ok(chunk) => print!("{}", chunk),
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            break;
+        }
+    }
+}
+```
+
+The iterator approach is particularly beneficial when:
+- Generating very large test cases (GiB in size)
+- Streaming output to files or other processes
+- Piping test cases directly to a code runner
+- Avoiding memory accumulation
+
+See the [generate_iter example](./examples/generate_iter.rs) for more detailed usage.
+
 ### Clex Language Specification
 
 For more information on the clex language and its usage, refer to the [Clex Language Specs](./docs/CLEX_LANG_SPECS.md).

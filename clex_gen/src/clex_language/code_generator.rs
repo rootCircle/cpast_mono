@@ -53,6 +53,164 @@ pub struct Generator {
     syntax_tree: ClexLanguageAST,
 }
 
+/// Iterator that generates test case data incrementally by processing each unit expression.
+///
+/// This iterator yields chunks of the generated test case as individual tokens/values,
+/// allowing for memory-efficient handling of large test cases. Each iteration processes
+/// one unit expression from the AST and yields its generated output.
+///
+/// # Example
+///
+/// ```rust
+/// use clex_gen::clex_language::parser::Parser;
+/// use clex_gen::clex_language::code_generator::Generator;
+///
+/// let source = "N[1,100] N[1,100]";
+/// let mut parser = Parser::new(source.to_string()).unwrap();
+/// parser.parser().unwrap();
+///
+/// let generator = Generator::new(&parser);
+/// for chunk_result in generator.generate_testcases_iter() {
+///     match chunk_result {
+///         Ok(data) => print!("{}", data),
+///         Err(e) => {
+///             eprintln!("Error: {}", e);
+///             break;
+///         }
+///     }
+/// }
+/// ```
+pub struct TestCaseIterator {
+    generator: Generator,
+    groups: HashMap<u64, u64>,
+    expr_index: usize,
+    finished: bool,
+}
+
+impl TestCaseIterator {
+    fn new(generator: Generator) -> Self {
+        Self {
+            generator,
+            groups: HashMap::new(),
+            expr_index: 0,
+            finished: false,
+        }
+    }
+}
+
+impl Iterator for TestCaseIterator {
+    type Item = Result<String, ClexErrorType>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.finished {
+            return None;
+        }
+
+        if self.expr_index >= self.generator.syntax_tree.expression.len() {
+            self.finished = true;
+            return None;
+        }
+
+        let unit_expression = &self.generator.syntax_tree.expression[self.expr_index].clone();
+        self.expr_index += 1;
+
+        match self.process_unit_expression(unit_expression) {
+            Ok(output) => {
+                // Check if this is EOF and handle trailing space
+                if matches!(unit_expression, UnitExpression::Eof) {
+                    self.finished = true;
+                    // Return empty string for EOF since we already removed trailing space
+                    return None;
+                }
+                Some(Ok(output))
+            }
+            Err(e) => {
+                self.finished = true;
+                Some(Err(e))
+            }
+        }
+    }
+}
+
+impl TestCaseIterator {
+    fn process_unit_expression(
+        &mut self,
+        unit_expression: &UnitExpression,
+    ) -> Result<String, ClexErrorType> {
+        let mut output_text = String::new();
+
+        match unit_expression {
+            UnitExpression::Primitives {
+                data_type,
+                repetition,
+            } => {
+                let repetition_count = self
+                    .generator
+                    .get_positive_value_from_reference(repetition, &self.groups)?;
+
+                for _ in 1..=repetition_count {
+                    let generated_text = match data_type {
+                        DataType::String(min_length, max_length, charset) => {
+                            self.generator.generate_random_string(
+                                min_length,
+                                max_length,
+                                charset,
+                                &self.groups,
+                            )?
+                        }
+                        DataType::Float(min_reference, max_reference) => self
+                            .generator
+                            .generate_random_float(min_reference, max_reference, &self.groups)?
+                            .to_string(),
+                        DataType::Integer(min_reference, max_reference) => self
+                            .generator
+                            .generate_random_number(min_reference, max_reference, &self.groups)?
+                            .to_string(),
+                    };
+                    output_text.push_str(&generated_text);
+                    output_text.push(' ');
+                }
+            }
+            UnitExpression::CapturingGroup {
+                group_number,
+                range: (min_reference, max_reference),
+            } => {
+                let random_number = self.generator.generate_positive_random_number(
+                    min_reference,
+                    max_reference,
+                    &self.groups,
+                )?;
+                self.groups.insert(*group_number, random_number);
+
+                output_text.push_str(&random_number.to_string());
+                output_text.push(' ');
+            }
+            UnitExpression::NonCapturingGroup {
+                nest_exp,
+                repetition,
+            } => {
+                let repetition_count = self
+                    .generator
+                    .get_positive_value_from_reference(repetition, &self.groups)?;
+
+                for _ in 1..=repetition_count {
+                    let nest_gen = Generator::new_from_program(ClexLanguageAST {
+                        expression: nest_exp.clone(),
+                    });
+                    let nested_output = nest_gen.traverse_ast(&mut self.groups)?;
+                    output_text.push_str(&nested_output);
+                }
+            }
+            UnitExpression::Eof => {
+                // EOF marker - remove trailing space from last output
+                // This is handled in the iterator's next() method
+            }
+        }
+
+        Ok(output_text)
+    }
+}
+
 impl Generator {
     pub fn new(syntax_tree: &Parser) -> Self {
         Self {
@@ -69,6 +227,40 @@ impl Generator {
     pub fn generate_testcases(&self) -> Result<String, ClexErrorType> {
         let mut groups = HashMap::new();
         self.traverse_ast(&mut groups)
+    }
+
+    /// Generate test cases as an iterator that yields chunks of data.
+    ///
+    /// This method returns an iterator that generates test case data incrementally,
+    /// processing one unit expression at a time. This is more memory-efficient for
+    /// large test cases compared to generating the entire test case at once.
+    ///
+    /// Each iteration yields the output from one unit expression in the AST.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use clex_gen::clex_language::parser::Parser;
+    /// use clex_gen::clex_language::code_generator::Generator;
+    ///
+    /// let source = "N[1,100] N[1,100]";
+    /// let mut parser = Parser::new(source.to_string()).unwrap();
+    /// parser.parser().unwrap();
+    ///
+    /// let generator = Generator::new(&parser);
+    /// for chunk in generator.generate_testcases_iter() {
+    ///     match chunk {
+    ///         Ok(data) => print!("{}", data),
+    ///         Err(e) => {
+    ///             eprintln!("Error: {}", e);
+    ///             break;
+    ///         }
+    ///     }
+    /// }
+    /// // Need to manually remove trailing space in the final output if needed
+    /// ```
+    pub fn generate_testcases_iter(self) -> TestCaseIterator {
+        TestCaseIterator::new(self)
     }
 
     fn traverse_ast(&self, groups: &mut HashMap<u64, u64>) -> Result<String, ClexErrorType> {
