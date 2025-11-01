@@ -30,10 +30,7 @@ mod integration_with_runner {
 
         for part in parts {
             let num: i64 = part.parse().expect("Should be a valid integer");
-            assert!(
-                (1..=10).contains(&num),
-                "Number should be in range [1,10]"
-            );
+            assert!((1..=10).contains(&num), "Number should be in range [1,10]");
         }
     }
 
