@@ -140,6 +140,7 @@ impl Generator {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
+                crate::clex_language::lexer::Span { start: 0, end: 0 },
                 min,
                 max,
             ));
@@ -152,6 +153,7 @@ impl Generator {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
+                crate::clex_language::lexer::Span { start: 0, end: 0 },
                 min as i64,
                 max as i64,
             ));
@@ -220,6 +222,7 @@ impl Generator {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
+                crate::clex_language::lexer::Span { start: 0, end: 0 },
                 min as i64,
                 max as i64,
             ));
@@ -263,6 +266,7 @@ impl Generator {
             Some(value) => Ok(*value),
             None => Err(ClexErrorType::UnknownGroupNumber(
                 ParentErrorType::GeneratorError,
+                crate::clex_language::lexer::Span { start: 0, end: 0 },
                 group_number,
             )),
         }

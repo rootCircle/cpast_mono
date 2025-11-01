@@ -3,7 +3,7 @@
 //! This module provides error types and implementations for handling various errors
 //! that can occur during lexical analysis, parsing, and code generation phases.
 
-use crate::clex_language::lexer::TokenType;
+use crate::clex_language::lexer::{Span, TokenType};
 use core::fmt;
 use std::error::Error;
 /// Represents the main categories of errors that can occur in the CLEX system.
@@ -22,56 +22,58 @@ pub enum ParentErrorType {
 pub enum ClexErrorType {
     // Lexical Errors
     /// Error when a single quote is not properly closed
-    UnclosedSingleQuotes(ParentErrorType),
+    UnclosedSingleQuotes(ParentErrorType, Span),
     /// Error when a colon is missing after a question mark
-    MissingColonAfterQuestionMark(ParentErrorType),
+    MissingColonAfterQuestionMark(ParentErrorType, Span),
     /// Error when a negative sign is not followed by a number
-    MissingNumberAfterNegativeSign(ParentErrorType),
+    MissingNumberAfterNegativeSign(ParentErrorType, Span),
     /// Error when parsing numeric values
-    NumericParsingError(ParentErrorType),
+    NumericParsingError(ParentErrorType, Span),
     /// Error when encountering an unknown character
-    UnknownCharacter(ParentErrorType, &'static str),
+    UnknownCharacter(ParentErrorType, Span, &'static str),
     /// Error when an @ symbol is not properly closed
-    UnclosedAtSymbol(ParentErrorType),
+    UnclosedAtSymbol(ParentErrorType, Span),
     /// Error when an invalid character set is specified, all valid character sets are specified in <https://github.com/rootCircle/cpast_mono/blob/main/clex_gen/docs/CLEX_LANG_SPECS.md#character>
-    InvalidCharacterSet(ParentErrorType),
+    InvalidCharacterSet(ParentErrorType, Span),
 
     // Parser Errors
     /// Error when a non-capturing group is missing closing parenthesis
-    MissingClosingParensNonCapturingGroup(ParentErrorType),
+    MissingClosingParensNonCapturingGroup(ParentErrorType, Span),
     /// Error when parentheses are not properly closed
-    UnclosedParens(ParentErrorType),
+    UnclosedParens(ParentErrorType, Span),
     /// Error when an invalid token is encountered
-    InvalidTokenFound(ParentErrorType, TokenType),
+    InvalidTokenFound(ParentErrorType, Span, TokenType),
     /// Error when a comma is missing in a range expression
-    MissingCommaRangeExpression(ParentErrorType),
+    MissingCommaRangeExpression(ParentErrorType, Span),
     /// Error when square brackets are missing in a range expression
-    MissingSquareBracketsRangeExpression(ParentErrorType),
+    MissingSquareBracketsRangeExpression(ParentErrorType, Span),
     /// Error when a negative group number is specified
-    NegativeGroupNumber(ParentErrorType),
+    NegativeGroupNumber(ParentErrorType, Span),
     /// Error when a group number is missing
-    MissingGroupNumber(ParentErrorType),
+    MissingGroupNumber(ParentErrorType, Span),
     /// Error when a negative value is used in a positive reference
-    NegativeValueInPositiveReference(ParentErrorType),
+    NegativeValueInPositiveReference(ParentErrorType, Span),
     /// Error when an unexpected token is encountered
-    UnexpectedToken(ParentErrorType, TokenType),
+    UnexpectedToken(ParentErrorType, Span, TokenType),
     /// Error when unreachable code is executed
-    UnreachableCodeReached(ParentErrorType),
+    UnreachableCodeReached(ParentErrorType, Span),
 
     // Generator Errors
     /// Error when range values are invalid
-    InvalidRangeValues(ParentErrorType, i64, i64),
+    InvalidRangeValues(ParentErrorType, Span, i64, i64),
     /// Error when referencing an unknown group number
-    UnknownGroupNumber(ParentErrorType, u64),
+    UnknownGroupNumber(ParentErrorType, Span, u64),
 }
 
 impl fmt::Display for ClexErrorType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let span = self.get_span();
         write!(
             f,
-            "[CLEX Error][{}] {}",
-            self.get_parent_error_type(),
-            self.get_error_message()
+            "error: {} at position {}..{}",
+            self.get_error_message(),
+            span.start,
+            span.end
         )
     }
 }
@@ -87,55 +89,133 @@ impl Error for ClexErrorType {
 }
 
 impl ClexErrorType {
+    /// Format error message with source code context for better readability
+    ///
+    /// This creates a cargo/clippy-style error message with:
+    /// - Error description
+    /// - Source code snippet with position indicator (if source is available)
+    /// - Visual pointer to the error location (if source is available)
+    pub fn format_with_source(&self, source: &str) -> String {
+        let span = self.get_span();
+        let error_type = self.get_parent_error_type();
+        let message = self.get_error_message();
+
+        // Build the error output similar to cargo/clippy
+        let mut output = String::new();
+
+        // Error header
+        output.push_str(&format!("error: {}\n", message));
+
+        // If source is empty, just show the basic error without context
+        if source.is_empty() {
+            output.push_str(&format!("  --> position:{}..{}\n", span.start, span.end));
+            return output;
+        }
+
+        output.push_str(&format!("  --> input:{}..{}\n", span.start, span.end));
+        output.push_str("   |\n");
+
+        // Show the source line with line number
+        output.push_str(&format!(" 1 | {}\n", source));
+
+        // Add visual pointer to the error location
+        output.push_str("   | ");
+
+        // Add spaces before the caret
+        for _ in 0..span.start {
+            output.push(' ');
+        }
+
+        // Add carets to highlight the error span
+        let span_length = if span.end > span.start {
+            span.end - span.start
+        } else {
+            1
+        };
+
+        for _ in 0..span_length {
+            output.push('^');
+        }
+
+        output.push(' ');
+        output.push_str(&format!("{}\n", error_type.to_lowercase()));
+
+        output
+    }
+
     fn get_error_message(&self) -> String {
         match self {
-            ClexErrorType::UnclosedSingleQuotes(_) => "Expected closing single quote (') after opening single quote (')".to_string(),
-            ClexErrorType::MissingColonAfterQuestionMark(_) => "Expected colon (:) after question mark (?)".to_string(),
-            ClexErrorType::MissingNumberAfterNegativeSign(_) => "Expected a number after negative sign (-)".to_string(),
-            ClexErrorType::NumericParsingError(_) => "Error parsing the number".to_string(),
-            ClexErrorType::UnknownCharacter(_, c) => format!("Unexpected character: '{c}'"),
-            ClexErrorType::UnclosedAtSymbol(_) => "Couldn't find closing @ after opening one!".to_string(),
-            ClexErrorType::MissingClosingParensNonCapturingGroup(_) => "Expected closing parenthesis ')' after opening parenthesis '(' in Non-Capturing group".to_string(),
-            ClexErrorType::UnclosedParens(_) => "Expected N) or ?:<UnitExpression> after opening parenthesis '('".to_string(),
-            ClexErrorType::InvalidTokenFound(_, token_type) => format!("Invalid token found: {token_type:#?}"),
-            ClexErrorType::InvalidCharacterSet(_) => "Invalid character set! Expected CH_UPPER, CH_LOWER, CH_ALL, CH_NUM, CH_ALPHA, CH_ALNUM, CH_NEWLINE".to_string(),
+            ClexErrorType::UnclosedSingleQuotes(_, _) => "expected closing single quote (')\n  = help: strings must be enclosed in single quotes like 'text'".to_string(),
+            ClexErrorType::MissingColonAfterQuestionMark(_, _) => "expected colon (:) after question mark\n  = help: non-capturing groups use the syntax (?:...)".to_string(),
+            ClexErrorType::MissingNumberAfterNegativeSign(_, _) => "expected a number after negative sign (-)\n  = help: negative signs must be followed by digits, e.g., -5".to_string(),
+            ClexErrorType::NumericParsingError(_, _) => "failed to parse number\n  = help: numbers must be valid integers within the valid range".to_string(),
+            ClexErrorType::UnknownCharacter(_, _, c) => format!("unexpected character '{}'\n  = help: this character is not valid in clex syntax", c),
+            ClexErrorType::UnclosedAtSymbol(_, _) => "unclosed @ symbol\n  = help: character sets must be enclosed in @ symbols like @CH_UPPER@".to_string(),
+            ClexErrorType::MissingClosingParensNonCapturingGroup(_, _) => "expected closing parenthesis ')' in non-capturing group\n  = help: non-capturing groups must be closed like (?:N)".to_string(),
+            ClexErrorType::UnclosedParens(_, _) => "expected valid content after opening parenthesis\n  = help: use (N[min,max]) for capturing groups or (?:...) for non-capturing groups".to_string(),
+            ClexErrorType::InvalidTokenFound(_, _, token_type) => format!("unexpected token: {:?}\n  = help: this token is not valid at this position", token_type),
+            ClexErrorType::InvalidCharacterSet(_, _) => "invalid character set name\n  = help: valid character sets are: CH_UPPER, CH_LOWER, CH_ALL, CH_NUM, CH_ALPHA, CH_ALNUM, CH_NEWLINE\n  = example: @CH_UPPER@ for uppercase letters".to_string(),
 
-            ClexErrorType::MissingCommaRangeExpression(_) => "Expected comma (,) after opening square bracket ('[') in Range Bound Expression".to_string(),
-            ClexErrorType::MissingSquareBracketsRangeExpression(_) => "Expected closing square bracket (']') after opening square bracket ('[') in Range Bound Expression".to_string(),
+            ClexErrorType::MissingCommaRangeExpression(_, _) => "expected comma in range expression\n  = help: ranges use the format [min,max], e.g., N[1,10]".to_string(),
+            ClexErrorType::MissingSquareBracketsRangeExpression(_, _) => "expected closing square bracket (']') in range expression\n  = help: ranges must be closed like [1,10]".to_string(),
 
-            ClexErrorType::NegativeGroupNumber(_) => "Group number in back-reference can't be 0 or negative!".to_string(),
-            ClexErrorType::MissingGroupNumber(_) => "Expected <Group Number> after '{\\' in Quantifiers".to_string(),
-            ClexErrorType::NegativeValueInPositiveReference(_) => "Literal can't be negative!".to_string(),
+            ClexErrorType::NegativeGroupNumber(_, _) => "group number must be positive\n  = help: back-references like {\\1} must refer to a valid group number (1 or higher)".to_string(),
+            ClexErrorType::MissingGroupNumber(_, _) => "expected group number after '{\\'\n  = help: quantifiers use the format {\\N} where N is a group number, e.g., {\\1}".to_string(),
+            ClexErrorType::NegativeValueInPositiveReference(_, _) => "value cannot be negative in this context\n  = help: only positive numbers are allowed in ranges and repetitions".to_string(),
 
-            ClexErrorType::UnexpectedToken(_, token_type) => format!("Expected {token_type:?}, but not found"),
-            ClexErrorType::UnreachableCodeReached(_) => "Unreachable code reached!".to_string(),
+            ClexErrorType::UnexpectedToken(_, _, token_type) => format!("expected {:?} but found something else\n  = help: check your syntax at this position", token_type),
+            ClexErrorType::UnreachableCodeReached(_, _) => "internal error: reached unreachable code\n  = note: this is a bug in the parser, please report it".to_string(),
 
-            ClexErrorType::InvalidRangeValues(_, min, max) => format!("Upper bound should be greater than lower bound in [{min}, {max}]"),
-            ClexErrorType::UnknownGroupNumber(_, group_number) => format!("Can't find specified Group no. {group_number} in the language"),
+            ClexErrorType::InvalidRangeValues(_, _, min, max) => format!("invalid range: minimum ({}) is greater than maximum ({})\n  = help: the first number in a range must be less than or equal to the second\n  = example: use [1,10] not [10,1]", min, max),
+            ClexErrorType::UnknownGroupNumber(_, _, group_number) => format!("reference to undefined group {}\n  = help: you can only reference groups that have been defined earlier\n  = note: groups are defined with (N[...]) syntax", group_number),
+        }
+    }
+
+    fn get_span(&self) -> Span {
+        match self {
+            ClexErrorType::UnclosedSingleQuotes(_, span)
+            | ClexErrorType::MissingColonAfterQuestionMark(_, span)
+            | ClexErrorType::MissingNumberAfterNegativeSign(_, span)
+            | ClexErrorType::NumericParsingError(_, span)
+            | ClexErrorType::UnknownCharacter(_, span, _)
+            | ClexErrorType::MissingClosingParensNonCapturingGroup(_, span)
+            | ClexErrorType::UnclosedParens(_, span)
+            | ClexErrorType::InvalidTokenFound(_, span, _)
+            | ClexErrorType::MissingCommaRangeExpression(_, span)
+            | ClexErrorType::MissingSquareBracketsRangeExpression(_, span)
+            | ClexErrorType::NegativeGroupNumber(_, span)
+            | ClexErrorType::MissingGroupNumber(_, span)
+            | ClexErrorType::NegativeValueInPositiveReference(_, span)
+            | ClexErrorType::UnexpectedToken(_, span, _)
+            | ClexErrorType::UnreachableCodeReached(_, span)
+            | ClexErrorType::InvalidRangeValues(_, span, _, _)
+            | ClexErrorType::UnknownGroupNumber(_, span, _)
+            | ClexErrorType::UnclosedAtSymbol(_, span)
+            | ClexErrorType::InvalidCharacterSet(_, span) => *span,
         }
     }
 
     fn get_parent_error_type(&self) -> &'static str {
         match self {
-            ClexErrorType::UnclosedSingleQuotes(parent_type)
-            | ClexErrorType::MissingColonAfterQuestionMark(parent_type)
-            | ClexErrorType::MissingNumberAfterNegativeSign(parent_type)
-            | ClexErrorType::NumericParsingError(parent_type)
-            | ClexErrorType::UnknownCharacter(parent_type, _)
-            | ClexErrorType::MissingClosingParensNonCapturingGroup(parent_type)
-            | ClexErrorType::UnclosedParens(parent_type)
-            | ClexErrorType::InvalidTokenFound(parent_type, _)
-            | ClexErrorType::MissingCommaRangeExpression(parent_type)
-            | ClexErrorType::MissingSquareBracketsRangeExpression(parent_type)
-            | ClexErrorType::NegativeGroupNumber(parent_type)
-            | ClexErrorType::MissingGroupNumber(parent_type)
-            | ClexErrorType::NegativeValueInPositiveReference(parent_type)
-            | ClexErrorType::UnexpectedToken(parent_type, _)
-            | ClexErrorType::UnreachableCodeReached(parent_type)
-            | ClexErrorType::InvalidRangeValues(parent_type, _, _)
-            | ClexErrorType::UnknownGroupNumber(parent_type, _)
-            | ClexErrorType::UnclosedAtSymbol(parent_type)
-            | ClexErrorType::InvalidCharacterSet(parent_type) => match parent_type {
+            ClexErrorType::UnclosedSingleQuotes(parent_type, _)
+            | ClexErrorType::MissingColonAfterQuestionMark(parent_type, _)
+            | ClexErrorType::MissingNumberAfterNegativeSign(parent_type, _)
+            | ClexErrorType::NumericParsingError(parent_type, _)
+            | ClexErrorType::UnknownCharacter(parent_type, _, _)
+            | ClexErrorType::MissingClosingParensNonCapturingGroup(parent_type, _)
+            | ClexErrorType::UnclosedParens(parent_type, _)
+            | ClexErrorType::InvalidTokenFound(parent_type, _, _)
+            | ClexErrorType::MissingCommaRangeExpression(parent_type, _)
+            | ClexErrorType::MissingSquareBracketsRangeExpression(parent_type, _)
+            | ClexErrorType::NegativeGroupNumber(parent_type, _)
+            | ClexErrorType::MissingGroupNumber(parent_type, _)
+            | ClexErrorType::NegativeValueInPositiveReference(parent_type, _)
+            | ClexErrorType::UnexpectedToken(parent_type, _, _)
+            | ClexErrorType::UnreachableCodeReached(parent_type, _)
+            | ClexErrorType::InvalidRangeValues(parent_type, _, _, _)
+            | ClexErrorType::UnknownGroupNumber(parent_type, _, _)
+            | ClexErrorType::UnclosedAtSymbol(parent_type, _)
+            | ClexErrorType::InvalidCharacterSet(parent_type, _) => match parent_type {
                 ParentErrorType::LexerError => "LEXER ERROR",
                 ParentErrorType::ParserError => "PARSER ERROR",
                 ParentErrorType::GeneratorError => "GENERATOR ERROR",

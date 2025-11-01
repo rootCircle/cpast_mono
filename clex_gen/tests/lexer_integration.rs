@@ -1,5 +1,6 @@
-use clex_gen::clex_language::lexer::{Token, TokenType};
+use clex_gen::clex_language::lexer::{Span, Token, TokenType};
 use clex_gen::get_tokens;
+
 #[test]
 fn test_single_token() {
     let src = "N";
@@ -10,10 +11,12 @@ fn test_single_token() {
             Token {
                 token_type: TokenType::Integer,
                 lexeme: "N".to_string(),
+                span: Span { start: 0, end: 1 },
             },
             Token {
                 token_type: TokenType::Eof,
                 lexeme: "".to_string(),
+                span: Span { start: 1, end: 1 },
             },
         ]
     );
@@ -28,6 +31,7 @@ fn test_empty_source() {
         vec![Token {
             token_type: TokenType::Eof,
             lexeme: "".to_string(),
+            span: Span { start: 0, end: 0 },
         }]
     );
 }
@@ -41,6 +45,7 @@ fn test_whitespace_source() {
         vec![Token {
             token_type: TokenType::Eof,
             lexeme: "".to_string(),
+            span: Span { start: 6, end: 6 },
         }]
     );
 }
@@ -55,58 +60,72 @@ fn test_mixed_tokens() {
             Token {
                 token_type: TokenType::Integer,
                 lexeme: "N".to_string(),
+                span: Span { start: 0, end: 1 },
             },
             Token {
                 token_type: TokenType::LeftSquareBracket,
                 lexeme: "[".to_string(),
+                span: Span { start: 2, end: 3 },
             },
             Token {
                 token_type: TokenType::QuestionColon,
                 lexeme: "?:".to_string(),
+                span: Span { start: 4, end: 6 },
             },
             Token {
                 token_type: TokenType::LiteralNumber(42),
                 lexeme: "42".to_string(),
+                span: Span { start: 7, end: 9 },
             },
             Token {
                 token_type: TokenType::LiteralNumber(-24),
                 lexeme: "-24".to_string(),
+                span: Span { start: 10, end: 13 },
             },
             Token {
                 token_type: TokenType::RightSquareBracket,
                 lexeme: "]".to_string(),
+                span: Span { start: 14, end: 15 },
             },
             Token {
                 token_type: TokenType::LeftParens,
                 lexeme: "(".to_string(),
+                span: Span { start: 16, end: 17 },
             },
             Token {
                 token_type: TokenType::RightParens,
                 lexeme: ")".to_string(),
+                span: Span { start: 17, end: 18 },
             },
             Token {
                 token_type: TokenType::LeftCurlyBrackets,
                 lexeme: "{".to_string(),
+                span: Span { start: 18, end: 19 },
             },
             Token {
                 token_type: TokenType::RightCurlyBrackets,
                 lexeme: "}".to_string(),
+                span: Span { start: 19, end: 20 },
             },
             Token {
                 token_type: TokenType::Backslash,
                 lexeme: "\\".to_string(),
+                span: Span { start: 20, end: 21 },
             },
             Token {
                 token_type: TokenType::Float,
                 lexeme: "F".to_string(),
+                span: Span { start: 22, end: 23 },
             },
             Token {
                 token_type: TokenType::String,
                 lexeme: "S".to_string(),
+                span: Span { start: 24, end: 25 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string(),
+                lexeme: String::new(),
+                span: Span { start: 25, end: 25 },
             }
         ]
     );
@@ -122,10 +141,12 @@ fn test_characters() {
             Token {
                 token_type: TokenType::LiteralString("ABC".to_string()),
                 lexeme: "ABC".to_string(),
+                span: Span { start: 1, end: 4 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 5, end: 5 },
             }
         ]
     );
@@ -141,10 +162,12 @@ fn test_character_set_upper() {
             Token {
                 token_type: TokenType::CharacterSetUpper,
                 lexeme: "CH_UPPER".to_string(),
+                span: Span { start: 1, end: 9 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 10, end: 10 },
             }
         ]
     );
@@ -160,10 +183,12 @@ fn test_character_set_lower() {
             Token {
                 token_type: TokenType::CharacterSetLower,
                 lexeme: "CH_LOWER".to_string(),
+                span: Span { start: 1, end: 9 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 10, end: 10 },
             }
         ]
     );
@@ -179,10 +204,12 @@ fn test_character_set_newline() {
             Token {
                 token_type: TokenType::CharacterSetNewline,
                 lexeme: "CH_NEWLINE".to_string(),
+                span: Span { start: 1, end: 11 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 12, end: 12 },
             }
         ]
     );
@@ -198,10 +225,12 @@ fn test_character_set_alpha() {
             Token {
                 token_type: TokenType::CharacterSetAlpha,
                 lexeme: "CH_ALPHA".to_string(),
+                span: Span { start: 1, end: 9 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 10, end: 10 },
             }
         ]
     );
@@ -217,10 +246,12 @@ fn test_character_set_alnum() {
             Token {
                 token_type: TokenType::CharacterSetAlnum,
                 lexeme: "CH_ALNUM".to_string(),
+                span: Span { start: 1, end: 9 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 10, end: 10 },
             }
         ]
     );
@@ -236,10 +267,12 @@ fn test_character_set_all() {
             Token {
                 token_type: TokenType::CharacterSetAll,
                 lexeme: "CH_ALL".to_string(),
+                span: Span { start: 1, end: 7 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 8, end: 8 },
             }
         ]
     );
@@ -255,10 +288,12 @@ fn test_character_set_num() {
             Token {
                 token_type: TokenType::CharacterSetNumeric,
                 lexeme: "CH_NUM".to_string(),
+                span: Span { start: 1, end: 7 },
             },
             Token {
                 token_type: TokenType::Eof,
-                lexeme: "".to_string()
+                lexeme: "".to_string(),
+                span: Span { start: 8, end: 8 },
             }
         ]
     );
