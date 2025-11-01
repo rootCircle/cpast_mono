@@ -198,3 +198,167 @@ print(n * n)
     assert_eq!(expected.trim(), "100");
     assert_eq!(actual.trim(), "100");
 }
+
+#[test]
+fn test_memory_limit_only_no_timeout() {
+    // Test program that runs quickly but with memory limit set
+    let program_text = r#"
+print("Quick program with memory limit")
+"#;
+
+    let limits = ExecutionLimits::new().with_memory_limit(100 * 1024 * 1024); // 100MB
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::Python,
+        LanguageName::Python,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    assert!(
+        run_result.is_ok(),
+        "Should succeed with memory limit on quick program"
+    );
+
+    let (matched, expected, _) = run_result.unwrap();
+    assert!(matched);
+    assert_eq!(expected.trim(), "Quick program with memory limit");
+}
+
+#[test]
+fn test_combined_time_and_memory_limits() {
+    // Test with both time and memory limits
+    let program_text = r#"
+import sys
+print("Program with both limits")
+"#;
+
+    let limits = ExecutionLimits::new()
+        .with_time_limit(5000)
+        .with_memory_limit(100 * 1024 * 1024);
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::Python,
+        LanguageName::Python,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    assert!(run_result.is_ok(), "Should succeed with both limits");
+
+    let (matched, expected, _) = run_result.unwrap();
+    assert!(matched);
+    assert_eq!(expected.trim(), "Program with both limits");
+}
+
+#[test]
+fn test_memory_limit_with_rust() {
+    // Test memory limit with a compiled language
+    let program_text = r#"
+fn main() {
+    println!("Rust with memory limit");
+}
+"#;
+
+    let limits = ExecutionLimits::new()
+        .with_time_limit(5000)
+        .with_memory_limit(50 * 1024 * 1024); // 50MB
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::Rust,
+        LanguageName::Rust,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    assert!(
+        run_result.is_ok(),
+        "Should succeed with memory limit on Rust"
+    );
+
+    let (matched, expected, _) = run_result.unwrap();
+    assert!(matched);
+    assert_eq!(expected.trim(), "Rust with memory limit");
+}
+
+#[test]
+fn test_only_time_limit_no_memory() {
+    // Test with only time limit, no memory limit
+    let program_text = r#"
+print("Only time limit")
+"#;
+
+    let limits = ExecutionLimits::new().with_time_limit(5000);
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::Python,
+        LanguageName::Python,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    assert!(run_result.is_ok(), "Should succeed with time limit only");
+
+    let (matched, expected, _) = run_result.unwrap();
+    assert!(matched);
+    assert_eq!(expected.trim(), "Only time limit");
+}
+
+#[test]
+fn test_cpp_with_limits() {
+    // Test with C++ to cover compiled language paths
+    let program_text = r#"
+#include <iostream>
+int main() {
+    std::cout << "C++ with limits" << std::endl;
+    return 0;
+}
+"#;
+
+    let limits = ExecutionLimits::new()
+        .with_time_limit(5000)
+        .with_memory_limit(50 * 1024 * 1024);
+
+    let result = ProgramStore::new_from_text_with_limits(
+        program_text,
+        program_text,
+        LanguageName::Cpp,
+        LanguageName::Cpp,
+        false,
+        limits,
+    );
+
+    assert!(result.is_ok(), "ProgramStore creation should succeed");
+    let program = result.unwrap();
+
+    let run_result = program.run_codes_and_compare_output("");
+    assert!(run_result.is_ok(), "Should succeed with limits on C++");
+
+    let (matched, expected, _) = run_result.unwrap();
+    assert!(matched);
+    assert_eq!(expected.trim(), "C++ with limits");
+}
