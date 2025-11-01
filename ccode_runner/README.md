@@ -67,6 +67,8 @@ You can configure time and memory limits to prevent infinite loops and excessive
   - Unix/Linux/macOS: Native OS enforcement via `setrlimit(RLIMIT_AS)`
   - Windows: Active monitoring and enforcement via process memory tracking
 
+**Note**: Execution limits apply only to program execution, not compilation. Compilation always runs without limits to ensure successful builds.
+
 ```rust
 use ccode_runner::lang_runner::program_store::ProgramStore;
 use ccode_runner::ExecutionLimits;

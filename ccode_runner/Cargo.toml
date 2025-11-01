@@ -23,7 +23,6 @@ api = ["utoipa"]
 rand = { workspace = true }
 regex = { workspace = true }
 serde = { features = ["derive"], workspace = true }
-sysinfo = "0.31"
 tempfile = { workspace = true }
 tokio = { workspace = true }
 utoipa = { workspace = true, optional = true }
@@ -32,3 +31,6 @@ which = { workspace = true }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
+
+[target.'cfg(not(unix))'.dependencies]
+sysinfo = "0.31"
