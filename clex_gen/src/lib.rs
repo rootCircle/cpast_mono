@@ -52,6 +52,43 @@ use crate::clex_language::clex_error_type::ClexErrorType;
 use crate::clex_language::lexer::Token;
 use crate::clex_language::{ast::ClexLanguageAST, code_generator, lexer, parser};
 
+/// Error type that includes source context for better error messages
+#[derive(Debug)]
+pub struct ClexError {
+    error: ClexErrorType,
+    source: String,
+}
+
+impl ClexError {
+    /// Create a new ClexError with source context
+    pub fn new(error: ClexErrorType, source: String) -> Self {
+        Self { error, source }
+    }
+
+    /// Get the underlying error
+    pub fn error(&self) -> &ClexErrorType {
+        &self.error
+    }
+
+    /// Get the source string
+    pub fn source(&self) -> &str {
+        &self.source
+    }
+
+    /// Format the error with source context (cargo/clippy style)
+    pub fn format_with_context(&self) -> String {
+        self.error.format_with_source(&self.source)
+    }
+}
+
+impl std::fmt::Display for ClexError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.format_with_context())
+    }
+}
+
+impl std::error::Error for ClexError {}
+
 /// Get tokens from the custom language lexer.
 ///
 /// # Arguments
@@ -67,9 +104,10 @@ use crate::clex_language::{ast::ClexLanguageAST, code_generator, lexer, parser};
 /// ```rust
 /// let tokens = clex_gen::get_tokens("(N) (?:N){\\1}".to_string()).unwrap();
 /// ```
-pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexErrorType> {
+pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexError> {
+    let source = language.clone();
     let mut token = lexer::Tokens::new(language);
-    token.scan_tokens()?;
+    token.scan_tokens().map_err(|e| ClexError::new(e, source))?;
     Ok(token.get_tokens())
 }
 
@@ -88,9 +126,11 @@ pub fn get_tokens(language: String) -> Result<Vec<Token>, ClexErrorType> {
 /// ```rust
 /// let ast = clex_gen::get_ast("(N) (?:N){\\1}".to_string()).unwrap();
 /// ```
-pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexErrorType> {
-    let mut parser = parser::Parser::new(language)?;
-    parser.parser()?;
+pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexError> {
+    let source = language.clone();
+    let mut parser =
+        parser::Parser::new(language).map_err(|e| ClexError::new(e, source.clone()))?;
+    parser.parser().map_err(|e| ClexError::new(e, source))?;
     Ok(parser.get_language().clone())
 }
 
@@ -109,9 +149,15 @@ pub fn get_ast(language: String) -> Result<ClexLanguageAST, ClexErrorType> {
 /// ```rust
 /// let generated_code = clex_gen::generator("(N[1,10]) (?:N){\\1}".to_string()).unwrap();
 /// ```
-pub fn generator(language: String) -> Result<String, ClexErrorType> {
-    let mut parser = parser::Parser::new(language)?;
-    parser.parser()?;
+pub fn generator(language: String) -> Result<String, ClexError> {
+    let source = language.clone();
+    let mut parser =
+        parser::Parser::new(language).map_err(|e| ClexError::new(e, source.clone()))?;
+    parser
+        .parser()
+        .map_err(|e| ClexError::new(e, source.clone()))?;
     let generator = code_generator::Generator::new(&parser);
-    generator.generate_testcases()
+    generator
+        .generate_testcases()
+        .map_err(|e| ClexError::new(e, source))
 }
