@@ -93,8 +93,8 @@ impl ClexErrorType {
     ///
     /// This creates a cargo/clippy-style error message with:
     /// - Error description
-    /// - Source code snippet with position indicator
-    /// - Visual pointer to the error location
+    /// - Source code snippet with position indicator (if source is available)
+    /// - Visual pointer to the error location (if source is available)
     pub fn format_with_source(&self, source: &str) -> String {
         let span = self.get_span();
         let error_type = self.get_parent_error_type();
@@ -105,6 +105,13 @@ impl ClexErrorType {
 
         // Error header
         output.push_str(&format!("error: {}\n", message));
+
+        // If source is empty, just show the basic error without context
+        if source.is_empty() {
+            output.push_str(&format!("  --> position:{}..{}\n", span.start, span.end));
+            return output;
+        }
+
         output.push_str(&format!("  --> input:{}..{}\n", span.start, span.end));
         output.push_str("   |\n");
 

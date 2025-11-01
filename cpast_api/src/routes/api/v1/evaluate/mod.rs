@@ -56,7 +56,7 @@ struct EvaluateCodeResponse {
 #[derive(thiserror::Error)]
 pub enum EvaluateAPIError {
     #[error(transparent)]
-    APIClexErrorType(#[from] clex_language::clex_error_type::ClexErrorType),
+    APIClexErrorType(#[from] clex_gen::ClexError),
 
     #[error(transparent)]
     ScrapperError(#[from] cscrapper::qscrapper::ScraperError),
@@ -146,11 +146,11 @@ fn run_and_compare(
     let mut token = lexer::Tokens::new(clex_language.to_string());
     token
         .scan_tokens()
-        .map_err(EvaluateAPIError::APIClexErrorType)?;
+        .map_err(|e| EvaluateAPIError::APIClexErrorType(e.into()))?;
     let mut parser = clex_language::parser::Parser::new_from_tokens(token);
     parser
         .parser()
-        .map_err(EvaluateAPIError::APIClexErrorType)?;
+        .map_err(|e| EvaluateAPIError::APIClexErrorType(e.into()))?;
     let generator = Generator::new(&parser);
 
     let mut response = EvaluateCodeResponse {
@@ -162,7 +162,7 @@ fn run_and_compare(
     for _ in 0..10 {
         let testcase = generator
             .generate_testcases()
-            .map_err(EvaluateAPIError::APIClexErrorType)?;
+            .map_err(|e| EvaluateAPIError::APIClexErrorType(e.into()))?;
         let (matched, expected, actual) = runner
             .run_codes_and_compare_output(&testcase)
             .map_err(EvaluateAPIError::APIRunnerErrorType)?;

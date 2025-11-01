@@ -81,6 +81,15 @@ impl ClexError {
     }
 }
 
+impl From<ClexErrorType> for ClexError {
+    fn from(error: ClexErrorType) -> Self {
+        Self {
+            error,
+            source: String::new(),
+        }
+    }
+}
+
 impl std::fmt::Display for ClexError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.format_with_context())
