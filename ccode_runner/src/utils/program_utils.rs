@@ -207,7 +207,7 @@ fn start_memory_monitor(pid: u32, memory_limit_bytes: u64) -> MemoryMonitor {
     use std::sync::Arc;
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::thread;
-    use sysinfo::{Pid, System};
+    use sysinfo::{Pid, System, Signal, ProcessesToUpdate};
 
     let should_stop = Arc::new(AtomicBool::new(false));
     let should_stop_clone = should_stop.clone();
@@ -217,14 +217,14 @@ fn start_memory_monitor(pid: u32, memory_limit_bytes: u64) -> MemoryMonitor {
         let pid = Pid::from_u32(pid);
 
         while !should_stop_clone.load(Ordering::Relaxed) {
-            sys.refresh_process(pid);
+            sys.refresh_processes(ProcessesToUpdate::Some(&[pid]), true);
 
             if let Some(process) = sys.process(pid) {
                 let memory_usage = process.memory();
 
                 if memory_usage > memory_limit_bytes {
                     // Try to kill the process
-                    if process.kill() {
+                    if process.kill() || process.kill_with(Signal::Kill).unwrap_or(false) {
                         eprintln!("Process terminated due to exceeding memory limit.");
                     }
                     break;

@@ -19,8 +19,8 @@ env:
   APP_DB_NAME: cpast_store_db
 
 jobs:
-  test:
-    name: Test and Coverage
+  test-linux:
+    name: Test and Coverage (Ubuntu)
     runs-on: ubuntu-latest
     # Service containers to run alongside the `test` container job
     services:
@@ -117,6 +117,41 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           files: lcov.info
           fail_ci_if_error: true
+
+  # Cross-platform build and limited tests (no Linux-only services)
+  test-cross:
+    name: Build and non-DB tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    env:
+      SQLX_OFFLINE: true
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Install the Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Install latest nextest release
+        uses: taiki-e/install-action@nextest
+
+      - name: Build all targets
+        run: cargo build --workspace --all-targets --all-features
+
+      - name: Run non-DB tests
+        run: |
+          cargo nextest run \
+            --workspace \
+            --all-targets \
+            --all-features \
+            --profile=ci \
+            --exclude cpast_api \
+            --exclude clex_llm \
+            --exclude cpastord \
+            --exclude cscrapper
 
   # `fmt` container job
   fmt:
