@@ -13,12 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Memory limit support for program execution (all platforms)
   - Unix/Linux/macOS: Native OS enforcement via `setrlimit(RLIMIT_AS)`
   - Windows: Active monitoring via background thread using `sysinfo`
-- New `ExecutionLimits` struct with builder pattern for configuring limits
-- New error types `TimeLimitExceeded` and `MemoryLimitExceeded`
-- Extended API methods: `new_with_limits`, `new_from_text_with_limits`, `new_from_custom_dest_with_limits`
-- Comprehensive test suite for execution limits (13 tests with 100% patch coverage)
-- Example program demonstrating execution limits usage
-- Documentation updates for time and memory limit features
+- Windows: Active monitoring via background thread using `sysinfo`
 
 ### Dependencies
 
@@ -30,8 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 9 commits contributed to the release.
- - 38 days passed between releases.
+ - 10 commits contributed to the release.
+ - 39 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -42,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Adjusting changelogs prior to release of ccode_runner v0.3.7 ([`6c7db12`](https://github.com/rootCircle/cpast_mono/commit/6c7db129a11035bb538c4b48eb6b0b01cf220a34))
     - Merge pull request #48 from rootCircle/copilot/fix-time-memory-limits ([`1e12bd9`](https://github.com/rootCircle/cpast_mono/commit/1e12bd9cb9c8878790302cbcab4cd1a9b70209f0))
     - Make sysinfo conditional, split examples, and document compilation limits ([`b57f0d1`](https://github.com/rootCircle/cpast_mono/commit/b57f0d110fcb10cfda2a23de37b634ea91e8041e))
     - Update CHANGELOG for Windows support and add memory limit exceeded tests ([`32b8d63`](https://github.com/rootCircle/cpast_mono/commit/32b8d63537bfad311bc42f1a588cf19adae417b5))
@@ -52,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Add documentation and examples for execution limits ([`a6bb76f`](https://github.com/rootCircle/cpast_mono/commit/a6bb76fd37eb50625ac9109e28ea4310a091bef4))
     - Add time and memory limit support to ccode_runner ([`6539f54`](https://github.com/rootCircle/cpast_mono/commit/6539f5400a4ceebf6022b463b31c6292f9b54126))
 </details>
+
+<csr-unknown>
+New ExecutionLimits struct with builder pattern for configuring limitsNew error types TimeLimitExceeded and MemoryLimitExceededExtended API methods: new_with_limits, new_from_text_with_limits, new_from_custom_dest_with_limitsComprehensive test suite for execution limits (13 tests with 100% patch coverage)Example program demonstrating execution limits usageDocumentation updates for time and memory limit features<csr-unknown/>
 
 ## v0.3.6 (2025-09-24)
 
