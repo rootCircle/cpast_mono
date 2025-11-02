@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## v0.3.7 (2025-11-02)
 
 ### Added
 
@@ -26,7 +26,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `libc` v0.2 for Unix-specific memory limiting via `setrlimit`
 - Added `sysinfo` v0.31 for cross-platform memory monitoring (Windows support)
 
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 9 commits contributed to the release.
+ - 38 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge pull request #48 from rootCircle/copilot/fix-time-memory-limits ([`1e12bd9`](https://github.com/rootCircle/cpast_mono/commit/1e12bd9cb9c8878790302cbcab4cd1a9b70209f0))
+    - Make sysinfo conditional, split examples, and document compilation limits ([`b57f0d1`](https://github.com/rootCircle/cpast_mono/commit/b57f0d110fcb10cfda2a23de37b634ea91e8041e))
+    - Update CHANGELOG for Windows support and add memory limit exceeded tests ([`32b8d63`](https://github.com/rootCircle/cpast_mono/commit/32b8d63537bfad311bc42f1a588cf19adae417b5))
+    - Add comprehensive tests for 100% patch coverage of execution limits ([`4446e1a`](https://github.com/rootCircle/cpast_mono/commit/4446e1ad30cc2728f79115e9449d3a12f59ae5a6))
+    - Add Windows support for memory limits using active monitoring ([`8ea2706`](https://github.com/rootCircle/cpast_mono/commit/8ea2706e2cb138295300ab3175ccbc97e0117b6e))
+    - Document platform limitations for memory limits ([`c75ffa5`](https://github.com/rootCircle/cpast_mono/commit/c75ffa54c65c082d71d435346cfd8fc0cd011395))
+    - Apply cargo fmt and fix clippy warnings ([`a63da5f`](https://github.com/rootCircle/cpast_mono/commit/a63da5f92916fd2577d14042728a261964d50c84))
+    - Add documentation and examples for execution limits ([`a6bb76f`](https://github.com/rootCircle/cpast_mono/commit/a6bb76fd37eb50625ac9109e28ea4310a091bef4))
+    - Add time and memory limit support to ccode_runner ([`6539f54`](https://github.com/rootCircle/cpast_mono/commit/6539f5400a4ceebf6022b463b31c6292f9b54126))
+</details>
+
 ## v0.3.6 (2025-09-24)
+
+<csr-id-d3c932771728a95ebd89991f221f0000a442eaf1/>
 
 ### Chore
 
@@ -36,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release over the course of 43 calendar days.
+ - 2 commits contributed to the release over the course of 43 calendar days.
  - 43 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -48,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.6 ([`59fd3ff`](https://github.com/rootCircle/cpast_mono/commit/59fd3ff8509a43a336bc006ec41b5c1bdcc4f3ec))
     - Enhance string normalization and comparison functions with comprehensive tests ([`d3c9327`](https://github.com/rootCircle/cpast_mono/commit/d3c932771728a95ebd89991f221f0000a442eaf1))
 </details>
 
