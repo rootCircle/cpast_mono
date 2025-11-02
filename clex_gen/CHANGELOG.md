@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release.
+ - 8 commits contributed to the release.
  - 83 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Adjusting changelogs prior to release of clex_gen v0.3.5 ([`b6a494b`](https://github.com/rootCircle/cpast_mono/commit/b6a494b95d5acaa18d0419304ae41ea6d6031472))
     - Merge pull request #50 from rootCircle/copilot/improve-error-messages-clex ([`ce36a37`](https://github.com/rootCircle/cpast_mono/commit/ce36a37df641dcac8d6d3dd0ce468785e5a81a85))
     - Make error messages more friendly with helpful hints and examples ([`6669f09`](https://github.com/rootCircle/cpast_mono/commit/6669f097ff2ee05325e52d6fdab601bebb7e60f3))
     - Fix build error by adding ClexErrorType to ClexError conversion ([`c05e0f7`](https://github.com/rootCircle/cpast_mono/commit/c05e0f71d6d3afcbe4acf03b07f8e49ffef36fc0))
