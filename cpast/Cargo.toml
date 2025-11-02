@@ -29,7 +29,7 @@ arboard = { workspace = true, features = ["wayland-data-control", "image-data"] 
 ccode_runner = { version = "^0.3.7", path = "../ccode_runner" }
 clap = { workspace = true, features = ["derive"] }
 clap_complete = { workspace = true }
-clex_gen = { version = "^0.3.4", path = "../clex_gen" }
+clex_gen = { version = "^0.3.5", path = "../clex_gen" }
 clex_llm = { version = "^0.3.3", path = "../clex_llm" }
 colored = { workspace = true }
 cscrapper = { version = "^0.1.3", path = "../cscrapper" }

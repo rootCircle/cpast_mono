@@ -5,7 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.5 (2025-11-02)
+
+### New Features
+
+- Error spans and much better error message.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 7 commits contributed to the release.
+ - 83 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Merge pull request #50 from rootCircle/copilot/improve-error-messages-clex ([`ce36a37`](https://github.com/rootCircle/cpast_mono/commit/ce36a37df641dcac8d6d3dd0ce468785e5a81a85))
+    - Make error messages more friendly with helpful hints and examples ([`6669f09`](https://github.com/rootCircle/cpast_mono/commit/6669f097ff2ee05325e52d6fdab601bebb7e60f3))
+    - Fix build error by adding ClexErrorType to ClexError conversion ([`c05e0f7`](https://github.com/rootCircle/cpast_mono/commit/c05e0f71d6d3afcbe4acf03b07f8e49ffef36fc0))
+    - Make error messages more ergonomic with cargo/clippy style formatting ([`788854b`](https://github.com/rootCircle/cpast_mono/commit/788854b0b99adeb4e643a127fe4b8fa3d998bb6d))
+    - Fix formatting and clippy warnings in error_messages_with_span test ([`228ee97`](https://github.com/rootCircle/cpast_mono/commit/228ee9727c18e864ac1e79244fe9196fb75095a3))
+    - Add comprehensive tests for error messages with span information ([`5cf3826`](https://github.com/rootCircle/cpast_mono/commit/5cf3826d20651bcd55ecc35a6c81196273e5417d))
+    - Add span/position information to clex error messages ([`d9a9fe4`](https://github.com/rootCircle/cpast_mono/commit/d9a9fe4399212f1d4a1e6c1b215792207f3a43b7))
+</details>
+
 ## v0.3.4 (2025-08-11)
+
+<csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/>
 
 ### Other
 
@@ -15,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release over the course of 42 calendar days.
+ - 2 commits contributed to the release over the course of 42 calendar days.
  - 146 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.5, clex_gen v0.3.4, clex_llm v0.3.2, cscrapper v0.1.3, cpast v0.10.4 ([`291b2fb`](https://github.com/rootCircle/cpast_mono/commit/291b2fbce9bcfaeda1e608f6e8195e3fc4ef999f))
     - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
 </details>
 
