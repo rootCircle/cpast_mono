@@ -20,7 +20,7 @@ rust-version = "1.88"
 
 [workspace.dependencies]
 actix-session = { version = "0.11.0", features = ["redis-session-rustls"] }
-actix-web = "4.11.0"
+actix-web = "4.12.0"
 actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
 anyhow = "1.0.100"
 arboard = "3.6.1"
