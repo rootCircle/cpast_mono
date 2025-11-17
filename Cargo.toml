@@ -50,7 +50,7 @@ reqwest = { version = "0.12.24", default-features = false, features = [
     "rustls-tls",
     "cookies",
 ] }
-rig-core = "0.23.1"
+rig-core = "0.24.0"
 scraper = "0.24.0"
 secrecy = { version = "0.10.3", features = ["serde"] }
 serde = { version = "1.0.228", features = ["derive"] }
