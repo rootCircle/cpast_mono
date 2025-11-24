@@ -29,7 +29,7 @@ base64 = "0.22.1"
 chrono = { version = "0.4.42", default-features = false, features = ["clock"] }
 claims = "0.8.0"
 clap = { version = "4.5.51", features = ["derive"] }
-clap_complete = "4.5.60"
+clap_complete = "4.5.61"
 colored = "3.0.0"
 config = { version = "0.15.18", default-features = false, features = ["yaml"] }
 criterion = "0.7.0" 
