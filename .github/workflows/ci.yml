@@ -12,7 +12,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  SQLX_VERSION: 0.8.0
+  SQLX_VERSION: 0.9.0
   SQLX_FEATURES: "rustls,postgres"
   APP_USER: app
   APP_USER_PWD: secret
@@ -94,7 +94,7 @@ jobs:
             GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
 
       - name: Check that queries are fresh
-        run: cargo sqlx prepare --workspace --check -- --all-targets
+        run: cargo sqlx prepare --workspace --check --database-url="postgres://${{ env.APP_USER }}:${{ env.APP_USER_PWD }}@localhost/${{ env.APP_DB_NAME }}" -- --all-targets
 
       # Coverage (sequentially after tests)
       - name: Install cargo-llvm-cov

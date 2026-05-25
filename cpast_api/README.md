@@ -19,7 +19,7 @@ rustup component add llvm-tools-preview
 ```
 
 ```bash
-cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
+cargo install --version="~0.9" sqlx-cli --no-default-features --features rustls,postgres
 ```
 
 ### Linux
@@ -32,7 +32,7 @@ sudo pacman -S lld clang postgresql
 ```
 
 ```bash
-cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
+cargo install --version="~0.9" sqlx-cli --no-default-features --features rustls,postgres
 ```
 
 ### MacOS
@@ -42,7 +42,7 @@ brew install michaeleisel/zld/zld
 ```
 
 ```bash
-cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
+cargo install --version="~0.9" sqlx-cli --no-default-features --features rustls,postgres
 ```
 
 ## How to build

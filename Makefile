@@ -47,7 +47,7 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 
 init-repo:
 	@echo "Ensure you have GOOGLE_API_KEY in the env before you run this!"
-	cargo install --version="~0.8" sqlx-cli --no-default-features --features rustls,postgres
+	cargo install --version="~0.9" sqlx-cli --no-default-features --features rustls,postgres
 	./cpast_api/scripts/init_db.sh
 	./cpast_api/scripts/init_redis.sh
 	python scripts/secrets_for_ci.py
@@ -113,10 +113,10 @@ migrate-run:
 	cd cpast_api && cargo sqlx migrate run
 
 prepare:
-	cargo sqlx prepare --workspace -- --all-targets
+	cargo sqlx prepare --workspace --database-url="postgres://postgres@localhost/cpast_store_db" -- --all-targets
 
 prepare-check:
-	cargo sqlx prepare --workspace --check -- --all-targets
+	cargo sqlx prepare --workspace --check --database-url="postgres://postgres@localhost/cpast_store_db" -- --all-targets
 # Run format clippy test and tests.
 #
 # Usage :
