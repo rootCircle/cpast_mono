@@ -6,22 +6,46 @@
       {
         "ordinal": 0,
         "name": "statement",
-        "type_info": "Text"
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scrape_cache",
+            "name": "statement"
+          }
+        }
       },
       {
         "ordinal": 1,
         "name": "input_format",
-        "type_info": "Text"
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scrape_cache",
+            "name": "input_format"
+          }
+        }
       },
       {
         "ordinal": 2,
         "name": "constraints",
-        "type_info": "Text"
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scrape_cache",
+            "name": "constraints"
+          }
+        }
       },
       {
         "ordinal": 3,
         "name": "clex",
-        "type_info": "Text"
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scrape_cache",
+            "name": "clex"
+          }
+        }
       }
     ],
     "parameters": {

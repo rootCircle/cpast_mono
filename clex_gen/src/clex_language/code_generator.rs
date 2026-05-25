@@ -43,7 +43,7 @@ use crate::clex_language::ast::{
     CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };
 use crate::clex_language::parser::Parser;
-use rand::Rng;
+use rand::RngExt;
 
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use std::collections::HashMap;

@@ -1,4 +1,4 @@
-use rig::{
+use rig_core::{
     OneOrMany,
     client::CompletionClient,
     completion::{Prompt, PromptError},
@@ -30,7 +30,7 @@ impl ClexPromptGenerator {
     pub(crate) fn new(api_key: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let examples = examples::get_examples();
 
-        let client = gemini::Client::new(api_key);
+        let client = gemini::Client::new(api_key)?;
 
         Ok(ClexPromptGenerator { examples, client })
     }
@@ -204,8 +204,8 @@ Respond only with the final, validated Clex expression in a single line. Do not 
 
         let response = agent
             .prompt(question_prompt)
-            .multi_turn(self.examples.len() + 5)
-            .with_history(&mut content)
+            .max_turns(self.examples.len() + 5)
+            .with_history(content)
             .await?;
 
         Ok(response.trim().to_string())

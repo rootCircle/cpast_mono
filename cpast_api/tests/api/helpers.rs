@@ -2,7 +2,7 @@ use cpast_api::configuration::{DatabaseSettings, get_configuration};
 use cpast_api::startup::{Application, get_connection_pool};
 use cpast_api::telemetry::{get_subscriber, init_subscriber};
 use secrecy::SecretString;
-use sqlx::{Connection, Executor, PgConnection, PgPool};
+use sqlx::{Connection, PgConnection, PgPool};
 use std::sync::LazyLock;
 use uuid::Uuid;
 
@@ -183,11 +183,15 @@ async fn configure_database(config: &DatabaseSettings) -> PgPool {
         password: SecretString::from("password"),
         ..config.clone()
     };
+
+    let query = format!(r#"CREATE DATABASE "{}";"#, config.database_name);
+
     let mut connection = PgConnection::connect_with(&maintenance_settings.connect_options())
         .await
         .expect("Failed to connect to Postgres");
-    connection
-        .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
+
+    sqlx::query(sqlx::AssertSqlSafe(query))
+        .execute(&mut connection)
         .await
         .expect("Failed to create database.");
 

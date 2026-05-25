@@ -1,6 +1,6 @@
 use super::examples::{self, SolutionTurn};
 use ccode_runner::lang_runner::language_name::LanguageName;
-use rig::{
+use rig_core::{
     OneOrMany,
     client::CompletionClient,
     completion::{Prompt, PromptError},
@@ -21,7 +21,7 @@ impl CodeSolutionGenerator {
     pub(crate) fn new(api_key: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let examples = examples::get_examples();
 
-        let client = gemini::Client::new(api_key);
+        let client = gemini::Client::new(api_key)?;
 
         Ok(CodeSolutionGenerator {
             examples,
@@ -132,7 +132,7 @@ impl CodeSolutionGenerator {
 
         let response = gemini_2_5_client
             .prompt(question_prompt)
-            .with_history(&mut content)
+            .with_history(content)
             .await?;
 
         let merged = remove_cpp_markdown_formatting(response.trim()).to_string();

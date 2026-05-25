@@ -36,7 +36,7 @@ rand = { workspace = true, features = ["std_rng"] }
 reqwest = { workspace = true, default-features = false, features = [
     "cookies",
     "json",
-    "rustls-tls",
+    "rustls",
 ] }
 secrecy = { workspace = true, features = ["serde"] }
 serde = { workspace = true }
@@ -48,7 +48,8 @@ sqlx = { workspace = true, default-features = false, features = [
     "macros",
     "migrate",
     "postgres",
-    "runtime-tokio-rustls",
+    "runtime-tokio",
+    "tls-rustls",
     "uuid",
 ] }
 thiserror = { workspace = true }

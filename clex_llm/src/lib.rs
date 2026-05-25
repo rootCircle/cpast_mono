@@ -34,7 +34,7 @@
 use ccode_runner::lang_runner::language_name::LanguageName;
 use clex_generator::runner::ClexPromptGenerator;
 use code_generator::runner::CodeSolutionGenerator;
-use rig::completion::PromptError;
+use rig_core::completion::PromptError;
 
 mod clex_generator;
 mod code_generator;
