@@ -8,6 +8,21 @@ use flaky_test::flaky_test;
 ))]
 fn send_to_clipboard_works() {
     use arboard::Clipboard;
+
+    // arboard segfaults (SIGSEGV) in headless environments instead of returning Err.
+    // Skip the test early when no display server is available (e.g. GitHub Actions).
+    #[cfg(unix)]
+    {
+        let has_display =
+            std::env::var("DISPLAY").is_ok() || std::env::var("WAYLAND_DISPLAY").is_ok();
+        if !has_display {
+            eprintln!(
+                "Skipping clipboard test: no display server (DISPLAY/WAYLAND_DISPLAY not set)"
+            );
+            return;
+        }
+    }
+
     let ctx: Result<_, _> = Clipboard::new();
     if let Err(e) = ctx {
         eprintln!("Error: {e:?}");

@@ -411,6 +411,7 @@ int main() {
 }
 
 #[test]
+#[cfg(unix)]
 fn test_memory_limit_exceeded_python() {
     // Python program that tries to allocate memory
     // Set a very low limit that Python runtime itself might exceed
