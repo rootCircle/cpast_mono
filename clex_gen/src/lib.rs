@@ -170,3 +170,46 @@ pub fn generator(language: String) -> Result<String, ClexError> {
         .generate_testcases()
         .map_err(|e| ClexError::new(e, source))
 }
+
+/// Generate code as an iterator based on the custom language specification.
+///
+/// This function returns an iterator that yields chunks of the generated test pattern
+/// incrementally, processing one unit expression at a time. This is more memory-efficient
+/// for very large test cases (in the order of GiBs) compared to generating the entire
+/// test case at once.
+///
+/// # Arguments
+///
+/// * `language` - The custom language generator code for test generation.
+///
+/// # Returns
+///
+/// Result enum containing an iterator that yields `Result<String, ClexErrorType>` for each chunk.
+///
+/// # Example
+///
+/// ```rust
+/// use clex_gen::generator_iter;
+///
+/// let mut output = String::new();
+/// for chunk in generator_iter("N[1,10] N[1,10]".to_string()).unwrap() {
+///     match chunk {
+///         Ok(data) => output.push_str(&data),
+///         Err(e) => {
+///             eprintln!("Error: {}", e);
+///             break;
+///         }
+///     }
+/// }
+/// // Remove trailing space if needed
+/// if output.ends_with(' ') {
+///     output.pop();
+/// }
+/// println!("{}", output);
+/// ```
+pub fn generator_iter(language: String) -> Result<code_generator::TestCaseIterator, ClexErrorType> {
+    let mut parser = parser::Parser::new(language)?;
+    parser.parser()?;
+    let generator = code_generator::Generator::new(&parser);
+    Ok(generator.generate_testcases_iter())
+}
