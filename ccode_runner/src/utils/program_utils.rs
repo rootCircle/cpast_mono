@@ -207,7 +207,7 @@ fn start_memory_monitor(pid: u32, memory_limit_bytes: u64) -> MemoryMonitor {
     use std::sync::Arc;
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::thread;
-    use sysinfo::{Pid, System, Signal, ProcessesToUpdate};
+    use sysinfo::{Pid, ProcessesToUpdate, Signal, System};
 
     let should_stop = Arc::new(AtomicBool::new(false));
     let should_stop_clone = should_stop.clone();
