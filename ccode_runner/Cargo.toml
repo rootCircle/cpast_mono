@@ -32,5 +32,5 @@ which = { workspace = true }
 [target.'cfg(unix)'.dependencies]
 libc = { workspace = true }
 
-[target.'cfg(not(unix))'.dependencies]
+[target.'cfg(not(target_os = "linux"))'.dependencies]
 sysinfo = { workspace = true }

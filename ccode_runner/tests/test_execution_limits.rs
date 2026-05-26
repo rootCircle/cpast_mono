@@ -364,7 +364,7 @@ int main() {
 }
 
 #[test]
-#[cfg(unix)] // Memory limits are enforced differently on Unix vs Windows
+#[cfg(unix)] // Linux: RLIMIT_AS; macOS: sysinfo RSS monitor
 fn test_memory_limit_exceeded_c() {
     // C program that tries to allocate 10MB of memory
     // We'll set the limit to 2MB, which should cause it to fail
@@ -411,7 +411,7 @@ int main() {
 }
 
 #[test]
-#[cfg(unix)]
+#[cfg(unix)] // Linux: RLIMIT_AS; macOS: sysinfo RSS monitor
 fn test_memory_limit_exceeded_python() {
     // Python program that tries to allocate memory
     // Set a very low limit that Python runtime itself might exceed
