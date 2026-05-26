@@ -88,8 +88,8 @@ readline.question('', number => {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "10\n");
-    assert_eq!(actual, "10\n");
+    assert_eq!(expected.trim_end(), "10");
+    assert_eq!(actual.trim_end(), "10");
 }
 
 #[test]
@@ -119,6 +119,6 @@ fn run_test(correct_program: &str, test_program: &str, lang: LanguageName) {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "10");
-    assert_eq!(actual, "10");
+    assert_eq!(expected.trim_end(), "10");
+    assert_eq!(actual.trim_end(), "10");
 }

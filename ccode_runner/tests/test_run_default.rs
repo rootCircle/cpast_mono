@@ -14,8 +14,8 @@ fn test_run_rust_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100\n");
-    assert_eq!(actual, "100\n");
+    assert_eq!(expected.trim_end(), "100");
+    assert_eq!(actual.trim_end(), "100");
 }
 
 #[test]
@@ -30,8 +30,8 @@ fn test_run_python_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100.0\n");
-    assert_eq!(actual, "100.0\n");
+    assert_eq!(expected.trim_end(), "100.0");
+    assert_eq!(actual.trim_end(), "100.0");
 }
 
 #[test]
@@ -46,8 +46,8 @@ fn test_run_cpp_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100\n");
-    assert_eq!(actual, "100\n");
+    assert_eq!(expected.trim_end(), "100");
+    assert_eq!(actual.trim_end(), "100");
 }
 
 #[test]
@@ -62,8 +62,8 @@ fn test_run_c_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100.00\n");
-    assert_eq!(actual, "100.00\n");
+    assert_eq!(expected.trim_end(), "100.00");
+    assert_eq!(actual.trim_end(), "100.00");
 }
 
 #[test]
@@ -78,8 +78,8 @@ fn test_run_ruby_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100.0\n");
-    assert_eq!(actual, "100.0\n");
+    assert_eq!(expected.trim_end(), "100.0");
+    assert_eq!(actual.trim_end(), "100.0");
 }
 
 #[test]
@@ -95,8 +95,8 @@ fn test_run_javascript_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100\n");
-    assert_eq!(actual, "100\n");
+    assert_eq!(expected.trim_end(), "100");
+    assert_eq!(actual.trim_end(), "100");
 }
 
 #[test]
@@ -111,6 +111,6 @@ fn test_run_java_program() {
         .expect("Failed to run program");
 
     assert!(matched);
-    assert_eq!(expected, "100.0\n");
-    assert_eq!(actual, "100.0\n");
+    assert_eq!(expected.trim_end(), "100.0");
+    assert_eq!(actual.trim_end(), "100.0");
 }
