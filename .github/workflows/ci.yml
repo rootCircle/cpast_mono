@@ -1,4 +1,4 @@
-name: Lint Check
+name: CI
 
 on:
   push:
@@ -17,6 +17,8 @@ env:
   APP_USER: app
   APP_USER_PWD: secret
   APP_DB_NAME: cpast_store_db
+  RUSTFLAGS: -D warnings
+  CARGO_INCREMENTAL: 0
 
 jobs:
   test-linux:
@@ -48,12 +50,12 @@ jobs:
           components: llvm-tools-preview
 
       - name: Install sqlx-cli
-        run:
-          cargo install sqlx-cli
-          --version=${{ env.SQLX_VERSION }}
-          --features ${{ env.SQLX_FEATURES }}
-          --no-default-features
-          --locked
+        run: |
+          cargo install sqlx-cli \
+            --version=${{ env.SQLX_VERSION }} \
+            --features ${{ env.SQLX_FEATURES }} \
+            --no-default-features \
+            --locked
           # The --locked flag can be used to force Cargo to use the packaged Cargo.lock file if it is available.
           # This may be useful for ensuring reproducible builds, to use the exact same set of dependencies that were available when the package was published.
           # It may also be useful if a newer version of a dependency is published that no longer builds on your system, or has other problems
@@ -63,7 +65,7 @@ jobs:
 
       - name: Create app user in Postgres
         run: |
-          sudo apt-get install postgresql-client
+          sudo apt-get install -y postgresql-client
 
           # Create the application user
           CREATE_QUERY="CREATE USER ${APP_USER} WITH PASSWORD '${APP_USER_PWD}';"
@@ -76,7 +78,7 @@ jobs:
       # Install compilers for C, C++, Java, Node, Ruby (Python/Rust are already installed)
       - name: Install compilers
         run: |
-          sudo apt-get install build-essential default-jdk nodejs ruby 
+          sudo apt-get install -y build-essential default-jdk nodejs ruby
 
       - name: Migrate database
         run: |
@@ -86,12 +88,12 @@ jobs:
         run: |
           python3 scripts/secrets_for_ci.py
         env:
-            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
 
       - name: Run tests
         run: cargo nextest run --all-features --all-targets --profile=ci
         env:
-            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
 
       - name: Check that queries are fresh
         run: cargo sqlx prepare --workspace --check --database-url="postgres://${{ env.APP_USER }}:${{ env.APP_USER_PWD }}@localhost/${{ env.APP_DB_NAME }}" -- --all-targets
@@ -142,16 +144,7 @@ jobs:
         run: cargo build --workspace --all-targets --all-features
 
       - name: Run non-DB tests
-        run: |
-          cargo nextest run \
-            --workspace \
-            --all-targets \
-            --all-features \
-            --profile=ci \
-            --exclude cpast_api \
-            --exclude clex_llm \
-            --exclude cpastord \
-            --exclude cscrapper
+        run: cargo nextest run --workspace --all-targets --all-features --profile=ci --exclude cpast_api --exclude clex_llm --exclude cpastord --exclude cscrapper
 
   # `fmt` container job
   fmt:
@@ -180,8 +173,6 @@ jobs:
       - name: Linting
         run: cargo clippy --workspace --all-features --all-targets -- -D warnings
 
-  
-
   msrv:
     runs-on: ubuntu-latest
     env:
@@ -190,4 +181,3 @@ jobs:
       - uses: actions/checkout@v6
       - uses: taiki-e/install-action@cargo-hack
       - run: cargo hack check --rust-version --workspace --all-targets --ignore-private
-
