@@ -371,6 +371,7 @@ fn test_memory_limit_exceeded_c() {
     let program_text = r#"
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 int main() {
     // Try to allocate 10MB
@@ -380,6 +381,7 @@ int main() {
     }
     // Touch the memory to ensure it's actually allocated
     memset(mem, 0, 10 * 1024 * 1024);
+    usleep(10 * 1000);
     free(mem);
     return 0;
 }

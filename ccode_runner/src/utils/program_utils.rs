@@ -357,8 +357,8 @@ fn start_memory_monitor(pid: u32, memory_limit_bytes: u64) -> MemoryMonitor {
                 _ => {}
             }
 
-            // Poll every 50ms — balances CPU overhead vs. overshoot window
-            thread::sleep(Duration::from_millis(50));
+            // Poll every 5ms — balances CPU overhead vs. overshoot window
+            thread::sleep(Duration::from_millis(5));
         }
     });
 
