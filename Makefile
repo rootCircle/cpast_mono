@@ -46,7 +46,7 @@ eq = $(if $(or $(1),$(2)),$(and $(findstring $(1),$(2)),\
 
 
 init-repo:
-	@echo "Ensure you have GOOGLE_API_KEY in the env before you run this!"
+	@echo "Ensure you have GOOGLE_API_KEY in the env before you run this! Also chromium must be installed for scraping to work."
 	cargo install --version="~0.9" sqlx-cli --no-default-features --features rustls,postgres
 	./cpast_api/scripts/init_db.sh
 	./cpast_api/scripts/init_redis.sh
