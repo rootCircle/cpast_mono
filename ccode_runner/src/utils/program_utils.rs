@@ -269,7 +269,7 @@ fn get_phys_footprint(pid: u32) -> Option<u64> {
     let ret = unsafe {
         // int proc_pid_rusage(int pid, int flavor, rusage_info_t *buffer, int *error)
         // Declared in <libproc.h>, linked via libproc (part of libSystem on macOS).
-        extern "C" {
+        unsafe extern "C" {
             fn proc_pid_rusage(
                 pid: libc::c_int,
                 flavor: libc::c_int,
@@ -326,12 +326,26 @@ fn start_memory_monitor(pid: u32, memory_limit_bytes: u64) -> MemoryMonitor {
 
             match memory_usage {
                 Some(usage) if usage > memory_limit_bytes => {
-                    // Send SIGKILL — process exceeded memory limit
+                    // Kill the process — platform-specific:
+                    // - macOS/Unix: libc::kill with SIGKILL (libc is a unix-only dep)
+                    // - Windows: sysinfo process lookup + kill() (libc not available)
+                    #[cfg(unix)]
                     unsafe {
                         libc::kill(pid as libc::pid_t, libc::SIGKILL);
                     }
+
+                    #[cfg(windows)]
+                    {
+                        use sysinfo::{Pid, ProcessesToUpdate};
+                        let pid_key = Pid::from_u32(pid);
+                        sys.refresh_processes(ProcessesToUpdate::Some(&[pid_key]), true);
+                        if let Some(proc) = sys.process(pid_key) {
+                            let _ = proc.kill();
+                        }
+                    }
+
                     eprintln!(
-                        "Process {} terminated: phys_footprint {} bytes exceeded limit of {} bytes",
+                        "Process {} terminated: memory usage {} bytes exceeded limit of {} bytes",
                         pid, usage, memory_limit_bytes
                     );
                     break;
