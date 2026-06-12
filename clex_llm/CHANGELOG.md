@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.3.4 (2026-06-12)
 
+<csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/>
+
 ### Other
 
  - <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/> upgrade
@@ -15,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release over the course of 205 calendar days.
- - 244 days passed between releases.
+ - 4 commits contributed to the release over the course of 222 calendar days.
+ - 261 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`38abc24`](https://github.com/rootCircle/cpast_mono/commit/38abc243373d2d5c9b03f5c1c20601fb03790137))
     - Upgrade ([`17a121b`](https://github.com/rootCircle/cpast_mono/commit/17a121b4f9681c379a292f8bff070a661b0b2a75))
     - Adjusting changelogs prior to release of clex_gen v0.3.5 ([`b6a494b`](https://github.com/rootCircle/cpast_mono/commit/b6a494b95d5acaa18d0419304ae41ea6d6031472))
     - Adjusting changelogs prior to release of ccode_runner v0.3.7 ([`6c7db12`](https://github.com/rootCircle/cpast_mono/commit/6c7db129a11035bb538c4b48eb6b0b01cf220a34))
@@ -123,9 +126,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - LLM 429 retry logic and refactor clipboard handling ([`17e42ac`](https://github.com/rootCircle/cpast_mono/commit/17e42ac965d7d19fd8e44edf21903dbfc0df257c))
     - Format! lint fix ([`2845880`](https://github.com/rootCircle/cpast_mono/commit/284588063fdf8bb686ad6f79ac7313f2e6b66fb7))
 </details>
-
-<csr-unknown>
-Introduced a utility module with retry logic for posting requests to the Gemini API.<csr-unknown/>
 
 ## v0.3.1 (2025-03-17)
 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.3.6 (2026-06-12)
 
+<csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/>
+
 ### Other
 
  - <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/> upgrade
@@ -15,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
- - 205 days passed between releases.
+ - 2 commits contributed to the release over the course of 17 calendar days.
+ - 222 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`38abc24`](https://github.com/rootCircle/cpast_mono/commit/38abc243373d2d5c9b03f5c1c20601fb03790137))
     - Upgrade ([`17a121b`](https://github.com/rootCircle/cpast_mono/commit/17a121b4f9681c379a292f8bff070a661b0b2a75))
 </details>
 

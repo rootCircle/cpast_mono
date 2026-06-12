@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.3.8 (2026-06-12)
 
+<csr-id-3cc746e7228152d80ff987b0657c1755f895ca5a/>
+<csr-id-e626b384d213d432a79e274b82e6a7d06af8a3ca/>
+<csr-id-9be0d466845e5dad608fa74601a3c5aa13736e82/>
+<csr-id-4578b920e9889213a0b1c19829f7b5750ec71fd2/>
+<csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/>
+<csr-id-ec8b62f85f1fccef5de3193a55bf0c80d7dd8397/>
+
 ### Chore
 
  - <csr-id-3cc746e7228152d80ff987b0657c1755f895ca5a/> test reduce poll duration
@@ -20,8 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 7 commits contributed to the release over the course of 204 calendar days.
- - 205 days passed between releases.
+ - 8 commits contributed to the release over the course of 221 calendar days.
+ - 222 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -32,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`38abc24`](https://github.com/rootCircle/cpast_mono/commit/38abc243373d2d5c9b03f5c1c20601fb03790137))
     - Test reduce poll duration ([`3cc746e`](https://github.com/rootCircle/cpast_mono/commit/3cc746e7228152d80ff987b0657c1755f895ca5a))
     - Handling crlf behavior on windows ([`e626b38`](https://github.com/rootCircle/cpast_mono/commit/e626b384d213d432a79e274b82e6a7d06af8a3ca))
     - Fix kill api on windows ([`9be0d46`](https://github.com/rootCircle/cpast_mono/commit/9be0d466845e5dad608fa74601a3c5aa13736e82))

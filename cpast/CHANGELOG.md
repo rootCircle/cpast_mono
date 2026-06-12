@@ -2,6 +2,8 @@
 
 ## 0.10.6 (2026-06-12)
 
+<csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/>
+
 ### Chore
 
  - <csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/> fix failing tests
@@ -10,8 +12,8 @@
 
 <csr-read-only-do-not-edit/>
 
- - 3 commits contributed to the release over the course of 205 calendar days.
- - 244 days passed between releases.
+ - 4 commits contributed to the release over the course of 222 calendar days.
+ - 261 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -22,6 +24,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`38abc24`](https://github.com/rootCircle/cpast_mono/commit/38abc243373d2d5c9b03f5c1c20601fb03790137))
     - Fix failing tests ([`c16ba98`](https://github.com/rootCircle/cpast_mono/commit/c16ba989987daad334f7a6da1e8d2aaf2bfb4235))
     - Adjusting changelogs prior to release of clex_gen v0.3.5 ([`b6a494b`](https://github.com/rootCircle/cpast_mono/commit/b6a494b95d5acaa18d0419304ae41ea6d6031472))
     - Adjusting changelogs prior to release of ccode_runner v0.3.7 ([`6c7db12`](https://github.com/rootCircle/cpast_mono/commit/6c7db129a11035bb538c4b48eb6b0b01cf220a34))
