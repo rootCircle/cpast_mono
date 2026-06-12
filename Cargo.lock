@@ -698,7 +698,7 @@ dependencies = [
 
 [[package]]
 name = "ccode_runner"
-version = "0.3.7"
+version = "0.3.8"
 dependencies = [
  "libc",
  "rand 0.10.1",
@@ -843,7 +843,7 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "clex_gen"
-version = "0.3.5"
+version = "0.3.6"
 dependencies = [
  "rand 0.10.1",
  "unicode-segmentation",
@@ -851,7 +851,7 @@ dependencies = [
 
 [[package]]
 name = "clex_llm"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "ccode_runner",
  "clex_gen",
@@ -1035,7 +1035,7 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
 name = "cpast"
-version = "0.10.5"
+version = "0.10.6"
 dependencies = [
  "arboard",
  "ccode_runner",

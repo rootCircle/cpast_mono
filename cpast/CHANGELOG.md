@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.10.6 (2026-06-12)
+
+### Chore
+
+ - <csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/> fix failing tests
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release over the course of 205 calendar days.
+ - 244 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Fix failing tests ([`c16ba98`](https://github.com/rootCircle/cpast_mono/commit/c16ba989987daad334f7a6da1e8d2aaf2bfb4235))
+    - Adjusting changelogs prior to release of clex_gen v0.3.5 ([`b6a494b`](https://github.com/rootCircle/cpast_mono/commit/b6a494b95d5acaa18d0419304ae41ea6d6031472))
+    - Adjusting changelogs prior to release of ccode_runner v0.3.7 ([`6c7db12`](https://github.com/rootCircle/cpast_mono/commit/6c7db129a11035bb538c4b48eb6b0b01cf220a34))
+</details>
+
 ## 0.10.5 (2025-09-24)
 
 ### Chore
@@ -10,7 +37,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release.
+ - 5 commits contributed to the release.
  - 43 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -22,6 +49,7 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release cpast v0.10.5 ([`0f70e33`](https://github.com/rootCircle/cpast_mono/commit/0f70e33b15fcee1ad9dc25a56cfe6eb7850d9af9))
     - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`58d6037`](https://github.com/rootCircle/cpast_mono/commit/58d6037ffb345853258798d8b6803e22cdaf9223))
     - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`aeb527f`](https://github.com/rootCircle/cpast_mono/commit/aeb527f0ee3afdea41161703f716b7fbf2935672))
     - Adjusting changelogs prior to release of clex_llm v0.3.3, cpast v0.10.5 ([`48a00d9`](https://github.com/rootCircle/cpast_mono/commit/48a00d920c572965915d63a059b8ef23b41c5307))

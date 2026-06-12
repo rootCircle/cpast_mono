@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.8 (2026-06-12)
+
+### Chore
+
+ - <csr-id-3cc746e7228152d80ff987b0657c1755f895ca5a/> test reduce poll duration
+ - <csr-id-e626b384d213d432a79e274b82e6a7d06af8a3ca/> handling crlf behavior on windows
+ - <csr-id-9be0d466845e5dad608fa74601a3c5aa13736e82/> fix kill api on windows
+ - <csr-id-4578b920e9889213a0b1c19829f7b5750ec71fd2/> fix memory usage tracker for macos
+ - <csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/> fix failing tests
+ - <csr-id-ec8b62f85f1fccef5de3193a55bf0c80d7dd8397/> cargo fmt
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 7 commits contributed to the release over the course of 204 calendar days.
+ - 205 days passed between releases.
+ - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Test reduce poll duration ([`3cc746e`](https://github.com/rootCircle/cpast_mono/commit/3cc746e7228152d80ff987b0657c1755f895ca5a))
+    - Handling crlf behavior on windows ([`e626b38`](https://github.com/rootCircle/cpast_mono/commit/e626b384d213d432a79e274b82e6a7d06af8a3ca))
+    - Fix kill api on windows ([`9be0d46`](https://github.com/rootCircle/cpast_mono/commit/9be0d466845e5dad608fa74601a3c5aa13736e82))
+    - Fix memory usage tracker for macos ([`4578b92`](https://github.com/rootCircle/cpast_mono/commit/4578b920e9889213a0b1c19829f7b5750ec71fd2))
+    - Fix failing tests ([`c16ba98`](https://github.com/rootCircle/cpast_mono/commit/c16ba989987daad334f7a6da1e8d2aaf2bfb4235))
+    - Cargo fmt ([`ec8b62f`](https://github.com/rootCircle/cpast_mono/commit/ec8b62f85f1fccef5de3193a55bf0c80d7dd8397))
+    - Update deps and ci ([`87d9cfc`](https://github.com/rootCircle/cpast_mono/commit/87d9cfcac16c561331398d1aa9ee74ff9ed08f01))
+</details>
+
 ## v0.3.7 (2025-11-02)
 
 ### Added
@@ -25,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 10 commits contributed to the release.
+ - 11 commits contributed to the release.
  - 39 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -37,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.7 ([`d256dbb`](https://github.com/rootCircle/cpast_mono/commit/d256dbba401fd2175920d9d1e6fa1793a9cacb15))
     - Adjusting changelogs prior to release of ccode_runner v0.3.7 ([`6c7db12`](https://github.com/rootCircle/cpast_mono/commit/6c7db129a11035bb538c4b48eb6b0b01cf220a34))
     - Merge pull request #48 from rootCircle/copilot/fix-time-memory-limits ([`1e12bd9`](https://github.com/rootCircle/cpast_mono/commit/1e12bd9cb9c8878790302cbcab4cd1a9b70209f0))
     - Make sysinfo conditional, split examples, and document compilation limits ([`b57f0d1`](https://github.com/rootCircle/cpast_mono/commit/b57f0d110fcb10cfda2a23de37b634ea91e8041e))
@@ -50,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 </details>
 
 <csr-unknown>
-New ExecutionLimits struct with builder pattern for configuring limitsNew error types TimeLimitExceeded and MemoryLimitExceededExtended API methods: new_with_limits, new_from_text_with_limits, new_from_custom_dest_with_limitsComprehensive test suite for execution limits (13 tests with 100% patch coverage)Example program demonstrating execution limits usageDocumentation updates for time and memory limit features<csr-unknown/>
+Windows: Active monitoring via background thread using sysinfo<csr-unknown/>
 
 ## v0.3.6 (2025-09-24)
 

@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.6 (2026-06-12)
+
+### Other
+
+ - <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/> upgrade
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 205 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Upgrade ([`17a121b`](https://github.com/rootCircle/cpast_mono/commit/17a121b4f9681c379a292f8bff070a661b0b2a75))
+</details>
+
 ## v0.3.5 (2025-11-02)
 
 ### New Features
@@ -15,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release.
+ - 9 commits contributed to the release.
  - 83 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_gen v0.3.5 ([`5adf07c`](https://github.com/rootCircle/cpast_mono/commit/5adf07c9d783f7460a2572911ba06bc6afe4e2fe))
     - Adjusting changelogs prior to release of clex_gen v0.3.5 ([`b6a494b`](https://github.com/rootCircle/cpast_mono/commit/b6a494b95d5acaa18d0419304ae41ea6d6031472))
     - Merge pull request #50 from rootCircle/copilot/improve-error-messages-clex ([`ce36a37`](https://github.com/rootCircle/cpast_mono/commit/ce36a37df641dcac8d6d3dd0ce468785e5a81a85))
     - Make error messages more friendly with helpful hints and examples ([`6669f09`](https://github.com/rootCircle/cpast_mono/commit/6669f097ff2ee05325e52d6fdab601bebb7e60f3))
