@@ -1,6 +1,6 @@
 [package]
 name = "cpast"
-version = "0.10.7"
+version = "0.10.8"
 description = "Run custom testcase with powerful clex language powered generated tool. Ideal for competitive coders. Can test two file and pass & match randomly generated outputs"
 categories = [
     "development-tools::testing",
@@ -30,7 +30,7 @@ ccode_runner = { version = "^0.3.9", path = "../ccode_runner" }
 clap = { workspace = true, features = ["derive"] }
 clap_complete = { workspace = true }
 clex_gen = { version = "^0.3.6", path = "../clex_gen" }
-clex_llm = { version = "^0.3.5", path = "../clex_llm" }
+clex_llm = { version = "^0.3.6", path = "../clex_llm" }
 colored = { workspace = true }
 cscrapper = { version = "^0.1.4", path = "../cscrapper" }
 futures = { workspace = true }

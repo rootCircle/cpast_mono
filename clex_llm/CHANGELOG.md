@@ -9,7 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update gemini model to 3.5-flash
 
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Chore(clex_llm): bump model to gemini-3.5-flash ([`bdd8159`](https://github.com/rootCircle/cpast_mono/commit/bdd81594b8d195e2a9da365162ec57415cf37206))
+</details>
+
 ## v0.3.5 (2026-06-14)
+
+<csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/>
 
 ### Chore
 
@@ -19,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 2 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -31,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.9, clex_llm v0.3.5, cscrapper v0.1.4, cpast v0.10.7 ([`4e60cb0`](https://github.com/rootCircle/cpast_mono/commit/4e60cb04a7d514c6e1d0a136d66bdb51ad89b746))
     - Bump versions to trigger release for workspace dependencies update ([`4a2704c`](https://github.com/rootCircle/cpast_mono/commit/4a2704c1abbb05fdb1ac3344e2df83056bd7aef6))
 </details>
 
