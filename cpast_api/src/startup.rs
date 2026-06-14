@@ -35,6 +35,21 @@ impl Application {
     pub async fn build(configuration: Settings) -> Result<Self, anyhow::Error> {
         let connection_pool = get_connection_pool(&configuration.database);
 
+        tracing::info!("Verifying database connection...");
+        if let Err(e) = tokio::time::timeout(
+            std::time::Duration::from_secs(10),
+            connection_pool.acquire(),
+        )
+        .await
+        {
+            tracing::error!(
+                "Failed to connect to the database within 10 seconds: {:?}",
+                e
+            );
+            anyhow::bail!("Database connection timeout or error: {:?}", e);
+        }
+        tracing::info!("Database connection verified.");
+
         let address = format!(
             "{}:{}",
             configuration.application.host, configuration.application.port
@@ -96,7 +111,25 @@ async fn run(
     let gemini_api_key = Data::new(gemini_api_key);
     let message_store = CookieMessageStore::builder(secret_key.clone()).build();
     let message_framework = FlashMessagesFramework::builder(message_store).build();
-    let redis_store = RedisSessionStore::new(redis_uri.expose_secret()).await?;
+
+    tracing::info!(
+        "Connecting to Redis session store at {}...",
+        redis_uri.expose_secret()
+    );
+    let redis_future = RedisSessionStore::new(redis_uri.expose_secret());
+    let redis_store =
+        match tokio::time::timeout(std::time::Duration::from_secs(10), redis_future).await {
+            Ok(Ok(store)) => store,
+            Ok(Err(e)) => {
+                tracing::error!("Failed to connect to Redis: {:?}", e);
+                anyhow::bail!("Redis connection error: {:?}", e);
+            }
+            Err(_) => {
+                tracing::error!("Redis connection timed out after 10 seconds");
+                anyhow::bail!("Redis connection timeout");
+            }
+        };
+    tracing::info!("Connected to Redis.");
 
     let openapi = ApiDoc::openapi();
 
