@@ -20,6 +20,11 @@ rust-version = "1.95"
 
 [workspace.dependencies]
 actix-session = { version = "0.11.0", features = ["redis-session-rustls"] }
+# Pinned: cookie_store 0.22.1 requires time = "0.3.47" which triggers E0119 via
+# time's internal HourBase type conflicting with blanket From impls in cookie/actix-web.
+# Remove caps when cookie-rs releases a fix for the blanket From<T: Into<Option<OffsetDateTime>>>.
+cookie_store = ">=0.22, <0.22.1"
+time = { version = ">=0.3, <0.3.37", default-features = false }
 actix-web = "4.13.0"
 actix-web-flash-messages = { version = "0.5.0", features = ["cookies"] }
 anyhow = "1.0.102"

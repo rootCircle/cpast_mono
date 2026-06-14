@@ -21,6 +21,9 @@ name = "cpast_api"
 actix-session = { workspace = true, features = ["redis-session-rustls"] }
 actix-web = { workspace = true }
 actix-web-flash-messages = { workspace = true, features = ["cookies"] }
+# picking cookie_store >= 0.22.1 (which pins time >= 0.3.47, causing E0119).
+cookie_store = { workspace = true }
+time = { workspace = true }
 anyhow = { workspace = true }
 argon2 = { workspace = true, features = ["std"] }
 base64 = { workspace = true }
