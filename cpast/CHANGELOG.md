@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.8 (2026-06-14)
+
+- Update model to gemini-3.5-flash
+
 ## 0.10.7 (2026-06-14)
 
 ### Chore

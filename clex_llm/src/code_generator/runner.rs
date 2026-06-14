@@ -123,14 +123,14 @@ impl CodeSolutionGenerator {
         let gen_cfg = GenerationConfig::default();
         let cfg = AdditionalParameters::default().with_config(gen_cfg);
 
-        let gemini_2_5_client = self
+        let gemini_3_5_client = self
             .client
-            .agent("gemini-2.5-flash")
+            .agent("gemini-3.5-flash")
             .preamble(system_prompt)
             .additional_params(serde_json::to_value(cfg).unwrap())
             .build();
 
-        let response = gemini_2_5_client
+        let response = gemini_3_5_client
             .prompt(question_prompt)
             .with_history(content)
             .await?;

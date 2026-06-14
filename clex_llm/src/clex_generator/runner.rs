@@ -196,7 +196,7 @@ Respond only with the final, validated Clex expression in a single line. Do not 
 
         let agent = self
             .client
-            .agent("gemini-2.5-flash")
+            .agent("gemini-3.5-flash")
             .preamble(system_prompt)
             .additional_params(serde_json::to_value(cfg).unwrap())
             .tool(ValidateClex)
