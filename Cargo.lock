@@ -289,12 +289,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cc7bb162ec39d46ab1ca8c77bf72e890535becd1751bb45f64c597edb4c8c6b3"
 
 [[package]]
-name = "alloc-stdlib"
-version = "0.2.2"
+name = "alloc-no-stdlib"
+version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94fb8275041c72129eb51b7d0322c29b8387a0386127718b096429201a5d6ece"
+checksum = "c2fb6cfd47bf496ff64095c20eaba0c201404ee38714d4142fcfa1dc334fcc7a"
+
+[[package]]
+name = "alloc-stdlib"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e76a019e91224d279006ff972f1e984179a6e9feb050adba6ce8274aef23195"
 dependencies = [
- "alloc-no-stdlib",
+ "alloc-no-stdlib 2.0.4",
 ]
 
 [[package]]
@@ -624,7 +630,7 @@ version = "8.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8119e4516436f5708bbc474a9d395bf12f1b5395e93a92a56e647ac3388c8610"
 dependencies = [
- "alloc-no-stdlib",
+ "alloc-no-stdlib 2.0.4",
  "alloc-stdlib",
  "brotli-decompressor",
 ]
@@ -635,7 +641,7 @@ version = "5.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "30bebb348517c190d59e80c4f19c2beef71cf89d9df0c46386be8f92c7021fec"
 dependencies = [
- "alloc-no-stdlib",
+ "alloc-no-stdlib 3.0.0",
  "alloc-stdlib",
 ]
 
@@ -698,7 +704,7 @@ dependencies = [
 
 [[package]]
 name = "ccode_runner"
-version = "0.3.8"
+version = "0.3.9"
 dependencies = [
  "libc",
  "rand 0.10.1",
@@ -851,7 +857,7 @@ dependencies = [
 
 [[package]]
 name = "clex_llm"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "ccode_runner",
  "clex_gen",
@@ -1044,7 +1050,7 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
 name = "cpast"
-version = "0.10.6"
+version = "0.10.7"
 dependencies = [
  "arboard",
  "ccode_runner",
@@ -1265,7 +1271,7 @@ dependencies = [
 
 [[package]]
 name = "cscrapper"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "headless_chrome",
  "rand 0.10.1",
