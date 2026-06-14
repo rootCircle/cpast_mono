@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.9 (2026-06-14)
+
+### Chore
+
+ - <csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/> bump versions to trigger release for workspace dependencies update
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 2 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Bump versions to trigger release for workspace dependencies update ([`4a2704c`](https://github.com/rootCircle/cpast_mono/commit/4a2704c1abbb05fdb1ac3344e2df83056bd7aef6))
+</details>
+
 ## v0.3.8 (2026-06-12)
 
 <csr-id-3cc746e7228152d80ff987b0657c1755f895ca5a/>
@@ -27,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release over the course of 221 calendar days.
+ - 9 commits contributed to the release over the course of 221 calendar days.
  - 222 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -39,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`0b96d8e`](https://github.com/rootCircle/cpast_mono/commit/0b96d8e3a60490285c93db799224ad98129ef353))
     - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`38abc24`](https://github.com/rootCircle/cpast_mono/commit/38abc243373d2d5c9b03f5c1c20601fb03790137))
     - Test reduce poll duration ([`3cc746e`](https://github.com/rootCircle/cpast_mono/commit/3cc746e7228152d80ff987b0657c1755f895ca5a))
     - Handling crlf behavior on windows ([`e626b38`](https://github.com/rootCircle/cpast_mono/commit/e626b384d213d432a79e274b82e6a7d06af8a3ca))
@@ -93,9 +119,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Add documentation and examples for execution limits ([`a6bb76f`](https://github.com/rootCircle/cpast_mono/commit/a6bb76fd37eb50625ac9109e28ea4310a091bef4))
     - Add time and memory limit support to ccode_runner ([`6539f54`](https://github.com/rootCircle/cpast_mono/commit/6539f5400a4ceebf6022b463b31c6292f9b54126))
 </details>
-
-<csr-unknown>
-Windows: Active monitoring via background thread using sysinfo<csr-unknown/>
 
 ## v0.3.6 (2025-09-24)
 

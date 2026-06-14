@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.3.5 (2026-06-14)
+
+### Chore
+
+ - <csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/> bump versions to trigger release for workspace dependencies update
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 2 days passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Bump versions to trigger release for workspace dependencies update ([`4a2704c`](https://github.com/rootCircle/cpast_mono/commit/4a2704c1abbb05fdb1ac3344e2df83056bd7aef6))
+</details>
+
 ## v0.3.4 (2026-06-12)
 
 <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/>
@@ -17,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 4 commits contributed to the release over the course of 222 calendar days.
+ - 5 commits contributed to the release over the course of 222 calendar days.
  - 261 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -29,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`0b96d8e`](https://github.com/rootCircle/cpast_mono/commit/0b96d8e3a60490285c93db799224ad98129ef353))
     - Release ccode_runner v0.3.8, clex_gen v0.3.6, clex_llm v0.3.4, cpast v0.10.6 ([`38abc24`](https://github.com/rootCircle/cpast_mono/commit/38abc243373d2d5c9b03f5c1c20601fb03790137))
     - Upgrade ([`17a121b`](https://github.com/rootCircle/cpast_mono/commit/17a121b4f9681c379a292f8bff070a661b0b2a75))
     - Adjusting changelogs prior to release of clex_gen v0.3.5 ([`b6a494b`](https://github.com/rootCircle/cpast_mono/commit/b6a494b95d5acaa18d0419304ae41ea6d6031472))
