@@ -26,7 +26,7 @@ anyhow = "1.0.102"
 arboard = "3.6.1"
 argon2 = { version = "0.5.3", features = ["std"] }
 base64 = "0.22.1"
-chrono = { version = "0.4.44", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.45", default-features = false, features = ["clock"] }
 claims = "0.8.0"
 clap = { version = "4.6.1", features = ["derive"] }
 clap_complete = "4.6.5"
@@ -36,21 +36,21 @@ criterion = "0.8.2"
 fake = "5.1.0"
 flaky_test = "0.2.2"
 futures = "0.3.32"
-headless_chrome = "1.0.21"
+headless_chrome = "1.0.22"
 hex = "0.4.3"
 libc = "0.2.186"
 linkify = "0.11.0"
-log = "0.4.30"
+log = "0.4.32"
 quickcheck = "1.1.0"
 quickcheck_macros = "1.2.0"
 rand = "0.10.1"
-regex = "1.12.3"
+regex = "1.12.4"
 reqwest = { version = "0.13.4", default-features = false, features = [
     "json",
     "rustls",
     "cookies",
 ] }
-rig-core = "0.37.0"
+rig-core = "0.38.2"
 scraper = "0.27.0"
 secrecy = { version = "0.10.3", features = ["serde"] }
 serde = { version = "1.0.228", features = ["derive"] }
@@ -58,7 +58,7 @@ serde-aux = "4.7.0"
 serde_json = "1.0.150"
 serde_urlencoded = "0.7.1"
 serenity = { version = "0.12.5", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
-serial_test = "3.4.0"
+serial_test = "3.5.0"
 sha2 = "0.11.0"
 shuttle-runtime = "0.57.0"
 shuttle-serenity = "0.57.0"
@@ -71,7 +71,7 @@ sqlx = { version = "0.9.0", default-features = false, features = [
     "chrono",
     "migrate",
 ] }
-sysinfo = "0.39.2"
+sysinfo = "0.39.3"
 tempfile = "3.27.0"
 thiserror = "2.0.18"
 tokio = { version = "1.52.3", features = ["full"] }
@@ -86,10 +86,10 @@ utoipa-rapidoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 utoipa-scalar = { version = "0.3.0", features = ["actix-web"] }
 utoipa-swagger-ui = { version = "9.0.2", features = ["actix-web", "vendored"] }
-uuid = { version = "1.23.1", features = ["v4", "serde", "v7"] }
+uuid = { version = "1.23.3", features = ["v4", "serde", "v7"] }
 validator = "0.20.0"
 wait-timeout = "0.2.1"
-which = "8.0.2"
+which = "8.0.3"
 wiremock = "0.6.5"
 
 [profile.dev]
@@ -100,3 +100,4 @@ opt-level = "z"
 lto = true
 codegen-units = 1
 strip = true  # Automatically strip symbols from the binary.
+
