@@ -384,6 +384,12 @@ impl Parser {
                         ParentErrorType::ParserError,
                         num_span,
                     ))
+                } else if value as u64 > self.current_group {
+                    Err(ClexErrorType::UnknownGroupNumber(
+                        ParentErrorType::ParserError,
+                        num_span,
+                        value as u64,
+                    ))
                 } else {
                     Ok(PositiveReferenceType::ByGroup {
                         group_number: value as u64,
@@ -426,6 +432,12 @@ impl Parser {
                     Err(ClexErrorType::NegativeGroupNumber(
                         ParentErrorType::ParserError,
                         num_span,
+                    ))
+                } else if value as u64 > self.current_group {
+                    Err(ClexErrorType::UnknownGroupNumber(
+                        ParentErrorType::ParserError,
+                        num_span,
+                        value as u64,
                     ))
                 } else {
                     Ok(ReferenceType::ByGroup {

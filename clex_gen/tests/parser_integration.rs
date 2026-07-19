@@ -44,12 +44,19 @@ fn test_get_ast_with_complex_pattern() {
 
 #[test]
 fn test_get_ast_with_backreference() {
-    let language = "S {\\1}";
+    let language = "(N) S {\\1}";
     let ast = get_ast(language.to_string()).unwrap();
 
     assert_eq!(
         ast.expression,
         vec![
+            UnitExpression::CapturingGroup {
+                group_number: 1,
+                range: (
+                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE),
+                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE),
+                ),
+            },
             UnitExpression::Primitives {
                 data_type: DataType::String(
                     PositiveReferenceType::ByLiteral(
