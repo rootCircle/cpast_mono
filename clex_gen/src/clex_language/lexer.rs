@@ -316,14 +316,13 @@ impl Tokens {
 
                     self.add_token(TokenType::LiteralNumber(number));
                 } else {
-                    let character: &'static str = Box::leak(c.into());
                     return Err(ClexErrorType::UnknownCharacter(
                         ParentErrorType::LexerError,
                         Span {
                             start: self.start,
                             end: self.current,
                         },
-                        character,
+                        c,
                     ));
                 }
             }

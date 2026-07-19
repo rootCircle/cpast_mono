@@ -30,7 +30,7 @@ pub enum ClexErrorType {
     /// Error when parsing numeric values
     NumericParsingError(ParentErrorType, Span),
     /// Error when encountering an unknown character
-    UnknownCharacter(ParentErrorType, Span, &'static str),
+    UnknownCharacter(ParentErrorType, Span, String),
     /// Error when an @ symbol is not properly closed
     UnclosedAtSymbol(ParentErrorType, Span),
     /// Error when an invalid character set is specified, all valid character sets are specified in <https://github.com/rootCircle/cpast_mono/blob/main/clex_gen/docs/CLEX_LANG_SPECS.md#character>
