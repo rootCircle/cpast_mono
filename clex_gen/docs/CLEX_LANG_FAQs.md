@@ -34,7 +34,7 @@ This document is a compilation of frequently asked questions (FAQs) about the Cl
     No, ranges within data types are currently limited to numeric values. Supporting character ranges or string length ranges is considered for future development, but potential complexity is a concern.
 
 * **Does Clex support advanced features like conditional branching or lookarounds?**
-    No, Clex does not currently support features like conditional branching or lookarounds, as these would significantly increase complexity without clear benefits for its core use cases.
+    Clex supports branch alternation within non-capturing groups using pipe `|` (e.g., `(?: "YES" | "NO" )`). Lookarounds and complex conditionals are not supported to preserve simplicity and efficiency.
 
 * **Does Clex offer user-defined functions or macros for customization?**
     No, the current design of Clex does not include user-defined functions or macros. However, future versions might explore alternative mechanisms for customization without compromising simplicity.
