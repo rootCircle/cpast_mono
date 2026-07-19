@@ -276,8 +276,12 @@ fn test_loop_index_ast() {
             UnitExpression::CapturingGroup {
                 group_number: 1,
                 range: (
-                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE),
-                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE),
+                    PositiveReferenceType::ByLiteral(
+                        clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE
+                    ),
+                    PositiveReferenceType::ByLiteral(
+                        clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE
+                    ),
                 ),
                 span: Span { start: 0, end: 1 },
             },

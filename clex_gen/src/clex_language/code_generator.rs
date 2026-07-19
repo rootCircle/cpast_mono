@@ -46,8 +46,8 @@ use crate::clex_language::ast::{
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use crate::clex_language::lexer::Span;
 use crate::clex_language::parser::Parser;
-use rand::seq::SliceRandom;
 use rand::RngExt;
+use rand::seq::SliceRandom;
 use std::collections::{HashMap, HashSet};
 
 #[derive(Debug)]
@@ -73,7 +73,11 @@ impl Generator {
         self.traverse_ast_with_loop(&mut groups, 1)
     }
 
-    fn traverse_ast_with_loop(&self, groups: &mut HashMap<u64, u64>, current_loop_index: u64) -> Result<String, ClexErrorType> {
+    fn traverse_ast_with_loop(
+        &self,
+        groups: &mut HashMap<u64, u64>,
+        current_loop_index: u64,
+    ) -> Result<String, ClexErrorType> {
         let mut output_text = String::new();
 
         for unit_expression in &self.syntax_tree.expression {
@@ -83,16 +87,28 @@ impl Generator {
                     repetition,
                     span,
                 } => {
-                    let repetition_count = self.get_repetition_count(repetition, groups, *span, current_loop_index)?;
+                    let repetition_count =
+                        self.get_repetition_count(repetition, groups, *span, current_loop_index)?;
 
                     for _ in 1..=repetition_count {
                         let generated_text = match data_type {
                             DataType::String(min_length, max_length, charset) => self
                                 .generate_random_string(
-                                    min_length, max_length, charset, groups, *span, current_loop_index,
+                                    min_length,
+                                    max_length,
+                                    charset,
+                                    groups,
+                                    *span,
+                                    current_loop_index,
                                 )?,
                             DataType::Float(min_reference, max_reference) => self
-                                .generate_random_float(min_reference, max_reference, groups, *span, current_loop_index)?
+                                .generate_random_float(
+                                    min_reference,
+                                    max_reference,
+                                    groups,
+                                    *span,
+                                    current_loop_index,
+                                )?
                                 .to_string(),
                             DataType::Integer(min_reference, max_reference) => self
                                 .generate_random_number(
@@ -130,7 +146,8 @@ impl Generator {
                     repetition,
                     span,
                 } => {
-                    let repetition_count = self.get_repetition_count(repetition, groups, *span, current_loop_index)?;
+                    let repetition_count =
+                        self.get_repetition_count(repetition, groups, *span, current_loop_index)?;
 
                     for step in 1..=repetition_count {
                         if branches.is_empty() {
@@ -233,8 +250,10 @@ impl Generator {
         span: Span,
         loop_index: u64,
     ) -> Result<String, ClexErrorType> {
-        let min_length = self.get_positive_value_from_reference(min_length, groups, span, loop_index)? as usize;
-        let max_length = self.get_positive_value_from_reference(max_length, groups, span, loop_index)? as usize;
+        let min_length =
+            self.get_positive_value_from_reference(min_length, groups, span, loop_index)? as usize;
+        let max_length =
+            self.get_positive_value_from_reference(max_length, groups, span, loop_index)? as usize;
         let length =
             self.generate_positive_random_integer(min_length as u64, max_length as u64, span)?;
         let charset = character_set.get_character_domain();
@@ -277,8 +296,10 @@ impl Generator {
         span: Span,
         loop_index: u64,
     ) -> Result<u64, ClexErrorType> {
-        let min = self.get_positive_value_from_reference(min_reference, groups, span, loop_index)?;
-        let max = self.get_positive_value_from_reference(max_reference, groups, span, loop_index)?;
+        let min =
+            self.get_positive_value_from_reference(min_reference, groups, span, loop_index)?;
+        let max =
+            self.get_positive_value_from_reference(max_reference, groups, span, loop_index)?;
 
         self.generate_positive_random_integer(min, max, span)
     }

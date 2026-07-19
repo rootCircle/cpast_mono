@@ -60,7 +60,10 @@ fn test_generator_with_numeral_charset_string_expression() {
 #[test]
 fn test_generator_graph_primitives() {
     let perm_res = generator("@PERM(5)@".to_string()).unwrap();
-    let nums: Vec<i64> = perm_res.split_whitespace().map(|s| s.parse().unwrap()).collect();
+    let nums: Vec<i64> = perm_res
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
     assert_eq!(nums.len(), 5);
 
     let tree_res = generator("@TREE(4)@".to_string()).unwrap();

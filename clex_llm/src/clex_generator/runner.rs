@@ -58,7 +58,7 @@ Your task is to convert human-readable descriptions into formal Clex grammar rep
 ```
 ClexLanguage ::= UnitExpression*
 
-UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | LiteralText
+UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | LiteralText | GraphPrimitive
 
 CapturingGroup ::= "(" "N" PositiveRange? ")"
 
@@ -71,6 +71,11 @@ DataType ::= "N" Range? Quantifiers?
           | "S" StringModifier? Quantifiers?
 
 LiteralText ::= '"' <LITERAL_CHARACTERS> '"'
+
+GraphPrimitive ::= "@TREE(" PositiveReference ")@"
+                | "@GRAPH(" PositiveReference "," PositiveReference ")@"
+                | "@DAG(" PositiveReference "," PositiveReference ")@"
+                | "@PERM(" PositiveReference ")@"
 
 StringModifier ::= "[" PositiveReference "]"
                 | "[" PositiveReference "," PositiveReference "]"
@@ -86,11 +91,13 @@ PositiveRange ::= "[" PositiveReference? "," PositiveReference? "]"
 Quantifiers ::= "{" PositiveReference "}"
               | "{" PositiveReference "," PositiveReference "}"
 
-Reference ::= "\" GroupNo | i64
+Reference ::= "\" GroupNo | "%i" Offset? | i64
 
 FloatReference ::= "\" GroupNo | f64
 
-PositiveReference ::= "\" GroupNo | u64
+PositiveReference ::= "\" GroupNo | "%i" Offset? | u64
+
+Offset ::= ("+" | "-") u64
 
 GroupNo ::= u64
 
@@ -104,6 +111,8 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
 - **F**: Generates floating-point numbers
 - **S**: Generates strings
 - **LiteralText**: Double-quoted text (e.g., `"YES\n"`) emitted as-is without auto-space
+- **GraphPrimitive**: `@TREE(N)@`, `@GRAPH(N,M)@`, `@DAG(N,M)@`, `@PERM(N)@` for graph & permutation generation
+- **LoopIndex**: `%i` or `%i-1` refers to current loop iteration counter inside repeated groups
 - **CapturingGroup**: (N) captures a non-negative integer for later reference
 - **NonCapturingGroup**: (?:...) groups expressions without capturing. Supports branch alternation with `|` (e.g. `(?: "YES" | "NO" )`)
 - **Quantifiers**: {n} specifies exact repetition, {min,max} specifies random repetition range

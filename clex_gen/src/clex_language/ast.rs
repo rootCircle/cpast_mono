@@ -88,15 +88,9 @@ pub enum UnitExpression {
         span: Span,
     },
     /// Literal text expression (emitted as-is without auto-space).
-    Literal {
-        text: String,
-        span: Span,
-    },
+    Literal { text: String, span: Span },
     /// Graph or permutation topology primitive.
-    GraphPrimitive {
-        kind: GraphKind,
-        span: Span,
-    },
+    GraphPrimitive { kind: GraphKind, span: Span },
     /// Represents the end of the file in the program.
     Eof,
 }

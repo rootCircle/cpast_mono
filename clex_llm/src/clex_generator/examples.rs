@@ -59,5 +59,10 @@ pub(crate) fn get_examples() -> Vec<Example> {
             constraints: "1 ≤ each integer ≤ 100".to_string(),
             generated_language: "(?: \"YES\\n\" | \"NO\\n\" ) N[1,100]{2,5}".to_string(),
         },
+        Example {
+            input_format: "The first line contains an integer N (number of vertices). The next N-1 lines describe the edges of a tree.".to_string(),
+            constraints: "2 ≤ N ≤ 10^5".to_string(),
+            generated_language: "(N[2,100000]) \"\\n\" @TREE(\\1)@".to_string(),
+        },
     ]
 }

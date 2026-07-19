@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Non-Capturing Group Alternation (`(?: ... | ... )`)**: Support for branch alternation inside non-capturing groups using pipe `|`.
 - **Flexible String Modifier Forms**: Support for `S[len]`, `S[min, max]`, `S[len, charset]`, and `S[min, max, charset]` syntax.
 - **Floating-Point Decimal Bounds (`F[min, max]`)**: Support for literal floating-point bounds (e.g. `F[1.5, 2.7]`) and float back-references.
+- **Graph & Permutation Topology Directives**: Native graph generation via `@TREE(N)@`, `@GRAPH(N, M)@`, `@DAG(N, M)@`, and `@PERM(N)@`.
+- **Loop Iteration Index Variable (`%i`)**: Support for current loop iteration counter `%i` (with offsets e.g. `%i-1`, `%i+1`) inside repeated non-capturing groups.
 - **AST Span Propagation**: AST nodes (`UnitExpression`) now preserve precise `Span` locations for accurate error reporting during parsing and generation.
 
 ### Fixed

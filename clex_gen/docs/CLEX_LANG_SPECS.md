@@ -16,7 +16,7 @@ For example: S[1, 4, @CH_UPPER@] can generate "G", "GAHS" or "JHAS" etc.
 ```txt
 ClexLanguage ::= UnitExpression*
 
-UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | LiteralText | EOF
+UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | LiteralText | GraphPrimitive | EOF
 
 CapturingGroup ::= "(" "N" PositiveRange? ")"
 
@@ -29,6 +29,11 @@ DataType ::= "N" Range? Quantifiers?
           | "S" StringModifier? Quantifiers?
 
 LiteralText ::= '"' <LITERAL_CHARACTERS> '"'
+
+GraphPrimitive ::= "@TREE(" PositiveReference ")@"
+                | "@GRAPH(" PositiveReference "," PositiveReference ")@"
+                | "@DAG(" PositiveReference "," PositiveReference ")@"
+                | "@PERM(" PositiveReference ")@"
 
 StringModifier ::= "[" PositiveReference "]"
                 | "[" PositiveReference "," PositiveReference "]"
@@ -45,13 +50,17 @@ Quantifiers ::= "{" PositiveReference "}"
               | "{" PositiveReference "," PositiveReference "}"
 
 Reference ::= "\" GroupNo
+            | "%i" Offset?
             | i64
 
 FloatReference ::= "\" GroupNo
                  | f64
 
 PositiveReference ::= "\" GroupNo
+                    | "%i" Offset?
                     | u64
+
+Offset ::= ("+" | "-") u64
 
 GroupNo ::= u64
 

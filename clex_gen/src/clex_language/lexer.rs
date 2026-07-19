@@ -491,8 +491,7 @@ impl Tokens {
         if s.starts_with('\\') {
             let num: u64 = s[1..].parse().ok()?;
             Some(PositiveReferenceType::ByGroup { group_number: num })
-        } else if s.starts_with("%i") {
-            let rest = &s[2..];
+        } else if let Some(rest) = s.strip_prefix("%i") {
             let offset: i64 = if rest.is_empty() {
                 0
             } else {

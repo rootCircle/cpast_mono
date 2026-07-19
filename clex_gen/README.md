@@ -67,6 +67,8 @@ For more information on the clex language and its usage, refer to the [Clex Lang
 - `N S`: Generates a random integer and string.
 - `F[-100,100]`: Generates a random floating-point number between -100 and 100.
 - `(N[1,100]) (?:N[1,1000]){\1} N[1,10000]`: Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
+- `(N[2,100]) "\n" @TREE(\1)@`: Generates $N$ followed by $N-1$ edges forming a valid random tree.
+- `(N[2,1000]) "\n" (?: %i N[1, %i-1] "\n" ){\1-1}`: Generates $N$ and $N-1$ tree parent edges using the loop index `%i`.
 
 ## Meta
 
