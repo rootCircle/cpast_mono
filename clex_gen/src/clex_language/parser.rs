@@ -478,6 +478,9 @@ impl Parser {
             } else {
                 Ok(PositiveReferenceType::ByLiteral(value as u64))
             }
+        } else if let TokenType::LoopIndex(offset) = self.peek().token_type {
+            self.advance();
+            Ok(PositiveReferenceType::ByLoopIndex { offset })
         } else {
             Ok(PositiveReferenceType::ByLiteral(default_value))
         }
@@ -519,6 +522,9 @@ impl Parser {
         } else if let TokenType::LiteralNumber(value) = self.peek().token_type {
             self.advance();
             Ok(ReferenceType::ByLiteral(value))
+        } else if let TokenType::LoopIndex(offset) = self.peek().token_type {
+            self.advance();
+            Ok(ReferenceType::ByLoopIndex { offset })
         } else {
             Ok(ReferenceType::ByLiteral(default_value))
         }

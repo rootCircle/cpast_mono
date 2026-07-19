@@ -90,6 +90,8 @@ pub enum TokenType {
     LiteralFloat(f64),
     LiteralString(String),
     LiteralText(String),
+    /// Loop iteration index (%i, %i-1, %i+1, etc.) with offset.
+    LoopIndex(i64),
 
     // End of file
     Eof,
@@ -194,6 +196,33 @@ impl Tokens {
             "," => self.add_token(TokenType::Comma),
             "|" => self.add_token(TokenType::Pipe),
             "\\" => self.add_token(TokenType::Backslash),
+            "%" => {
+                let start_pos = self.start;
+                if self.peek() == "i" {
+                    self.advance(); // consume 'i'
+                    let mut offset: i64 = 0;
+                    if self.peek() == "+" || self.peek() == "-" {
+                        let sign_str = self.advance().to_string();
+                        let mut num_str = String::new();
+                        while Self::is_digit(self.peek()) {
+                            num_str.push_str(self.advance());
+                        }
+                        if let Ok(val) = num_str.parse::<i64>() {
+                            offset = if sign_str == "-" { -val } else { val };
+                        }
+                    }
+                    self.add_token_with_span(
+                        TokenType::LoopIndex(offset),
+                        self.get_byte_span(start_pos, self.current),
+                    );
+                } else {
+                    return Err(ClexErrorType::UnknownCharacter(
+                        ParentErrorType::LexerError,
+                        self.get_byte_span(self.start, self.current),
+                        c,
+                    ));
+                }
+            }
             "N" => self.add_token(TokenType::Integer),
             "F" => self.add_token(TokenType::Float),
             "S" => self.add_token(TokenType::String),

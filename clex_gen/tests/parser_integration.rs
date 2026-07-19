@@ -264,3 +264,36 @@ fn test_float_bounds_ast() {
         ]
     );
 }
+
+#[test]
+fn test_loop_index_ast() {
+    let language = "(N) (?: N[1, %i] ){\\1}";
+    let ast = get_ast(language.to_string()).unwrap();
+
+    assert_eq!(
+        ast.expression,
+        vec![
+            UnitExpression::CapturingGroup {
+                group_number: 1,
+                range: (
+                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE),
+                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE),
+                ),
+                span: Span { start: 0, end: 1 },
+            },
+            UnitExpression::NonCapturingGroup {
+                branches: vec![vec![UnitExpression::Primitives {
+                    data_type: DataType::Integer(
+                        ReferenceType::ByLiteral(1),
+                        ReferenceType::ByLoopIndex { offset: 0 },
+                    ),
+                    repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                    span: Span { start: 8, end: 9 },
+                }]],
+                repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 1 }),
+                span: Span { start: 4, end: 5 },
+            },
+            UnitExpression::Eof,
+        ]
+    );
+}

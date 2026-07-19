@@ -130,6 +130,8 @@ pub enum ReferenceType {
     ByGroup { group_number: u64 },
     /// Reference based on a specified literal.
     ByLiteral(i64),
+    /// Reference based on current loop index (%i) with offset.
+    ByLoopIndex { offset: i64 },
 }
 
 /// Represents the repetition type of unit expression, which is guaranteed to dereference to a positive value only!
@@ -139,6 +141,8 @@ pub enum PositiveReferenceType {
     ByGroup { group_number: u64 },
     /// Reference based on a specified literal.
     ByLiteral(u64),
+    /// Reference based on current loop index (%i) with offset.
+    ByLoopIndex { offset: i64 },
 }
 
 /// Represent character set for string domain
