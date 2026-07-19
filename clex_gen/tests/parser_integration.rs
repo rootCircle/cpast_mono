@@ -201,3 +201,34 @@ fn test_quantifier_range_ast() {
         ]
     );
 }
+
+#[test]
+fn test_flexible_string_modifier_ast() {
+    let language = "S[5] S[5, @CH_UPPER@]";
+    let ast = get_ast(language.to_string()).unwrap();
+
+    assert_eq!(
+        ast.expression,
+        vec![
+            UnitExpression::Primitives {
+                data_type: DataType::String(
+                    PositiveReferenceType::ByLiteral(5),
+                    PositiveReferenceType::ByLiteral(5),
+                    CharacterSet::get_default_charset(),
+                ),
+                repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                span: Span { start: 0, end: 1 },
+            },
+            UnitExpression::Primitives {
+                data_type: DataType::String(
+                    PositiveReferenceType::ByLiteral(5),
+                    PositiveReferenceType::ByLiteral(5),
+                    CharacterSet::Uppercase,
+                ),
+                repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                span: Span { start: 5, end: 6 },
+            },
+            UnitExpression::Eof,
+        ]
+    );
+}

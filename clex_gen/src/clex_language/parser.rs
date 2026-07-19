@@ -230,6 +230,24 @@ impl Parser {
         }
     }
 
+    fn try_parse_character_set(&mut self) -> Option<CharacterSet> {
+        let cs = match &self.peek().token_type {
+            TokenType::LiteralString(charset) => Some(CharacterSet::Custom(charset.to_string())),
+            TokenType::CharacterSetAlpha => Some(CharacterSet::Alphabet),
+            TokenType::CharacterSetAlnum => Some(CharacterSet::AlphaNumeric),
+            TokenType::CharacterSetNewline => Some(CharacterSet::Newline),
+            TokenType::CharacterSetNumeric => Some(CharacterSet::Numeric),
+            TokenType::CharacterSetUpper => Some(CharacterSet::Uppercase),
+            TokenType::CharacterSetLower => Some(CharacterSet::LowerCase),
+            TokenType::CharacterSetAll => Some(CharacterSet::All),
+            _ => None,
+        };
+        if cs.is_some() {
+            self.advance();
+        }
+        cs
+    }
+
     fn parse_string_modifiers(
         &mut self,
     ) -> Result<(PositiveReferenceType, PositiveReferenceType, CharacterSet), ClexErrorType> {
@@ -240,50 +258,32 @@ impl Parser {
         let mut char_set = CharacterSet::get_default_charset();
 
         if self.match_token(&TokenType::LeftSquareBracket) {
-            min_length_reference =
+            let first_ref =
                 self.parse_positive_reference(clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64)?;
 
-            self.expect(&TokenType::Comma)?;
+            if self.match_token(&TokenType::Comma) {
+                if let Some(cs) = self.try_parse_character_set() {
+                    // S[len, charset]
+                    min_length_reference = first_ref.clone();
+                    max_length_reference = first_ref;
+                    char_set = cs;
+                } else {
+                    // S[min, max] or S[min, max, charset]
+                    min_length_reference = first_ref;
+                    max_length_reference = self.parse_positive_reference(
+                        clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64,
+                    )?;
 
-            max_length_reference =
-                self.parse_positive_reference(clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64)?;
-
-            self.expect(&TokenType::Comma)?;
-
-            match &self.tokens.get_tokens()[self.current].token_type {
-                TokenType::LiteralString(charset) => {
-                    char_set = CharacterSet::Custom(charset.to_string());
-                    self.advance();
+                    if self.match_token(&TokenType::Comma) {
+                        if let Some(cs) = self.try_parse_character_set() {
+                            char_set = cs;
+                        }
+                    }
                 }
-                TokenType::CharacterSetAlpha => {
-                    char_set = CharacterSet::Alphabet;
-                    self.advance();
-                }
-                TokenType::CharacterSetAlnum => {
-                    char_set = CharacterSet::AlphaNumeric;
-                    self.advance();
-                }
-                TokenType::CharacterSetNewline => {
-                    char_set = CharacterSet::Newline;
-                    self.advance();
-                }
-                TokenType::CharacterSetNumeric => {
-                    char_set = CharacterSet::Numeric;
-                    self.advance();
-                }
-                TokenType::CharacterSetUpper => {
-                    char_set = CharacterSet::Uppercase;
-                    self.advance();
-                }
-                TokenType::CharacterSetLower => {
-                    char_set = CharacterSet::LowerCase;
-                    self.advance();
-                }
-                TokenType::CharacterSetAll => {
-                    char_set = CharacterSet::All;
-                    self.advance();
-                }
-                _ => {}
+            } else {
+                // S[length]
+                min_length_reference = first_ref.clone();
+                max_length_reference = first_ref;
             }
 
             self.expect(&TokenType::RightSquareBracket)?;
