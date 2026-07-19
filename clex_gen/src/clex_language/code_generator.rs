@@ -42,6 +42,7 @@
 use crate::clex_language::ast::{
     CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };
+use crate::clex_language::lexer::Span;
 use crate::clex_language::parser::Parser;
 use rand::RngExt;
 
@@ -79,19 +80,20 @@ impl Generator {
                 UnitExpression::Primitives {
                     data_type,
                     repetition,
+                    span,
                 } => {
                     let repetition_count =
-                        self.get_positive_value_from_reference(repetition, groups)?;
+                        self.get_positive_value_from_reference(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
                         let generated_text = match data_type {
                             DataType::String(min_length, max_length, charset) => self
-                                .generate_random_string(min_length, max_length, charset, groups)?,
+                                .generate_random_string(min_length, max_length, charset, groups, *span)?,
                             DataType::Float(min_reference, max_reference) => self
-                                .generate_random_float(min_reference, max_reference, groups)?
+                                .generate_random_float(min_reference, max_reference, groups, *span)?
                                 .to_string(),
                             DataType::Integer(min_reference, max_reference) => self
-                                .generate_random_number(min_reference, max_reference, groups)?
+                                .generate_random_number(min_reference, max_reference, groups, *span)?
                                 .to_string(),
                         };
                         output_text.push_str(&generated_text);
@@ -101,9 +103,10 @@ impl Generator {
                 UnitExpression::CapturingGroup {
                     group_number,
                     range: (min_reference, max_reference),
+                    span,
                 } => {
                     let random_number =
-                        self.generate_positive_random_number(min_reference, max_reference, groups)?;
+                        self.generate_positive_random_number(min_reference, max_reference, groups, *span)?;
                     groups.insert(*group_number, random_number);
 
                     output_text.push_str(&random_number.to_string());
@@ -112,9 +115,10 @@ impl Generator {
                 UnitExpression::NonCapturingGroup {
                     nest_exp,
                     repetition,
+                    span,
                 } => {
                     let repetition_count =
-                        self.get_positive_value_from_reference(repetition, groups)?;
+                        self.get_positive_value_from_reference(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
                         let nest_gen = Self::new_from_program(ClexLanguageAST {
@@ -136,11 +140,11 @@ impl Generator {
     }
 
     // Helper method for generating random integers
-    fn generate_random_integer(&self, min: i64, max: i64) -> Result<i64, ClexErrorType> {
+    fn generate_random_integer(&self, min: i64, max: i64, span: Span) -> Result<i64, ClexErrorType> {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
-                crate::clex_language::lexer::Span { start: 0, end: 0 },
+                span,
                 min,
                 max,
             ));
@@ -149,11 +153,11 @@ impl Generator {
     }
 
     // Helper method for generating random positive integers
-    fn generate_positive_random_integer(&self, min: u64, max: u64) -> Result<u64, ClexErrorType> {
+    fn generate_positive_random_integer(&self, min: u64, max: u64, span: Span) -> Result<u64, ClexErrorType> {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
-                crate::clex_language::lexer::Span { start: 0, end: 0 },
+                span,
                 min as i64,
                 max as i64,
             ));
@@ -167,10 +171,11 @@ impl Generator {
         max_length: &PositiveReferenceType,
         character_set: &CharacterSet,
         groups: &HashMap<u64, u64>,
+        span: Span,
     ) -> Result<String, ClexErrorType> {
-        let min_length = self.get_positive_value_from_reference(min_length, groups)? as usize;
-        let max_length = self.get_positive_value_from_reference(max_length, groups)? as usize;
-        let length = self.generate_positive_random_integer(min_length as u64, max_length as u64)?;
+        let min_length = self.get_positive_value_from_reference(min_length, groups, span)? as usize;
+        let max_length = self.get_positive_value_from_reference(max_length, groups, span)? as usize;
+        let length = self.generate_positive_random_integer(min_length as u64, max_length as u64, span)?;
         let charset = character_set.get_character_domain();
         Ok(Self::generate_random_string_from_charset(&charset, length))
     }
@@ -191,11 +196,12 @@ impl Generator {
         min_reference: &ReferenceType,
         max_reference: &ReferenceType,
         groups: &HashMap<u64, u64>,
+        span: Span,
     ) -> Result<i64, ClexErrorType> {
-        let min = self.get_value_from_reference(min_reference, groups)?;
-        let max = self.get_value_from_reference(max_reference, groups)?;
+        let min = self.get_value_from_reference(min_reference, groups, span)?;
+        let max = self.get_value_from_reference(max_reference, groups, span)?;
 
-        self.generate_random_integer(min, max)
+        self.generate_random_integer(min, max, span)
     }
 
     fn generate_positive_random_number(
@@ -203,11 +209,12 @@ impl Generator {
         min_reference: &PositiveReferenceType,
         max_reference: &PositiveReferenceType,
         groups: &HashMap<u64, u64>,
+        span: Span,
     ) -> Result<u64, ClexErrorType> {
-        let min = self.get_positive_value_from_reference(min_reference, groups)?;
-        let max = self.get_positive_value_from_reference(max_reference, groups)?;
+        let min = self.get_positive_value_from_reference(min_reference, groups, span)?;
+        let max = self.get_positive_value_from_reference(max_reference, groups, span)?;
 
-        self.generate_positive_random_integer(min, max)
+        self.generate_positive_random_integer(min, max, span)
     }
 
     fn generate_random_float(
@@ -215,14 +222,15 @@ impl Generator {
         min_reference: &ReferenceType,
         max_reference: &ReferenceType,
         groups: &HashMap<u64, u64>,
+        span: Span,
     ) -> Result<f64, ClexErrorType> {
-        let min = self.get_value_from_reference(min_reference, groups)? as f64;
-        let max = self.get_value_from_reference(max_reference, groups)? as f64;
+        let min = self.get_value_from_reference(min_reference, groups, span)? as f64;
+        let max = self.get_value_from_reference(max_reference, groups, span)? as f64;
 
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
-                crate::clex_language::lexer::Span { start: 0, end: 0 },
+                span,
                 min as i64,
                 max as i64,
             ));
@@ -235,10 +243,11 @@ impl Generator {
         &self,
         reference_type: &ReferenceType,
         groups: &HashMap<u64, u64>,
+        span: Span,
     ) -> Result<i64, ClexErrorType> {
         Ok(match reference_type {
             ReferenceType::ByGroup { group_number: gn } => {
-                self.get_count_from_group(groups, *gn)? as i64
+                self.get_count_from_group(groups, *gn, span)? as i64
             }
             ReferenceType::ByLiteral(value) => *value,
         })
@@ -248,10 +257,11 @@ impl Generator {
         &self,
         reference_type: &PositiveReferenceType,
         groups: &HashMap<u64, u64>,
+        span: Span,
     ) -> Result<u64, ClexErrorType> {
         Ok(match reference_type {
             PositiveReferenceType::ByGroup { group_number: gn } => {
-                self.get_count_from_group(groups, *gn)?
+                self.get_count_from_group(groups, *gn, span)?
             }
             PositiveReferenceType::ByLiteral(value) => *value,
         })
@@ -261,12 +271,13 @@ impl Generator {
         &self,
         groups: &HashMap<u64, u64>,
         group_number: u64,
+        span: Span,
     ) -> Result<u64, ClexErrorType> {
         match groups.get(&group_number) {
             Some(value) => Ok(*value),
             None => Err(ClexErrorType::UnknownGroupNumber(
                 ParentErrorType::GeneratorError,
-                crate::clex_language::lexer::Span { start: 0, end: 0 },
+                span,
                 group_number,
             )),
         }

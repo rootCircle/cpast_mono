@@ -1,6 +1,7 @@
 use clex_gen::clex_language::ast::{
     CharacterSet, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
 };
+use clex_gen::clex_language::lexer::Span;
 use clex_gen::{clex_language, get_ast};
 
 #[test]
@@ -17,6 +18,7 @@ fn test_get_ast_with_complex_pattern() {
                     PositiveReferenceType::ByLiteral(5),
                     PositiveReferenceType::ByLiteral(7)
                 ),
+                span: Span { start: 0, end: 1 },
             },
             UnitExpression::NonCapturingGroup {
                 nest_exp: vec![
@@ -26,6 +28,7 @@ fn test_get_ast_with_complex_pattern() {
                             PositiveReferenceType::ByLiteral(1),
                             PositiveReferenceType::ByLiteral(5)
                         ),
+                        span: Span { start: 13, end: 14 },
                     },
                     UnitExpression::Primitives {
                         data_type: DataType::Integer(
@@ -33,9 +36,11 @@ fn test_get_ast_with_complex_pattern() {
                             ReferenceType::ByLiteral(10000)
                         ),
                         repetition: PositiveReferenceType::ByGroup { group_number: 2 },
+                        span: Span { start: 22, end: 23 },
                     },
                 ],
                 repetition: PositiveReferenceType::ByGroup { group_number: 1 },
+                span: Span { start: 9, end: 10 },
             },
             UnitExpression::Eof,
         ]
@@ -56,6 +61,7 @@ fn test_get_ast_with_backreference() {
                     PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE),
                     PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE),
                 ),
+                span: Span { start: 0, end: 1 },
             },
             UnitExpression::Primitives {
                 data_type: DataType::String(
@@ -68,6 +74,7 @@ fn test_get_ast_with_backreference() {
                     CharacterSet::get_default_charset()
                 ),
                 repetition: PositiveReferenceType::ByGroup { group_number: 1 },
+                span: Span { start: 4, end: 5 },
             },
             UnitExpression::Eof
         ]
@@ -89,6 +96,7 @@ fn test_custom_charset_with_string() {
                     CharacterSet::Custom("asghdgad".to_string())
                 ),
                 repetition: PositiveReferenceType::ByLiteral(1),
+                span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof
         ]
@@ -110,6 +118,7 @@ fn test_charset_with_string() {
                     CharacterSet::All
                 ),
                 repetition: PositiveReferenceType::ByLiteral(1),
+                span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof
         ]

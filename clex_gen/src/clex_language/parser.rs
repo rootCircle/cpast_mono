@@ -86,16 +86,17 @@ impl Parser {
     fn parse_expr(&mut self) -> Result<UnitExpression, ClexErrorType> {
         let token = self.advance();
 
-        match token.token_type {
+        match &token.token_type {
             TokenType::Integer | TokenType::String | TokenType::Float => {
-                self.parse_primitive_expr(token.token_type)
+                let dt = token.token_type.clone();
+                self.parse_primitive_expr(dt, token.span)
             }
-            TokenType::LeftParens => self.parse_group_expr(),
+            TokenType::LeftParens => self.parse_group_expr(token.span),
             TokenType::Eof => Ok(UnitExpression::Eof),
             _ => Err(ClexErrorType::InvalidTokenFound(
                 ParentErrorType::ParserError,
                 token.span,
-                token.token_type,
+                token.token_type.clone(),
             )),
         }
     }
@@ -103,6 +104,7 @@ impl Parser {
     fn parse_primitive_expr(
         &mut self,
         data_type: TokenType,
+        start_span: crate::clex_language::lexer::Span,
     ) -> Result<UnitExpression, ClexErrorType> {
         match data_type {
             TokenType::Integer => {
@@ -112,6 +114,7 @@ impl Parser {
                 Ok(UnitExpression::Primitives {
                     data_type: DataType::Integer(lower_bound, upper_bound),
                     repetition: repetition_type,
+                    span: start_span,
                 })
             }
             TokenType::Float => {
@@ -121,6 +124,7 @@ impl Parser {
                 Ok(UnitExpression::Primitives {
                     data_type: DataType::Float(lower_reference, upper_reference),
                     repetition: repetition_type,
+                    span: start_span,
                 })
             }
             TokenType::String => {
@@ -130,29 +134,20 @@ impl Parser {
                 Ok(UnitExpression::Primitives {
                     data_type: DataType::String(min_length, max_length, charset),
                     repetition: repetition_type,
+                    span: start_span,
                 })
             }
-            _ => {
-                let current_token = if self.current > 0 {
-                    self.tokens.get_tokens()[self.current - 1].span
-                } else {
-                    crate::clex_language::lexer::Span { start: 0, end: 0 }
-                };
-                Err(ClexErrorType::UnreachableCodeReached(
-                    ParentErrorType::ParserError,
-                    current_token,
-                ))
-            }
+            _ => Err(ClexErrorType::UnreachableCodeReached(
+                ParentErrorType::ParserError,
+                start_span,
+            )),
         }
     }
 
-    fn parse_group_expr(&mut self) -> Result<UnitExpression, ClexErrorType> {
-        let start_span = if self.current > 0 {
-            self.tokens.get_tokens()[self.current - 1].span
-        } else {
-            crate::clex_language::lexer::Span { start: 0, end: 0 }
-        };
-
+    fn parse_group_expr(
+        &mut self,
+        start_span: crate::clex_language::lexer::Span,
+    ) -> Result<UnitExpression, ClexErrorType> {
         if self.match_token(&TokenType::Integer) {
             let (lower_reference, upper_reference) = self.parse_positive_range()?;
             self.expect(&TokenType::RightParens)?;
@@ -162,6 +157,7 @@ impl Parser {
             Ok(UnitExpression::CapturingGroup {
                 group_number: self.current_group,
                 range: (lower_reference, upper_reference),
+                span: start_span,
             })
         } else if self.match_token(&TokenType::QuestionColon) {
             let last_index = self
@@ -189,6 +185,7 @@ impl Parser {
             Ok(UnitExpression::NonCapturingGroup {
                 nest_exp,
                 repetition: repetition_type,
+                span: start_span,
             })
         } else {
             Err(ClexErrorType::UnclosedParens(

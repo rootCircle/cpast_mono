@@ -16,6 +16,7 @@
 //!
 //! ```rust
 //! use clex_gen::clex_language::ast::{ClexLanguageAST, UnitExpression, DataType, ReferenceType, PositiveReferenceType};
+//! use clex_gen::clex_language::lexer::Span;
 //!
 //! // Define a simple program AST
 //! let program_ast = ClexLanguageAST {
@@ -23,10 +24,12 @@
 //!         UnitExpression::Primitives {
 //!             data_type: DataType::Integer(ReferenceType::ByLiteral(0), ReferenceType::ByLiteral(100)),
 //!             repetition: PositiveReferenceType::ByLiteral(1),
+//!             span: Span { start: 0, end: 1 },
 //!         },
 //!         UnitExpression::CapturingGroup {
 //!             group_number: 1,
 //!             range: (PositiveReferenceType::ByLiteral(0), PositiveReferenceType::ByLiteral(10)),
+//!             span: Span { start: 1, end: 2 },
 //!         },
 //!         UnitExpression::Eof,
 //!     ],
@@ -49,7 +52,9 @@ pub const DEFAULT_RANGE_MAX_VALUE: i64 = i32::MAX as i64;
 pub const DEFAULT_POSITIVE_RANGE_MIN_VALUE: u64 = u32::MIN as u64;
 pub const DEFAULT_POSITIVE_RANGE_MAX_VALUE: u64 = u32::MAX as u64;
 
-#[derive(Debug, Clone)]
+use crate::clex_language::lexer::Span;
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct ClexLanguageAST {
     pub expression: Vec<UnitExpression>,
 }
@@ -61,22 +66,33 @@ pub enum UnitExpression {
     Primitives {
         data_type: DataType,
         repetition: PositiveReferenceType,
+        span: Span,
     },
     /// Capturing group unit expression with a group number and range.
     CapturingGroup {
-        // Type is fixed to be non-negative Number, DataType is implied to be integer
-        // DataType::Integer
-        // group_number won't exceed the value of total number of capturing group present before.
         group_number: u64,
         range: (PositiveReferenceType, PositiveReferenceType),
+        span: Span,
     },
     /// Non-capturing group unit expression with nested expressions and repetition type.
     NonCapturingGroup {
         nest_exp: Vec<UnitExpression>,
         repetition: PositiveReferenceType,
+        span: Span,
     },
     /// Represents the end of the file in the program.
     Eof,
+}
+
+impl UnitExpression {
+    pub fn span(&self) -> Span {
+        match self {
+            UnitExpression::Primitives { span, .. }
+            | UnitExpression::CapturingGroup { span, .. }
+            | UnitExpression::NonCapturingGroup { span, .. } => *span,
+            UnitExpression::Eof => Span { start: 0, end: 0 },
+        }
+    }
 }
 
 /// Represents the data type of unit expression.
