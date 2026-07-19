@@ -113,16 +113,23 @@ pub struct Tokens {
     start: usize,
     current: usize,
     source_language: String,
+    graphemes: Vec<(usize, usize, String)>,
 }
 
 impl Tokens {
     /// Creates a new Tokens instance for a given source language.
     pub fn new(source_language: String) -> Self {
+        let graphemes = source_language
+            .grapheme_indices(true)
+            .map(|(idx, g)| (idx, idx + g.len(), g.to_string()))
+            .collect();
+
         Self {
             tokens: Vec::new(),
             start: 0,
             current: 0,
             source_language,
+            graphemes,
         }
     }
 
@@ -137,12 +144,13 @@ impl Tokens {
             self.scan_token()?;
         }
 
+        let eof_pos = self.source_language.len();
         self.tokens.push(Token {
             token_type: TokenType::Eof,
             lexeme: String::new(),
             span: Span {
-                start: self.current,
-                end: self.current,
+                start: eof_pos,
+                end: eof_pos,
             },
         });
 
@@ -151,7 +159,26 @@ impl Tokens {
 
     /// Checks if the lexer has reached the end of the source language.
     fn at_end(&self) -> bool {
-        self.source_language.len() <= self.current
+        self.current >= self.graphemes.len()
+    }
+
+    fn get_byte_span(&self, start_grapheme: usize, end_grapheme: usize) -> Span {
+        let start = if start_grapheme < self.graphemes.len() {
+            self.graphemes[start_grapheme].0
+        } else {
+            self.source_language.len()
+        };
+        let end = if end_grapheme > 0 && end_grapheme <= self.graphemes.len() {
+            self.graphemes[end_grapheme - 1].1
+        } else if end_grapheme == 0 && !self.graphemes.is_empty() {
+            self.graphemes[0].0
+        } else {
+            self.source_language.len()
+        };
+        Span {
+            start,
+            end: end.max(start),
+        }
     }
 
     /// Scans a single token from the source language.
@@ -183,10 +210,7 @@ impl Tokens {
                 if self.at_end() {
                     return Err(ClexErrorType::UnclosedAtSymbol(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
 
@@ -201,10 +225,7 @@ impl Tokens {
                     _ => {
                         return Err(ClexErrorType::InvalidCharacterSet(
                             ParentErrorType::LexerError,
-                            Span {
-                                start: start_pos,
-                                end: self.current,
-                            },
+                            self.get_byte_span(start_pos, self.current),
                         ));
                     }
                 };
@@ -213,10 +234,7 @@ impl Tokens {
                 if !self.match_str("@") {
                     return Err(ClexErrorType::UnclosedAtSymbol(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
             }
@@ -255,10 +273,7 @@ impl Tokens {
                 if self.at_end() {
                     return Err(ClexErrorType::UnclosedSingleQuotes(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
 
@@ -266,10 +281,7 @@ impl Tokens {
                 if !self.match_str("'") {
                     return Err(ClexErrorType::UnclosedSingleQuotes(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
             }
@@ -304,30 +316,19 @@ impl Tokens {
                 if self.at_end() {
                     return Err(ClexErrorType::UnclosedDoubleQuotes(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
 
                 if !self.match_str("\"") {
                     return Err(ClexErrorType::UnclosedDoubleQuotes(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
 
-                self.add_token_with_span(
-                    TokenType::LiteralText(literal),
-                    Span {
-                        start: start_pos,
-                        end: self.current,
-                    },
-                );
+                let span = self.get_byte_span(start_pos, self.current);
+                self.add_token_with_span(TokenType::LiteralText(literal), span);
             }
             "?" => {
                 let start_pos = self.start;
@@ -336,10 +337,7 @@ impl Tokens {
                 } else {
                     return Err(ClexErrorType::MissingColonAfterQuestionMark(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: start_pos,
-                            end: self.current,
-                        },
+                        self.get_byte_span(start_pos, self.current),
                     ));
                 }
             }
@@ -349,10 +347,7 @@ impl Tokens {
                     if c.as_str() == "-" && !Self::is_digit(self.peek()) {
                         return Err(ClexErrorType::MissingNumberAfterNegativeSign(
                             ParentErrorType::LexerError,
-                            Span {
-                                start: start_pos,
-                                end: self.current,
-                            },
+                            self.get_byte_span(start_pos, self.current),
                         ));
                     }
 
@@ -361,39 +356,33 @@ impl Tokens {
                     }
 
                     if self.peek() == "."
-                        && self
-                            .source_language
-                            .get(self.current + 1..self.current + 2)
-                            .map_or(false, |s| Self::is_digit(s))
+                        && self.current + 1 < self.graphemes.len()
+                        && Self::is_digit(&self.graphemes[self.current + 1].2)
                     {
                         self.current += 1; // consume '.'
                         while Self::is_digit(self.peek()) {
                             self.current += 1;
                         }
 
-                        let float_val = match self.source_language[self.start..self.current].parse::<f64>() {
+                        let span = self.get_byte_span(start_pos, self.current);
+                        let float_val = match self.source_language[span.start..span.end].parse::<f64>() {
                             Ok(num) => num,
                             Err(_err) => {
                                 return Err(ClexErrorType::NumericParsingError(
                                     ParentErrorType::LexerError,
-                                    Span {
-                                        start: start_pos,
-                                        end: self.current,
-                                    },
+                                    span,
                                 ));
                             }
                         };
                         self.add_token(TokenType::LiteralFloat(float_val));
                     } else {
-                        let number = match self.source_language[self.start..self.current].parse::<i64>() {
+                        let span = self.get_byte_span(start_pos, self.current);
+                        let number = match self.source_language[span.start..span.end].parse::<i64>() {
                             Ok(num) => num,
                             Err(_err) => {
                                 return Err(ClexErrorType::NumericParsingError(
                                     ParentErrorType::LexerError,
-                                    Span {
-                                        start: start_pos,
-                                        end: self.current,
-                                    },
+                                    span,
                                 ));
                             }
                         };
@@ -401,12 +390,10 @@ impl Tokens {
                         self.add_token(TokenType::LiteralNumber(number));
                     }
                 } else {
+                    let span = self.get_byte_span(self.start, self.current);
                     return Err(ClexErrorType::UnknownCharacter(
                         ParentErrorType::LexerError,
-                        Span {
-                            start: self.start,
-                            end: self.current,
-                        },
+                        span,
                         c,
                     ));
                 }
@@ -417,13 +404,11 @@ impl Tokens {
 
     /// Adds a token to the tokens vector.
     fn add_token(&mut self, token_type: TokenType) {
+        let span = self.get_byte_span(self.start, self.current);
         self.tokens.push(Token {
             token_type,
-            lexeme: self.source_language[self.start..self.current].to_string(),
-            span: Span {
-                start: self.start,
-                end: self.current,
-            },
+            lexeme: self.source_language[span.start..span.end].to_string(),
+            span,
         });
     }
 
@@ -444,7 +429,7 @@ impl Tokens {
 
     /// Retrieves the character at the specified index.
     fn char_at(&self, index: usize) -> &str {
-        self.source_language.graphemes(true).collect::<Vec<&str>>()[index]
+        &self.graphemes[index].2
     }
 
     /// Checks if the current characters match the expected string if yes then traverse as well.

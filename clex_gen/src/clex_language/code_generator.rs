@@ -211,12 +211,15 @@ impl Generator {
     }
 
     fn generate_random_string_from_charset(charset: &str, length: u64) -> String {
-        let charset = charset.as_bytes();
+        let chars: Vec<char> = charset.chars().collect();
+        if chars.is_empty() {
+            return String::new();
+        }
         let mut rng = rand::rng();
         (0..length)
             .map(|_| {
-                let idx = rng.random_range(0..charset.len());
-                charset[idx] as char
+                let idx = rng.random_range(0..chars.len());
+                chars[idx]
             })
             .collect()
     }
