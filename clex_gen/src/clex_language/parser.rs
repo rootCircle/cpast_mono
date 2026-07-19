@@ -31,7 +31,8 @@
 use super::lexer::{TokenType, Tokens};
 use crate::clex_language;
 use crate::clex_language::ast::{
-    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
+    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, Repetition,
+    UnitExpression,
 };
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use crate::clex_language::lexer::Token;
@@ -200,16 +201,24 @@ impl Parser {
         }
     }
 
-    fn parse_quantifier(&mut self) -> Result<PositiveReferenceType, ClexErrorType> {
+    fn parse_quantifier(&mut self) -> Result<Repetition, ClexErrorType> {
         if self.match_token(&TokenType::LeftCurlyBrackets) {
-            let reference =
+            let first_reference =
                 self.parse_positive_reference(clex_language::ast::DEFAULT_QUANTIFIER_VALUE)?;
-            self.expect(&TokenType::RightCurlyBrackets)?;
-            Ok(reference)
+
+            if self.match_token(&TokenType::Comma) {
+                let second_reference =
+                    self.parse_positive_reference(clex_language::ast::DEFAULT_QUANTIFIER_VALUE)?;
+                self.expect(&TokenType::RightCurlyBrackets)?;
+                Ok(Repetition::Range(first_reference, second_reference))
+            } else {
+                self.expect(&TokenType::RightCurlyBrackets)?;
+                Ok(Repetition::Exact(first_reference))
+            }
         } else {
-            Ok(PositiveReferenceType::ByLiteral(
+            Ok(Repetition::Exact(PositiveReferenceType::ByLiteral(
                 clex_language::ast::DEFAULT_QUANTIFIER_VALUE,
-            ))
+            )))
         }
     }
 

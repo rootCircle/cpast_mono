@@ -15,7 +15,7 @@
 //! # Example
 //!
 //! ```rust
-//! use clex_gen::clex_language::ast::{ClexLanguageAST, UnitExpression, DataType, ReferenceType, PositiveReferenceType};
+//! use clex_gen::clex_language::ast::{ClexLanguageAST, UnitExpression, DataType, ReferenceType, PositiveReferenceType, Repetition};
 //! use clex_gen::clex_language::lexer::Span;
 //!
 //! // Define a simple program AST
@@ -23,7 +23,7 @@
 //!     expression: vec![
 //!         UnitExpression::Primitives {
 //!             data_type: DataType::Integer(ReferenceType::ByLiteral(0), ReferenceType::ByLiteral(100)),
-//!             repetition: PositiveReferenceType::ByLiteral(1),
+//!             repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
 //!             span: Span { start: 0, end: 1 },
 //!         },
 //!         UnitExpression::CapturingGroup {
@@ -59,13 +59,20 @@ pub struct ClexLanguageAST {
     pub expression: Vec<UnitExpression>,
 }
 
+/// Represents repetition count (either exact count or random range [min, max]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Repetition {
+    Exact(PositiveReferenceType),
+    Range(PositiveReferenceType, PositiveReferenceType),
+}
+
 /// Represents various unit expressions within a program.
 #[derive(Debug, Clone, PartialEq)]
 pub enum UnitExpression {
     /// Primitive unit expression with specified data type and repetition type.
     Primitives {
         data_type: DataType,
-        repetition: PositiveReferenceType,
+        repetition: Repetition,
         span: Span,
     },
     /// Capturing group unit expression with a group number and range.
@@ -77,7 +84,7 @@ pub enum UnitExpression {
     /// Non-capturing group unit expression with nested expressions and repetition type.
     NonCapturingGroup {
         nest_exp: Vec<UnitExpression>,
-        repetition: PositiveReferenceType,
+        repetition: Repetition,
         span: Span,
     },
     /// Literal text expression (emitted as-is without auto-space).

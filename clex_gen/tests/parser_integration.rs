@@ -1,5 +1,5 @@
 use clex_gen::clex_language::ast::{
-    CharacterSet, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
+    CharacterSet, DataType, PositiveReferenceType, ReferenceType, Repetition, UnitExpression,
 };
 use clex_gen::clex_language::lexer::Span;
 use clex_gen::{clex_language, get_ast};
@@ -35,11 +35,11 @@ fn test_get_ast_with_complex_pattern() {
                             ReferenceType::ByLiteral(-10000),
                             ReferenceType::ByLiteral(10000)
                         ),
-                        repetition: PositiveReferenceType::ByGroup { group_number: 2 },
+                        repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 2 }),
                         span: Span { start: 22, end: 23 },
                     },
                 ],
-                repetition: PositiveReferenceType::ByGroup { group_number: 1 },
+                repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 1 }),
                 span: Span { start: 9, end: 10 },
             },
             UnitExpression::Eof,
@@ -73,7 +73,7 @@ fn test_get_ast_with_backreference() {
                     ),
                     CharacterSet::get_default_charset()
                 ),
-                repetition: PositiveReferenceType::ByGroup { group_number: 1 },
+                repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 1 }),
                 span: Span { start: 4, end: 5 },
             },
             UnitExpression::Eof
@@ -95,7 +95,7 @@ fn test_custom_charset_with_string() {
                     PositiveReferenceType::ByLiteral(10),
                     CharacterSet::Custom("asghdgad".to_string())
                 ),
-                repetition: PositiveReferenceType::ByLiteral(1),
+                repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
                 span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof
@@ -117,7 +117,7 @@ fn test_charset_with_string() {
                     PositiveReferenceType::ByLiteral(10),
                     CharacterSet::All
                 ),
-                repetition: PositiveReferenceType::ByLiteral(1),
+                repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
                 span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof
@@ -136,6 +136,30 @@ fn test_literal_text_ast() {
             UnitExpression::Literal {
                 text: "YES\n".to_string(),
                 span: Span { start: 0, end: 7 },
+            },
+            UnitExpression::Eof,
+        ]
+    );
+}
+
+#[test]
+fn test_quantifier_range_ast() {
+    let language = "N{2, 5}";
+    let ast = get_ast(language.to_string()).unwrap();
+
+    assert_eq!(
+        ast.expression,
+        vec![
+            UnitExpression::Primitives {
+                data_type: DataType::Integer(
+                    ReferenceType::ByLiteral(clex_language::ast::DEFAULT_RANGE_MIN_VALUE),
+                    ReferenceType::ByLiteral(clex_language::ast::DEFAULT_RANGE_MAX_VALUE),
+                ),
+                repetition: Repetition::Range(
+                    PositiveReferenceType::ByLiteral(2),
+                    PositiveReferenceType::ByLiteral(5)
+                ),
+                span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof,
         ]

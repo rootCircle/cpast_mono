@@ -40,7 +40,8 @@
 //! and other potential generation-time issues.
 
 use crate::clex_language::ast::{
-    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, UnitExpression,
+    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, Repetition,
+    UnitExpression,
 };
 use crate::clex_language::lexer::Span;
 use crate::clex_language::parser::Parser;
@@ -83,7 +84,7 @@ impl Generator {
                     span,
                 } => {
                     let repetition_count =
-                        self.get_positive_value_from_reference(repetition, groups, *span)?;
+                        self.get_repetition_count(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
                         let generated_text = match data_type {
@@ -118,7 +119,7 @@ impl Generator {
                     span,
                 } => {
                     let repetition_count =
-                        self.get_positive_value_from_reference(repetition, groups, *span)?;
+                        self.get_repetition_count(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
                         let nest_gen = Self::new_from_program(ClexLanguageAST {
@@ -141,6 +142,22 @@ impl Generator {
         }
 
         Ok(output_text)
+    }
+
+    fn get_repetition_count(
+        &self,
+        repetition: &Repetition,
+        groups: &HashMap<u64, u64>,
+        span: Span,
+    ) -> Result<u64, ClexErrorType> {
+        match repetition {
+            Repetition::Exact(pos_ref) => self.get_positive_value_from_reference(pos_ref, groups, span),
+            Repetition::Range(r1, r2) => {
+                let min = self.get_positive_value_from_reference(r1, groups, span)?;
+                let max = self.get_positive_value_from_reference(r2, groups, span)?;
+                self.generate_positive_random_integer(min, max, span)
+            }
+        }
     }
 
     // Helper method for generating random integers
