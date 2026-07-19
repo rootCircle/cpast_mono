@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.9 (2026-07-20)
+
+- Update `clex_gen` and `clex_llm` dependencies to `^0.4.0`.
+
 ## 0.10.8 (2026-06-14)
 
 - Update model to gemini-3.5-flash

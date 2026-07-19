@@ -11,6 +11,29 @@ For changelogs of packages, see:
 - [clex_gen](./clex_gen/CHANGELOG.md)
 - [ccode_runner](./ccode_runner/CHANGELOG.md)
 
+## 0.10.9 (2026-07-20)
+
+### clex_gen (v0.4.0)
+
+- **Literal Text Injection (`"..."`)**: Double-quoted literal text in expressions (e.g. `"YES\n"`, `"# "`) with full escape character support (`\n`, `\t`, `\r`, `\"`, `\\`, etc.).
+- **Quantifier Range Repetition (`{min, max}`)**: Variable repetition bounds `{min, max}` on primitives and non-capturing groups.
+- **Non-Capturing Group Alternation (`(?: ... | ... )`)**: Branch alternation inside non-capturing groups using pipe `|`.
+- **Flexible String Modifier Syntax**: Support for `S[len]`, `S[min, max]`, `S[len, charset]`, and `S[min, max, charset]`.
+- **Floating-Point Decimal Bounds (`F[min, max]`)**: Support for literal floating-point bounds (e.g. `F[1.5, 2.7]`) and float back-references.
+- **Graph & Permutation Topology Directives**: Native graph generation via `@TREE(N)@`, `@GRAPH(N, M)@`, `@DAG(N, M)@`, and `@PERM(N)@`.
+- **Loop Iteration Index Variable (`%i`)**: Support for current loop iteration counter `%i` (with offsets e.g. `%i-1`, `%i+1`) inside repeated non-capturing groups.
+- **AST Span Propagation**: Preserves precise `Span` locations for accurate error reporting during parsing and generation.
+- **Parser & Lexer Fixes**: Fixed `UnknownCharacter` memory leak, parenthetical nesting matching in `peek_from_current`, and parse-time validation for back-references (`\N`).
+
+### clex_llm (v0.4.0)
+
+- Updated prompt grammar specification and generator examples for modern Clex syntax.
+- Bumped dependency `clex_gen` to `^0.4.0`.
+
+### cpast (v0.10.9)
+
+- Bumped workspace dependencies `clex_gen` and `clex_llm` to `^0.4.0`.
+
 ## 0.10.4 (2025-08-10)
 
 - headless_chrome for scraping (experimental)
