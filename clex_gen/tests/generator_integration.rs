@@ -56,3 +56,18 @@ fn test_generator_with_numeral_charset_string_expression() {
     let gen_language = generator(language.to_string()).unwrap();
     assert!(!gen_language.is_empty() && gen_language.chars().all(|c| c.is_ascii_digit()));
 }
+
+#[test]
+fn test_generator_graph_primitives() {
+    let perm_res = generator("@PERM(5)@".to_string()).unwrap();
+    let nums: Vec<i64> = perm_res.split_whitespace().map(|s| s.parse().unwrap()).collect();
+    assert_eq!(nums.len(), 5);
+
+    let tree_res = generator("@TREE(4)@".to_string()).unwrap();
+    let lines: Vec<&str> = tree_res.trim().lines().collect();
+    assert_eq!(lines.len(), 3); // N-1 edges = 3
+
+    let dag_res = generator("@DAG(4, 3)@".to_string()).unwrap();
+    let dag_lines: Vec<&str> = dag_res.trim().lines().collect();
+    assert_eq!(dag_lines.len(), 3);
+}

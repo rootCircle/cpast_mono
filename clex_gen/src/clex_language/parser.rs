@@ -97,6 +97,10 @@ impl Parser {
                 text: text.clone(),
                 span: token.span,
             }),
+            TokenType::GraphPrimitive(kind) => Ok(UnitExpression::GraphPrimitive {
+                kind: kind.clone(),
+                span: token.span,
+            }),
             TokenType::Eof => Ok(UnitExpression::Eof),
             _ => Err(ClexErrorType::InvalidTokenFound(
                 ParentErrorType::ParserError,
@@ -184,7 +188,8 @@ impl Parser {
                     UnitExpression::Primitives { .. }
                     | UnitExpression::NonCapturingGroup { .. }
                     | UnitExpression::CapturingGroup { .. }
-                    | UnitExpression::Literal { .. } => {
+                    | UnitExpression::Literal { .. }
+                    | UnitExpression::GraphPrimitive { .. } => {
                         if let Some(current_branch) = branches.last_mut() {
                             current_branch.push(expr);
                         }

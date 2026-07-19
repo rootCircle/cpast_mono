@@ -40,15 +40,15 @@
 //! and other potential generation-time issues.
 
 use crate::clex_language::ast::{
-    CharacterSet, ClexLanguageAST, DataType, FloatReferenceType, PositiveReferenceType,
+    CharacterSet, ClexLanguageAST, DataType, FloatReferenceType, GraphKind, PositiveReferenceType,
     ReferenceType, Repetition, UnitExpression,
 };
+use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use crate::clex_language::lexer::Span;
 use crate::clex_language::parser::Parser;
+use rand::seq::SliceRandom;
 use rand::RngExt;
-
-use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug)]
 pub struct Generator {
@@ -151,6 +151,11 @@ impl Generator {
                 }
                 UnitExpression::Literal { text, span: _ } => {
                     output_text.push_str(text);
+                }
+                UnitExpression::GraphPrimitive { kind, span } => {
+                    let gen_text =
+                        self.generate_graph_primitive(kind, groups, *span, current_loop_index)?;
+                    output_text.push_str(&gen_text);
                 }
                 UnitExpression::Eof => {
                     if output_text.ends_with(' ') {
@@ -363,6 +368,104 @@ impl Generator {
                 span,
                 group_number,
             )),
+        }
+    }
+
+    fn generate_graph_primitive(
+        &self,
+        kind: &GraphKind,
+        groups: &HashMap<u64, u64>,
+        span: Span,
+        loop_index: u64,
+    ) -> Result<String, ClexErrorType> {
+        let mut rng = rand::rng();
+        match kind {
+            GraphKind::Tree(n_ref) => {
+                let n = self.get_positive_value_from_reference(n_ref, groups, span, loop_index)?;
+                if n <= 1 {
+                    return Ok(String::new());
+                }
+                let mut edges = Vec::new();
+                for i in 2..=n {
+                    let p = rng.random_range(1..i);
+                    edges.push((i, p));
+                }
+                let mut perm: Vec<u64> = (1..=n).collect();
+                perm.shuffle(&mut rng);
+
+                let mut out = String::new();
+                for (u, v) in edges {
+                    let u_mapped = perm[(u - 1) as usize];
+                    let v_mapped = perm[(v - 1) as usize];
+                    out.push_str(&format!("{u_mapped} {v_mapped}\n"));
+                }
+                Ok(out)
+            }
+            GraphKind::Graph(n_ref, m_ref) => {
+                let n = self.get_positive_value_from_reference(n_ref, groups, span, loop_index)?;
+                let requested_m =
+                    self.get_positive_value_from_reference(m_ref, groups, span, loop_index)?;
+                if n <= 1 {
+                    return Ok(String::new());
+                }
+                let max_edges = n * (n - 1) / 2;
+                let m = requested_m.min(max_edges);
+
+                let mut edge_set = HashSet::new();
+                while (edge_set.len() as u64) < m {
+                    let u = rng.random_range(1..=n);
+                    let v = rng.random_range(1..=n);
+                    if u != v {
+                        let edge = if u < v { (u, v) } else { (v, u) };
+                        edge_set.insert(edge);
+                    }
+                }
+                let mut out = String::new();
+                for (mut u, mut v) in edge_set {
+                    if rng.random_bool(0.5) {
+                        std::mem::swap(&mut u, &mut v);
+                    }
+                    out.push_str(&format!("{u} {v}\n"));
+                }
+                Ok(out)
+            }
+            GraphKind::Dag(n_ref, m_ref) => {
+                let n = self.get_positive_value_from_reference(n_ref, groups, span, loop_index)?;
+                let requested_m =
+                    self.get_positive_value_from_reference(m_ref, groups, span, loop_index)?;
+                if n <= 1 {
+                    return Ok(String::new());
+                }
+                let max_edges = n * (n - 1) / 2;
+                let m = requested_m.min(max_edges);
+
+                let mut edge_set = HashSet::new();
+                while (edge_set.len() as u64) < m {
+                    let u = rng.random_range(1..=n);
+                    let v = rng.random_range(1..=n);
+                    if u != v {
+                        let edge = if u < v { (u, v) } else { (v, u) };
+                        edge_set.insert(edge);
+                    }
+                }
+                let mut out = String::new();
+                for (u, v) in edge_set {
+                    out.push_str(&format!("{u} {v}\n"));
+                }
+                Ok(out)
+            }
+            GraphKind::Permutation(n_ref) => {
+                let n = self.get_positive_value_from_reference(n_ref, groups, span, loop_index)?;
+                if n == 0 {
+                    return Ok(String::new());
+                }
+                let mut perm: Vec<u64> = (1..=n).collect();
+                perm.shuffle(&mut rng);
+                let perm_strs: Vec<String> = perm.into_iter().map(|x| x.to_string()).collect();
+                let mut out = perm_strs.join(" ");
+                out.push(' ');
+                Ok(out)
+            }
         }
     }
 }

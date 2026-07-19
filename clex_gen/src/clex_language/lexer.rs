@@ -40,6 +40,7 @@
 //!
 //! For more details on the types and methods provided by the lexer, refer to the documentation for each type.
 
+use crate::clex_language::ast::{GraphKind, PositiveReferenceType};
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use unicode_segmentation::UnicodeSegmentation;
 
@@ -92,6 +93,8 @@ pub enum TokenType {
     LiteralText(String),
     /// Loop iteration index (%i, %i-1, %i+1, etc.) with offset.
     LoopIndex(i64),
+    /// Graph or permutation topology primitive.
+    GraphPrimitive(GraphKind),
 
     // End of file
     Eof,
@@ -243,7 +246,8 @@ impl Tokens {
                     ));
                 }
 
-                let token_type = match literal.trim().to_uppercase().as_str() {
+                let uppercase_literal = literal.trim().to_uppercase();
+                let token_type = match uppercase_literal.as_str() {
                     "CH_ALPHA" => TokenType::CharacterSetAlpha,
                     "CH_NUM" => TokenType::CharacterSetNumeric,
                     "CH_NEWLINE" => TokenType::CharacterSetNewline,
@@ -252,10 +256,14 @@ impl Tokens {
                     "CH_LOWER" => TokenType::CharacterSetLower,
                     "CH_ALL" => TokenType::CharacterSetAll,
                     _ => {
-                        return Err(ClexErrorType::InvalidCharacterSet(
-                            ParentErrorType::LexerError,
-                            self.get_byte_span(start_pos, self.current),
-                        ));
+                        if let Some(directive) = Self::parse_graph_primitive_directive(&literal) {
+                            TokenType::GraphPrimitive(directive)
+                        } else {
+                            return Err(ClexErrorType::InvalidCharacterSet(
+                                ParentErrorType::LexerError,
+                                self.get_byte_span(start_pos, self.current),
+                            ));
+                        }
                     }
                 };
 
@@ -473,9 +481,61 @@ impl Tokens {
         }
     }
 
-    /// Checks if the character is a digit.
-    fn is_digit(ch: &str) -> bool {
-        ("0"..="9").contains(&ch)
+    /// Checks if a string is a digit.
+    fn is_digit(c: &str) -> bool {
+        c.chars().all(|ch| ch.is_ascii_digit())
+    }
+
+    fn parse_pos_ref_str(s: &str) -> Option<PositiveReferenceType> {
+        let s = s.trim();
+        if s.starts_with('\\') {
+            let num: u64 = s[1..].parse().ok()?;
+            Some(PositiveReferenceType::ByGroup { group_number: num })
+        } else if s.starts_with("%i") {
+            let rest = &s[2..];
+            let offset: i64 = if rest.is_empty() {
+                0
+            } else {
+                rest.parse().ok()?
+            };
+            Some(PositiveReferenceType::ByLoopIndex { offset })
+        } else {
+            let val: u64 = s.parse().ok()?;
+            Some(PositiveReferenceType::ByLiteral(val))
+        }
+    }
+
+    fn parse_graph_primitive_directive(literal: &str) -> Option<GraphKind> {
+        let trimmed = literal.trim();
+        let open_bracket = trimmed.find('(')?;
+        if !trimmed.ends_with(')') {
+            return None;
+        }
+        let name = trimmed[..open_bracket].trim().to_uppercase();
+        let args_str = &trimmed[open_bracket + 1..trimmed.len() - 1];
+        let args: Vec<&str> = args_str.split(',').collect();
+
+        match name.as_str() {
+            "TREE" if args.len() == 1 => {
+                let n_ref = Self::parse_pos_ref_str(args[0])?;
+                Some(GraphKind::Tree(n_ref))
+            }
+            "GRAPH" if args.len() == 2 => {
+                let n_ref = Self::parse_pos_ref_str(args[0])?;
+                let m_ref = Self::parse_pos_ref_str(args[1])?;
+                Some(GraphKind::Graph(n_ref, m_ref))
+            }
+            "DAG" if args.len() == 2 => {
+                let n_ref = Self::parse_pos_ref_str(args[0])?;
+                let m_ref = Self::parse_pos_ref_str(args[1])?;
+                Some(GraphKind::Dag(n_ref, m_ref))
+            }
+            "PERM" | "PERMUTATION" if args.len() == 1 => {
+                let n_ref = Self::parse_pos_ref_str(args[0])?;
+                Some(GraphKind::Permutation(n_ref))
+            }
+            _ => None,
+        }
     }
 
     /// Peeks at the character at the current index.

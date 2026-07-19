@@ -88,9 +88,26 @@ pub enum UnitExpression {
         span: Span,
     },
     /// Literal text expression (emitted as-is without auto-space).
-    Literal { text: String, span: Span },
+    Literal {
+        text: String,
+        span: Span,
+    },
+    /// Graph or permutation topology primitive.
+    GraphPrimitive {
+        kind: GraphKind,
+        span: Span,
+    },
     /// Represents the end of the file in the program.
     Eof,
+}
+
+/// Represents specialized graph and permutation topology primitive types.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum GraphKind {
+    Tree(PositiveReferenceType),
+    Graph(PositiveReferenceType, PositiveReferenceType),
+    Dag(PositiveReferenceType, PositiveReferenceType),
+    Permutation(PositiveReferenceType),
 }
 
 impl UnitExpression {
@@ -99,7 +116,8 @@ impl UnitExpression {
             UnitExpression::Primitives { span, .. }
             | UnitExpression::CapturingGroup { span, .. }
             | UnitExpression::NonCapturingGroup { span, .. }
-            | UnitExpression::Literal { span, .. } => *span,
+            | UnitExpression::Literal { span, .. }
+            | UnitExpression::GraphPrimitive { span, .. } => *span,
             UnitExpression::Eof => Span { start: 0, end: 0 },
         }
     }
