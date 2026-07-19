@@ -58,25 +58,37 @@ Your task is to convert human-readable descriptions into formal Clex grammar rep
 ```
 ClexLanguage ::= UnitExpression*
 
-UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType
+UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | LiteralText
 
 CapturingGroup ::= "(" "N" PositiveRange? ")"
 
-NonCapturingGroup ::= "(?:" UnitExpression* ")" Quantifiers?
+NonCapturingGroup ::= "(?:" NonCapturingBranch ("|" NonCapturingBranch)* ")" Quantifiers?
+
+NonCapturingBranch ::= UnitExpression*
 
 DataType ::= "N" Range? Quantifiers?
-          | "F" Range? Quantifiers?
+          | "F" FloatRange? Quantifiers?
           | "S" StringModifier? Quantifiers?
 
-StringModifier ::= "[" PositiveReference? "," CharacterSet? "]"
+LiteralText ::= '"' <LITERAL_CHARACTERS> '"'
+
+StringModifier ::= "[" PositiveReference "]"
+                | "[" PositiveReference "," PositiveReference "]"
+                | "[" PositiveReference "," CharacterSet "]"
+                | "[" PositiveReference "," PositiveReference "," CharacterSet "]"
 
 Range ::= "[" Reference? "," Reference? "]"
+
+FloatRange ::= "[" FloatReference? "," FloatReference? "]"
 
 PositiveRange ::= "[" PositiveReference? "," PositiveReference? "]"
 
 Quantifiers ::= "{" PositiveReference "}"
+              | "{" PositiveReference "," PositiveReference "}"
 
 Reference ::= "\" GroupNo | i64
+
+FloatReference ::= "\" GroupNo | f64
 
 PositiveReference ::= "\" GroupNo | u64
 
@@ -91,11 +103,13 @@ Character ::= "CH_ALPHA" | "CH_NUM" | "CH_NEWLINE" | "CH_ALNUM" | "CH_UPPER" | "
 - **N**: Generates integers
 - **F**: Generates floating-point numbers
 - **S**: Generates strings
+- **LiteralText**: Double-quoted text (e.g., `"YES\n"`) emitted as-is without auto-space
 - **CapturingGroup**: (N) captures a non-negative integer for later reference
-- **NonCapturingGroup**: (?:...) groups expressions without capturing
-- **Quantifiers**: {n} or {\n} specifies repetition count
-- **Range**: [min,max] specifies value range for N and F
-- **StringModifier**: [length,@CHARACTER_SET@] specifies string length and character set
+- **NonCapturingGroup**: (?:...) groups expressions without capturing. Supports branch alternation with `|` (e.g. `(?: "YES" | "NO" )`)
+- **Quantifiers**: {n} specifies exact repetition, {min,max} specifies random repetition range
+- **Range**: [min,max] specifies value range for N
+- **FloatRange**: [min,max] specifies floating-point range for F (e.g., F[1.5, 2.7])
+- **StringModifier**: S[len], S[min,max], S[len,charset], or S[min,max,charset]
 - **Back-reference**: \n refers to the nth captured group
 
 ## Character Sets
