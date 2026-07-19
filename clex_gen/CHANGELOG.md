@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased (2026-07-20)
+
+### Added
+- **Literal Text Injection (`"..."`)**: Support for double-quoted literal text in expressions (e.g. `"YES\n"`, `"# "`) with full escape character support (`\n`, `\t`, `\r`, `\"`, `\\`, etc.).
+- **Quantifier Range Repetition (`{min, max}`)**: Support for variable repetition bounds `{min, max}` on primitives and non-capturing groups.
+- **Non-Capturing Group Alternation (`(?: ... | ... )`)**: Support for branch alternation inside non-capturing groups using pipe `|`.
+- **Flexible String Modifier Forms**: Support for `S[len]`, `S[min, max]`, `S[len, charset]`, and `S[min, max, charset]` syntax.
+- **Floating-Point Decimal Bounds (`F[min, max]`)**: Support for literal floating-point bounds (e.g. `F[1.5, 2.7]`) and float back-references.
+- **AST Span Propagation**: AST nodes (`UnitExpression`) now preserve precise `Span` locations for accurate error reporting during parsing and generation.
+
+### Fixed
+- **Lexer Memory Leak**: Changed `UnknownCharacter` error variant to use an owned `String` instead of leaking memory via `Box::leak`.
+- **Group Parentheses Matching**: Fixed parenthetical nesting checks in `peek_from_current` using a depth counter instead of stack double-pop logic.
+- **Group Reference Validation**: Added parse-time validation ensuring back-references (`\N`) refer only to existing, previously-defined capturing groups.
+
 ## v0.3.6 (2026-06-12)
 
 <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/>
