@@ -11,29 +11,44 @@ For example: S[1, 4, @CH_UPPER@] can generate "G", "GAHS" or "JHAS" etc.
 
 ## Rules for grammar
 
+## Rules for grammar
+
 ```txt
 ClexLanguage ::= UnitExpression*
 
-UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | EOF
+UnitExpression ::= CapturingGroup | NonCapturingGroup | DataType | LiteralText | EOF
 
 CapturingGroup ::= "(" "N" PositiveRange? ")"
 
-NonCapturingGroup ::= "(?:" UnitExpression* ")" Quantifiers?
+NonCapturingGroup ::= "(?:" NonCapturingBranch ("|" NonCapturingBranch)* ")" Quantifiers?
+
+NonCapturingBranch ::= UnitExpression*
 
 DataType ::= "N" Range? Quantifiers?
-          | "F" Range? Quantifiers?
+          | "F" FloatRange? Quantifiers?
           | "S" StringModifier? Quantifiers?
 
-StringModifier ::= "[" PositiveReference? "," PositiveReference? "," CharacterSet? "]"
+LiteralText ::= '"' <LITERAL_CHARACTERS> '"'
+
+StringModifier ::= "[" PositiveReference "]"
+                | "[" PositiveReference "," PositiveReference "]"
+                | "[" PositiveReference "," CharacterSet "]"
+                | "[" PositiveReference "," PositiveReference "," CharacterSet "]"
 
 Range ::= "[" Reference? "," Reference? "]"
+
+FloatRange ::= "[" FloatReference? "," FloatReference? "]"
 
 PositiveRange ::= "[" PositiveReference? "," PositiveReference? "]"
 
 Quantifiers ::= "{" PositiveReference "}"
+              | "{" PositiveReference "," PositiveReference "}"
 
 Reference ::= "\" GroupNo
             | i64
+
+FloatReference ::= "\" GroupNo
+                 | f64
 
 PositiveReference ::= "\" GroupNo
                     | u64
@@ -51,7 +66,7 @@ ASCII_CHARACTER_SET ::= <ANY_ASCII_CHARACTER>
 
 ### ASCII_CHARACTER_SET
 
-Denotes the set of all ASCII characters, that can be represented. Includes espace characters like `\n`, `\t`, `\r`, `\\`, `\'`, `\"`, `\0` `\a`, `\b`, `\f` and `\v`. Other escape characters excluding these might be treated as two characters.
+Denotes the set of all ASCII characters, that can be represented. Includes escape characters like `\n`, `\t`, `\r`, `\\`, `\'`, `\"`, `\0` `\a`, `\b`, `\f` and `\v`. Other escape characters excluding these might be treated as two characters.
 
 ### Character
 
@@ -81,7 +96,11 @@ _Reference_ can be a back-reference to a capturing group (GroupNo) or a numeric 
 
 Back-referencing is done by using `"\" GroupNo`, in this case the value in that specific Group is de-referenced upon use and put back in as a value.
 
-lex uses 1-based indexing for backreferences, rather than zero-based like many other regular expression engines.
+Clex uses 1-based indexing for backreferences, rather than zero-based like many other regular expression engines.
+
+### FloatReference
+
+_FloatReference_ can be a back-reference to a capturing group (GroupNo) or a floating-point literal value (f64). It is used in FloatRange to specify floating-point bounds.
 
 ### PositiveReference
 
@@ -89,51 +108,55 @@ _PositiveReference_ is similar to Reference but ensures that the referenced valu
 
 ### Quantifier
 
-_Quantifier_ specify the number of occurrences for the preceding expression. The _PositiveReference_ in "{ ... }" denote the number of occurrences. If not specified, the associated expression occurs only once. The number of occurrences can't be negative for obvious reasons.
+_Quantifier_ specifies the number of occurrences for the preceding expression. It can be exact repetition `{count}` or a random repetition range `{min, max}`. If not specified, the associated expression occurs only once.
 
 ### Range
 
-_Range_ specifies a domain of values for numeric _DataType_ (Integer and Float) from which its value will be generated during generator phase. It includes _Reference_(s) for the lower and the upper bound for the number to be generated. If not specified, default values(INT32_MIN, INT32_MAX) are used. The upper and lower bound is always an integer(even if defining range for float data types also). Range is always inclusive, so `[m, n]` would mean that value can be anywhere from `m` to including `n`. The minimum and maximum value in range can be INT64_MIN and INT64_MAX respectively.
+_Range_ specifies a domain of integer values for numeric _DataType_ ("N") from which its value will be generated during generator phase. It includes _Reference_(s) for the lower and the upper bound. Range is always inclusive `[m, n]`.
+
+### FloatRange
+
+_FloatRange_ specifies a domain of floating-point values for numeric _DataType_ ("F"). It includes _FloatReference_(s) for lower and upper bounds (e.g., `F[1.5, 2.7]`).
 
 ### PositiveRange
 
-_PositiveRange_ is similar to _Range_ but ensures that the specified references are non-negative(using _PositiveReference_). It includes _PositiveReference_ for the lower and the upper bound for the number to be generated. If not specified, default values(UINT32_MIN, UINT32_MAX) are used. The upper and lower bound is always a non-negative integer. The minimum and maximum value in range can be UINT64_MIN and UINT64_MAX respectively.
+_PositiveRange_ is similar to _Range_ but ensures that the specified references are non-negative(using _PositiveReference_).
 
 ### StringModifier
 
-_StringModifier_ is an optional modifier for the String ("S") _DataType_, specifying additional properties for generating strings. It includes two _PositiveReference_ for the minimum and maximum length of the string and a _CharacterSet_ for the set of characters from which string has to be generated.
+_StringModifier_ is an optional modifier for the String ("S") _DataType_, supporting flexible forms:
+- `S[len]`: Exact length string with default charset.
+- `S[min, max]`: Variable length string [min, max] with default charset.
+- `S[len, charset]`: Exact length string with specified charset.
+- `S[min, max, charset]`: Variable length string [min, max] with specified charset.
+
+### LiteralText
+
+Literal text enclosed in double quotes (e.g. `"YES\n"`, `"# "`). Emitted verbatim into generated test cases without automatic trailing spaces.
 
 ### DataType
 
-_DataType_ represents different types of data that can be generator. It includes "N" for integers, "F" for floating-point numbers, "S" for strings, and "C" for characters. Each data type can have an optional range, string modifier, and quantifiers based on their respective types.
+_DataType_ represents different types of data that can be generated: "N" for integers, "F" for floating-point numbers, and "S" for strings.
 
 ### NonCapturingGroup
 
-A _NonCapturingGroup_ is a _UnitExpression_ that groups other expressions without capturing the matched text, i.e. no account in group register is hold for it. The "(?:" and ")" denote the start and end of the non-capturing group. It can contain other unit expressions and may have associated quantifiers. A NonCapturingGroup can be nested and/or store _CapturingGroup_ as well.
-
-However, it's worth mentioning that if the _NonCapturingGroup_ is repeated using _Quantifier_ and there is a _CapturingGroup_ inside that _NonCapturingGroup_, then the _CapturingGroup_ will only have one group number, not many for each iteration.
-
-Example : (?:(N)){3} : In this the group number of N will always be one, irrespective of how many times it's called. It won't be 1, 2, 3.
+A _NonCapturingGroup_ groups expressions without capturing matched text. Supports branch alternation using pipe `|` (e.g., `(?: "YES" | "NO" )`).
 
 ### CapturingGroup
 
-A _CapturingGroup_ is a _UnitExpression_ that captures and stores a non-negative number. It is used for grouping and capturing elements in the regular expression. Capturing Group is a special UnitExpression that only house a non-negative number.
-
-By design, it's made to capture positive values only, due to its wide use in quantifier, where value of quantifier can't be negative semantically.
+A _CapturingGroup_ is a _UnitExpression_ that captures and stores a non-negative number.
 
 ### UnitExpression
 
-UnitExpression is a fundamental building block in the Clex language, representing a single element or group of elements in the expression. It can be either a _CapturingGroup_ or _NonCapturingGroup_ or _DataType_ or _EOF_.
+UnitExpression is a fundamental building block in the Clex language, representing a single element or group of elements in the expression. It can be a _CapturingGroup_, _NonCapturingGroup_, _DataType_, _LiteralText_, or _EOF_.
 
 ### EOF
 
-Denotes the end of the Clex language expression. It isn't shown semantically in the language itself, but is generated during intermediate steps manually in lexical phase.
+Denotes the end of the Clex language expression.
 
 ### ClexLanguage
 
-ClexLanguage is the overall expression in the Clex language, consisting of multiple UnitExpression elements. It represents the complete expression pattern defined in the Clex language.
-
-In essence, ClexLanguage is the top-level structure that encapsulates the entire regular expression defined in the Clex language, composed of various UnitExpression elements.
+ClexLanguage is the overall expression in the Clex language, consisting of multiple UnitExpression elements.
 
 ## Constants in Language
 
@@ -142,11 +165,11 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 
 ## Common Rules while deriving a language
 
-- Whitespace(s) introduced at any stages are eaten completely by the lexers. So, space are treated the same way as typical comments in other languages.
+- Whitespace(s) introduced at any stages are eaten completely by the lexers. So, spaces are treated the same way as typical comments in other languages.
 
 - _PositiveReference_ must have their dereferenced values always positive. This rule is enforced by ensuring that the value generated in any _CapturingGroup_ is always a non-negative integer.
 
-- At any given instance, _GroupNo_ CANNOT EXCEED the **total number of occurrences of _CapturingGroup_** in that specific Language. So, if there are only three capturing group in that language, then language will not allow _GroupNo_ > 3.
+- At any given instance, _GroupNo_ CANNOT EXCEED the **total number of occurrences of _CapturingGroup_** present prior in that specific Language.
 
 ## Defaults
 
@@ -158,22 +181,15 @@ In essence, ClexLanguage is the top-level structure that encapsulates the entire
 
 - In case, if _StringModifier_ is not given in _DataType_ (for "S"), then it defaults to the defaults of _StringModifier_ only.
 
-- In case of _StringModifier_, if the _PositiveReference_ is not given, then it defaults to the constant **MAX_STRING_SIZE** i.e., 12.
-
-- In case of _StringModifier_, if the CharacterSet is not given, then it defaults to the constant **DEFAULT_CHARSET** i.e., "'N'".
-
-- If _Reference_ in _Range_ is not given then it defaults to INT32_MIN and INT32_MAX respectively for the corresponding missing value.
-
-- If _PositiveReference_ in _PositiveRange_ is not given then it defaults to UINT32_MIN and UINT32_MAX respectively for the corresponding missing value.
-
 ## Examples
 
 - `N{2}` : Generates two random integers.
+- `N{2, 5}` : Generates between 2 and 5 random integers.
+- `(?: "YES" | "NO" )` : Randomly chooses between generating "YES" or "NO".
 - `(N) (?:N){\1}` : Generates a random integer, then the same number of additional integers.
-- `(N) (?:S[\1,\1,])` : Generates a random integer, then a string of that length.
-- `(N) (?:S[\1,\1,@CH_UPPER@])` : Generates a random integer followed by a random string of uppercase letters, where the length of the string is equal to the generated integer.
-- `N S C` : Generates a random integer, string, and character.
-- `F[-100,100]` : Generates a random floating-point number between -100 and 100.
+- `(N) (?:S[\1])` : Generates a random integer, then a string of that length.
+- `(N) (?:S[\1, @CH_UPPER@])` : Generates a random integer followed by a random string of uppercase letters of that length.
+- `F[1.5, 2.7]` : Generates a random floating-point number between 1.5 and 2.7.
 - `(N[1,100]) (?:N[1,1000]){\1} N[1,10000]` : Captures a random integer between 1 and 100, then generates that many integers between 1 and 1000, followed by another integer between 1 and 10000.
 
 ## References
