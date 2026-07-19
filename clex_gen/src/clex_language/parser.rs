@@ -274,10 +274,10 @@ impl Parser {
                         clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64,
                     )?;
 
-                    if self.match_token(&TokenType::Comma) {
-                        if let Some(cs) = self.try_parse_character_set() {
-                            char_set = cs;
-                        }
+                    if self.match_token(&TokenType::Comma)
+                        && let Some(cs) = self.try_parse_character_set()
+                    {
+                        char_set = cs;
                     }
                 }
             } else {

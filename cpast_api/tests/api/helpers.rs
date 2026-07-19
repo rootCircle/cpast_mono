@@ -43,7 +43,7 @@ impl TestApp {
         Body: serde::Serialize,
     {
         self.api_client
-            .post(format!("{}/api/v1/share", &self.address))
+            .post(format!("{}/api/v1/share", self.address))
             .header("Content-Type", "application/json")
             .json(body)
             .send()
@@ -53,7 +53,7 @@ impl TestApp {
 
     pub async fn get_shared_code(&self, share_id: &str) -> reqwest::Response {
         self.api_client
-            .get(format!("{}/api/v1/share/{}", &self.address, share_id))
+            .get(format!("{}/api/v1/share/{}", self.address, share_id))
             .send()
             .await
             .expect("Failed to execute request.")
@@ -66,7 +66,7 @@ impl TestApp {
         self.api_client
             .post(format!(
                 "{}/api/v1/evaluate/with_code_and_clex",
-                &self.address
+                self.address
             ))
             .header("Content-Type", "application/json")
             .json(body)
@@ -80,7 +80,7 @@ impl TestApp {
         Body: serde::Serialize,
     {
         self.api_client
-            .post(format!("{}/api/v1/evaluate/with_shared_id", &self.address))
+            .post(format!("{}/api/v1/evaluate/with_shared_id", self.address))
             .header("Content-Type", "application/json")
             .json(body)
             .send()
@@ -98,7 +98,7 @@ impl TestApp {
         self.api_client
             .post(format!(
                 "{}/api/v1/evaluate/with_code_and_constraint",
-                &self.address
+                self.address
             ))
             .header("Content-Type", "application/json")
             .json(body)
@@ -114,7 +114,7 @@ impl TestApp {
         self.api_client
             .post(format!(
                 "{}/api/v1/evaluate/with_code_and_platform",
-                &self.address
+                self.address
             ))
             .header("Content-Type", "application/json")
             .json(body)
@@ -128,7 +128,7 @@ impl TestApp {
         Body: serde::Serialize,
     {
         self.api_client
-            .post(format!("{}/api/v1/evaluate/with_platform", &self.address))
+            .post(format!("{}/api/v1/evaluate/with_platform", self.address))
             .header("Content-Type", "application/json")
             .json(body)
             .send()

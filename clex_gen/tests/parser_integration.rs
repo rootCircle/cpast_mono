@@ -36,7 +36,9 @@ fn test_get_ast_with_complex_pattern() {
                             ReferenceType::ByLiteral(-10000),
                             ReferenceType::ByLiteral(10000)
                         ),
-                        repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 2 }),
+                        repetition: Repetition::Exact(PositiveReferenceType::ByGroup {
+                            group_number: 2
+                        }),
                         span: Span { start: 22, end: 23 },
                     },
                 ]],
@@ -59,8 +61,12 @@ fn test_get_ast_with_backreference() {
             UnitExpression::CapturingGroup {
                 group_number: 1,
                 range: (
-                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE),
-                    PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE),
+                    PositiveReferenceType::ByLiteral(
+                        clex_language::ast::DEFAULT_POSITIVE_RANGE_MIN_VALUE
+                    ),
+                    PositiveReferenceType::ByLiteral(
+                        clex_language::ast::DEFAULT_POSITIVE_RANGE_MAX_VALUE
+                    ),
                 ),
                 span: Span { start: 0, end: 1 },
             },
@@ -146,8 +152,12 @@ fn test_alternation_ast() {
                     }],
                     vec![UnitExpression::Primitives {
                         data_type: DataType::String(
-                            PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64),
-                            PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64),
+                            PositiveReferenceType::ByLiteral(
+                                clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64
+                            ),
+                            PositiveReferenceType::ByLiteral(
+                                clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64
+                            ),
                             CharacterSet::get_default_charset(),
                         ),
                         repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),

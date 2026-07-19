@@ -107,7 +107,10 @@ fn test_lexer_numeric_parsing() {
 #[test]
 fn test_lexer_missing_digit_after_minus() {
     let err = generator("N[-]".to_string()).unwrap_err();
-    assert!(err.to_string().contains("expected a number after negative sign"));
+    assert!(
+        err.to_string()
+            .contains("expected a number after negative sign")
+    );
 }
 
 // ============================================================================
@@ -238,15 +241,27 @@ fn test_parser_string_modifiers_variations() {
 fn test_parser_backreference_validation() {
     // Group 0 reference error
     let err_zero = generator("N{\\0}".to_string()).unwrap_err();
-    assert!(err_zero.to_string().contains("group number must be positive"));
+    assert!(
+        err_zero
+            .to_string()
+            .contains("group number must be positive")
+    );
 
     // Forward group reference error
     let err_forward = generator("N{\\1} (N)".to_string()).unwrap_err();
-    assert!(err_forward.to_string().contains("reference to undefined group 1"));
+    assert!(
+        err_forward
+            .to_string()
+            .contains("reference to undefined group 1")
+    );
 
     // Out-of-bounds group number error
     let err_oob = generator("(N) N{\\2}".to_string()).unwrap_err();
-    assert!(err_oob.to_string().contains("reference to undefined group 2"));
+    assert!(
+        err_oob
+            .to_string()
+            .contains("reference to undefined group 2")
+    );
 }
 
 #[test]
@@ -270,11 +285,17 @@ fn test_parser_non_capturing_groups_and_alternation() {
 fn test_parser_syntax_errors() {
     // Missing comma in range
     let err1 = generator("N[1 5]".to_string()).unwrap_err();
-    assert!(err1.to_string().contains("expected comma in range expression"));
+    assert!(
+        err1.to_string()
+            .contains("expected comma in range expression")
+    );
 
     // Capturing group starting with non-N (e.g. S)
     let err2 = generator("(S)".to_string()).unwrap_err();
-    assert!(err2.to_string().contains("expected valid content after opening parenthesis"));
+    assert!(
+        err2.to_string()
+            .contains("expected valid content after opening parenthesis")
+    );
 }
 
 // ============================================================================
@@ -285,7 +306,10 @@ fn test_parser_syntax_errors() {
 fn test_generator_invalid_range_min_greater_than_max() {
     // Integer min > max
     let err1 = generator("N[10, 1]".to_string()).unwrap_err();
-    assert!(err1.to_string().contains("invalid range: minimum (10) is greater than maximum (1)"));
+    assert!(
+        err1.to_string()
+            .contains("invalid range: minimum (10) is greater than maximum (1)")
+    );
 
     // Float min > max
     let err2 = generator("F[10.5, 1.2]".to_string()).unwrap_err();

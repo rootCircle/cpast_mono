@@ -365,19 +365,21 @@ impl Tokens {
                         }
 
                         let span = self.get_byte_span(start_pos, self.current);
-                        let float_val = match self.source_language[span.start..span.end].parse::<f64>() {
-                            Ok(num) => num,
-                            Err(_err) => {
-                                return Err(ClexErrorType::NumericParsingError(
-                                    ParentErrorType::LexerError,
-                                    span,
-                                ));
-                            }
-                        };
+                        let float_val =
+                            match self.source_language[span.start..span.end].parse::<f64>() {
+                                Ok(num) => num,
+                                Err(_err) => {
+                                    return Err(ClexErrorType::NumericParsingError(
+                                        ParentErrorType::LexerError,
+                                        span,
+                                    ));
+                                }
+                            };
                         self.add_token(TokenType::LiteralFloat(float_val));
                     } else {
                         let span = self.get_byte_span(start_pos, self.current);
-                        let number = match self.source_language[span.start..span.end].parse::<i64>() {
+                        let number = match self.source_language[span.start..span.end].parse::<i64>()
+                        {
                             Ok(num) => num,
                             Err(_err) => {
                                 return Err(ClexErrorType::NumericParsingError(

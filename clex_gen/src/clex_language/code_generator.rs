@@ -83,18 +83,24 @@ impl Generator {
                     repetition,
                     span,
                 } => {
-                    let repetition_count =
-                        self.get_repetition_count(repetition, groups, *span)?;
+                    let repetition_count = self.get_repetition_count(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
                         let generated_text = match data_type {
                             DataType::String(min_length, max_length, charset) => self
-                                .generate_random_string(min_length, max_length, charset, groups, *span)?,
+                                .generate_random_string(
+                                    min_length, max_length, charset, groups, *span,
+                                )?,
                             DataType::Float(min_reference, max_reference) => self
                                 .generate_random_float(min_reference, max_reference, groups, *span)?
                                 .to_string(),
                             DataType::Integer(min_reference, max_reference) => self
-                                .generate_random_number(min_reference, max_reference, groups, *span)?
+                                .generate_random_number(
+                                    min_reference,
+                                    max_reference,
+                                    groups,
+                                    *span,
+                                )?
                                 .to_string(),
                         };
                         output_text.push_str(&generated_text);
@@ -106,8 +112,12 @@ impl Generator {
                     range: (min_reference, max_reference),
                     span,
                 } => {
-                    let random_number =
-                        self.generate_positive_random_number(min_reference, max_reference, groups, *span)?;
+                    let random_number = self.generate_positive_random_number(
+                        min_reference,
+                        max_reference,
+                        groups,
+                        *span,
+                    )?;
                     groups.insert(*group_number, random_number);
 
                     output_text.push_str(&random_number.to_string());
@@ -118,8 +128,7 @@ impl Generator {
                     repetition,
                     span,
                 } => {
-                    let repetition_count =
-                        self.get_repetition_count(repetition, groups, *span)?;
+                    let repetition_count = self.get_repetition_count(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
                         if branches.is_empty() {
@@ -160,7 +169,9 @@ impl Generator {
         span: Span,
     ) -> Result<u64, ClexErrorType> {
         match repetition {
-            Repetition::Exact(pos_ref) => self.get_positive_value_from_reference(pos_ref, groups, span),
+            Repetition::Exact(pos_ref) => {
+                self.get_positive_value_from_reference(pos_ref, groups, span)
+            }
             Repetition::Range(r1, r2) => {
                 let min = self.get_positive_value_from_reference(r1, groups, span)?;
                 let max = self.get_positive_value_from_reference(r2, groups, span)?;
@@ -170,7 +181,12 @@ impl Generator {
     }
 
     // Helper method for generating random integers
-    fn generate_random_integer(&self, min: i64, max: i64, span: Span) -> Result<i64, ClexErrorType> {
+    fn generate_random_integer(
+        &self,
+        min: i64,
+        max: i64,
+        span: Span,
+    ) -> Result<i64, ClexErrorType> {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
@@ -183,7 +199,12 @@ impl Generator {
     }
 
     // Helper method for generating random positive integers
-    fn generate_positive_random_integer(&self, min: u64, max: u64, span: Span) -> Result<u64, ClexErrorType> {
+    fn generate_positive_random_integer(
+        &self,
+        min: u64,
+        max: u64,
+        span: Span,
+    ) -> Result<u64, ClexErrorType> {
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
                 ParentErrorType::GeneratorError,
@@ -205,7 +226,8 @@ impl Generator {
     ) -> Result<String, ClexErrorType> {
         let min_length = self.get_positive_value_from_reference(min_length, groups, span)? as usize;
         let max_length = self.get_positive_value_from_reference(max_length, groups, span)? as usize;
-        let length = self.generate_positive_random_integer(min_length as u64, max_length as u64, span)?;
+        let length =
+            self.generate_positive_random_integer(min_length as u64, max_length as u64, span)?;
         let charset = character_set.get_character_domain();
         Ok(Self::generate_random_string_from_charset(&charset, length))
     }

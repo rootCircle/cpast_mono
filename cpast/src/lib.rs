@@ -198,7 +198,7 @@ async fn process_test_case(
                     "{}\n{}\n{}\n==============================\n{}\n{}\n==============================\n{}\n{}",
                     format!("Testcase {iter} failed!").red(),
                     "INPUT".underline(),
-                    &output_text.cyan(),
+                    output_text.cyan(),
                     "EXPECTED OUTPUT".underline(),
                     expected.green(),
                     "ACTUAL OUTPUT".underline(),

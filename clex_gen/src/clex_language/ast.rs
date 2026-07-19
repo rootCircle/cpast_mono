@@ -88,10 +88,7 @@ pub enum UnitExpression {
         span: Span,
     },
     /// Literal text expression (emitted as-is without auto-space).
-    Literal {
-        text: String,
-        span: Span,
-    },
+    Literal { text: String, span: Span },
     /// Represents the end of the file in the program.
     Eof,
 }
