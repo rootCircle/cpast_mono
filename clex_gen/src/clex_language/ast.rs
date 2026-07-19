@@ -80,6 +80,11 @@ pub enum UnitExpression {
         repetition: PositiveReferenceType,
         span: Span,
     },
+    /// Literal text expression (emitted as-is without auto-space).
+    Literal {
+        text: String,
+        span: Span,
+    },
     /// Represents the end of the file in the program.
     Eof,
 }
@@ -89,7 +94,8 @@ impl UnitExpression {
         match self {
             UnitExpression::Primitives { span, .. }
             | UnitExpression::CapturingGroup { span, .. }
-            | UnitExpression::NonCapturingGroup { span, .. } => *span,
+            | UnitExpression::NonCapturingGroup { span, .. }
+            | UnitExpression::Literal { span, .. } => *span,
             UnitExpression::Eof => Span { start: 0, end: 0 },
         }
     }

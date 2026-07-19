@@ -92,6 +92,10 @@ impl Parser {
                 self.parse_primitive_expr(dt, token.span)
             }
             TokenType::LeftParens => self.parse_group_expr(token.span),
+            TokenType::LiteralText(text) => Ok(UnitExpression::Literal {
+                text: text.clone(),
+                span: token.span,
+            }),
             TokenType::Eof => Ok(UnitExpression::Eof),
             _ => Err(ClexErrorType::InvalidTokenFound(
                 ParentErrorType::ParserError,
@@ -174,7 +178,8 @@ impl Parser {
                 match expr {
                     UnitExpression::Primitives { .. }
                     | UnitExpression::NonCapturingGroup { .. }
-                    | UnitExpression::CapturingGroup { .. } => nest_exp.push(expr),
+                    | UnitExpression::CapturingGroup { .. }
+                    | UnitExpression::Literal { .. } => nest_exp.push(expr),
                     UnitExpression::Eof => break,
                 }
             }

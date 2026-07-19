@@ -33,6 +33,8 @@ pub enum ClexErrorType {
     UnknownCharacter(ParentErrorType, Span, String),
     /// Error when an @ symbol is not properly closed
     UnclosedAtSymbol(ParentErrorType, Span),
+    /// Error when a double quote is not properly closed
+    UnclosedDoubleQuotes(ParentErrorType, Span),
     /// Error when an invalid character set is specified, all valid character sets are specified in <https://github.com/rootCircle/cpast_mono/blob/main/clex_gen/docs/CLEX_LANG_SPECS.md#character>
     InvalidCharacterSet(ParentErrorType, Span),
 
@@ -146,6 +148,7 @@ impl ClexErrorType {
     fn get_error_message(&self) -> String {
         match self {
             ClexErrorType::UnclosedSingleQuotes(_, _) => "expected closing single quote (')\n  = help: strings must be enclosed in single quotes like 'text'".to_string(),
+            ClexErrorType::UnclosedDoubleQuotes(_, _) => "expected closing double quote (\")\n  = help: literal text must be enclosed in double quotes like \"text\"".to_string(),
             ClexErrorType::MissingColonAfterQuestionMark(_, _) => "expected colon (:) after question mark\n  = help: non-capturing groups use the syntax (?:...)".to_string(),
             ClexErrorType::MissingNumberAfterNegativeSign(_, _) => "expected a number after negative sign (-)\n  = help: negative signs must be followed by digits, e.g., -5".to_string(),
             ClexErrorType::NumericParsingError(_, _) => "failed to parse number\n  = help: numbers must be valid integers within the valid range".to_string(),
@@ -174,6 +177,7 @@ impl ClexErrorType {
     fn get_span(&self) -> Span {
         match self {
             ClexErrorType::UnclosedSingleQuotes(_, span)
+            | ClexErrorType::UnclosedDoubleQuotes(_, span)
             | ClexErrorType::MissingColonAfterQuestionMark(_, span)
             | ClexErrorType::MissingNumberAfterNegativeSign(_, span)
             | ClexErrorType::NumericParsingError(_, span)
@@ -198,6 +202,7 @@ impl ClexErrorType {
     fn get_parent_error_type(&self) -> &'static str {
         match self {
             ClexErrorType::UnclosedSingleQuotes(parent_type, _)
+            | ClexErrorType::UnclosedDoubleQuotes(parent_type, _)
             | ClexErrorType::MissingColonAfterQuestionMark(parent_type, _)
             | ClexErrorType::MissingNumberAfterNegativeSign(parent_type, _)
             | ClexErrorType::NumericParsingError(parent_type, _)

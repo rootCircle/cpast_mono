@@ -87,6 +87,7 @@ pub enum TokenType {
     /// Literal number token type with a specified value.
     LiteralNumber(i64),
     LiteralString(String),
+    LiteralText(String),
 
     // End of file
     Eof,
@@ -269,6 +270,62 @@ impl Tokens {
                     ));
                 }
             }
+            "\"" => {
+                let start_pos = self.start;
+
+                let mut literal = String::new();
+                while self.peek() != "\"" && !self.at_end() {
+                    let c = self.advance();
+                    if c == "\\" {
+                        let escaped = match self.peek() {
+                            "n" => '\n',   // newline
+                            "t" => '\t',   // tab
+                            "r" => '\r',   // carriage return
+                            "\\" => '\\',  // backslash
+                            "'" => '\'',   // single quote
+                            "\"" => '\"',  // double quote
+                            "0" => '\0',   // null
+                            "a" => '\x07', // bell
+                            "b" => '\x08', // backspace
+                            "f" => '\x0C', // form feed
+                            "v" => '\x0B', // vertical tab
+                            _ => '\\',
+                        };
+                        self.advance();
+                        literal.push(escaped);
+                    } else {
+                        literal.push_str(c);
+                    }
+                }
+
+                if self.at_end() {
+                    return Err(ClexErrorType::UnclosedDoubleQuotes(
+                        ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
+                    ));
+                }
+
+                if !self.match_str("\"") {
+                    return Err(ClexErrorType::UnclosedDoubleQuotes(
+                        ParentErrorType::LexerError,
+                        Span {
+                            start: start_pos,
+                            end: self.current,
+                        },
+                    ));
+                }
+
+                self.add_token_with_span(
+                    TokenType::LiteralText(literal),
+                    Span {
+                        start: start_pos,
+                        end: self.current,
+                    },
+                );
+            }
             "?" => {
                 let start_pos = self.start;
                 if self.match_str(":") {
@@ -339,6 +396,15 @@ impl Tokens {
                 start: self.start,
                 end: self.current,
             },
+        });
+    }
+
+    /// Adds a token with a specific span to the tokens vector.
+    fn add_token_with_span(&mut self, token_type: TokenType, span: Span) {
+        self.tokens.push(Token {
+            token_type,
+            lexeme: self.source_language[span.start..span.end].to_string(),
+            span,
         });
     }
 

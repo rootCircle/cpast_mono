@@ -128,9 +128,13 @@ impl Generator {
                         output_text.push_str(&nested_output);
                     }
                 }
+                UnitExpression::Literal { text, span: _ } => {
+                    output_text.push_str(text);
+                }
                 UnitExpression::Eof => {
-                    // Removes the last character introduced by the last iteration before Eof
-                    output_text.pop();
+                    if output_text.ends_with(' ') {
+                        output_text.pop();
+                    }
                     break;
                 }
             }

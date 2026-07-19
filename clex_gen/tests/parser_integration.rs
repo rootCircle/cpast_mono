@@ -124,3 +124,20 @@ fn test_charset_with_string() {
         ]
     );
 }
+
+#[test]
+fn test_literal_text_ast() {
+    let language = "\"YES\\n\"";
+    let ast = get_ast(language.to_string()).unwrap();
+
+    assert_eq!(
+        ast.expression,
+        vec![
+            UnitExpression::Literal {
+                text: "YES\n".to_string(),
+                span: Span { start: 0, end: 7 },
+            },
+            UnitExpression::Eof,
+        ]
+    );
+}
