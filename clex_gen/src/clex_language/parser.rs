@@ -447,26 +447,21 @@ impl Parser {
     }
 
     fn peek_from_current(&mut self, expected: TokenType, not_expected: TokenType) -> Option<usize> {
-        // Finds index of occurrence of expected Token from current position
-        let mut stack = Vec::new();
+        let mut depth = 0;
         let current_reset_duplicate = self.current;
 
         while !self.at_end() {
             let tk = self.advance();
 
             if tk.token_type == not_expected {
-                stack.push(&not_expected);
+                depth += 1;
             } else if tk.token_type == expected {
-                if let Some(not_expect) = stack.pop() {
-                    if not_expect == &not_expected {
-                        stack.pop();
-                    } else {
-                        stack.push(&expected);
-                    }
-                } else {
+                if depth == 0 {
                     let expected_index = self.current - 1;
                     self.current = current_reset_duplicate;
                     return Some(expected_index);
+                } else {
+                    depth -= 1;
                 }
             }
         }
