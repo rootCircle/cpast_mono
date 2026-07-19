@@ -65,6 +65,7 @@ pub enum TokenType {
     LeftCurlyBrackets,
     RightCurlyBrackets,
     Comma,
+    Pipe,
 
     // Character sets
     /// Integer token type
@@ -163,6 +164,7 @@ impl Tokens {
             "{" => self.add_token(TokenType::LeftCurlyBrackets),
             "}" => self.add_token(TokenType::RightCurlyBrackets),
             "," => self.add_token(TokenType::Comma),
+            "|" => self.add_token(TokenType::Pipe),
             "\\" => self.add_token(TokenType::Backslash),
             "N" => self.add_token(TokenType::Integer),
             "F" => self.add_token(TokenType::Float),

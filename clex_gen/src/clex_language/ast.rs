@@ -81,9 +81,9 @@ pub enum UnitExpression {
         range: (PositiveReferenceType, PositiveReferenceType),
         span: Span,
     },
-    /// Non-capturing group unit expression with nested expressions and repetition type.
+    /// Non-capturing group unit expression with nested expression branches (alternation) and repetition type.
     NonCapturingGroup {
-        nest_exp: Vec<UnitExpression>,
+        branches: Vec<Vec<UnitExpression>>,
         repetition: Repetition,
         span: Span,
     },

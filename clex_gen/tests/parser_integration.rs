@@ -21,7 +21,7 @@ fn test_get_ast_with_complex_pattern() {
                 span: Span { start: 0, end: 1 },
             },
             UnitExpression::NonCapturingGroup {
-                nest_exp: vec![
+                branches: vec![vec![
                     UnitExpression::CapturingGroup {
                         group_number: 2,
                         range: (
@@ -38,7 +38,7 @@ fn test_get_ast_with_complex_pattern() {
                         repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 2 }),
                         span: Span { start: 22, end: 23 },
                     },
-                ],
+                ]],
                 repetition: Repetition::Exact(PositiveReferenceType::ByGroup { group_number: 1 }),
                 span: Span { start: 9, end: 10 },
             },
@@ -121,6 +121,42 @@ fn test_charset_with_string() {
                 span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof
+        ]
+    );
+}
+
+#[test]
+fn test_alternation_ast() {
+    let language = "(?: N | S )";
+    let ast = get_ast(language.to_string()).unwrap();
+
+    assert_eq!(
+        ast.expression,
+        vec![
+            UnitExpression::NonCapturingGroup {
+                branches: vec![
+                    vec![UnitExpression::Primitives {
+                        data_type: DataType::Integer(
+                            ReferenceType::ByLiteral(clex_language::ast::DEFAULT_RANGE_MIN_VALUE),
+                            ReferenceType::ByLiteral(clex_language::ast::DEFAULT_RANGE_MAX_VALUE),
+                        ),
+                        repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                        span: Span { start: 4, end: 5 },
+                    }],
+                    vec![UnitExpression::Primitives {
+                        data_type: DataType::String(
+                            PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_MIN_STRING_SIZE as u64),
+                            PositiveReferenceType::ByLiteral(clex_language::ast::DEFAULT_MAX_STRING_SIZE as u64),
+                            CharacterSet::get_default_charset(),
+                        ),
+                        repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                        span: Span { start: 8, end: 9 },
+                    }],
+                ],
+                repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                span: Span { start: 0, end: 1 },
+            },
+            UnitExpression::Eof,
         ]
     );
 }

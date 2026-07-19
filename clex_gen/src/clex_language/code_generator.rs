@@ -114,7 +114,7 @@ impl Generator {
                     output_text.push(' ');
                 }
                 UnitExpression::NonCapturingGroup {
-                    nest_exp,
+                    branches,
                     repetition,
                     span,
                 } => {
@@ -122,8 +122,17 @@ impl Generator {
                         self.get_repetition_count(repetition, groups, *span)?;
 
                     for _ in 1..=repetition_count {
+                        if branches.is_empty() {
+                            continue;
+                        }
+                        let branch_idx = if branches.len() == 1 {
+                            0
+                        } else {
+                            rand::rng().random_range(0..branches.len())
+                        };
+
                         let nest_gen = Self::new_from_program(ClexLanguageAST {
-                            expression: nest_exp.clone(),
+                            expression: branches[branch_idx].clone(),
                         });
                         let nested_output = nest_gen.traverse_ast(groups)?;
                         output_text.push_str(&nested_output);

@@ -172,15 +172,23 @@ impl Parser {
                     start_span,
                 ))?;
 
-            let mut nest_exp = Vec::new();
+            let mut branches = vec![Vec::new()];
 
             while self.current < last_index {
+                if self.match_token(&TokenType::Pipe) {
+                    branches.push(Vec::new());
+                    continue;
+                }
                 let expr = self.parse_expr()?;
                 match expr {
                     UnitExpression::Primitives { .. }
                     | UnitExpression::NonCapturingGroup { .. }
                     | UnitExpression::CapturingGroup { .. }
-                    | UnitExpression::Literal { .. } => nest_exp.push(expr),
+                    | UnitExpression::Literal { .. } => {
+                        if let Some(current_branch) = branches.last_mut() {
+                            current_branch.push(expr);
+                        }
+                    }
                     UnitExpression::Eof => break,
                 }
             }
@@ -189,7 +197,7 @@ impl Parser {
 
             let repetition_type = self.parse_quantifier()?;
             Ok(UnitExpression::NonCapturingGroup {
-                nest_exp,
+                branches,
                 repetition: repetition_type,
                 span: start_span,
             })
