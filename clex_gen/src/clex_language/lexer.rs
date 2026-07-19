@@ -53,7 +53,7 @@ pub struct Span {
 }
 
 /// Represents the different types of tokens in the lexer.
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
     // Metacharacters
     LeftParens,
@@ -87,6 +87,7 @@ pub enum TokenType {
     // Literals
     /// Literal number token type with a specified value.
     LiteralNumber(i64),
+    LiteralFloat(f64),
     LiteralString(String),
     LiteralText(String),
 
@@ -95,7 +96,7 @@ pub enum TokenType {
 }
 
 /// Represents a token in the lexer, consisting of a token type and the corresponding lexeme.
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Token {
     /// The type of the token, indicating its classification.
     pub token_type: TokenType,
@@ -359,21 +360,46 @@ impl Tokens {
                         self.current += 1;
                     }
 
-                    let number = match self.source_language[self.start..self.current].parse::<i64>()
+                    if self.peek() == "."
+                        && self
+                            .source_language
+                            .get(self.current + 1..self.current + 2)
+                            .map_or(false, |s| Self::is_digit(s))
                     {
-                        Ok(num) => num,
-                        Err(_err) => {
-                            return Err(ClexErrorType::NumericParsingError(
-                                ParentErrorType::LexerError,
-                                Span {
-                                    start: start_pos,
-                                    end: self.current,
-                                },
-                            ));
+                        self.current += 1; // consume '.'
+                        while Self::is_digit(self.peek()) {
+                            self.current += 1;
                         }
-                    };
 
-                    self.add_token(TokenType::LiteralNumber(number));
+                        let float_val = match self.source_language[self.start..self.current].parse::<f64>() {
+                            Ok(num) => num,
+                            Err(_err) => {
+                                return Err(ClexErrorType::NumericParsingError(
+                                    ParentErrorType::LexerError,
+                                    Span {
+                                        start: start_pos,
+                                        end: self.current,
+                                    },
+                                ));
+                            }
+                        };
+                        self.add_token(TokenType::LiteralFloat(float_val));
+                    } else {
+                        let number = match self.source_language[self.start..self.current].parse::<i64>() {
+                            Ok(num) => num,
+                            Err(_err) => {
+                                return Err(ClexErrorType::NumericParsingError(
+                                    ParentErrorType::LexerError,
+                                    Span {
+                                        start: start_pos,
+                                        end: self.current,
+                                    },
+                                ));
+                            }
+                        };
+
+                        self.add_token(TokenType::LiteralNumber(number));
+                    }
                 } else {
                     return Err(ClexErrorType::UnknownCharacter(
                         ParentErrorType::LexerError,

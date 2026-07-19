@@ -109,14 +109,21 @@ impl UnitExpression {
 }
 
 /// Represents the data type of unit expression.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum DataType {
     /// Integer data type with a specified minimum and maximum value (inclusive).
     Integer(ReferenceType, ReferenceType),
     /// Float data type with a specified minimum and maximum value (inclusive).
-    Float(ReferenceType, ReferenceType),
+    Float(FloatReferenceType, FloatReferenceType),
     /// String data type with specified minimum and maximum length.
     String(PositiveReferenceType, PositiveReferenceType, CharacterSet),
+}
+
+/// Represents reference type for floats (group reference or float literal).
+#[derive(Debug, Clone, PartialEq)]
+pub enum FloatReferenceType {
+    ByGroup { group_number: u64 },
+    ByLiteral(f64),
 }
 
 /// Represents the repetition type of unit expression.

@@ -1,5 +1,6 @@
 use clex_gen::clex_language::ast::{
-    CharacterSet, DataType, PositiveReferenceType, ReferenceType, Repetition, UnitExpression,
+    CharacterSet, DataType, FloatReferenceType, PositiveReferenceType, ReferenceType, Repetition,
+    UnitExpression,
 };
 use clex_gen::clex_language::lexer::Span;
 use clex_gen::{clex_language, get_ast};
@@ -227,6 +228,27 @@ fn test_flexible_string_modifier_ast() {
                 ),
                 repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
                 span: Span { start: 5, end: 6 },
+            },
+            UnitExpression::Eof,
+        ]
+    );
+}
+
+#[test]
+fn test_float_bounds_ast() {
+    let language = "F[1.5, 2.7]";
+    let ast = get_ast(language.to_string()).unwrap();
+
+    assert_eq!(
+        ast.expression,
+        vec![
+            UnitExpression::Primitives {
+                data_type: DataType::Float(
+                    FloatReferenceType::ByLiteral(1.5),
+                    FloatReferenceType::ByLiteral(2.7),
+                ),
+                repetition: Repetition::Exact(PositiveReferenceType::ByLiteral(1)),
+                span: Span { start: 0, end: 1 },
             },
             UnitExpression::Eof,
         ]

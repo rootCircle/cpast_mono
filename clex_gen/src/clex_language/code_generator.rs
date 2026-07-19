@@ -40,8 +40,8 @@
 //! and other potential generation-time issues.
 
 use crate::clex_language::ast::{
-    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, Repetition,
-    UnitExpression,
+    CharacterSet, ClexLanguageAST, DataType, FloatReferenceType, PositiveReferenceType,
+    ReferenceType, Repetition, UnitExpression,
 };
 use crate::clex_language::lexer::Span;
 use crate::clex_language::parser::Parser;
@@ -249,13 +249,13 @@ impl Generator {
 
     fn generate_random_float(
         &self,
-        min_reference: &ReferenceType,
-        max_reference: &ReferenceType,
+        min_reference: &FloatReferenceType,
+        max_reference: &FloatReferenceType,
         groups: &HashMap<u64, u64>,
         span: Span,
     ) -> Result<f64, ClexErrorType> {
-        let min = self.get_value_from_reference(min_reference, groups, span)? as f64;
-        let max = self.get_value_from_reference(max_reference, groups, span)? as f64;
+        let min = self.get_float_value_from_reference(min_reference, groups, span)?;
+        let max = self.get_float_value_from_reference(max_reference, groups, span)?;
 
         if min > max {
             return Err(ClexErrorType::InvalidRangeValues(
@@ -267,6 +267,20 @@ impl Generator {
         }
 
         Ok(rand::random_range(min..=max))
+    }
+
+    fn get_float_value_from_reference(
+        &self,
+        reference_type: &FloatReferenceType,
+        groups: &HashMap<u64, u64>,
+        span: Span,
+    ) -> Result<f64, ClexErrorType> {
+        Ok(match reference_type {
+            FloatReferenceType::ByGroup { group_number: gn } => {
+                self.get_count_from_group(groups, *gn, span)? as f64
+            }
+            FloatReferenceType::ByLiteral(value) => *value,
+        })
     }
 
     fn get_value_from_reference(

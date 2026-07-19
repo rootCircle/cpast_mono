@@ -31,8 +31,8 @@
 use super::lexer::{TokenType, Tokens};
 use crate::clex_language;
 use crate::clex_language::ast::{
-    CharacterSet, ClexLanguageAST, DataType, PositiveReferenceType, ReferenceType, Repetition,
-    UnitExpression,
+    CharacterSet, ClexLanguageAST, DataType, FloatReferenceType, PositiveReferenceType,
+    ReferenceType, Repetition, UnitExpression,
 };
 use crate::clex_language::clex_error_type::{ClexErrorType, ParentErrorType};
 use crate::clex_language::lexer::Token;
@@ -123,7 +123,7 @@ impl Parser {
                 })
             }
             TokenType::Float => {
-                let (lower_reference, upper_reference) = self.parse_range()?;
+                let (lower_reference, upper_reference) = self.parse_float_range()?;
                 let repetition_type = self.parse_quantifier()?;
 
                 Ok(UnitExpression::Primitives {
@@ -337,6 +337,53 @@ impl Parser {
         Ok((lower_reference, upper_reference))
     }
 
+    fn parse_float_range(
+        &mut self,
+    ) -> Result<(FloatReferenceType, FloatReferenceType), ClexErrorType> {
+        let lower_bound = clex_language::ast::DEFAULT_RANGE_MIN_VALUE as f64;
+        let upper_bound = clex_language::ast::DEFAULT_RANGE_MAX_VALUE as f64;
+        let mut lower_reference = FloatReferenceType::ByLiteral(lower_bound);
+        let mut upper_reference = FloatReferenceType::ByLiteral(upper_bound);
+
+        if self.match_token(&TokenType::LeftSquareBracket) {
+            let bracket_span = if self.current > 0 {
+                self.tokens.get_tokens()[self.current - 1].span
+            } else {
+                crate::clex_language::lexer::Span { start: 0, end: 0 }
+            };
+
+            lower_reference = self.parse_float_reference(lower_bound)?;
+
+            if !self.match_token(&TokenType::Comma) {
+                let current_span = if self.current < self.tokens.get_tokens().len() {
+                    self.tokens.get_tokens()[self.current].span
+                } else {
+                    bracket_span
+                };
+                return Err(ClexErrorType::MissingCommaRangeExpression(
+                    ParentErrorType::ParserError,
+                    current_span,
+                ));
+            }
+
+            upper_reference = self.parse_float_reference(upper_bound)?;
+
+            if !self.match_token(&TokenType::RightSquareBracket) {
+                let current_span = if self.current < self.tokens.get_tokens().len() {
+                    self.tokens.get_tokens()[self.current].span
+                } else {
+                    bracket_span
+                };
+                return Err(ClexErrorType::MissingSquareBracketsRangeExpression(
+                    ParentErrorType::ParserError,
+                    current_span,
+                ));
+            }
+        }
+
+        Ok((lower_reference, upper_reference))
+    }
+
     fn parse_positive_range(
         &mut self,
     ) -> Result<(PositiveReferenceType, PositiveReferenceType), ClexErrorType> {
@@ -474,6 +521,53 @@ impl Parser {
             Ok(ReferenceType::ByLiteral(value))
         } else {
             Ok(ReferenceType::ByLiteral(default_value))
+        }
+    }
+
+    fn parse_float_reference(
+        &mut self,
+        default_value: f64,
+    ) -> Result<FloatReferenceType, ClexErrorType> {
+        if self.match_token(&TokenType::Backslash) {
+            let backslash_span = if self.current > 0 {
+                self.tokens.get_tokens()[self.current - 1].span
+            } else {
+                crate::clex_language::lexer::Span { start: 0, end: 0 }
+            };
+
+            if let TokenType::LiteralNumber(value) = self.peek().token_type {
+                let num_span = self.peek().span;
+                self.advance();
+                if value <= 0 {
+                    Err(ClexErrorType::NegativeGroupNumber(
+                        ParentErrorType::ParserError,
+                        num_span,
+                    ))
+                } else if value as u64 > self.current_group {
+                    Err(ClexErrorType::UnknownGroupNumber(
+                        ParentErrorType::ParserError,
+                        num_span,
+                        value as u64,
+                    ))
+                } else {
+                    Ok(FloatReferenceType::ByGroup {
+                        group_number: value as u64,
+                    })
+                }
+            } else {
+                Err(ClexErrorType::MissingGroupNumber(
+                    ParentErrorType::ParserError,
+                    backslash_span,
+                ))
+            }
+        } else if let TokenType::LiteralFloat(value) = self.peek().token_type {
+            self.advance();
+            Ok(FloatReferenceType::ByLiteral(value))
+        } else if let TokenType::LiteralNumber(value) = self.peek().token_type {
+            self.advance();
+            Ok(FloatReferenceType::ByLiteral(value as f64))
+        } else {
+            Ok(FloatReferenceType::ByLiteral(default_value))
         }
     }
 
