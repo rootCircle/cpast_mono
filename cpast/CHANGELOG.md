@@ -4,6 +4,31 @@
 
 - Update `clex_gen` and `clex_llm` dependencies to `^0.4.0`.
 
+### Chore
+
+ - <csr-id-f2e058f4767aa461b6c9789fd26d187ac65fa074/> pre-release version bump
+ - <csr-id-cd93d529006a4ce65b071bdd0c0c8cd362769cb4/> cargo clippy and fmt
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 36 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Pre-release version bump ([`f2e058f`](https://github.com/rootCircle/cpast_mono/commit/f2e058f4767aa461b6c9789fd26d187ac65fa074))
+    - Cargo clippy and fmt ([`cd93d52`](https://github.com/rootCircle/cpast_mono/commit/cd93d529006a4ce65b071bdd0c0c8cd362769cb4))
+</details>
+
 ## 0.10.8 (2026-06-14)
 
 - Update model to gemini-3.5-flash
@@ -12,7 +37,7 @@
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -23,16 +48,13 @@
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_llm v0.3.6, cpast v0.10.8 ([`b033129`](https://github.com/rootCircle/cpast_mono/commit/b033129b7e7ef227578232fee8ca81b1421815e4))
     - Chore(clex_llm): bump model to gemini-3.5-flash ([`bdd8159`](https://github.com/rootCircle/cpast_mono/commit/bdd81594b8d195e2a9da365162ec57415cf37206))
 </details>
 
 ## 0.10.7 (2026-06-14)
 
 <csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/>
-
-### Chore
-
- - <csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/> bump versions to trigger release for workspace dependencies update
 
 ### Commit Statistics
 
@@ -57,10 +79,6 @@
 ## 0.10.6 (2026-06-12)
 
 <csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/>
-
-### Chore
-
- - <csr-id-c16ba989987daad334f7a6da1e8d2aaf2bfb4235/> fix failing tests
 
 ### Commit Statistics
 
@@ -96,7 +114,7 @@
 <csr-read-only-do-not-edit/>
 
  - 5 commits contributed to the release.
- - 43 days passed between releases.
+ - 44 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -121,31 +139,18 @@
 <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/>
 <csr-id-12140a0a7cae88d072b28bc803c0e0cee19bdb74/>
 
-### Chore
-
- - <csr-id-d5942b63e45b8a164d86deeaa838d83034041e77/> bump msrv
-
 ### New Features
 
  - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
  - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
    - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
 
-### Other
-
- - <csr-id-950ed853366f835e1d552f3c7434523a9977dbba/> cargo sort -w
- - <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/> format! lint fix
-
-### Test
-
- - <csr-id-12140a0a7cae88d072b28bc803c0e0cee19bdb74/> serial test for LLM call
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
  - 7 commits contributed to the release over the course of 42 calendar days.
- - 146 days passed between releases.
+ - 147 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -170,20 +175,12 @@
 <csr-id-ba0d255c687a637ecfaa1732051e561b90099bf1/>
 <csr-id-2000467be52a20ed2d3f142923f3a6ec094e635a/>
 
-### Chore
-
- - <csr-id-ba0d255c687a637ecfaa1732051e561b90099bf1/> fix --problem_url maturity message
-
-### Other
-
- - <csr-id-2000467be52a20ed2d3f142923f3a6ec094e635a/> some Makefile and ci improvements
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
  - 3 commits contributed to the release.
- - 1 day passed between releases.
+ - 2 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -202,10 +199,6 @@
 ## 0.10.2 (2025-03-15)
 
 <csr-id-41feaa188b4a013e208f762cf721e44ad36d29d5/>
-
-### Other
-
- - <csr-id-41feaa188b4a013e208f762cf721e44ad36d29d5/> update cscraper to v0.1.1
 
 ### Commit Statistics
 
@@ -282,7 +275,7 @@
 <csr-read-only-do-not-edit/>
 
  - 14 commits contributed to the release over the course of 10 calendar days.
- - 13 days passed between releases.
+ - 14 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -313,11 +306,6 @@
 
 <csr-id-f93b38cd00306356503de16b84202333ea3baee4/>
 <csr-id-98decaeb5f61596e592b4c73236deec4c9979fcc/>
-
-### Chore
-
- - <csr-id-f93b38cd00306356503de16b84202333ea3baee4/> update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation
- - <csr-id-98decaeb5f61596e592b4c73236deec4c9979fcc/> update resolver to 3
 
 ### Commit Statistics
 
@@ -381,6 +369,7 @@
 <csr-read-only-do-not-edit/>
 
  - 2 commits contributed to the release.
+ - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -425,22 +414,14 @@
 
 <csr-id-92ee0a4ff8513df123f3a67844cd048d607be264/>
 
-### Chore
-
- - <csr-id-92ee0a4ff8513df123f3a67844cd048d607be264/> add shell completion instructions
-
 ### Documentation
 
  - <csr-id-0d6e667a7a3087106e377efd5c2c96881f63caa7/> improved shields badges and README
 
 ### New Features
 
- - <csr-id-ebc1e6e3d20e2fdee80ba6c0cb780f2c0d4db06e/> introduce ai subcommand to generate clex form input format and constraints
  - <csr-id-1fa604a848dc960908c7148efde4621a38f2a573/> add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash
- - <csr-id-bc8f08ba637c113645a417d558e149dbe16bdd3a/> introduce ai subcommand to generate clex form input format and constraints
- - <csr-id-7fbe621497981a93f390f1857537b540420c8d18/> introduce ai subcommand to generate clex form input format and constraints
  - <csr-id-d7f610314c38fdad56d297a1371a72e343085212/> introduce ai subcommand to generate clex form input format and constraints
- - <csr-id-f8cb2b04dabe45c08ba94f7e7bdc68eaa8c1755e/> add --clipboard for cpast ai
 
 ### Commit Statistics
 
@@ -481,18 +462,6 @@
 <csr-id-27ba21a737a84005359317eb48cca12100405b32/>
 <csr-id-9a63c718ab3848503f75ff7e9bb1b5fbc022021b/>
 
-### Chore
-
- - <csr-id-be396e164ba64e5cda157ce5ad4d93fe503bf976/> catch os 32 broken pipe errors
- - <csr-id-1a1d5113a4797c98ce15f4c8467e3807806139a8/> ignore other program file used for testing
- - <csr-id-a898f15e10691ff4d2389ba9baa1eebaf81c6421/> add cpastcord
- - <csr-id-bd06417f6935b916ab6647ddbb40880fd9388c7d/> new release
- - <csr-id-03199312b8347f21e93b44dab9cbce3c538182f1/> restructing folder structure cpast
-
-### Refactor
-
- - <csr-id-9a63c718ab3848503f75ff7e9bb1b5fbc022021b/> rename clex package to clex_gen
-
 ### Documentation
 
  - <csr-id-e670b0ca127f2755ea7ad090f0283cc2bf4cdbc7/> modified/add README for better segregation
@@ -509,19 +478,6 @@
 ### Bug Fixes
 
  - <csr-id-94458dd0ae5d90e46b6871a7b6eca43ec472d107/> allow pipe of generated testcases easily
-
-### Other
-
- - <csr-id-8a000e047deebefdbe34b6c52656c342f149f099/> cpast_cli clex ccode_runner
- - <csr-id-e98a8df53a173d3a51ec2a30cf126802793d0990/> rename to cpast_mono from cpast
- - <csr-id-139c68a9a1f7178749e6297875fd01437d8b4ac4/> update msrv
- - <csr-id-0a04f6f80d8f1c544aeee6fad96a8c366dd2b9ca/> use worspace deps
- - <csr-id-05cc73bdc5887c67fdf86d02df60fc90e2109683/> fix failing clipboard test pipeline
- - <csr-id-c4e4fe1a126481c850a4f78bd4011125ff988b06/> fix failing ci
-
-### Refactor
-
- - <csr-id-27ba21a737a84005359317eb48cca12100405b32/> use atomicbool instead of mutex in compile_and_test
 
 ### Commit Statistics
 

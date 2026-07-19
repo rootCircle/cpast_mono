@@ -10,6 +10,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update LLM prompt grammar specification and generator examples to support modern Clex syntax.
 - Bump dependency `clex_gen` to `^0.4.0`.
 
+### Bug Fixes
+
+ - <csr-id-7d9f2f9879c417a0e7f033ff603f24cd4f05df05/> update LLM generator examples for modern Clex syntax
+ - <csr-id-8ce31f94ebfb2d4df1e93af3451f83cb7bb34936/> update LLM prompt grammar specification
+
+### Documentation
+
+ - <csr-id-2b451b7d5ff5d307f568afb8b681ba23be9c505b/> update grammar specifications, README, and LLM prompts for graph topology
+
+### Chore
+
+ - <csr-id-f2e058f4767aa461b6c9789fd26d187ac65fa074/> pre-release version bump
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 4 commits contributed to the release.
+ - 36 days passed between releases.
+ - 4 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Pre-release version bump ([`f2e058f`](https://github.com/rootCircle/cpast_mono/commit/f2e058f4767aa461b6c9789fd26d187ac65fa074))
+    - Update grammar specifications, README, and LLM prompts for graph topology ([`2b451b7`](https://github.com/rootCircle/cpast_mono/commit/2b451b7d5ff5d307f568afb8b681ba23be9c505b))
+    - Update LLM generator examples for modern Clex syntax ([`7d9f2f9`](https://github.com/rootCircle/cpast_mono/commit/7d9f2f9879c417a0e7f033ff603f24cd4f05df05))
+    - Update LLM prompt grammar specification ([`8ce31f9`](https://github.com/rootCircle/cpast_mono/commit/8ce31f94ebfb2d4df1e93af3451f83cb7bb34936))
+</details>
+
 ## v0.3.6 (2026-06-14)
 
 - Update gemini model to 3.5-flash
@@ -18,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -29,16 +64,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release clex_llm v0.3.6, cpast v0.10.8 ([`b033129`](https://github.com/rootCircle/cpast_mono/commit/b033129b7e7ef227578232fee8ca81b1421815e4))
     - Chore(clex_llm): bump model to gemini-3.5-flash ([`bdd8159`](https://github.com/rootCircle/cpast_mono/commit/bdd81594b8d195e2a9da365162ec57415cf37206))
 </details>
 
 ## v0.3.5 (2026-06-14)
 
 <csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/>
-
-### Chore
-
- - <csr-id-4a2704c1abbb05fdb1ac3344e2df83056bd7aef6/> bump versions to trigger release for workspace dependencies update
 
 ### Commit Statistics
 
@@ -63,10 +95,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.3.4 (2026-06-12)
 
 <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/>
-
-### Other
-
- - <csr-id-17a121b4f9681c379a292f8bff070a661b0b2a75/> upgrade
 
 ### Commit Statistics
 
@@ -95,10 +123,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-id-f633af53a922f685f3e11978869b1913e85d499b/>
 
-### Chore
-
- - <csr-id-f633af53a922f685f3e11978869b1913e85d499b/> rig-core upgrade
-
 ### New Features
 
  - <csr-id-4342bc031ccc1713a10194c7a7c0996c81e94313/> handle Gemini rate limit handling for flaky tests
@@ -108,7 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <csr-read-only-do-not-edit/>
 
  - 5 commits contributed to the release over the course of 43 calendar days.
- - 43 days passed between releases.
+ - 44 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -135,33 +159,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/>
 <csr-id-3207ab24d8d3961528c416a56cbd23dd8a1324ee/>
 
-### Chore
-
- - <csr-id-d5942b63e45b8a164d86deeaa838d83034041e77/> bump msrv
- - <csr-id-a82f0cb4b09543c6bfe60004ec0d56febab42755/> cleanup database script and remove google-generative-ai-rs
-
 ### New Features
 
  - <csr-id-061adbce540301608dd1dd05b09bf8885fc29ff8/> add validation tool call for Clex expressions and integrate into clex_llm generator
  - <csr-id-17e42ac965d7d19fd8e44edf21903dbfc0df257c/> LLM 429 retry logic and refactor clipboard handling
    - Added `arboard` dependency for clipboard functionality, replacing `cli-clipboard`.
 
-### Other
-
- - <csr-id-950ed853366f835e1d552f3c7434523a9977dbba/> cargo sort -w
- - <csr-id-b987b95a74ed95804be13f9ca38516eacf44954e/> update deps and add rig-core
- - <csr-id-284588063fdf8bb686ad6f79ac7313f2e6b66fb7/> format! lint fix
-
-### Refactor
-
- - <csr-id-3207ab24d8d3961528c416a56cbd23dd8a1324ee/> use rig instead of google-generative-ai-rs
-
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
  - 9 commits contributed to the release over the course of 42 calendar days.
- - 146 days passed between releases.
+ - 147 days passed between releases.
  - 8 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -194,7 +203,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <csr-read-only-do-not-edit/>
 
  - 2 commits contributed to the release over the course of 1 calendar day.
- - 1 day passed between releases.
+ - 2 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -233,7 +242,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <csr-read-only-do-not-edit/>
 
  - 7 commits contributed to the release over the course of 1 calendar day.
- - 13 days passed between releases.
+ - 14 days passed between releases.
  - 6 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
@@ -256,10 +265,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.2.2 (2025-03-01)
 
 <csr-id-f93b38cd00306356503de16b84202333ea3baee4/>
-
-### Chore
-
- - <csr-id-f93b38cd00306356503de16b84202333ea3baee4/> update default range values to i32_min, i32_max and u32_min, u32_max; improve completions support and documentation
 
 ### Documentation
 
@@ -322,28 +327,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
  - <csr-id-e670b0ca127f2755ea7ad090f0283cc2bf4cdbc7/> modified/add README for better segregation
- - <csr-id-5d48fdc64ef4d36aacfa3b24aa893bfc02ce6eb5/> add badges for clex_llm
 
 ### New Features
 
- - <csr-id-ebc1e6e3d20e2fdee80ba6c0cb780f2c0d4db06e/> introduce ai subcommand to generate clex form input format and constraints
  - <csr-id-1fa604a848dc960908c7148efde4621a38f2a573/> add support for min,max length in string as well espace characters in custom charsets and updated llm model to gemini 2_0flash
  - <csr-id-18f1c5182c4fd105242aeb7f851edbbeafd778d7/> introduce --debug flag (closes #5)
  - <csr-id-a29a4c1da0732dbf2e9cf3f86873a635b7896592/> new file store interface and mig to rust 2024
  - <csr-id-d473aa8e95145a2815e910c877f98788c2cb5bc5/> integrated clex llm with gemini
- - <csr-id-bc8f08ba637c113645a417d558e149dbe16bdd3a/> introduce ai subcommand to generate clex form input format and constraints
- - <csr-id-7fbe621497981a93f390f1857537b540420c8d18/> introduce ai subcommand to generate clex form input format and constraints
  - <csr-id-d7f610314c38fdad56d297a1371a72e343085212/> introduce ai subcommand to generate clex form input format and constraints
-
-### Other
-
- - <csr-id-e98a8df53a173d3a51ec2a30cf126802793d0990/> rename to cpast_mono from cpast
- - <csr-id-139c68a9a1f7178749e6297875fd01437d8b4ac4/> update msrv
- - <csr-id-0a04f6f80d8f1c544aeee6fad96a8c366dd2b9ca/> use worspace deps
-
-### Refactor
-
- - <csr-id-9a63c718ab3848503f75ff7e9bb1b5fbc022021b/> rename clex package to clex_gen
 
 ### Commit Statistics
 
