@@ -488,8 +488,8 @@ impl Tokens {
 
     fn parse_pos_ref_str(s: &str) -> Option<PositiveReferenceType> {
         let s = s.trim();
-        if s.starts_with('\\') {
-            let num: u64 = s[1..].parse().ok()?;
+        if let Some(rest) = s.strip_prefix('\\') {
+            let num: u64 = rest.parse().ok()?;
             Some(PositiveReferenceType::ByGroup { group_number: num })
         } else if let Some(rest) = s.strip_prefix("%i") {
             let offset: i64 = if rest.is_empty() {
