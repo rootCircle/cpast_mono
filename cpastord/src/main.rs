@@ -1,11 +1,10 @@
 mod commands;
 
-use anyhow::anyhow;
+use anyhow::Context as _;
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
-use shuttle_runtime::{SecretStore, Secrets};
 use tracing::{error, info};
 
 struct Bot;
@@ -25,23 +24,25 @@ impl EventHandler for Bot {
     }
 }
 
-#[shuttle_runtime::main]
-async fn serenity(#[Secrets] secret_store: SecretStore) -> shuttle_serenity::ShuttleSerenity {
-    // Get the discord token set in `Secrets.toml`
-    let token = match secret_store.get("DISCORD_TOKEN") {
-        Some(token) => token,
-        _ => {
-            return Err(anyhow!("'DISCORD_TOKEN' was not found").into());
-        }
-    };
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt::init();
+
+    // Get the discord token from the environment
+    let token = std::env::var("DISCORD_TOKEN")
+        .context("'DISCORD_TOKEN' was not found in environment")?;
 
     // Set gateway intents, which decides what events the bot will be notified about
     let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
 
-    let client = Client::builder(&token, intents)
+    let mut client = Client::builder(&token, intents)
         .event_handler(Bot)
         .await
-        .expect("Err creating client");
+        .context("Error creating client")?;
 
-    Ok(client.into())
+    if let Err(why) = client.start().await {
+        error!("Client error: {:?}", why);
+    }
+
+    Ok(())
 }
